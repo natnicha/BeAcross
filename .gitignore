@@ -1,0 +1,22 @@
+# dependencies
+across-app/node_modules
+across-app/.pnp
+across-app/.pnp.js
+
+# testing
+across-app/coverage
+
+# production
+across-app/build
+
+# misc
+across-app/.DS_Store
+across-app/.env.local
+across-app/.env.development.local
+across-app/.env.test.local
+across-app/.env.production.local
+
+across-app/npm-debug.log*
+across-app/yarn-debug.log*
+across-app/yarn-error.log*
+_backend/env
