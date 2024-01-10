@@ -1,26 +1,27 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './bootstrap.min.css';
+import './bootstrap-icons.css';
+import './magnific-popup.css';
+import './tooplate-waso-strategy.css';
 
-function App() {
+import Header from './Header';
+import Content from './Content';
+
+const App: React.FC = () => {
+
+  const page = "Home"; // Make some logic here to determine what page to be rendered !!
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+        <Header />
+        <Content displayPage={page} userName="" />
+      </>
   );
-}
+};
+
+//export default HeaderComponent;
+
 
 export default App;
