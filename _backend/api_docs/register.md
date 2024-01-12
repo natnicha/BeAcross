@@ -33,22 +33,17 @@
 
 ## Body Parameters
 
-| Key                  | Type           | Required     | Description                                                                                                                  |
-| -------------------- | :------------: | :----------: | ---------------------------------------------------------------------------------------------------------------------------- |
-| email                | string(128)    | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
-| password             | string(64)     | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character |
-| first_name           | string(32)     | true         | a user's first name                                                                                                          |
-| last_name            | string(32)     | true         | a user's last name                                                                                                           |
+| Key                  | Type           | Required     | Description                                                                                                |
+| -------------------- | :------------: | :----------: | ---------------------------------------------------------------------------------------------------------- |
+| email                | string(128)    | true         | a user email identifing one's university and is conformed by email format e.g., example@tu-chemnitz.de  |
 
 ## Sample Body Parameter Json Request
 ```json
 {
   "email": "example@tu-chemnitz.de",
-  "first_name": "john",
-  "last_name": "doe",
-  "user_pin": "P@ssw0rd"
 }
 ```
+
 ## Success Response 200 - OK
 ```json
 {
@@ -59,7 +54,23 @@
 }
 ```
 
-## Error Response 400 - Bad Request (case: user account is aleady existed.)
+## Error Response 400 - Bad Request (case: the email doesn't conform by email format)
+```json
+{
+  "message" : "The email doesn't conform by email format, please input in format of example@university.de",
+  "data": {}
+}
+```
+
+## Error Response 400 - Bad Request (case: the email's domain (university) isn't under Across)
+```json
+{
+  "message" : "The email's domain isn't under Across, please input another email which is under Across",
+  "data": {}
+}
+```
+
+## Error Response 400 - Bad Request (case: the email is aleady existed.)
 ```json
 {
   "message" : "The email is already taken, please check again",
