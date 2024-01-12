@@ -15,10 +15,9 @@
 
 ## Header Parameters
 
-| Key                 | Type       | Required  | Description                                            |
-| ------------------- | :--------: | :-------: | ------------------------------------------------------ |
-| correlation-uid     | UUID       | false     | Correlation ID. Must be UUID format. For tracing data. |
-| content-type        | string     | true      | Content-Type has to be `application/json`              |
+| Key                 | Type       | Required  | Description                                 |
+| ------------------- | :--------: | :-------: | ------------------------------------------- |
+| content-type        | string     | true      | Content-Type has to be `application/json`   |
 
 ## Path Parameters
 
@@ -60,10 +59,10 @@
 }
 ```
 
-## Error Response 400 - Bad Request (case: user data is aleady existed.)
+## Error Response 400 - Bad Request (case: user account is aleady existed.)
 ```json
 {
-  "message" : "the email is already taken, please check again",
+  "message" : "The email is already taken, please check again",
   "data": {}
 }
 ```
@@ -87,7 +86,7 @@
 ## Error Response 503 - Service Unavailable (case: Can't connect to 3rd party)
 ```json
 {
-  "message" : "Can not connect to third party.",
+  "message" : "Couldn't connect to third party",
   "data": {}
 }
 ```
