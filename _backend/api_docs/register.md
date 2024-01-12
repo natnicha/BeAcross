@@ -36,7 +36,7 @@
 
 | Key                  | Type           | Required     | Description                                                                                                                  |
 | -------------------- | :------------: | :----------: | ---------------------------------------------------------------------------------------------------------------------------- |
-| email                | string(127)    | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
+| email                | string(128)    | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
 | password             | string(64)     | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character |
 | first_name           | string(32)     | true         | a user's first name                                                                                                          |
 | last_name            | string(32)     | true         | a user's last name                                                                                                           |
