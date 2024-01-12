@@ -1,5 +1,7 @@
 # ** [POST] Login **
 
+To login to a system after registration
+
 ## Request
 
 | ** Method **     | POST                              |
