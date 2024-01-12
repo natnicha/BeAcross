@@ -1,5 +1,7 @@
 # ** [POST] Register to auth **
 
+To register a **student** to our system by email which is under Across universities
+
 ## Request
 
 | ** Method **     | POST                              |
