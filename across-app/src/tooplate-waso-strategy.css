@@ -371,13 +371,78 @@ strong {
 
 
 /*---------------------------------------
-  SEARCHBAR             
+  SEARCH BAR             
 -----------------------------------------*/
 .searchbar img {
   height: 300px;
   width: 100%;
 }
 
+.searchbarContent {
+  display: flex;
+  position: absolute;
+  width: 65%;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+  border-radius: 5px;
+  align-items: center; 
+}
+
+.bi-search {
+  margin-right: 10px; /* Adds space between the icon and the input field */
+}
+
+.searchInput{
+  width: 100%;
+}
+
+.bi-lightbulb-fill:hover{
+  color: var(--secondary-color);
+}
+
+.tooltipButton {
+  position: absolute;
+  top: 33.3333333%;
+  right: 14%;
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltipText {
+  visibility: visible;
+  width: 350px;
+  background-color: white;
+  color: var(--p-color);
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltipButton:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*---------------------------------------
+  HERO           
+-----------------------------------------*/
 .section-hero {
   position: relative;
   height: auto;

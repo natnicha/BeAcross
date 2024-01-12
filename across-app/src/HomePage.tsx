@@ -18,9 +18,21 @@ const HomePage: React.FC = () => {
             <>         
                 {/*Searchbar*/}
                 <section className="searchbar">
-                    <div>
-                        <img src={acrossBG} />
-                    </div>
+                    <img src={acrossBG} alt="Background" />
+
+                        <div className="searchbarContent">
+                            <i className="bi bi-search"></i>
+                            <input 
+                                type="text" 
+                                placeholder="Search module here..." 
+                                className="searchInput"
+                            />
+                        </div>
+
+                        <div className="tooltipButton">
+                        <i className="bi bi-lightbulb-fill"></i>
+                        <span className="tooltipText">You can add searches condition by using "AND", "OR", "NOT" e.g. database AND introduction NOT design</span>
+                        </div>
                 </section>
                 
                 {/*Course Categories*/}
