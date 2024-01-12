@@ -1,4 +1,4 @@
-# ** [POST] Register to oauth **
+# ** [POST] Register to auth **
 
 ## Request
 
