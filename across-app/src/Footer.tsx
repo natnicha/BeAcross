@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
                     </div>
                     
                     <div className="col-lg-6 col-12">
-                    	<p className="copyright-text mb-0 me-4">
+                    	<p className="copyright-text text-center mx-auto mb-0 me-4">
                             This website design by &nbsp; 
                             <a href="https://www.victorypiesolutions.com/" target="_blank">Victory Pie Solutions</a>
                         </p>

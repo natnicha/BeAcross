@@ -23,7 +23,4 @@ const App: React.FC = () => {
   );
 };
 
-//export default HeaderComponent;
-
-
 export default App;

@@ -25,7 +25,7 @@ Free Bootstrap 5 HTML Template
   --h1-font-size:                 60px;
   --h2-font-size:                 42px;
   --h3-font-size:                 36px;
-  --h4-font-size:                 32px;
+  --h4-font-size:                 28px;
   --h5-font-size:                 24px;
   --h6-font-size:                 22px;
   --p-font-size:                  14px;
@@ -586,7 +586,7 @@ strong {
 
 .projects-thumb:hover .custom-btn,
 .projects-btn-wrap .custom-btn:hover {
-  background: var(--primary-color);
+  background: var(--secondary-color);
 }
 
 .projects-title-wrap {
@@ -627,8 +627,9 @@ strong {
 }
 
 .projects-btn-wrap .custom-btn {
-  font-size: 30px;
-  padding: 7.5px 15px;
+  font-size: 20px;
+  padding: 3px 15px;
+  /*padding: 7.5px 15px;*/
 }
 
 
