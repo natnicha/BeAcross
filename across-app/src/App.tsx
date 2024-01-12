@@ -12,7 +12,7 @@ import Footer from './Footer';
 
 const App: React.FC = () => {
 
-  const page = "Home"; // Make some logic here to determine what page to be rendered !!
+  const page = "home"; // Make some logic here to determine what page to be rendered !!
   
   return (
       <>
