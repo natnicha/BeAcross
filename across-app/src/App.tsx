@@ -8,6 +8,7 @@ import './tooplate-waso-strategy.css';
 
 import Header from './Header';
 import Content from './Content';
+import Footer from './Footer';
 
 const App: React.FC = () => {
 
@@ -17,6 +18,7 @@ const App: React.FC = () => {
       <>
         <Header />
         <Content displayPage={page} userName="" />
+        <Footer />
       </>
   );
 };

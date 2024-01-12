@@ -722,6 +722,10 @@ strong {
   font-size: var(--copyright-text-font-size);
 }
 
+.site-footer .copyright-text a:hover {
+  color: var(--secondary-color);
+}
+
 
 /*---------------------------------------
   SOCIAL ICON               
