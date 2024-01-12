@@ -973,3 +973,38 @@ strong {
   }
 }
 
+@media (max-width: 768px) {
+  .tooltipButton {
+    right: 10%; /* Adjust the position for smaller screens */
+    width: 30px; /* Adjust the size if needed */
+    height: 30px;
+  }
+
+  .tooltipText {
+    width: 250px; /* Smaller width for smaller screens */
+    margin-left: -125px; /* Adjust margin to align tooltip */
+  }
+}
+
+@media (max-width: 480px) {
+  .tooltipButton {
+    right: 5%; /* Further adjust for very small screens */
+  }
+
+  .tooltipText {
+    width: 200px; /* Further reduce width for very small screens */
+    margin-left: -100px; /* Adjust margin to align tooltip */
+  }
+}
+
+@media (max-width: 768px) {
+  .searchbar img {
+    height: 200px; /* Reduced height for medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .searchbar img {
+    height: 150px; /* Further reduced height for small screens */
+  }
+}
