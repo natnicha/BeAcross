@@ -12,7 +12,7 @@ python -m pip install --upgrade pip
 python -m pip install fastapi
 python -m pip install uvicorn
 python -m pip install "pymongo[srv]"
-
+python -m pip install motor
 
 python -m uvicorn main:app --reload
 
