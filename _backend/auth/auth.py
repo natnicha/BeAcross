@@ -13,6 +13,8 @@ async def register(item: RegisterRequestModel):
     # check existing
     # if yes - exists, return error
     # extract first_name & last_name 
-    # sent email
-    # if success, insert into db & return success
+    # generate password
+    # send email
+    # decrypt password
+    # if sent success, insert into db & return 200 - OK 
     return {"message": item}
