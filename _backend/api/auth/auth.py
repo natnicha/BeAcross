@@ -3,6 +3,8 @@ from pymongo import MongoClient
 import re
 import secrets
 import string
+import uuid
+import hashlib
 
 from db.mongodb import get_database
 from api.auth.model import RegisterRequestModel
@@ -41,8 +43,9 @@ async def register(
     full_name = extractFullNameFromEmail(item.email, '.')
     # generate password
     password = generatePassword()
-    # send email
     # encrypt password using salted hashing
+    encrypted_password = bytearray(hashText(password), 'utf-8')
+    # send email
     # if sent success, insert into db & return 200 - OK 
     return {"message": item}
 
@@ -71,3 +74,13 @@ def generatePassword():
                 and sum(c.isdigit() for c in password) >=1):
             break
     return password
+
+# Basic hashing function for a text using random unique salt.
+def hashText(text):
+    salt = uuid.uuid4().hex
+    return hashlib.sha256(salt.encode() + text.encode()).hexdigest() + ':' + salt
+    
+# Check for the text in the hashed text
+def matchHashedText(hashedText, providedText):
+    _hashedText, salt = hashedText.split(':')
+    return _hashedText == hashlib.sha256(salt.encode() + providedText.encode()).hexdigest()
