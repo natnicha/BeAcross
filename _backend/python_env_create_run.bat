@@ -1,5 +1,8 @@
 @echo off
 
+REM copy .env.exmple to be environment variables
+COPY .env.example .env
+
 REM Create a virtual environment
 python -m venv env
 
