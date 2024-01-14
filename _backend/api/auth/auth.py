@@ -36,6 +36,7 @@ async def register(
         return {"message": "The email is already taken, please check again"}
 
     # extract first_name & last_name 
+    full_name = extractFullNameFromEmail(item.email, '.')
     # generate password
     # send email
     # encrypt password using salted hashing
@@ -52,3 +53,7 @@ def validate_email(email):
 
 def extract_domain_from_email(email):
     return email.split("@",1)[1]
+
+def extractFullNameFromEmail(email, delimiter):
+    full_name = email.split("@",1)[0]
+    return full_name.split(delimiter,1)
