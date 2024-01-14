@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 from pymongo import MongoClient
 import re
 import secrets
@@ -7,14 +7,16 @@ import uuid
 import hashlib
 
 from db.mongodb import get_database
+from db.users import UsersModel
 from api.auth.model import RegisterRequestModel
 
 auth = APIRouter()
 
-@auth.post("/register")
+@auth.post("/register", status_code=status.HTTP_201_CREATED)
 async def register(
         item: RegisterRequestModel = None,
-        db: MongoClient = Depends(get_database)
+        db: MongoClient = Depends(get_database),
+        response: UsersModel = None,
     ):
 
     # check email format
