@@ -30,7 +30,11 @@ async def register(
         return {"message": "The email's domain isn't under Across, please input another email which is under Across"}
 
     # check existing
+    users_collection = db.get_database("admin").get_collection("users").find({"email" : item.email})
     # if yes - exists, return error
+    if len(list(users_collection)) > 0:
+        return {"message": "The email is already taken, please check again"}
+
     # extract first_name & last_name 
     # generate password
     # send email
