@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from auth.auth import auth
+from db.mongodb_utils import *
 
 app = FastAPI()
 
@@ -13,7 +14,9 @@ app.add_middleware(
     CORSMiddleware, allow_origins=origins,
 )
 
+app.add_event_handler("startup", connect_to_mongo)
+app.add_event_handler("shutdown", close_mongo_connection)
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-
