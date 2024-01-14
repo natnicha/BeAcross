@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from auth.model import RegisterRequestModel
+from api.auth.model import RegisterRequestModel
 
 auth = APIRouter()
 
