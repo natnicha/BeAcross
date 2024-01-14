@@ -19,8 +19,7 @@ across-app/.env.production.local
 across-app/npm-debug.log*
 across-app/yarn-debug.log*
 across-app/yarn-error.log*
-
 _backend/env
-.env
+
 .vscode
 *__pycache__
