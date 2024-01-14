@@ -22,4 +22,5 @@ across-app/yarn-error.log*
 _backend/env
 
 .vscode
+.env
 *__pycache__
