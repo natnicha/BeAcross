@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from pymongo import MongoClient
 import re
+import secrets
+import string
 
 from db.mongodb import get_database
 from api.auth.model import RegisterRequestModel
@@ -38,6 +40,7 @@ async def register(
     # extract first_name & last_name 
     full_name = extractFullNameFromEmail(item.email, '.')
     # generate password
+    password = generatePassword()
     # send email
     # encrypt password using salted hashing
     # if sent success, insert into db & return 200 - OK 
@@ -57,3 +60,14 @@ def extract_domain_from_email(email):
 def extractFullNameFromEmail(email, delimiter):
     full_name = email.split("@",1)[0]
     return full_name.split(delimiter,1)
+
+def generatePassword():
+    password_length = 8
+    alphabet = string.ascii_letters + string.digits + string.punctuation
+    while True:
+        password = ''.join(secrets.choice(alphabet) for i in range(password_length))
+        if (sum(c.islower() for c in password) >=1
+                and sum(c.isupper() for c in password) >=1
+                and sum(c.isdigit() for c in password) >=1):
+            break
+    return password
