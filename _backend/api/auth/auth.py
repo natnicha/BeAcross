@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from pymongo import MongoClient
 
 from db.mongodb import get_database
-from db.users import UsersModel
+from crud.users import UsersModel
+import crud.email_domains as Email_Domains
 from .auth_utils import *
 from .model import RegisterRequestModel
 
@@ -53,7 +54,7 @@ def check_across_partner(db: MongoClient, email: string):
     # extract domain from a request
     request_domain = extract_domain_from_email(email)
     # get across university domains
-    email_domains_collection = db.get_database("admin").get_collection("email_domains").find({"domain" : request_domain})
+    email_domains_collection = Email_Domains.get_email_domain(db, request_domain)
     
     # if no - not match with any uni, return error
     if len(list(email_domains_collection)) == 0:

@@ -1,5 +1,4 @@
 from typing import Optional
-from bson import ObjectId
 from pydantic import BaseModel, Field
 
 class BaseModel(BaseModel):
