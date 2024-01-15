@@ -35,7 +35,10 @@ async def register(
     # check whether or not a given email is one of Across uni
     # if no - not match with any uni, return error
     if len(list(email_domains_collection)) == 0:
-        return {"message": "The email's domain isn't under Across, please input another email which is under Across"}
+        raise HTTPException( 
+            detail={"message": "The email's domain isn't under Across, please input another email which is under Across"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
 
     # check existing
     users_collection = db.get_database("admin").get_collection("users").find({"email" : item.email})
