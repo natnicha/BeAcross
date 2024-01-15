@@ -7,11 +7,10 @@ class BaseModel(BaseModel):
         arbitrary_types_allowed = True
 
 class UsersModel(BaseModel):
-    id: Optional[ObjectId] = Field(..., alias="_id")
     email: str = Field(...)
     password: bytes = Field(...)
     first_name: str = Field(...)
     last_name: str = Field(...)
-    registration_number: int = Field(...)
-    course_of_study: str = Field(...)
-    semester: int = Field(default=1)
+    registration_number: Optional[int] = Field(default=None)
+    course_of_study: Optional[str] = Field(default=None)
+    semester: Optional[int] = Field(default=1)
