@@ -17,18 +17,7 @@ async def register(
     # check email format
     check_email_format(item.email)
 
-    # extract domain from a request
-    request_domain = extract_domain_from_email(item.email)
-    # get across university domains
-    email_domains_collection = db.get_database("admin").get_collection("email_domains").find({"domain" : request_domain})
-    
-    # check whether or not a given email is one of Across uni
-    # if no - not match with any uni, return error
-    if len(list(email_domains_collection)) == 0:
-        raise HTTPException( 
-            detail={"message": "The email's domain isn't under Across, please input another email which is under Across"},
-            status_code=status.HTTP_400_BAD_REQUEST
-        )
+    check_across_partner(db, item.email)
 
     # check existing
     users_collection = db.get_database("admin").get_collection("users").find({"email" : item.email})
@@ -76,3 +65,17 @@ def check_email_format(email):
                 detail={"message": "The email doesn't conform by email format, please input in format of example@university.de"},
                 status_code=status.HTTP_400_BAD_REQUEST
             )
+
+def check_across_partner(db, email):
+    # extract domain from a request
+    request_domain = extract_domain_from_email(email)
+    # get across university domains
+    email_domains_collection = db.get_database("admin").get_collection("email_domains").find({"domain" : request_domain})
+    
+    # check whether or not a given email is one of Across uni
+    # if no - not match with any uni, return error
+    if len(list(email_domains_collection)) == 0:
+        raise HTTPException( 
+            detail={"message": "The email's domain isn't under Across, please input another email which is under Across"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
