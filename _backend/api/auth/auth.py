@@ -1,14 +1,10 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from pymongo import MongoClient
-import re
-import secrets
-import string
-import uuid
-import hashlib
 
 from db.mongodb import get_database
 from db.users import UsersModel
-from api.auth.model import RegisterRequestModel
+from .auth_utils import *
+from .model import RegisterRequestModel
 
 auth = APIRouter()
 
@@ -19,13 +15,7 @@ async def register(
     ):
 
     # check email format
-    isCorrectEmailFormat = validate_email(item.email)
-    # if not conform email format, return error
-    if not isCorrectEmailFormat:
-        raise HTTPException(
-                detail={"message": "The email doesn't conform by email format, please input in format of example@university.de"},
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
+    check_email_format(item.email)
 
     # extract domain from a request
     request_domain = extract_domain_from_email(item.email)
@@ -78,38 +68,11 @@ async def register(
 
     return new_user
 
-
-def validate_email(email):
-    pattern = '''^[\w\.-]+@[\w\.-]+\.\w+$'''
-    if re.match(pattern, email):
-        return True
-    else:
-        return False
-
-def extract_domain_from_email(email):
-    return email.split("@",1)[1]
-
-def extractFullNameFromEmail(email, delimiter):
-    full_name = email.split("@",1)[0]
-    return full_name.split(delimiter,1)
-
-def generatePassword():
-    password_length = 8
-    alphabet = string.ascii_letters + string.digits + string.punctuation
-    while True:
-        password = ''.join(secrets.choice(alphabet) for i in range(password_length))
-        if (sum(c.islower() for c in password) >=1
-                and sum(c.isupper() for c in password) >=1
-                and sum(c.isdigit() for c in password) >=1):
-            break
-    return password
-
-# Basic hashing function for a text using random unique salt.
-def hashText(text):
-    salt = uuid.uuid4().hex
-    return hashlib.sha256(salt.encode() + text.encode()).hexdigest() + ':' + salt
-    
-# Check for the text in the hashed text
-def matchHashedText(hashedText, providedText):
-    _hashedText, salt = hashedText.split(':')
-    return _hashedText == hashlib.sha256(salt.encode() + providedText.encode()).hexdigest()
+def check_email_format(email):
+    isCorrectEmailFormat = validate_email(email)
+    # if not conform email format, return error
+    if not isCorrectEmailFormat:
+        raise HTTPException(
+                detail={"message": "The email doesn't conform by email format, please input in format of example@university.de"},
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
