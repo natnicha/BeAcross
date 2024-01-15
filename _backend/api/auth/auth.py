@@ -16,7 +16,6 @@ auth = APIRouter()
 async def register(
         item: RegisterRequestModel = None,
         db: MongoClient = Depends(get_database),
-        response: UsersModel = None,
     ):
 
     # check email format
@@ -46,10 +45,27 @@ async def register(
     # generate password
     password = generatePassword()
     # encrypt password using salted hashing
-    encrypted_password = bytearray(hashText(password), 'utf-8')
+    encrypted_password = hashText(password)
     # send email
+    
     # if sent success, insert into db & return 200 - OK 
-    return {"message": item}
+    last_name = ''
+    if len(full_name)>0:
+        last_name = full_name[1]
+
+    new_user = UsersModel(
+        email = item.email,
+        password = encrypted_password,
+        first_name = full_name[0],
+        last_name = last_name,
+    )
+
+    try:
+        db.get_database("admin").get_collection("users").insert_one(new_user.dict())
+    except:
+        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return new_user
 
 
 def validate_email(email):
