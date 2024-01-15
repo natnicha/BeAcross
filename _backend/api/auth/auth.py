@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from pymongo import MongoClient
 import re
 import secrets
