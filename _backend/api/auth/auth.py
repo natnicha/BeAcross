@@ -53,9 +53,11 @@ async def register(
     full_name = extractFullNameFromEmail(item.email, '.')
     # generate password
     password = generatePassword()
+    print("Only temporary show password, will be deleted when email server is ready.")
+    print("Generated password is:"+password)
     # encrypt password using salted hashing
     encrypted_password = hashText(password)
-    # send email
+    # TODO: send email
     
     # if sent success, insert into db & return 200 - OK 
     last_name = ''
