@@ -49,7 +49,7 @@ def check_email_format(email):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-def check_across_partner(db, email):
+def check_across_partner(db: MongoClient, email: string):
     # extract domain from a request
     request_domain = extract_domain_from_email(email)
     # get across university domains
@@ -62,7 +62,7 @@ def check_across_partner(db, email):
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
-def check_user_existing(db, email):
+def check_user_existing(db: MongoClient, email: string):
     users_collection = db.get_database("admin").get_collection("users").find({"email" : email})
     # if yes - exists, return error
     if len(list(users_collection)) > 0:
@@ -71,7 +71,7 @@ def check_user_existing(db, email):
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
-def prepare_and_insert_user(db, full_name, email, password):
+def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, password: string):
     last_name = ''
     if len(full_name)>0:
         last_name = full_name[1]
