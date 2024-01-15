@@ -19,3 +19,6 @@ class UsersModel(BaseModel):
 
 def get_user(conn: MongoClient, email: str):
     return conn[env_config.DB_NAME].get_collection("users").find({"email" : email})
+
+def insert_one(conn: MongoClient, user: UsersModel):
+    return conn.get_database("admin").get_collection("users").insert_one(user)

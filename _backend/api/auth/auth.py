@@ -31,7 +31,7 @@ async def register(
     # generate password
     password = generatePassword()
     print("Only temporary show password, will be deleted when email server is ready.")
-    print("Generated password is:"+password)
+    print("Generated password is"+password)
 
     # encrypt password using salted hashing
     encrypted_password = hashText(password)
@@ -86,8 +86,11 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, pas
     )
 
     try:
-        db.get_database("admin").get_collection("users").insert_one(new_user.dict())
-    except:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        USERS.insert_one(db, new_user)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
     
     return new_user
