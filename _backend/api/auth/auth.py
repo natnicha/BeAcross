@@ -12,7 +12,7 @@ from api.auth.model import RegisterRequestModel
 
 auth = APIRouter()
 
-@auth.post("/register", status_code=status.HTTP_201_CREATED)
+@auth.post("/register", response_model=UsersModel, status_code=status.HTTP_201_CREATED)
 async def register(
         item: RegisterRequestModel = None,
         db: MongoClient = Depends(get_database),
@@ -44,7 +44,10 @@ async def register(
     users_collection = db.get_database("admin").get_collection("users").find({"email" : item.email})
     # if yes - exists, return error
     if len(list(users_collection)) > 0:
-        return {"message": "The email is already taken, please check again"}
+        raise HTTPException( 
+            detail={"message": "The email is already taken, please check again"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
 
     # extract first_name & last_name 
     full_name = extractFullNameFromEmail(item.email, '.')
@@ -69,7 +72,7 @@ async def register(
     try:
         db.get_database("admin").get_collection("users").insert_one(new_user.dict())
     except:
-        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return new_user
 
