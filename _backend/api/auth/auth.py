@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Response, status, HTTPException
 from pymongo import MongoClient
 import re
 import secrets
@@ -22,7 +22,10 @@ async def register(
     isCorrectEmailFormat = validate_email(item.email)
     # if not conform email format, return error
     if not isCorrectEmailFormat:
-        return {"message": "The email doesn't conform by email format, please input in format of example@university.de"}
+        raise HTTPException(
+                detail={"message": "The email doesn't conform by email format, please input in format of example@university.de"},
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
 
     # extract domain from a request
     request_domain = extract_domain_from_email(item.email)
