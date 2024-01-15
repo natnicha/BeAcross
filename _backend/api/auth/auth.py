@@ -3,7 +3,8 @@ from pymongo import MongoClient
 
 from db.mongodb import get_database
 from crud.users import UsersModel
-import crud.email_domains as Email_Domains
+import crud.email_domains as EMAIL_DOMAINS
+import crud.users as USERS
 from .auth_utils import *
 from .model import RegisterRequestModel
 
@@ -54,19 +55,19 @@ def check_across_partner(db: MongoClient, email: string):
     # extract domain from a request
     request_domain = extract_domain_from_email(email)
     # get across university domains
-    email_domains_collection = Email_Domains.get_email_domain(db, request_domain)
+    email_domains = EMAIL_DOMAINS.get_email_domain(db, request_domain)
     
     # if no - not match with any uni, return error
-    if len(list(email_domains_collection)) == 0:
+    if len(list(email_domains)) == 0:
         raise HTTPException( 
             detail={"message": "The email's domain isn't under Across, please input another email which is under Across"},
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
 def check_user_existing(db: MongoClient, email: string):
-    users_collection = db.get_database("admin").get_collection("users").find({"email" : email})
+    users = USERS.get_user(db, email)
     # if yes - exists, return error
-    if len(list(users_collection)) > 0:
+    if len(list(users)) > 0:
         raise HTTPException( 
             detail={"message": "The email is already taken, please check again"},
             status_code=status.HTTP_400_BAD_REQUEST

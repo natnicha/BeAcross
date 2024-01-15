@@ -1,5 +1,8 @@
 from typing import Optional
 from pydantic import BaseModel, Field
+from pymongo import MongoClient
+
+from config.config_utils import env_config
 
 class BaseModel(BaseModel):
     class Config:
@@ -13,3 +16,6 @@ class UsersModel(BaseModel):
     registration_number: Optional[int] = Field(default=None)
     course_of_study: Optional[str] = Field(default=None)
     semester: Optional[int] = Field(default=1)
+
+def get_user(conn: MongoClient, email: str):
+    return conn[env_config.DB_NAME].get_collection("users").find({"email" : email})
