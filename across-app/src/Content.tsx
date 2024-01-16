@@ -1,6 +1,6 @@
 import React from 'react';
 import HomePage from './HomePage';
-import SSRPage from './SSRPage';
+import StudentProfilePage from './StudentProfilepage';
 
 type ContentProps = {
     displayPage: string;
@@ -14,8 +14,8 @@ const Content: React.FC<ContentProps> = (props) => {
         case 'home':
             pageComponent = <HomePage />;
             break;
-        case 'ssr':
-            pageComponent = <SSRPage />;
+        case 'studentProfile':
+            pageComponent = <StudentProfilePage />;
             break;
         default:
             pageComponent = <div>Page not found</div>;
