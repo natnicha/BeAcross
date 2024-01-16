@@ -130,3 +130,4 @@ def test_login_success(mocker):
         json={"email":"example.x@tu-chemnitz.de", "password": "B(E0xJ[-"}
     )
     assert response.status_code == status.HTTP_200_OK
+    assert response.json()["data"]["jwt"] != ""

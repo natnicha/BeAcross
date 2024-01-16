@@ -67,6 +67,6 @@ def generateJwt(user_id: string):
             "iat": now,
             "exp": exp
         }, 
-        'secret', 
+        env_config.JWT_SECRET, 
         algorithm='HS256'
     )
