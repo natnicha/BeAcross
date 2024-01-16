@@ -7,3 +7,8 @@ class RegisterRequestModel(BaseModel):
 
 class RegisterResponseModel(BaseModel):
     data: UsersModel
+
+
+class LoginRequestModel(BaseModel):
+    email: str
+    password: str

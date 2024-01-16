@@ -107,3 +107,14 @@ def test_register_success_user_with_last_name(mocker):
     assert response.json()["data"]["email"] == "example@tu-chemnitz.de"
     assert response.json()["data"]["first_name"] == "example"
     assert response.json()["data"]["last_name"] == ""
+
+
+
+def test_login_success(mocker):
+    load_env()
+    response = client.post(
+        url="/api/v1/auth/login",
+        headers={"Content-Type":"application/json"},
+        json={"email":"example@tu-chemnitz.de", "password": "P@ssw0rd"}
+    )
+    assert response.status_code == status.HTTP_200_OK

@@ -7,7 +7,7 @@ import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
 
 from .auth_utils import *
-from .model import RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
@@ -100,3 +100,13 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, pas
         )
     
     return new_user
+
+
+
+@auth.post("/login", status_code=status.HTTP_200_OK)
+async def register(
+        item: LoginRequestModel = None,
+        db: MongoClient = Depends(get_database),
+    ):
+
+    return 
