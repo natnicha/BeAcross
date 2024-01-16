@@ -33,7 +33,7 @@ const HomePage: React.FC = (props) => {
             onChange={(e) => setContent(e.target.value)}
           />
           <button
-            className="searchbarbutton"
+            className="custom-btn btn custom-link"
             onClick={() =>
               navigate("/search?query=" + content, { state: { content } })
             }
