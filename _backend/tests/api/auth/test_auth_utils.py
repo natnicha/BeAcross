@@ -1,6 +1,3 @@
-from fastapi import status
-from jwt import InvalidSignatureError
-
 from app.api.auth.auth_utils import validate_jwt_token
 from app.config.config_utils import load_env
 
