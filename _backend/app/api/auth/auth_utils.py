@@ -59,7 +59,7 @@ def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
         )
     return users[0]
 
-def generateJwt(user_id: string):
+def generateJwt(user_id: str):
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
@@ -70,3 +70,10 @@ def generateJwt(user_id: string):
         env_config.JWT_SECRET, 
         algorithm='HS256'
     )
+
+def validate_jwt_token(token: str):
+    try:
+        jwt.decode(token, env_config.JWT_SECRET, algorithms="HS256")
+    except Exception as e:
+        raise e
+    
