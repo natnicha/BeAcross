@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 
-from pymongo import MongoClient
 from app.config.config_utils import env_config
 
 def get_email_domain(conn: MongoClient, request_domain: str):
