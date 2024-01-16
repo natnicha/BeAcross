@@ -18,6 +18,8 @@ python -m pip install "pymongo[srv]"
 python -m pip install python-dotenv
 python -m pip install pytest
 python -m pip install httpx
+python -m pip install mongomock
+python -m pip install pytest-env
 
 python -m uvicorn main:app --reload
 

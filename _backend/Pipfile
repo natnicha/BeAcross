@@ -10,6 +10,8 @@ pymongo = {extras = ["srv"], version = "*"}
 python-dotenv = "*"
 pytest = "*"
 httpx = "*"
+mongomock = "*"
+pytest-env = "*"
 
 [dev-packages]
 

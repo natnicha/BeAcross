@@ -17,3 +17,8 @@ python_env_create_run.bat
 ````
 python -m uvicorn main:app
 ````
+
+## How to run test
+````
+pytest -v -s
+````
