@@ -88,3 +88,22 @@ def test_register_success_user_without_last_name(mocker):
     assert response.json()["data"]["first_name"] == "example"
     assert response.json()["data"]["last_name"] == "x"
 
+
+def test_register_success_user_with_last_name(mocker):
+    email_domains_object = [{
+        "_id" : ObjectId("65a440ad4e731f4ba4ec9c9b"),
+        "university_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "domain" : "tu-chemnitz.de"
+    }]
+
+    mocker.patch('app.crud.email_domains.get_email_domain', return_value=email_domains_object)
+    load_env()
+    response = client.post(
+        url="/api/v1/auth/register",
+        headers={"Content-Type":"application/json"},
+        json={"email":"example@tu-chemnitz.de"}
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    assert response.json()["data"]["email"] == "example@tu-chemnitz.de"
+    assert response.json()["data"]["first_name"] == "example"
+    assert response.json()["data"]["last_name"] == ""
