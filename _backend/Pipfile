@@ -12,6 +12,7 @@ pytest = "*"
 httpx = "*"
 mongomock = "*"
 pytest-env = "*"
+pytest-mock = "*"
 
 [dev-packages]
 

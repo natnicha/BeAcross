@@ -1,9 +1,11 @@
+from bson import ObjectId
 from fastapi import status
 from fastapi.testclient import TestClient
 import mongomock
+
+from app.config.config_utils import load_env
+from app.api.auth.auth import get_database
 from main import app
-from config.config_utils import EnvConfig, load_env, env_config
-from api.auth.auth import get_database
 
 client = TestClient(app)
 
@@ -28,7 +30,6 @@ def test_register_invalid_email_format():
 
 def test_register_email_is_not_across_partner():
     load_env()
-    print(env_config.DB_NAME)
     response = client.post(
         url="/api/v1/auth/register",
         headers={"Content-Type":"application/json"},

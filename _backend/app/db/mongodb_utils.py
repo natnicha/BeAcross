@@ -1,7 +1,9 @@
 import pymongo
 import logging
+
+from app.config.config_utils import env_config
+
 from .mongodb import db
-from config.config_utils import env_config
 
 async def connect_to_mongo():
     try:
