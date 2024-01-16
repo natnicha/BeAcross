@@ -19,8 +19,9 @@ def extractFullNameFromEmail(email, delimiter):
     return full_name.split(delimiter,1)
 
 def generatePassword():
+    special_character = r"""!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
     password_length = 8
-    alphabet = string.ascii_letters + string.digits + string.punctuation
+    alphabet = string.ascii_letters + string.digits + special_character
     while True:
         password = ''.join(secrets.choice(alphabet) for i in range(password_length))
         if (sum(c.islower() for c in password) >=1
