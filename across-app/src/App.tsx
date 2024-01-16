@@ -18,7 +18,7 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           <Route index path="/" element={<HomePage />} />
-          <Route path="/search:keyword" element={<SearchPage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
         </Routes>
       </Router>
