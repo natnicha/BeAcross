@@ -31,12 +31,12 @@ async def register(
     full_name = extractFullNameFromEmail(item.email, '.')
     
     # generate password
-    password = generatePassword()
+    password = generate_password()
     print("Only temporary show password, will be deleted when email server is ready.")
     print("Generated password is"+password)
 
     # encrypt password using salted hashing
-    encrypted_password = hashText(password)
+    encrypted_password = hash_text(password)
     
     # TODO: send email
     
@@ -111,7 +111,7 @@ async def register(
         db: MongoClient = Depends(get_database),
     ):
     user = authenicate(db, item)
-    jwt = generateJwt(user["_id"])
+    jwt = generate_jwt(user["_id"])
     host = request.headers.get('host')
     user_agent = request.headers.get('user-agent')
     insert_user_logs(db, user["_id"], host, user_agent)

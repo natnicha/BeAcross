@@ -26,7 +26,7 @@ def extractFullNameFromEmail(email, delimiter):
     full_name = email.split("@",1)[0]
     return full_name.split(delimiter,1)
 
-def generatePassword():
+def generate_password():
     special_character = r"""!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
     password_length = 8
     alphabet = string.ascii_letters + string.digits + special_character
@@ -39,19 +39,19 @@ def generatePassword():
     return password
 
 # Basic hashing function for a text using random unique salt.
-def hashText(text):
+def hash_text(text):
     salt = uuid.uuid4().hex
     return hashlib.sha256(salt.encode() + text.encode()).hexdigest() + ':' + salt
     
 # Check for the text in the hashed text
-def matchHashedText(hashedText, providedText):
+def match_hashed_text(hashedText, providedText):
     _hashedText, salt = hashedText.split(':')
     return _hashedText == hashlib.sha256(salt.encode() + providedText.encode()).hexdigest()
 
 def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
     users = USERS.get_user(db, login_request_model.email)
     password = bytes.decode(users[0]["password"], 'utf-8')
-    isMatch = matchHashedText(password, login_request_model.password)
+    isMatch = match_hashed_text(password, login_request_model.password)
     if not isMatch:
         raise HTTPException(
             detail={"message": "Incorrect email or password"},
@@ -59,7 +59,7 @@ def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
         )
     return users[0]
 
-def generateJwt(user_id: str):
+def generate_jwt(user_id: str):
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
