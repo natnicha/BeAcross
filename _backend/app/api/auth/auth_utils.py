@@ -64,8 +64,8 @@ def generateJwt(user_id: string):
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
             "id":  str(user_id),
-            "iat": now.utcnow(),
-            "exp": exp.utcnow()
+            "iat": now,
+            "exp": exp
         }, 
         'secret', 
         algorithm='HS256'
