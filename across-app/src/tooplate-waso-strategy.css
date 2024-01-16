@@ -351,6 +351,14 @@ strong {
   color: var(--primary-color);
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row; /* Aligns children horizontally */
+  justify-content: space-around; /* Adjusts spacing between items */
+  align-items: center; /* Aligns items vertically */
+  padding-bottom: 150px;
+}
+
 
 /*---------------------------------------
   SITE HEADER              
@@ -587,6 +595,7 @@ strong {
   color: var(--p-color);
   display: block;
   text-align: left;
+  padding-bottom: 100px;
 }
 
 .nav-tabs .nav-link {
@@ -596,8 +605,11 @@ strong {
   margin-right: 30px;
   margin-left: 30px;
   margin-bottom: 30px;
-  padding: 30px;
   transition: all 0.3s ease-in-out;
+}
+
+.nav-link.active{
+  width: 20%;
 }
 
 .nav-tabs .nav-item.show .nav-link, 
@@ -731,6 +743,18 @@ strong {
   margin-right: 30px;
 }
 
+/*---------------------------------------
+  PROFILE CONTAINER            
+-----------------------------------------*/
+.profile-container {
+  display: flex;
+}
+
+.tm-content {
+  flex-grow: 1;
+  margin-top: 5%;
+}
+
 
 /*---------------------------------------
   CUSTOM FORM               
@@ -767,6 +791,10 @@ strong {
 .custom-form button[type="submit"]:focus {
   background: var(--white-color);
   color: var(--dark-color);
+}
+
+.nav-link button{
+  width: 100px;
 }
 
 
@@ -828,7 +856,7 @@ strong {
 .tm-sidebar {
   background-color: var(--white-color);
   color: var(--white-color);
-  width: 200px;
+  width: 300px;
   border: 1px solid #e5e5e5;
   overflow-y: visible;     
 }
@@ -950,11 +978,6 @@ ul {
     padding-left: 0;
   }
 
-  .navbar-nav .nav-link {
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
   .site-header .social-icon {
     text-align: left;
     margin-top: 10px;
@@ -1030,7 +1053,6 @@ ul {
   .nav-tabs .nav-link {
     margin-right: 0;
     margin-left: 0;
-    padding: 15px;
   }
 
   .contact-info {
