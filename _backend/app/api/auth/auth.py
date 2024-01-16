@@ -7,7 +7,7 @@ import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
 
 from .auth_utils import *
-from .model import LoginRequestModel, RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
@@ -103,20 +103,11 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, pas
 
 
 
-@auth.post("/login", status_code=status.HTTP_200_OK)
+@auth.post("/login", response_model=LoginResponseModel, status_code=status.HTTP_200_OK)
 async def register(
         item: LoginRequestModel = None,
         db: MongoClient = Depends(get_database),
     ):
-    authenicate(db, item)
-    return 
-
-def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
-    users = USERS.get_user(db, login_request_model.email)
-    password = bytes.decode(users[0]["password"], 'utf-8')
-    isMatch = matchHashedText(password, login_request_model.password)
-    if not isMatch:
-        raise HTTPException(
-            detail={"message": "Incorrect email or password"},
-            status_code=status.HTTP_401_UNAUTHORIZED
-        )
+    user = authenicate(db, item)
+    jwt = generateJwt(user["_id"])
+    return LoginResponseModel(data={"jwt": jwt})
