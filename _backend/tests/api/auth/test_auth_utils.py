@@ -1,4 +1,4 @@
-from app.api.auth.auth_utils import validate_jwt_token
+from app.api.auth.auth_utils import generate_jwt, validate_jwt_token
 from app.config.config_utils import load_env
 
 def test_validate_jwt_token_invalid_token():
@@ -9,4 +9,13 @@ def test_validate_jwt_token_invalid_token():
         assert False
     except Exception as e:
         assert True
+
+def test_validate_jwt_token_valid_token():
+    jwt_token = generate_jwt('1')
+    load_env()
+    try:
+        validate_jwt_token(jwt_token)
+        assert True
+    except Exception as e:
+        assert False
     
