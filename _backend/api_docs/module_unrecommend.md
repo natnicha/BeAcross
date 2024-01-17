@@ -57,7 +57,7 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 ```json
 {
   "detail" : {
-    "message": "invalid authorization token"
+    "message": "invalid authorization token or token expired"
   }
 }
 ```

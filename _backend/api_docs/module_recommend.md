@@ -57,7 +57,7 @@ A student can recommend a specified module by making a request with post method 
 ```json
 {
   "detail" : {
-    "message": "invalid authorization token"
+    "message": "invalid authorization token or token expired"
   }
 }
 ```
