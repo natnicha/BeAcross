@@ -1,25 +1,29 @@
-import React from 'react';
-import './App.css';
-import './bootstrap.min.css';
-import './bootstrap-icons.css';
-import './magnific-popup.css';
-import './tooplate-waso-strategy.css';
+import React from "react";
+import "./App.css";
+import "./bootstrap.min.css";
+import "./bootstrap-icons.css";
+import "./magnific-popup.css";
+import "./tooplate-waso-strategy.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Header from './Header';
-import Content from './Content';
-import Footer from './Footer';
+import Header from "./Header";
+import Footer from "./Footer";
+import HomePage from "./pages/HomePage";
+import SearchPage from "./pages/SearchPage";
 
 const App: React.FC = () => {
-
-  const homePage = "home";
-  const studentProfilePage = "studentProfile";
-  
   return (
-      <>
-        <Header />
-        <Content displayPage={studentProfilePage} userName="" />
-        <Footer />
-      </>
+    <>
+      <Header />
+      <Router>
+        <Routes>
+          <Route index path="/" element={<HomePage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
+        </Routes>
+      </Router>
+      <Footer />
+    </>
   );
 };
 
