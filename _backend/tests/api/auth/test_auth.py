@@ -107,3 +107,49 @@ def test_register_success_user_with_last_name(mocker):
     assert response.json()["data"]["email"] == "example@tu-chemnitz.de"
     assert response.json()["data"]["first_name"] == "example"
     assert response.json()["data"]["last_name"] == ""
+
+
+
+def test_login_unauthenticated(mocker):
+    users_object = [{
+        "_id" : ObjectId("65a54de25eb0e12eb0a93e3a"),
+        "email" : "example.x@tu-chemnitz.de",
+        "password" : b'848b8b89c2666cb85dc2969fdb9f99c3bcea099131e562d6e7aad5aba33ec337:09d92dd4cb1c4f11b88c7ab36ac66867',
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : int(1)
+    }]
+    mocker.patch('app.crud.users.get_user', return_value=users_object)
+
+    load_env()
+    response = client.post(
+        url="/api/v1/auth/login",
+        headers={"Content-Type":"application/json"},
+        json={"email":"example.x@tu-chemnitz.de", "password": "B(E0xJ[-"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_login_success(mocker):
+    users_object = [{
+        "_id" : ObjectId("65a54de25eb0e12eb0a93e3a"),
+        "email" : "example.x@tu-chemnitz.de",
+        "password" : b'848b8b89c2666cb85dc2969fdb9f99c3bcea099131e562d6e7aad5aba33ec337:09d92dd4cb1c4f11b88c7ab36ac66866',
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : int(1)
+    }]
+    mocker.patch('app.crud.users.get_user', return_value=users_object)
+
+    load_env()
+    response = client.post(
+        url="/api/v1/auth/login",
+        headers={"Content-Type":"application/json"},
+        json={"email":"example.x@tu-chemnitz.de", "password": "B(E0xJ[-"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["data"]["jwt"] != ""

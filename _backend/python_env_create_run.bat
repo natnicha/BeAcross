@@ -20,6 +20,8 @@ python -m pip install pytest
 python -m pip install httpx
 python -m pip install mongomock
 python -m pip install pytest-env
+python -m pip install pytest-mock
+python -m pip install pyjwt
 
 python -m uvicorn main:app --reload
 

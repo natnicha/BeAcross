@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Request
 from pymongo import MongoClient
 
 from app.db.mongodb import get_database
 from app.crud.users import UsersModel
 import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
+import app.crud.user_logs as USER_LOGS
 
 from .auth_utils import *
-from .model import RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
@@ -30,12 +31,12 @@ async def register(
     full_name = extractFullNameFromEmail(item.email, '.')
     
     # generate password
-    password = generatePassword()
+    password = generate_password()
     print("Only temporary show password, will be deleted when email server is ready.")
     print("Generated password is"+password)
 
     # encrypt password using salted hashing
-    encrypted_password = hashText(password)
+    encrypted_password = hash_text(password)
     
     # TODO: send email
     
@@ -100,3 +101,36 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, pas
         )
     
     return new_user
+
+
+
+@auth.post("/login", response_model=LoginResponseModel, status_code=status.HTTP_200_OK)
+async def register(
+        request: Request,
+        item: LoginRequestModel = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    user = authenicate(db, item)
+    jwt = generate_jwt(user["_id"])
+    host = request.headers.get('host')
+    user_agent = request.headers.get('user-agent')
+    insert_user_logs(db, user["_id"], host, user_agent)
+    return LoginResponseModel(data={"jwt": jwt})
+
+
+def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
+    user_log = USER_LOGS.UserLogsModel(
+        user_id=user_id,
+        type="login",
+        host=host,
+        user_agent=user_agent,
+    )
+
+    try:
+        user_log = USER_LOGS.insert_one(db, user_log)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return 

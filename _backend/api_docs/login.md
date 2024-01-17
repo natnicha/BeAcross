@@ -64,16 +64,8 @@ To login to a system after registration
 ## Error Response 401 - Unauthorized (case: invalid email or password)
 ```json
 {
-  "message" : "Invalid email or password",
+  "message" : "Incorrect email or password",
   "data": {}
-}
-```
-
-## Error Response 400 - Bad Request (case: user data is aleady existed.)
-```json
-{
-  "message" : "The email is already taken, please check again",
-  "data": {}
 }
 ```
 
