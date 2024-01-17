@@ -62,6 +62,15 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 }
 ```
 
+## Error Response 403 - Forbidden (case: no right to access this route)
+```json
+{
+  "detail" : {
+    "message": "insufficient permissions"
+  }
+}
+```
+
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {

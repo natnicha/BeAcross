@@ -62,6 +62,16 @@ A student can recommend a specified module by making a request with post method 
 }
 ```
 
+## Error Response 403 - Forbidden (case: no right to access this route)
+```json
+{
+  "detail" : {
+    "message": "insufficient permissions"
+  }
+}
+```
+
+
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
