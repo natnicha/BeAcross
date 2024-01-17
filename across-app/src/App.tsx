@@ -10,6 +10,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
+import StudentProfilePage from "./pages/StudentProfilepage";
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Routes>
           <Route index path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/studentprofile" element={<StudentProfilePage />} />
           <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
         </Routes>
       </Router>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 //thumbnail images
-import personalplanImage from './images/projects/personal-plan.png';
-import examResultImage from './images/projects/exam-result.png';
-import editProfileImage from './images/projects/edit-profile.png';
+import personalplanImage from '../images/projects/personal-plan.png';
+import examResultImage from '../images/projects/exam-result.png';
+import editProfileImage from '../images/projects/edit-profile.png';
 
 const StudentProfilepage: React.FC = () => {
 

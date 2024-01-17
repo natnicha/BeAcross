@@ -1,7 +1,7 @@
 import React from "react";
 import HomePage from "./pages/HomePage";
 import SSRPage from "./SSRPage";
-import StudentProfilePage from './StudentProfilepage';
+import StudentProfilePage from './pages/StudentProfilepage';
 
 type ContentProps = {
   displayPage: string;
