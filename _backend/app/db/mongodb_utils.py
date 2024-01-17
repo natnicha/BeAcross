@@ -19,6 +19,7 @@ async def close_mongo_connection():
 def check_mongo_connection():
     try:
         result = db.client.admin.command({'ping': 1})
-        print(result)
-    except:
-        print("error")
+        logging.error(result)
+    except Exception as e:
+        logging.error(e)
+
