@@ -1,4 +1,4 @@
 from pydantic import BaseModel
 
 class RecommendRequestModel(BaseModel):
-    module: str
+    module_id: str
