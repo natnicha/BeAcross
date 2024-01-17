@@ -95,7 +95,7 @@ def is_public_path(api: str):
     
     return False
 
-def check_permission(auth: str):
+def check_jwt_token(auth: str):
     splited_auth = (auth or ' ').split("Bearer ")
     if len(splited_auth)!=2:
         return False
