@@ -134,7 +134,7 @@ const StudentProfilepage: React.FC = () => {
                                     <input
                                         type="text"
                                         className="email full-width-input"
-                                        placeholder="firstname.lastname@tu-chemnitz.de"
+                                        placeholder="firstname.lastname@tu-chemnitz.de"               
                                         disabled 
                                     />
                                 </div>
@@ -149,7 +149,7 @@ const StudentProfilepage: React.FC = () => {
                                         />
                                     </div>
                                     <button
-                                        className="custom-btn btn custom-link">                                       
+                                        className="custom-btn btn custom-link mt-4">                                       
                                         Change Password
                                     </button>
                                 </div>

@@ -242,6 +242,8 @@ strong {
 }
 
 
+
+
 /*---------------------------------------
   NAVIGATION              
 -----------------------------------------*/
@@ -593,7 +595,8 @@ strong {
   border-radius: 20px;
   margin-bottom: 24px;
   padding: 25px;
-  width: 80%;
+  padding-bottom: 60px;
+  width: 80%;    
 }
 
 
@@ -770,6 +773,7 @@ strong {
   flex-grow: 1;
   margin-top: 5%;
   width: 80%;
+  height: 80%;
 }
 
 
@@ -902,10 +906,6 @@ strong {
 .tm-nav-item {
     list-style: none;
     border: 1px solid #e5e5e5;
-}
-
-.tm-nav-items {
-  margin-bottom: 100%;
 }
 
 .tm-nav-link {
