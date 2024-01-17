@@ -1,5 +1,5 @@
 from bson import ObjectId
-from fastapi import HTTPException, status
+from fastapi import HTTPException, Request, status
 import datetime
 import re
 import secrets
@@ -65,7 +65,7 @@ def generate_jwt(user_id: str, user_roles_id: str):
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
-            "id":  str(user_id),
+            "user_id":  str(user_id),
             "role": user_roles_id,
             "iat": now,
             "exp": exp
@@ -101,22 +101,25 @@ def is_public_path(api: str):
     
     return False
 
-def is_valid_jwt_token(auth: str):
+def is_valid_jwt_token(request: Request):
+    auth = request.headers.get('Authorization')
     splited_auth = (auth or ' ').split("Bearer ")
     if len(splited_auth)!=2:
         return False
     
     try:
         validate_jwt_token(splited_auth[1])
+        encoded = get_payload_from_auth(splited_auth[1])
+        request.state.role = encoded["role"]
+        request.state.user_id = encoded["user_id"]
     except:
         return False
     
     return True
 
-def check_permission(api: str, auth: str):
-    splited_auth = (auth or ' ').split("Bearer ")
+def check_permission(request: Request):
+    api = request.url.path
     if api.__contains__("/module/recommend"):
-        auth_payload = get_payload_from_auth(splited_auth[1])
-        if auth_payload['role'] != "student":
+        if request.state.role != "student":
             return False
     return True

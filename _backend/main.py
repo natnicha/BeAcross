@@ -27,15 +27,14 @@ app.add_event_handler("shutdown", close_mongo_connection)
 
 @app.middleware("http")
 async def check_authentication(request: Request, call_next):
-    auth = request.headers.get('Authorization')
     if not is_public_path(request.url.path):
-        if not is_valid_jwt_token(auth):
+        if not is_valid_jwt_token(request):
             return JSONResponse(
                 {"message": "invalid authorization token or token expired"}, 
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
         
-        if not check_permission(request.url.path, auth):
+        if not check_permission(request):
             return JSONResponse(
                 {"message": "insufficient permissions"}, 
                 status_code=status.HTTP_403_FORBIDDEN
