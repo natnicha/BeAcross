@@ -356,7 +356,7 @@ strong {
   flex-direction: row; /* Aligns children horizontally */
   justify-content: space-around; /* Adjusts spacing between items */
   align-items: center; /* Aligns items vertically */
-  padding-bottom: 150px;
+  padding-bottom: 10%;
 }
 
 
@@ -547,6 +547,23 @@ strong {
 
 
 /*---------------------------------------
+ PERSONAL INFO             
+-----------------------------------------*/
+.personal-info-container {
+  display: flex;
+}
+
+.personal-info-section {
+  margin-right: 20%;
+  padding: 10px;
+}
+
+.full-width-input {
+  width: 100%;
+  box-sizing: border-box; /* This ensures padding and border are included in the total width */
+}
+
+/*---------------------------------------
   ABOUT              
 -----------------------------------------*/
 .about-image-wrap {
@@ -575,7 +592,8 @@ strong {
   background: var(--primary-color);
   border-radius: 20px;
   margin-bottom: 24px;
-  padding: 40px;
+  padding: 25px;
+  width: 80%;
 }
 
 
@@ -595,7 +613,8 @@ strong {
   color: var(--p-color);
   display: block;
   text-align: left;
-  padding-bottom: 100px;
+  padding-bottom: 10%;
+  width: 25%;
 }
 
 .nav-tabs .nav-link {
@@ -606,10 +625,6 @@ strong {
   margin-left: 30px;
   margin-bottom: 30px;
   transition: all 0.3s ease-in-out;
-}
-
-.nav-link.active{
-  width: 20%;
 }
 
 .nav-tabs .nav-item.show .nav-link, 
@@ -686,6 +701,7 @@ strong {
   width: 100%;
   height: auto;
   transition: all 0.3s;
+  margin-bottom: 15px;
 }
 
 .projects-thumb-large .projects-image {
@@ -753,6 +769,7 @@ strong {
 .tm-content {
   flex-grow: 1;
   margin-top: 5%;
+  width: 80%;
 }
 
 
@@ -856,9 +873,9 @@ strong {
 .tm-sidebar {
   background-color: var(--white-color);
   color: var(--white-color);
-  width: 300px;
+  width: 220px;
   border: 1px solid #e5e5e5;
-  overflow-y: visible;     
+      
 }
 
 .tm-sidebar-wrapper {
@@ -895,11 +912,8 @@ strong {
     color: var(--pimary-color);
     background-color: transparent;
     height: 35px;
-    width: 100%;
-    max-width: 300px;    
     display: flex;
     align-items: center;
-    justify-content: center; 
     font-size: 14px;
 }
 
@@ -919,9 +933,6 @@ ul {
     margin: 0; 
     padding: 0;
 }
-
-.tm-nav { margin-left: -30px; }
-
 
 /*---------------------------------------
   RESPONSIVE STYLES               
