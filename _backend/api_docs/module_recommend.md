@@ -40,13 +40,13 @@ A student can recommend a specified module by making a request with post method 
 
 | Key          | Type         | Required     | Description                               |
 | ------------ | :----------: | :----------: | ----------------------------------------- |
-| module       | string       | true         | a module id which would like to recommend |
+| module_id    | string       | true         | a module ID which would like to recommend |
 
 
 ## Sample Body Parameter Json Request
 ```json
 {
-  "module": "65a54de25eb0e12eb0a93e3a"
+  "module_id": "65a54de25eb0e12eb0a93e3a"
 }
 ```
 
