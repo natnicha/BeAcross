@@ -86,6 +86,12 @@ def validate_jwt_token(token: str):
     except Exception as e:
         raise e
 
+def get_payload_from_auth(token: str):
+    try:
+        return jwt.decode(token, env_config.JWT_SECRET, algorithms="HS256")
+    except:
+        return ""
+    
 def is_public_path(api: str):
     if api == '/':
         return True
@@ -95,7 +101,7 @@ def is_public_path(api: str):
     
     return False
 
-def check_jwt_token(auth: str):
+def is_valid_jwt_token(auth: str):
     splited_auth = (auth or ' ').split("Bearer ")
     if len(splited_auth)!=2:
         return False
@@ -105,4 +111,12 @@ def check_jwt_token(auth: str):
     except:
         return False
     
+    return True
+
+def check_permission(api: str, auth: str):
+    splited_auth = (auth or ' ').split("Bearer ")
+    if api.__contains__("/module/recommend"):
+        auth_payload = get_payload_from_auth(splited_auth[1])
+        if auth_payload['role'] != "student":
+            return False
     return True
