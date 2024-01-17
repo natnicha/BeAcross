@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.auth.auth import auth
-from db.mongodb_utils import *
-from config.config_utils import *
+from app.api.auth.auth import auth
+from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
+from app.config.config_utils import load_env
 
 app = FastAPI()
 

@@ -1,16 +1,17 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from pymongo import MongoClient
 
-from db.mongodb import get_database
-from crud.users import UsersModel
-import crud.email_domains as EMAIL_DOMAINS
-import crud.users as USERS
+from app.db.mongodb import get_database
+from app.crud.users import UsersModel
+import app.crud.email_domains as EMAIL_DOMAINS
+import app.crud.users as USERS
+
 from .auth_utils import *
-from .model import RegisterRequestModel
+from .model import RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
-@auth.post("/register", response_model=UsersModel, status_code=status.HTTP_201_CREATED)
+@auth.post("/register", response_model=RegisterResponseModel, status_code=status.HTTP_201_CREATED)
 async def register(
         item: RegisterRequestModel = None,
         db: MongoClient = Depends(get_database),
@@ -39,7 +40,12 @@ async def register(
     # TODO: send email
     
     # if sent success, insert into db & return 200 - OK 
-    return prepare_and_insert_user(db, full_name, item.email, encrypted_password)
+    new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password)
+    return RegisterResponseModel(
+        message = "Successful registered",
+        data = new_user
+    )
+
 
 
 def check_email_format(email):
@@ -75,7 +81,7 @@ def check_user_existing(db: MongoClient, email: string):
 
 def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, password: string):
     last_name = ''
-    if len(full_name)>0:
+    if len(full_name)>1:
         last_name = full_name[1]
 
     new_user = UsersModel(
