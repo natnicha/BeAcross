@@ -1,7 +1,9 @@
+from bson import ObjectId, json_util
 from fastapi import APIRouter, Depends, status, HTTPException, Request
 from pymongo import MongoClient
 
 from app.db.mongodb import get_database
+from app.db.settings import Settings, get_settings
 from app.crud.users import UsersModel
 import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
@@ -16,6 +18,7 @@ auth = APIRouter()
 async def register(
         item: RegisterRequestModel = None,
         db: MongoClient = Depends(get_database),
+        settings: Settings = Depends(get_settings),
     ):
 
     # check email format
@@ -41,7 +44,8 @@ async def register(
     # TODO: send email
     
     # if sent success, insert into db & return 200 - OK 
-    new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password)
+    new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password, settings.user_roles["student"])
+    new_user.user_roles_id = str(new_user.user_roles_id)
     return RegisterResponseModel(
         message = "Successful registered",
         data = new_user
@@ -80,7 +84,7 @@ def check_user_existing(db: MongoClient, email: string):
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
-def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, password: string):
+def prepare_and_insert_user(db: MongoClient, full_name: list, email: str, password: str, user_roles_id: ObjectId):
     last_name = ''
     if len(full_name)>1:
         last_name = full_name[1]
@@ -90,6 +94,7 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: string, pas
         password = password,
         first_name = full_name[0],
         last_name = last_name,
+        user_roles_id=user_roles_id
     )
 
     try:
@@ -111,7 +116,7 @@ async def register(
         db: MongoClient = Depends(get_database),
     ):
     user = authenicate(db, item)
-    jwt = generate_jwt(user["_id"])
+    jwt = generate_jwt(user["_id"], get_user_role(user_roles_id=user["user_roles_id"]))
     host = request.headers.get('host')
     user_agent = request.headers.get('user-agent')
     insert_user_logs(db, user["_id"], host, user_agent)

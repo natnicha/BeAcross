@@ -1,3 +1,4 @@
+from bson import ObjectId
 from fastapi import HTTPException, status
 import datetime
 import re
@@ -11,6 +12,7 @@ from mongomock import MongoClient
 from app.api.auth.model import LoginRequestModel
 from app.config.config_utils import env_config
 import app.crud.users as USERS
+from app.db.settings import settings
 
 def validate_email(email):
     pattern = '''^[\w\.-]+@[\w\.-]+\.\w+$'''
@@ -59,11 +61,12 @@ def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
         )
     return users[0]
 
-def generate_jwt(user_id: str):
+def generate_jwt(user_id: str, user_roles_id: str):
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
             "id":  str(user_id),
+            "role": user_roles_id,
             "iat": now,
             "exp": exp
         }, 
@@ -71,9 +74,35 @@ def generate_jwt(user_id: str):
         algorithm='HS256'
     )
 
+def get_user_role(user_roles_id: ObjectId):
+    for role, id in enumerate(settings.user_roles):
+        if str(user_roles_id) == id:
+            return role
+    return ''
+
 def validate_jwt_token(token: str):
     try:
         jwt.decode(token, env_config.JWT_SECRET, algorithms="HS256")
     except Exception as e:
         raise e
+
+def is_public_path(api: str):
+    if api == '/':
+        return True
     
+    if api.__contains__('/api/v1/auth'):
+        return True
+    
+    return False
+
+def check_permission(auth: str):
+    splited_auth = (auth or ' ').split("Bearer ")
+    if len(splited_auth)!=2:
+        return False
+    
+    try:
+        validate_jwt_token(splited_auth[1])
+    except:
+        return False
+    
+    return True

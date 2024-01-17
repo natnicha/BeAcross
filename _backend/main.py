@@ -1,9 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.api.auth.auth import auth
 from app.api.module.module import module
 from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
+from app.db.settings_utils import load_settings
+from app.api.auth.auth_utils import check_permission, is_public_path
 from app.config.config_utils import load_env
 
 app = FastAPI()
@@ -19,7 +22,19 @@ app.add_middleware(
 
 app.add_event_handler("startup", load_env)
 app.add_event_handler("startup", connect_to_mongo)
+app.add_event_handler("startup", load_settings)
 app.add_event_handler("shutdown", close_mongo_connection)
+
+@app.middleware("http")
+async def check_authentication(request: Request, call_next):
+    auth = request.headers.get('Authorization')
+    if not is_public_path(request.url.path):
+        if not check_permission(auth):
+            return JSONResponse(
+                {"message": "invalid authorization token or token expired"}, 
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+    return await call_next(request)
 
 @app.get("/")
 async def root():

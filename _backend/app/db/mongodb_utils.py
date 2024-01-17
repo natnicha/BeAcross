@@ -16,7 +16,7 @@ async def close_mongo_connection():
     except:
         logging.error("disconnect database failed")
 
-def check_mongo_connection():
+async def check_mongo_connection():
     try:
         result = db.client.admin.command({'ping': 1})
         logging.error(result)
