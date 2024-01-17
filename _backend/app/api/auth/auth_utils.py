@@ -75,8 +75,8 @@ def generate_jwt(user_id: str, user_roles_id: str):
     )
 
 def get_user_role(user_roles_id: ObjectId):
-    for role, id in enumerate(settings.user_roles):
-        if str(user_roles_id) == id:
+    for role, id in settings.user_roles.items():
+        if user_roles_id == id:
             return role
     return ''
 
