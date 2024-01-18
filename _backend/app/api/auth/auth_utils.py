@@ -126,7 +126,6 @@ def check_permission(request: Request):
 
 async def is_include_request_body_if_post(request: Request):
     method = request.method
-    print(method)
     if method == "POST":
         body = await request.body()
         if body == bytes():
