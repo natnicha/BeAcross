@@ -13,7 +13,7 @@ class Role(str, Enum):
   guest = "guest"
 
 class User(BaseModel):
-  id: Optional[str] = uuid4()
+  id: Optional[UUID] = uuid4()
   first_name: str
   last_name: str
   uni_name: Optional[str] = Field(default="TU-Chemnitz")
