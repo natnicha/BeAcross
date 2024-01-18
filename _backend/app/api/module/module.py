@@ -119,3 +119,11 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@module.delete("/unrecommend", status_code=status.HTTP_200_OK)
+async def recommend(
+        request: Request,
+        item: RecommendRequestModel = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    return 
