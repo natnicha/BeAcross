@@ -16,12 +16,6 @@ async def recommend(
         item: RecommendRequestModel = None,
         db: MongoClient = Depends(get_database),
     ):
-    if item == None:
-        raise HTTPException(
-            detail={"message": "no request body provided"},
-            status_code=status.HTTP_400_BAD_REQUEST
-        )
-
     module_recommend = ModuleRecommendModel(
         module_id=ObjectId(item.module_id),
         user_id=ObjectId(request.state.user_id)
