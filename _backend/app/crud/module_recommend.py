@@ -15,5 +15,11 @@ class ModuleRecommendModel(BaseModel):
     user_id: ObjectId = Field(...)
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
+def get_module_recommend(conn: MongoClient, module_recommend: ModuleRecommendModel):
+    return conn[env_config.DB_NAME].get_collection("module_recommend").find({
+        "module_id": module_recommend.module_id,
+        "user_id": module_recommend.user_id
+    })
+
 def insert_one(conn: MongoClient, module_recommend: ModuleRecommendModel):
     return conn[env_config.DB_NAME].get_collection("module_recommend").insert_one(module_recommend.dict())
