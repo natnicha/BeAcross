@@ -2,7 +2,7 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from app.api.auth.auth_utils import check_permission, is_include_request_body_if_post, is_public_path, is_valid_jwt_token
+from app.api.auth.auth_utils import has_permission, is_include_request_body_if_post, is_public_path, is_valid_jwt_token
 
 async def authenticate(request: Request, call_next):
     if not is_public_path(request.url.path):
@@ -12,7 +12,7 @@ async def authenticate(request: Request, call_next):
                 status_code=status.HTTP_401_UNAUTHORIZED
             )
         
-        if not check_permission(request):
+        if not has_permission(request):
             return JSONResponse(
                 {"message": "insufficient permissions"}, 
                 status_code=status.HTTP_403_FORBIDDEN
