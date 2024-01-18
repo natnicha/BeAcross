@@ -140,6 +140,34 @@ const StudentProfilepage: React.FC = () => {
                                 </div>
                                 <div className="personal-info-container">
                                     <div className="personal-info-section">
+                                        <p>Registration Number:</p>
+                                        <input
+                                            type="text"
+                                            className="registrationnumber full-width-input"
+                                            placeholder=""
+                                        />
+                                    </div>
+
+                                    <div className="personal-info-section">
+                                        <p>Course of Study:</p>
+                                        <input
+                                            type="text"
+                                            className="courseofstudy full-width-input"
+                                            placeholder=""
+                                        />
+                                    </div>
+
+                                    <div className="personal-info-section">
+                                        <p>Study Semester:</p>
+                                        <input
+                                            type="text"
+                                            className="studysemester full-width-input"
+                                            placeholder=""
+                                        />
+                                    </div>
+                                </div>
+                                <div className="personal-info-container">
+                                    <div className="personal-info-section">
                                         <p>Password:</p>
                                         <input
                                             type="text"
