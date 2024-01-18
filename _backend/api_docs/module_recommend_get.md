@@ -4,10 +4,10 @@ To get number of recommend for a specific module
 
 ## Request
 
-| ** Method **     | GET                                                 |
-| ---------------- | --------------------------------------------------- |
-| ** Structure **  | `/api/v1/module/recommend/{module-id}`              |
-| ** Example **    | `/api/v1/module/recommend/65a81c0502ed558ac053a095` |
+| ** Method **     | GET                                                            |
+| ---------------- | -------------------------------------------------------------- |
+| ** Structure **  | `/api/v1/module/recommend/{module_id}`                         |
+| ** Example **    | `/api/v1/module/recommend/?module_id=65a81c0502ed558ac053a095` |
 
 ## Permissions
 
