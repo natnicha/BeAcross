@@ -6,7 +6,7 @@ from app.api.module.module import module
 from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
 from app.db.settings_utils import load_settings
 from app.config.config_utils import load_env
-from app.middleware.middleware import authenticate
+from app.middleware.middleware import security_checking
 
 app = FastAPI()
 
@@ -25,8 +25,8 @@ app.add_event_handler("startup", load_settings)
 app.add_event_handler("shutdown", close_mongo_connection)
 
 @app.middleware("http")
-async def check_authentication(request: Request, call_next):
-    return await authenticate(request, call_next)
+async def middleware_checking(request: Request, call_next):
+    return await security_checking(request, call_next)
 
 @app.get("/")
 async def root():
