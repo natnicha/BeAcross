@@ -1,4 +1,4 @@
-# ** [GET] Recommend Module **
+# ** [GET] No of Recommend for a Specified Module **
 
 To get number of recommend for a specific module
 
