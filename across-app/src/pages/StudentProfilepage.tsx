@@ -9,11 +9,13 @@ const StudentProfilepage: React.FC = () => {
 
     const [activeNav, setActiveNav] = useState('home'); // State to track the active navigation item
     const [showProfileInformation, setShowProfileInformation] = useState(false); // State to manage visibility of the sections
+    const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections
 
-    // Function to handle navigation item click
+    // Function to Nav navigation item click
     const homeNavClick = (navItem: string) => {
         setActiveNav(navItem);
         setShowProfileInformation(false);
+        setExamResult(false);
     };
     const planNavClick = (navItem: string) => {
         setActiveNav(navItem);
@@ -21,16 +23,42 @@ const StudentProfilepage: React.FC = () => {
     };
     const examNavClick = (navItem: string) => {
         setActiveNav(navItem);
-        setShowProfileInformation(false);
+        setExamResult(true);
     };
     const profileNavClick = (navItem: string) => {
         setActiveNav(navItem);
         setShowProfileInformation(true);
+        setExamResult(false);
     };
  
-    // Event handler for the 'Edit Profile' button
+    // Event handler for button navigate
     const handleEditProfileClick = () => {
         setShowProfileInformation(true);
+        setExamResult(false);
+    };
+    const handleExamResultClick = () => {
+        setExamResult(true);
+        setShowProfileInformation(false);
+    };
+
+    // State for the visibility of rows under module types
+    const [showFocusModuleRows, setShowFocusModuleRows] = useState(false);
+    const [showAdvanceModuleRows, setShowAdvanceModuleRows] = useState(false);
+    const [showSeminarModuleRows, setSeminarModuleRows] = useState(false);
+    const [showKeyCompetenceRows, setKeyCompetenceRows] = useState(false);
+
+    // Toggle function for each module type Row
+    const toggleFocusModuleRows = () => {
+        setShowFocusModuleRows(!showFocusModuleRows);
+    };
+    const toggleAdvanceModuleRows = () => {
+        setShowAdvanceModuleRows(!showAdvanceModuleRows);
+    };
+    const toggleSeminarModuleRows = () => {
+        setSeminarModuleRows(!showSeminarModuleRows);
+    };
+    const toggleKeyCompetenceRows = () => {
+        setKeyCompetenceRows(!showKeyCompetenceRows);
     };
 
     return (
@@ -68,7 +96,7 @@ const StudentProfilepage: React.FC = () => {
                 
                 {/*Menu card*/}
                 {/* Conditional rendering for menu card section */}
-                {!showProfileInformation && (
+                {!showProfileInformation && !showExamResult && (
                     <section className="tm-content" id="menucard">
                             <div className="nav nav-tabs flex-row align-items-baseline">
                                 
@@ -82,8 +110,8 @@ const StudentProfilepage: React.FC = () => {
                                     
                                 </button>  
 
-                                <button className="nav-link active" id="examresult">
-                                    <img src={examResultImage} className="img-fluid projects-image" alt="Personal Plan" /> 
+                                <button className="nav-link active" id="examresult" onClick={handleExamResultClick}>
+                                    <img src={examResultImage} className="img-fluid projects-image" alt="Exam Result" /> 
                                      
                                         <a className="click-scroll" href="#exam-result"> 
                                             <i className="bi bi-file-earmark-text"></i> <strong> &nbsp; Exam Result</strong>
@@ -180,7 +208,97 @@ const StudentProfilepage: React.FC = () => {
                                         className="custom-btn btn custom-link mt-4">                                       
                                         Change Password
                                     </button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button 
+                                        className="custom-btn-green btn custom-link mt-4" >                                       
+                                        &nbsp;&nbsp;  Save &nbsp;&nbsp;
+                                    </button>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/*Exam Results*/}
+                {/* Conditional rendering for exam result section */}
+                {showExamResult && (
+                    <section className="tm-content" id="profileinformation">
+                        <div className="nav nav-tabs flex-row align-items-baseline">
+                            <div className="about-thumb bg-white shadow-lg">
+                                <h5 className="mb-3" style={{ color: '#1e5af5' }}>Grade Archived</h5>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                        <th>Modules Name</th>
+                                        <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr onClick={toggleFocusModuleRows} style={{ cursor: 'pointer' }}>
+                                        <td colSpan={2}><i className="bi bi-caret-down-fill"></i>&nbsp;&nbsp;Focus modules - 25.0 credits</td>
+                                        </tr>
+                                        {!showFocusModuleRows  && (
+                                            <>
+                                                <tr>
+                                                <td>553010 - Current Trends in Web Engineering - Core elective - 5.0 credits</td>
+                                                <td>passed</td>
+                                                </tr>
+                                                <tr>
+                                                <td>563050 - Databases and web technologies - Core elective - 5.0 credits</td>
+                                                <td>passed</td>
+                                                </tr>
+                                                <tr>
+                                                <td>553050 - Cloud & Web applications - Core elective - 5.0 credits</td>
+                                                <td>failed</td>
+                                                </tr>
+                                            </>
+                                        )}
+                                        
+                                        <tr onClick={toggleAdvanceModuleRows} style={{ cursor: 'pointer' }}>
+                                        <td colSpan={2}><i className="bi bi-caret-down-fill"></i>&nbsp;&nbsp;Advance modules - 25.0 credits</td>
+                                        </tr>
+                                        {!showAdvanceModuleRows && (
+                                            <>
+                                                <tr>
+                                                <td>553030 - Design of distributed systems - Core elective - 5.0 credits</td>
+                                                <td>passed</td>
+                                                </tr>
+                                            </>
+                                        )}
+
+                                        <tr onClick={toggleSeminarModuleRows} style={{ cursor: 'pointer' }}>
+                                        <td colSpan={2}><i className="bi bi-caret-down-fill"></i>&nbsp;&nbsp;Seminar modules - 7.0 credits</td>
+                                        </tr>
+                                        {!showSeminarModuleRows && (
+                                            <>
+                                                <tr>
+                                                <td>500410 Seminar Web Engineering - Compulsory elective - 5.0 credits</td>
+                                                <td>passed</td>
+                                                </tr>
+                                                <tr>
+                                                <td>500420 Preparatory seminar business game web engineering - Compulsory elective - 2.0 credits</td>
+                                                <td>passed</td>
+                                                </tr>
+                                            </>
+                                        )}
+
+                                        <tr onClick={toggleKeyCompetenceRows} style={{ cursor: 'pointer' }}>
+                                        <td colSpan={2}><i className="bi bi-caret-down-fill"></i>&nbsp;&nbsp;Key Competence - 8.0 credits</td>
+                                        </tr>
+                                        {!showKeyCompetenceRows && (
+                                            <>
+                                                <tr>
+                                                <td>136130 German as a foreign language I (level A1)  - Core elective - 4.0 credits</td>
+                                                <td>passed</td>
+                                                </tr>
+                                                <tr>
+                                                <td>136135 German as a foreign language II (level A2)  - Core elective - 4.0 credits</td>
+                                                <td>failed</td>
+                                                </tr>
+                                            </>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </section>

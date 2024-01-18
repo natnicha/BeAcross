@@ -18,6 +18,7 @@ Free Bootstrap 5 HTML Template
   --secondary-color:              #ffd302;
   --section-bg-color:             #f5f5f5;
   --dark-color:                   #000000;
+  --green-color:                  #4caf50;
   --p-color:                      #717275;
 
   --body-font-family:             'DM Sans', sans-serif;
@@ -220,6 +221,15 @@ strong {
 -----------------------------------------*/
 .custom-btn {
   background: var(--primary-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 20px;
+}
+
+.custom-btn-green {
+  background: var(--green-color);
   border-radius: 10px;
   color: var(--white-color);
   font-size: var(--copyright-text-font-size);
@@ -597,6 +607,23 @@ strong {
   padding: 25px;
   padding-bottom: 60px;
   width: 80%;    
+}
+
+/*---------------------------------------
+  TABLE             
+-----------------------------------------*/
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+td {
+  font-size: 12px;
 }
 
 
