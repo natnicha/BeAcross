@@ -80,3 +80,12 @@ def get_no_of_recommend_module(db: MongoClient, module_id: ObjectId):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     return count
+
+
+@module.delete("/unrecommend", status_code=status.HTTP_200_OK)
+async def recommend(
+        request: Request,
+        item: RecommendRequestModel = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    return 
