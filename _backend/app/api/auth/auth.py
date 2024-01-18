@@ -1,4 +1,4 @@
-from bson import ObjectId, json_util
+from bson import ObjectId
 from fastapi import APIRouter, Depends, status, HTTPException, Request
 from pymongo import MongoClient
 
