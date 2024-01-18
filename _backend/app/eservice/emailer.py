@@ -10,6 +10,7 @@ config = dotenv_values(".env")
 GMAIL_USERNAME = config.get("GMAIL_USERNAME")
 GMAIL_PASSWORD = config.get("GMAIL_PASSWORD")
 
+#async def send_email(background_tasks: BackgroundTasks, recipient_email: str, subject: str, content: str):
 async def send_email(background_tasks: BackgroundTasks, recipient_email: str, subject: str, content: str):
     message = EmailMessage()
     #message["From"] = GMAIL_USERNAME
@@ -20,15 +21,31 @@ async def send_email(background_tasks: BackgroundTasks, recipient_email: str, su
     message["Subject"] = "New Password"
     message.set_content(content)
 
-    await send(
-        message,
-        hostname="smtp.gmail.com",
-        port=587,
-        #username=GMAIL_USERNAME,
-        username="beacrossapp@gmail.com",
-        #password=GMAIL_PASSWORD,
-        password="lsgjoiexpmlnpjif",
-        use_tls=True,
-    )
 
-    background_tasks.add_task(send_email, recipient_email, subject, content)
+#testing0
+
+#    try:
+#        await send(
+#            # ... parameters ...
+#        )
+#    except Exception as e:
+#        print(f"Error sending email: {e}")
+
+#testing1
+
+
+    try:
+        await send(
+            message=message,
+            hostname="smtp.gmail.com",
+            port=587,
+            #username=GMAIL_USERNAME,
+            username="beacrossapp@gmail.com",
+            #password=GMAIL_PASSWORD,
+            password="lsgjoiexpmlnpjif",
+            use_tls=False,
+        )
+    except Exception as e:
+        print(f"Error sending email:{e}")
+
+    #background_tasks.add_task(send_email, recipient_email, subject, content)
