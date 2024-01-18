@@ -16,10 +16,16 @@ async def recommend(
         item: RecommendRequestModel = None,
         db: MongoClient = Depends(get_database),
     ):
-    module_recommend = ModuleRecommendModel(
-        module_id=ObjectId(item.module_id),
-        user_id=ObjectId(request.state.user_id)
-    )
+    try:
+        module_recommend = ModuleRecommendModel(
+            module_id=ObjectId(item.module_id),
+            user_id=ObjectId(request.state.user_id)
+        )
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
 
     check_conflict(db, module_recommend)
     insert_module_recommend(db, module_recommend)
