@@ -4,18 +4,18 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 
 ## Request
 
-| ** Method **     | DELTE                             |
-| ---------------- | ----------------------------------|
-| ** Structure **  | `/api/v1/module/unrecommend`      |
-| ** Example **    | `/api/v1/module/unrecommend`      |
+| ** Method **     | DELTE                                                 |
+| ---------------- | ----------------------------------------------------- |
+| ** Structure **  | `/api/v1/module/{module_id}/unrecommend`              |
+| ** Example **    | `/api/v1/module/65a81c0502ed558ac053a095/unrecommend` |
 
 ## Permissions
 
-| Method          | Allow Acess                       |
-| ----------------| ----------------------------------|
-| student         | `/api/v1/module/unrecommend`      |
-| uni-admin       | -                                 |
-| sys-admin       | -                                 |
+| Method          | Allow Acess                                |
+| ----------------| ------------------------------------------ |
+| student         | `/api/v1/module/{module_id}/unrecommend`   |
+| uni-admin       | -                                          |
+| sys-admin       | -                                          |
 
 ## Header Parameters
 
@@ -26,9 +26,9 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 
 ## Path Parameters
 
-| Key       | Type      | Required     | Permissions  | Description                     |
-| --------- | :-------: | :----------: | :----------: | ------------------------------- |
-|           |           |              |              |                                 |
+| Key       | Type      | Required     | Permissions  | Description                               |
+| --------- | :-------: | :----------: | :----------: | ----------------------------------------- |
+| module_id | string    | true         |              | a module ID which would like to recommend |
 
 ## Query Parameters
 
@@ -40,15 +40,8 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 
 | Key          | Type         | Required     | Description                               |
 | ------------ | :----------: | :----------: | ----------------------------------------- |
-| module_id    | string       | true         | a module ID which would like to recommend |
+|              |              |              |                                           |
 
-
-## Sample Body Parameter Json Request
-```json
-{
-  "module_id": "65a54de25eb0e12eb0a93e3a"
-}
-```
 
 ## Success Response 200 - OK
   [no request body]
