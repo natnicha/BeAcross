@@ -46,6 +46,15 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 ## Success Response 200 - OK
   [no request body]
 
+## Error Response 404 - Not Found (case: not found a module recommended by authenticated user)
+```json
+{
+    "detail": {
+        "message": "the module recommended by this user is not found"
+    }
+}
+```
+
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
 ```json
 {
