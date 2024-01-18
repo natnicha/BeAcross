@@ -92,15 +92,6 @@ def get_payload_from_auth(token: str):
     except:
         return ""
     
-def is_public_path(api: str):
-    if api == '/':
-        return True
-    
-    if api.__contains__('/api/v1/auth'):
-        return True
-    
-    return False
-
 def is_valid_jwt_token(request: Request):
     auth = request.headers.get('Authorization')
     splited_auth = (auth or ' ').split("Bearer ")
@@ -121,13 +112,5 @@ def has_permission(request: Request):
     api = request.url.path
     if api.__contains__("/module/recommend"):
         if request.state.role != "student":
-            return False
-    return True
-
-async def is_include_request_body_if_post(request: Request):
-    method = request.method
-    if method == "POST":
-        body = await request.body()
-        if body == bytes():
             return False
     return True

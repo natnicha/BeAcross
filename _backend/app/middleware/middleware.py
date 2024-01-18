@@ -2,7 +2,8 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from app.api.auth.auth_utils import has_permission, is_include_request_body_if_post, is_public_path, is_valid_jwt_token
+from app.api.auth.auth_utils import has_permission, is_valid_jwt_token
+from .middleware_utils import is_public_path, is_include_request_body_if_post
 
 async def authenticate(request: Request, call_next):
     if not is_public_path(request.url.path):
