@@ -50,7 +50,7 @@ A student can recommend a specified module by making a request with post method 
 }
 ```
 
-## Success Response 200 - OK
+## Success Response 201 - Created
   [no request body]
 
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
