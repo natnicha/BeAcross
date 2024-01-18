@@ -53,6 +53,16 @@ A student can recommend a specified module by making a request with post method 
 ## Success Response 201 - Created
   [no request body]
 
+
+## Error Response 409 - Conflict (case: duplication of recommened for a user)
+```json
+{
+  "detail" : {
+    "message": "this action is performed"
+  }
+}
+```
+
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
 ```json
 {
