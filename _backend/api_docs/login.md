@@ -54,7 +54,6 @@ To login to a system after registration
 ## Success Response 200 - OK
 ```json
 {
-  "message" : "Login successfully",
   "data": {
     "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
   }
@@ -64,31 +63,35 @@ To login to a system after registration
 ## Error Response 401 - Unauthorized (case: invalid email or password)
 ```json
 {
-  "message" : "Incorrect email or password",
-  "data": {}
+ "detail": { 
+    "message" : "Incorrect email or password",
+ }
 }
 ```
 
 ## Error Response 422 - Unprocessable Entity (case: request body validation error)
 ```json
 {
-  "message": "Request body is invalid.",
-  "data": {}
+ "detail": { 
+    "message": "Request body is invalid.",
+ }
 }
 ```
 
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
-  "message" : "Server error",
-  "data": {}
+ "detail": { 
+    "message" : "Server error",
+ }
 }
 ```
 
 ## Error Response 503 - Service Unavailable (case: Can't connect to 3rd party)
 ```json
 {
-  "message" : "Couldn't connect to third party",
-  "data": {}
+ "detail": { 
+    "message" : "Couldn't connect to third party",
+ }
 }
 ```
