@@ -27,6 +27,11 @@ async def recommend(
         user_id=ObjectId(request.state.user_id)
     )
 
+    check_conflict(db, module_recommend)
+    insert_module_recommend(db, module_recommend)
+    return 
+
+def check_conflict(db: MongoClient, module_recommend: ModuleRecommendModel):
     rows = MODULE_RECOMMEND.get_module_recommend(db, module_recommend)
     if len(list(rows)) > 0:
         raise HTTPException(
@@ -34,6 +39,7 @@ async def recommend(
             status_code=status.HTTP_409_CONFLICT
         )
 
+def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendModel):
     try:
         MODULE_RECOMMEND.insert_one(db, module_recommend)
     except Exception as e:
@@ -41,4 +47,3 @@ async def recommend(
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-    return 
