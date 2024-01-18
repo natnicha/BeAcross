@@ -39,13 +39,13 @@ async def check_authentication(request: Request, call_next):
                 {"message": "insufficient permissions"}, 
                 status_code=status.HTTP_403_FORBIDDEN
             )
-        
-        is_include_request_body = await is_include_request_body_if_post(request)
-        if not is_include_request_body:
-            return JSONResponse(
-                {"message": "no request body provided"},
-                status_code=status.HTTP_400_BAD_REQUEST
-            )
+    
+    is_include_request_body = await is_include_request_body_if_post(request)
+    if not is_include_request_body:
+        return JSONResponse(
+            {"message": "no request body provided"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
     return await call_next(request)
 
 @app.get("/")
