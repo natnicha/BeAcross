@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from uuid import UUID, uuid4
 from typing import Optional, List
 from enum import Enum
@@ -16,7 +16,7 @@ class User(BaseModel):
   id: Optional[str] = uuid4()
   first_name: str
   last_name: str
-  #uni_name: Optional[str]
+  uni_name: Optional[str] = Field(default="TU-Chemnitz")
   gender: Gender
-  #new_pass: Optional[int]
+  new_pass: Optional[str] = Field(default="Pass1234")
   roles: List[Role]
