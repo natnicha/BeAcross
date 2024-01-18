@@ -4,18 +4,18 @@ To get number of recommend for a specific module
 
 ## Request
 
-| ** Method **     | GET                                                            |
-| ---------------- | -------------------------------------------------------------- |
-| ** Structure **  | `/api/v1/module/recommend/{module_id}`                         |
-| ** Example **    | `/api/v1/module/recommend/?module_id=65a81c0502ed558ac053a095` |
+| ** Method **     | GET                                                 |
+| ---------------- | --------------------------------------------------- |
+| ** Structure **  | `/api/v1/module/{module_id}/recommend`              |
+| ** Example **    | `/api/v1/module/65a81c0502ed558ac053a095/recommend` |
 
 ## Permissions
 
-| Method          | Allow Acess                       |
-| ----------------| ----------------------------------|
-| student         | `/api/v1/module/recommend`        |
-| uni-admin       | `/api/v1/module/recommend`        |
-| sys-admin       | `/api/v1/module/recommend`        |
+| Method          | Allow Acess                              |
+| ----------------| ---------------------------------------- |
+| student         | `/api/v1/module/{module_id}/recommend`   |
+| uni-admin       | `/api/v1/module/{module_id}/recommend`   |
+| sys-admin       | `/api/v1/module/{module_id}/recommend`   |
 
 ## Header Parameters
 
@@ -46,7 +46,8 @@ To get number of recommend for a specific module
 ```json
 {
   "data" : {
-    "no_of_recommend": 1
+    "module_id": "65a81c0502ed558ac053a095",
+    "no_of_recommend": 234
   }
 }
 ```
