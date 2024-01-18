@@ -120,7 +120,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
-@module.delete("/unrecommend/{module_id}", status_code=status.HTTP_200_OK)
+@module.delete("/{module_id}/unrecommend", status_code=status.HTTP_200_OK)
 async def unrecommend(
         request: Request,
         module_id: str = None,
