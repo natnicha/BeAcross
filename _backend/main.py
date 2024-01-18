@@ -13,10 +13,10 @@ app = FastAPI()
 app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
 app.include_router(module, prefix='/api/v1/module', tags=['module'])
 
-origins = ['http://localhost:3000']
+frontend_origins = ['http://localhost:3000']
 
 app.add_middleware(
-    CORSMiddleware, allow_origins=origins,
+    CORSMiddleware, allow_origins=frontend_origins,
 )
 
 app.add_event_handler("startup", load_env)
