@@ -49,7 +49,7 @@ A student can delete own comments once they have done using module-comment-id
 ```json
 {
     "detail": {
-        "message": "no comment found by this user is not found"
+        "message": "the comment by this user is not found"
     }
 }
 ```

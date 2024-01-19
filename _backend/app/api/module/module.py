@@ -190,7 +190,7 @@ def check_exist_module_comment(db: MongoClient, module_comment_id: ObjectId, use
     rows = MODULE_COMMENT.find(db, module_comment_id, user_id)
     if len(list(rows)) == 0:
         raise HTTPException(
-            detail={"message": "no comment found by this user is not found"},
+            detail={"message": "the comment by this user is not found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
 
