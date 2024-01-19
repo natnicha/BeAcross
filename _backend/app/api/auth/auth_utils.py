@@ -113,4 +113,7 @@ def has_permission(request: Request):
     if api.__contains__("/recommend"):
         if request.state.role != "student":
             return False
+    if api.__contains__("/module/comment"):
+        if request.state.role != "student":
+            return False
     return True
