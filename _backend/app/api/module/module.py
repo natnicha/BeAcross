@@ -1,5 +1,5 @@
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from mongomock import MongoClient
 
 import app.crud.module_recommend as MODULE_RECOMMEND
@@ -157,3 +157,21 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+@module.get("/search/", status_code=status.HTTP_200_OK)
+async def no_of_recommend(
+        term: str = Query('', description="limit items in response"),
+        limit: int = Query(20, description="limit items in response"),
+        offset: int = Query(0, description="limit items in response"),
+        sortby: str = Query('module-name', description="limit items in response"),
+        orderby: str = Query('asc', description="limit items in response"),
+        db: MongoClient = Depends(get_database),
+    ):
+    return {
+        "term": term,
+        "limit": limit,
+        "offset": offset,
+        "sortby": sortby,
+        "orderby": orderby,
+    }
