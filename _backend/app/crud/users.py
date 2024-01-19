@@ -1,5 +1,6 @@
 import datetime
 from typing import Optional
+from bson import ObjectId
 from pydantic import BaseModel, Field
 from pymongo import MongoClient
 
@@ -17,6 +18,7 @@ class UsersModel(BaseModel):
     registration_number: Optional[int] = Field(default=None)
     course_of_study: Optional[str] = Field(default=None)
     semester: Optional[int] = Field(default=1)
+    user_roles_id: ObjectId = Field()
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
