@@ -174,10 +174,35 @@ async def unrecommend(
         module_comment_id: str = None,
         db: MongoClient = Depends(get_database),
     ):
-
+    try:
+        module_comment_id_obj = ObjectId(module_comment_id)
+        user_id_obj = ObjectId(request.state.user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    check_exist_module_comment(db, module_comment_id_obj, user_id_obj)
+    delete_module_comment(db, module_comment_id_obj, user_id_obj)
     return 
 
+def check_exist_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
+    rows = MODULE_COMMENT.find(db, module_comment_id, user_id)
+    if len(list(rows)) == 0:
+        raise HTTPException(
+            detail={"message": "no comment found by this user is not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
 
+def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
+    try:
+        MODULE_COMMENT.delete_one(db, module_comment_id, user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
         term: str = Query(min_length=1),

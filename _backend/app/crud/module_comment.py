@@ -20,5 +20,20 @@ class ModuleCommentModel(BaseModel):
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
+
+def find(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
+    return db[env_config.DB_NAME].get_collection("module_comments").find({
+        "_id": module_comment_id, 
+        "user_id": user_id
+    })
+
+
+def delete_one(conn: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("module_comments").delete_one({
+        "_id": module_comment_id,
+        "user_id": user_id
+    })
+
+
 def insert_one(db: MongoClient, module_comment: ModuleCommentModel):
     return db[env_config.DB_NAME].get_collection("module_comments").insert_one(module_comment.dict())
