@@ -169,7 +169,14 @@ async def no_of_recommend(
         orderby: str = Query('asc', description="a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse"),
         db: MongoClient = Depends(get_database),
     ):
+    count = MODULES.count(db, term)
+    if count == 0:
+        raise HTTPException(detail="no module found", status_code=status.HTTP_404_NOT_FOUND)
     rows = MODULES.find(db, term, limit, offset, sortby, orderby)
+    items = list(rows)
     return {
-        "items": list(rows)
-    }
+        "data":{
+            "total_results": count,
+            "total_items": len(items),
+            "items": items
+    }}
