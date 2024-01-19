@@ -15,8 +15,10 @@ class BaseModel(BaseModel):
         
 class ModuleCommentModel(BaseModel):
     module_id: ObjectId = Field(...)
+    message: str = Field(...)
     user_id: ObjectId = Field(...)
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
+    updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
 def insert_one(db: MongoClient, module_comment: ModuleCommentModel):
-    return db[env_config.DB_NAME].get_collection("module_comments").insert_one(module_comment)
+    return db[env_config.DB_NAME].get_collection("module_comments").insert_one(module_comment.dict())

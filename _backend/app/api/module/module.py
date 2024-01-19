@@ -12,7 +12,7 @@ import app.crud.module_comment as MODULE_COMMENT
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, ModuleCommentRequestModel, RecommendRequestModel
+from app.api.module.model import CountRecommendResponseModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
 
 module = APIRouter()
@@ -130,7 +130,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
         )
 
 
-@module.post("/comment", status_code=status.HTTP_201_CREATED)
+@module.post("/comment", response_model=ModuleCommentResponseModel, status_code=status.HTTP_201_CREATED)
 async def unrecommend(
         request: Request,
         items: ModuleCommentRequestModel,
@@ -139,6 +139,7 @@ async def unrecommend(
     try:
         module_comment = ModuleCommentModel(
             module_id=ObjectId(items.module_id),
+            message=items.message,
             user_id=ObjectId(request.state.user_id)
         )
     except Exception as e:
@@ -147,18 +148,21 @@ async def unrecommend(
             status_code=status.HTTP_400_BAD_REQUEST
         )
     insert_module_comment(db, module_comment)
-    return 
+    return ModuleCommentResponseModel(
+        message = "successful commented",
+        data = module_comment
+    )
 
 
 def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
     try:
-        MODULE_COMMENT.insert_one(db, module_comment)
+        return MODULE_COMMENT.insert_one(db, module_comment)
     except Exception as e:
         raise HTTPException(
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-    return 
+     
 
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
