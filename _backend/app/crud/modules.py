@@ -22,15 +22,7 @@ class ModulesModel(BaseModel):
     university: str = Field(...)
     ect_credits: decimal = Field(...)
     year_of_study: decimal = Field(...)
-
-class UserLogsModel(BaseModel):
-    name: str = Field(...)
-    program: str = Field(...)
-    degree_level: str = Field(...)
-    university: str = Field(...)
-    ect_credits: decimal = Field(...)
-    semester: decimal = Field(...)
-    content: str = Field(...)
+    content: str = Field(...)   
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
@@ -40,7 +32,7 @@ def find(conn: MongoClient, term: str, limit: int, offset: int, sortby: str, ord
         is_asc = -1
 
     like_term = convert_to_like(term=term)
-    return conn[env_config.DB_NAME].get_collection("modules").find({
+    rows = conn[env_config.DB_NAME].get_collection("modules").find({
         "name": like_term
     }).sort({
         sortby : int(is_asc)
