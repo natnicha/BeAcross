@@ -3,9 +3,9 @@ import decimal
 import re
 from typing import Optional
 from bson import ObjectId
-from fastapi import HTTPException
 from mongomock import MongoClient
 from pydantic import BaseModel, Field
+from bson.objectid import ObjectId as BsonObjectId
 from app.config.config_utils import env_config
 
 class BaseModel(BaseModel):
@@ -31,12 +31,11 @@ def find(conn: MongoClient, term: str, limit: int, offset: int, sortby: str, ord
         is_asc = -1
 
     like_term = convert_to_like(term=term)
-    rows = conn[env_config.DB_NAME].get_collection("modules").find({
+    return conn[env_config.DB_NAME].get_collection("modules").find({
         "name": like_term
-    }, {'_id': 0}).sort({
+    }).sort({
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
-    return list(rows)
 
 def count(conn: MongoClient, term: str):
     like_term = convert_to_like(term=term)

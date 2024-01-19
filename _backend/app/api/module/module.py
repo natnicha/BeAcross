@@ -1,6 +1,9 @@
+import json
+from bson import json_util
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
-from mongomock import MongoClient
+from pymongo import MongoClient
+from pymongo.cursor import Cursor
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
@@ -10,6 +13,8 @@ from app.api.module.model import CountRecommendResponseModel, RecommendRequestMo
 
 
 module = APIRouter()
+
+sortby_database_col_mapping = {"module-name":"name", "offered-by":"university", "ect-credits":"property.ects", "degree-level":"degree_level", "semester": "property.semester"}
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
@@ -134,10 +139,24 @@ async def no_of_recommend(
     count = MODULES.count(db, term)
     if count == 0:
         raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
-    items = MODULES.find(db, term, limit, offset, sortby, orderby)
+    items = MODULES.find(db, term, limit, offset, sortby_database_col_mapping[sortby], orderby)
+    data = prepare_item(db, items)
     return {
         "data":{
             "total_results": count,
-            "total_items": len(items),
-            "items": items
+            "total_items": len(data),
+            "items": data
     }}
+
+def prepare_item(db: MongoClient, items: Cursor):
+    data = parse_json(items)
+    for entry in data:
+        entry["module_id"] = entry["_id"]['$oid']
+        entry["module_name"] = entry["name"]
+        del entry['name']
+        del entry["_id"]
+        entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
+    return data
+
+def parse_json(data):
+    return json.loads(json_util.dumps(data))
