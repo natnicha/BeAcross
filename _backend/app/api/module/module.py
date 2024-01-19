@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from mongomock import MongoClient
 
 import app.crud.module_recommend as MODULE_RECOMMEND
+import app.crud.modules as MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, RecommendRequestModel
@@ -168,10 +169,7 @@ async def no_of_recommend(
         orderby: str = Query('asc', description="a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse"),
         db: MongoClient = Depends(get_database),
     ):
+    rows = MODULES.find(db, term, limit, offset, sortby, orderby)
     return {
-        "term": term,
-        "limit": limit,
-        "offset": offset,
-        "sortby": sortby,
-        "orderby": orderby,
+        "items": list(rows)
     }
