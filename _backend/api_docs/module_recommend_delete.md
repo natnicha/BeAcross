@@ -25,9 +25,9 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 
 ## Path Parameters
 
-| Key       | Type      | Required     | Permissions  | Description                               |
-| --------- | :-------: | :----------: | :----------: | ----------------------------------------- |
-| module_id | string    | true         |              | a module ID which would like to recommend |
+| Key       | Type      | Required     | Permissions  | Description                                    |
+| --------- | :-------: | :----------: | :----------: | ---------------------------------------------- |
+| module_id | string    | true         |              | a module ID which would like to undo recommend |
 
 ## Query Parameters
 
