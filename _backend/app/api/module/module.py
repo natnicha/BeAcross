@@ -158,7 +158,6 @@ async def unrecommend(
         data = data
     )
 
-
 def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
     try:
         return MODULE_COMMENT.insert_one(db, module_comment)
@@ -167,7 +166,16 @@ def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-     
+
+
+@module.delete("/comment/{module_comment_id}", status_code=status.HTTP_200_OK)
+async def unrecommend(
+        request: Request,
+        module_comment_id: str = None,
+        db: MongoClient = Depends(get_database),
+    ):
+
+    return 
 
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
