@@ -1,5 +1,6 @@
 import datetime
 from typing import Optional
+from bson import ObjectId
 from pydantic import BaseModel, Field
 from pymongo import MongoClient
 
@@ -8,6 +9,8 @@ from app.config.config_utils import env_config
 class BaseModel(BaseModel):
     class Config:
         arbitrary_types_allowed = True
+        allow_population_by_field_name = True
+        json_encoders = {ObjectId: str}
 
 class UserRolesModel(BaseModel):
     name: str = Field(...)

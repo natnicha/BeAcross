@@ -45,7 +45,6 @@ async def register(
     
     # if sent success, insert into db & return 200 - OK 
     new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password, settings.user_roles["student"])
-    new_user.user_roles_id = str(new_user.user_roles_id)
     return RegisterResponseModel(
         message = "Successful registered",
         data = new_user
