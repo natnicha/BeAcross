@@ -14,7 +14,7 @@ from app.api.module.model import CountRecommendResponseModel, RecommendRequestMo
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module-name":"name", "offered-by":"university", "ect-credits":"ects", "degree-level":"level", "year-of-study": "Year of study"}
+sortby_database_col_mapping = {"module-name":"name", "offered-by":"university", "ect-credits":"ECTS", "degree-level":"level", "year-of-study": "Year of study"}
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
