@@ -61,7 +61,8 @@ A student can share own comments for a specified module by making a request with
         "message": "this course is awesome",
         "user_id": "65a98971f0de3d84f8c9a3d5",
         "created_at": "2024-01-19T16:16:21.023783",
-        "updated_at": "2024-01-19T16:16:21.023783"
+        "updated_at": "2024-01-19T16:16:21.023783",
+        "id": "65aaafcf55de1fe16e64fdd3"
     }
 }
 ```

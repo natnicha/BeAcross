@@ -12,7 +12,7 @@ import app.crud.module_comment as MODULE_COMMENT
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
+from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
 
 module = APIRouter()
@@ -147,10 +147,15 @@ async def unrecommend(
             detail={"message": str(e)},
             status_code=status.HTTP_400_BAD_REQUEST
         )
-    insert_module_comment(db, module_comment)
+    inserted = insert_module_comment(db, module_comment)
+    data = ModuleCommentDataModel(
+        id=inserted.inserted_id,
+        module_id=module_comment.module_id,
+        message=module_comment.message,
+        user_id=module_comment.user_id)
     return ModuleCommentResponseModel(
         message = "successful commented",
-        data = module_comment
+        data = data
     )
 
 
