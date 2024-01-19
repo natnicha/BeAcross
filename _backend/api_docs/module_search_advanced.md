@@ -33,10 +33,10 @@ To search recommend modules using OWL ontology regarding a given term
 
 | Key       | Type      | Required     | Default Value | Description                                                 |
 | --------- | :-------: | :----------: | :-----------: | ----------------------------------------------------------- |
-| term      | string    | true         |               | a search term to acquire modules with conditions. Each condition is stored in brackets and is connected to each others by operand word eg., `({cond-1}) Opr ({cond-2}) Opr ...`. The operand words (Opr) can only be `AND`, `OR` and `NOT`. The condition (Cond) must be in a format of `{metadata}:{search-terms}`. Metadata can only be `all-metadata`, `module-name`, `offered-by`, `ect-credits`, `degree-level` and `year-of-study`. Note: Don't forget to replace special character with ACII in hex |
+| term      | string    | true         |               | a search term to acquire modules with conditions. Each condition is stored in brackets and is connected to each others by operand word eg., `({cond-1}) Opr ({cond-2}) Opr ...`. The operand words (Opr) can only be `AND`, `OR` and `NOT`. The condition (Cond) must be in a format of `{metadata}:{search-terms}`. Metadata can only be `all-metadata`, `module-name`, `no-of-recommend`, `offered-by`, `ect-credits`, `degree-level` and `year-of-study`. Note: Don't forget to replace special character with ACII in hex |
 | limit     | int       | false        | 20            | a limitation number of module                               |
 | offset    | int       | false        | 0             | a starting position in the dataset of a particular record   |
-| sortby    | string    | false        | relevant      | an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `year-of-study` |
+| sortby    | string    | false        | relevant      | an entity referring how rows will be sorted in the response supports only `module-name`, `no-of-recommend`, `offered-by`, `ect-credits`, `degree-level` and `year-of-study` |
 | orderby   | string    | false        | asc           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
 
 ## Body Parameters
