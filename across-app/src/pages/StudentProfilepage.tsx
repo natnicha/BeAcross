@@ -10,34 +10,48 @@ const StudentProfilepage: React.FC = () => {
     const [activeNav, setActiveNav] = useState('home'); // State to track the active navigation item
     const [showProfileInformation, setShowProfileInformation] = useState(false); // State to manage visibility of the sections
     const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections
+    const [showPersonalPlan, setPersonalPlan] = useState(false); // State to manage visibility of the sections
 
     // Function to Nav navigation item click
     const homeNavClick = (navItem: string) => {
         setActiveNav(navItem);
         setShowProfileInformation(false);
         setExamResult(false);
+        setPersonalPlan(false);
     };
     const planNavClick = (navItem: string) => {
         setActiveNav(navItem);
+        setPersonalPlan(true);
         setShowProfileInformation(false);
+        setExamResult(false);
     };
     const examNavClick = (navItem: string) => {
         setActiveNav(navItem);
         setExamResult(true);
+        setShowProfileInformation(false);
+        setPersonalPlan(false);
     };
     const profileNavClick = (navItem: string) => {
         setActiveNav(navItem);
         setShowProfileInformation(true);
         setExamResult(false);
+        setPersonalPlan(false);
     };
  
     // Event handler for button navigate
     const handleEditProfileClick = () => {
         setShowProfileInformation(true);
         setExamResult(false);
+        setPersonalPlan(false);
     };
     const handleExamResultClick = () => {
         setExamResult(true);
+        setShowProfileInformation(false);
+        setPersonalPlan(false);
+    };
+    const handlePersonalPlanClick = () => {
+        setPersonalPlan(true);
+        setExamResult(false);
         setShowProfileInformation(false);
     };
 
@@ -96,7 +110,7 @@ const StudentProfilepage: React.FC = () => {
                 
                 {/*Menu card*/}
                 {/* Conditional rendering for menu card section */}
-                {!showProfileInformation && !showExamResult && (
+                {!showProfileInformation && !showExamResult && !showPersonalPlan &&(
                     <section className="tm-content" id="menucard">
                             <div className="nav nav-tabs flex-row align-items-baseline">
                                 
@@ -104,7 +118,7 @@ const StudentProfilepage: React.FC = () => {
                                     <img src={personalplanImage} className="img-fluid projects-image" alt="Personal Plan" /> 
                                     
                                     
-                                    <a className="click-scroll" href="#personal-plan"> 
+                                    <a className="click-scroll" href="#personal-plan" onClick={handlePersonalPlanClick}> 
                                             <i className="bi bi-bookmark"></i> <strong> &nbsp; Personal Plan</strong>
                                         </a>
                                     
@@ -299,6 +313,19 @@ const StudentProfilepage: React.FC = () => {
                                         )}
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/*Personal Plan*/}
+                {/* Conditional rendering for personal plan section */}
+                {showPersonalPlan && (
+                    <section className="tm-content" id="profileinformation">
+                        <div className="nav nav-tabs flex-row align-items-baseline">
+                            <div className="about-thumb bg-white shadow-lg">
+                                <h5 className="mb-3" style={{ color: '#1e5af5' }}>My Personal Plan</h5>
+                                
                             </div>
                         </div>
                     </section>
