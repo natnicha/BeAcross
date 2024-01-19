@@ -1,7 +1,7 @@
 import json
 from bson import json_util
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Query, Request, status
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
 
