@@ -161,11 +161,11 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
-        term: str = Query('', description="limit items in response"),
-        limit: int = Query(20, description="limit items in response"),
-        offset: int = Query(0, description="limit items in response"),
-        sortby: str = Query('module-name', description="limit items in response"),
-        orderby: str = Query('asc', description="limit items in response"),
+        term: str = Query('', description="a search term to acquire modules"),
+        limit: int = Query(20, description="a limitation number of modules"),
+        offset: int = Query(0, description="a starting position in the dataset of a particular record"),
+        sortby: str = Query('module-name', description="an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester`"),
+        orderby: str = Query('asc', description="a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse"),
         db: MongoClient = Depends(get_database),
     ):
     return {
