@@ -41,17 +41,31 @@ A student can share own comments for a specified module by making a request with
 | Key          | Type         | Required     | Description                               |
 | ------------ | :----------: | :----------: | ----------------------------------------- |
 | module_id    | string       | true         | a module ID which would like to recommend |
+| message      | string       | true         | a comment from a user                     |
 
 
 ## Sample Body Parameter Json Request
 ```json
 {
-  "module_id": "65a54de25eb0e12eb0a93e3a"
+  "module_id": "65a54de25eb0e12eb0a93e3a",
+  "message": "this course is awesome!"
 }
 ```
 
 ## Success Response 201 - Created
-  [no request body]
+```json
+{
+    "message": "successful commented",
+    "data": {
+        "module_id": "65aa8b61329a5b7064db8eca",
+        "message": "this course is awesome",
+        "user_id": "65a98971f0de3d84f8c9a3d5",
+        "created_at": "2024-01-19T16:16:21.023783",
+        "updated_at": "2024-01-19T16:16:21.023783"
+    }
+}
+```
+
 
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
 ```json
