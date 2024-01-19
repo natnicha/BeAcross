@@ -36,8 +36,8 @@ To search modules using OWL ontology regarding a given term
 | term      | string    | true         |               | a search term to acquire modules                            |
 | limit     | int       | false        | 20            | a limitation number of module                               |
 | offset    | int       | false        | 0             | a starting position in the dataset of a particular record   |
-| sortby    | string    | false        | relevant      | an entity referring how rows will be sorted in the response |
-| orderby   | string    | false        | ASC           | a sorting direction supports two values, either `ASC` for ascending order, or `DESC` for the reverse  |
+| sortby    | string    | false        | module-name   | an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester` |
+| orderby   | string    | false        | ASC           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
 
 ## Body Parameters
 
@@ -51,6 +51,7 @@ To search modules using OWL ontology regarding a given term
 {
   "data" : {
     "total_results": 76,
+    "total_items": 20,
     "items": [{
       "module_id": "65a81c0502ed558ac053a095",
       "module_name": "Database and Object Orientation",
