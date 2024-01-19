@@ -31,7 +31,7 @@ const HomePage: React.FC = (props) => {
             className="searchInput"
             placeholder="Search module here..."
             onChange={(e) => setContent(e.target.value)}
-          />
+          />&nbsp;&nbsp;
           <button
             className="custom-btn btn custom-link"
             onClick={() =>

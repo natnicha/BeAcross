@@ -18,6 +18,7 @@ Free Bootstrap 5 HTML Template
   --secondary-color:              #ffd302;
   --section-bg-color:             #f5f5f5;
   --dark-color:                   #000000;
+  --green-color:                  #4caf50;
   --p-color:                      #717275;
 
   --body-font-family:             'DM Sans', sans-serif;
@@ -227,6 +228,15 @@ strong {
   padding: 5px 20px;
 }
 
+.custom-btn-green {
+  background: var(--green-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 20px;
+}
+
 .custom-btn:hover {
   background: var(--secondary-color);
   color: var(--white-color);
@@ -242,11 +252,12 @@ strong {
 }
 
 
+
+
 /*---------------------------------------
   NAVIGATION              
 -----------------------------------------*/
 .navbar {
-  z-index: 9;
   right: 0;
   left: 0;
 }
@@ -349,6 +360,14 @@ strong {
 
 .breadcrumb-item.active {
   color: var(--primary-color);
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row; /* Aligns children horizontally */
+  justify-content: space-around; /* Adjusts spacing between items */
+  align-items: center; /* Aligns items vertically */
+  padding-bottom: 10%;
 }
 
 
@@ -539,6 +558,23 @@ strong {
 
 
 /*---------------------------------------
+ PERSONAL INFO             
+-----------------------------------------*/
+.personal-info-container {
+  display: flex;
+}
+
+.personal-info-section {
+  margin-right: 15%;
+  padding: 10px;
+}
+
+.full-width-input {
+  width: 100%;
+  box-sizing: border-box; /* This ensures padding and border are included in the total width */
+}
+
+/*---------------------------------------
   ABOUT              
 -----------------------------------------*/
 .about-image-wrap {
@@ -567,9 +603,51 @@ strong {
   background: var(--primary-color);
   border-radius: 20px;
   margin-bottom: 24px;
-  padding: 40px;
+  padding: 25px;
+  padding-bottom: 60px;
+  width: 80%;    
 }
 
+/*---------------------------------------
+  TABLE             
+-----------------------------------------*/
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+td {
+  font-size: 12px;
+}
+
+/*---------------------------------------
+ POP UP            
+-----------------------------------------*/
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  position: relative;
+  background-color: white;
+  width: 30%;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
 
 /*---------------------------------------
   SERVICES              
@@ -587,6 +665,8 @@ strong {
   color: var(--p-color);
   display: block;
   text-align: left;
+  padding-bottom: 10%;
+  width: 25%;
 }
 
 .nav-tabs .nav-link {
@@ -596,7 +676,6 @@ strong {
   margin-right: 30px;
   margin-left: 30px;
   margin-bottom: 30px;
-  padding: 30px;
   transition: all 0.3s ease-in-out;
 }
 
@@ -674,6 +753,7 @@ strong {
   width: 100%;
   height: auto;
   transition: all 0.3s;
+  margin-bottom: 15px;
 }
 
 .projects-thumb-large .projects-image {
@@ -731,6 +811,20 @@ strong {
   margin-right: 30px;
 }
 
+/*---------------------------------------
+  PROFILE CONTAINER            
+-----------------------------------------*/
+.profile-container {
+  display: flex;
+}
+
+.tm-content {
+  flex-grow: 1;
+  margin-top: 5%;
+  width: 80%;
+  height: 80%;
+}
+
 
 /*---------------------------------------
   CUSTOM FORM               
@@ -767,6 +861,10 @@ strong {
 .custom-form button[type="submit"]:focus {
   background: var(--white-color);
   color: var(--dark-color);
+}
+
+.nav-link button{
+  width: 100px;
 }
 
 
@@ -821,6 +919,69 @@ strong {
   color: var(--primary-color);
 }
 
+/*---------------------------------------
+  SIDE BAR             
+-----------------------------------------*/
+
+.tm-sidebar {
+  background-color: var(--white-color);
+  color: var(--white-color);
+  width: 220px;
+  border: 1px solid #e5e5e5;
+      
+}
+
+.tm-sidebar-wrapper {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 30px;
+  width: 100%;
+  height: 100%; 
+}
+
+.tm-sidebar-wrapper::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.tm-nav { 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.tm-nav-item {
+    list-style: none;
+    border: 1px solid #e5e5e5;
+}
+
+.tm-nav-link {
+    color: var(--pimary-color);
+    background-color: transparent;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.tm-nav-item:hover .tm-nav-link,
+.tm-nav-item.active .tm-nav-link
+ {
+    color: white;
+    background-color: #1e5af5;
+    text-decoration: none;
+}
+
+.tm-nav ul { position: relative; }
+
+.tm-nav-link i { margin-right: 10px; }
+
+ul { 
+    margin: 0; 
+    padding: 0;
+}
 
 /*---------------------------------------
   RESPONSIVE STYLES               
@@ -875,11 +1036,6 @@ strong {
 
   .navbar-expand-lg .navbar-nav .nav-link {
     padding-left: 0;
-  }
-
-  .navbar-nav .nav-link {
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
 
   .site-header .social-icon {
@@ -957,7 +1113,6 @@ strong {
   .nav-tabs .nav-link {
     margin-right: 0;
     margin-left: 0;
-    padding: 15px;
   }
 
   .contact-info {
@@ -1008,3 +1163,4 @@ strong {
     height: 150px; /* Further reduced height for small screens */
   }
 }
+
