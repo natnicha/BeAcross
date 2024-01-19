@@ -45,11 +45,11 @@ A student can delete own comments once they have done using module-comment-id
 ## Success Response 200 - OK
   [no request body]
 
-## Error Response 404 - Not Found (case: no comment found)
+## Error Response 404 - Not Found (case: no comment found by this user is not found)
 ```json
 {
     "detail": {
-        "message": "no comment found"
+        "message": "no comment found by this user is not found"
     }
 }
 ```
