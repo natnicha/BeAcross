@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Popup from '../components/ChangepasswordPopup';
 
 //thumbnail images
 import personalplanImage from '../images/projects/personal-plan.png';
@@ -11,6 +12,7 @@ const StudentProfilepage: React.FC = () => {
     const [showProfileInformation, setShowProfileInformation] = useState(false); // State to manage visibility of the sections
     const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections
     const [showPersonalPlan, setPersonalPlan] = useState(false); // State to manage visibility of the sections
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
 
     // Function to Nav navigation item click
     const homeNavClick = (navItem: string) => {
@@ -74,6 +76,10 @@ const StudentProfilepage: React.FC = () => {
     const toggleKeyCompetenceRows = () => {
         setKeyCompetenceRows(!showKeyCompetenceRows);
     };
+
+     // Function to open/close the popup
+    const openPopup = () => setIsPopupOpen(true);
+    const closePopup = () => setIsPopupOpen(false);
 
     return (
         <>         
@@ -214,18 +220,23 @@ const StudentProfilepage: React.FC = () => {
                                         <input
                                             type="text"
                                             className="password full-width-input"
-                                            placeholder="*****"
+                                            placeholder="********"
                                             disabled 
                                         />
                                     </div>
-                                    <button
+                                    <button onClick={openPopup}
                                         className="custom-btn btn custom-link mt-4">                                       
                                         Change Password
                                     </button>
+
+                                    {isPopupOpen && (
+                                        <Popup content="This is the popup content!" onClose={closePopup} />
+                                    )}
+
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <button 
                                         className="custom-btn-green btn custom-link mt-4" >                                       
-                                        &nbsp;&nbsp;  Save &nbsp;&nbsp;
+                                        &nbsp;&nbsp; Save &nbsp;&nbsp;
                                     </button>
                                 </div>
                             </div>
