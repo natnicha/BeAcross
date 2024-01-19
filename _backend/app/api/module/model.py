@@ -5,3 +5,6 @@ class RecommendRequestModel(BaseModel):
 
 class CountRecommendResponseModel(BaseModel):
     data: dict
+
+class ModuleCommentRequestModel(BaseModel):
+    module_id: str
