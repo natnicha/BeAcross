@@ -30,9 +30,9 @@ def find(conn: MongoClient, term: str, limit: int, offset: int, sortby: str, ord
     if orderby.lower() == 'desc':
         is_asc = -1
 
-    rgx = re.compile('.*'+term+'.*', re.IGNORECASE)
+    like_term = convert_to_like(term=term)
     return conn[env_config.DB_NAME].get_collection("modules").find({
-        "name": rgx
+        "name": like_term
     }, {'_id': 0}).sort({
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
@@ -43,7 +43,10 @@ def find(conn: MongoClient, term: str, limit: int, offset: int, sortby: str, ord
     # return student
 
 def count(conn: MongoClient, term: str):
-    rgx = re.compile('.*'+term+'.*', re.IGNORECASE)
+    like_term = convert_to_like(term=term)
     return conn[env_config.DB_NAME].get_collection("modules").count_documents({
-        "name": rgx
+        "name": like_term
     })
+
+def convert_to_like(term: str):
+    return re.compile('.*'+term+'.*', re.IGNORECASE)
