@@ -14,7 +14,7 @@ class BaseModel(BaseModel):
         allow_population_by_field_name = True
         json_encoders = {ObjectId: str}
 
-class UserLogsModel(BaseModel):
+class ModulesModel(BaseModel):
     name: str = Field(...)
     program: str = Field(...)
     degree_level: str = Field(...)
@@ -31,16 +31,12 @@ def find(conn: MongoClient, term: str, limit: int, offset: int, sortby: str, ord
         is_asc = -1
 
     like_term = convert_to_like(term=term)
-    return conn[env_config.DB_NAME].get_collection("modules").find({
+    rows = conn[env_config.DB_NAME].get_collection("modules").find({
         "name": like_term
     }, {'_id': 0}).sort({
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
-
-    # if rows is None:
-    #     raise HTTPException(status_code=404, detail='Student not found.')
-    # student: Student = Student(**data)
-    # return student
+    return list(rows)
 
 def count(conn: MongoClient, term: str):
     like_term = convert_to_like(term=term)
