@@ -34,18 +34,15 @@ async def send_email(background_tasks: BackgroundTasks, recipient_email: str, su
 #testing1
 
 
-    try:
-        await send(
-            message=message,
-            hostname="smtp.gmail.com",
-            port=587,
-            #username=GMAIL_USERNAME,
-            username="beacrossapp@gmail.com",
-            #password=GMAIL_PASSWORD,
-            password="lsgjoiexpmlnpjif",
-            use_tls=False,
-        )
-    except Exception as e:
-        print(f"Error sending email:{e}")
+    await send(
+        message,
+        hostname="smtp.gmail.com",
+        port=587,
+        #username=GMAIL_USERNAME,
+        username="beacrossapp@gmail.com",
+        #password=GMAIL_PASSWORD,
+        password="lsgjoiexpmlnpjif",
+        use_tls=False,
+    )
 
     #background_tasks.add_task(send_email, recipient_email, subject, content)
