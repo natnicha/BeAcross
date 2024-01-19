@@ -37,7 +37,7 @@ To search modules using OWL ontology regarding a given term
 | limit     | int       | false        | 20            | a limitation number of module                               |
 | offset    | int       | false        | 0             | a starting position in the dataset of a particular record   |
 | sortby    | string    | false        | module-name   | an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester` |
-| orderby   | string    | false        | ASC           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
+| orderby   | string    | false        | asc           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
 
 ## Body Parameters
 
