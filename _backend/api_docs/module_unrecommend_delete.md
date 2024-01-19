@@ -21,7 +21,6 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 
 | Key                 | Type       | Required  | Description                                         |
 | ------------------- | :--------: | :-------: | --------------------------------------------------- |
-| content-type        | string     | true      | Content-Type has to be `application/json`           |
 | Authorization       | string     | true      | Authorization JWT token in format of `Bearer <JWT>` |
 
 ## Path Parameters
