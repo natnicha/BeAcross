@@ -1,10 +1,10 @@
 import datetime
-import decimal
 import re
 from typing import Optional
 from bson import ObjectId
 from mongomock import MongoClient
 from pydantic import BaseModel, Field
+from bson.objectid import ObjectId
 from app.config.config_utils import env_config
 
 class BaseModel(BaseModel):
