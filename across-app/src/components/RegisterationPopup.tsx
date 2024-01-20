@@ -8,8 +8,8 @@ type PopupProps = {
 
   const RegisterationPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
-  // State for storing the email address
-  const [emailToRegister, setEmailToRegister] = useState('');
+  const [emailToRegister, setEmailToRegister] = useState(''); // State for storing the email address
+  const [responseMessage, setResponseMessage] = useState(''); // State for storing the email address
 
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,14 +21,11 @@ type PopupProps = {
     try {
       // Call the registerUser function
       const response = await registerUser(emailToRegister);
+      setResponseMessage(response);
       console.log('Registration successful:', response);
-      // Handle successful registration
-
-      // Call the onClose function or other existing logic
       onClose();
     } catch (error) {
       console.error('Registration failed:', error);
-      // Handle errors
     }
   };
 
@@ -67,6 +64,7 @@ type PopupProps = {
             
           <button className="custom-btn btn custom-link mt-4"
             onClick={handleSubmit}>Submit</button>
+            <p></p>
             <div style={{ marginTop: "20px" }}>
             <p>Already have an account?&nbsp; 
             <a className="click-scroll" href="#register"><strong><u>LOGIN</u></strong></a></p>

@@ -20,7 +20,6 @@ export async function registerUser(email: string): Promise<any> {
         // Parse the JSON response
         const responseData: any = await response.json();
 
-        // Check if the request was successful
         if (response.ok) {
         return "The registration email has been successfully sent to your email!";
         } else if (response.status == 400) {
