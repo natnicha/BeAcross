@@ -39,7 +39,7 @@ export async function registerUser(email: string): Promise<any> {
 };
 
 // Function to send a POST request to the Login API
-export async function LoginUser(email: string, password: string): Promise<any> {
+export async function loginUser(email: string, password: string): Promise<any> {
     const url: string = 'http://localhost:8000/api/v1/auth/login';
     const payload: LoginRequest = { email, password };
 

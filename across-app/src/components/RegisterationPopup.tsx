@@ -9,7 +9,7 @@ type PopupProps = {
   const RegisterationPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
   const [emailToRegister, setEmailToRegister] = useState(''); // State for storing the email address
-  const [responseMessage, setResponseMessage] = useState(''); // State for storing the email address
+  const [responseMessage, setResponseMessage] = useState(''); // State for storing response
 
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +64,7 @@ type PopupProps = {
             
           <button className="custom-btn btn custom-link mt-4"
             onClick={handleSubmit}>Submit</button>
-            <p></p>
+            <p>{responseMessage}</p>
             <div style={{ marginTop: "20px" }}>
             <p>Already have an account?&nbsp; 
             <a className="click-scroll" href="#register"><strong><u>LOGIN</u></strong></a></p>

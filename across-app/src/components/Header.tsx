@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Popup from '../components/RegisterationPopup';
+import RegisterPopup from '../components/RegisterationPopup';
+import LoginPopup from '../components/LoginPopup';
 
 const Header: React.FC = () => {
 
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+    const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
 
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
+    // Functions to open/close the login popup
+    const openLoginPopup = () => setIsLoginPopupOpen(true);
+    const closeLoginPopup = () => setIsLoginPopupOpen(false);
 
-     // Function to open/close the popup
-     const openPopup = () => setIsPopupOpen(true);
-     const closePopup = () => setIsPopupOpen(false);
+    // Functions to open/close the register popup
+    const openRegisterPopup = () => setIsRegisterPopupOpen(true);
+    const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
 
     return (
         <>
@@ -48,7 +53,21 @@ const Header: React.FC = () => {
                         </li>
                         <li className="nav-item">
                             <div className="d-flex align-items-center mt-2">
-                                <a className="custom-btn btn custom-link" href="#login">Login</a>
+                                <a 
+                                    className="custom-btn btn custom-link"                                  
+                                    href="javascript:void(0)"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevent default if using href="#"
+                                        openLoginPopup();
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    >
+                                    <strong><u>Login</u></strong>
+                                </a>
+                                {isLoginPopupOpen  && (
+                                        <LoginPopup content="" onClose={closeLoginPopup} />
+                                    )}
                             </div>
                             <p className="d-flex align-items-center mt-2">
                                 Don't have an account?&nbsp; 
@@ -57,7 +76,7 @@ const Header: React.FC = () => {
                                     href="javascript:void(0)"
                                     onClick={(e) => {
                                         e.preventDefault(); // Prevent default if using href="#"
-                                        openPopup();
+                                        openRegisterPopup();
                                     }}
                                     role="button"
                                     tabIndex={0}
@@ -65,8 +84,8 @@ const Header: React.FC = () => {
                                     <strong><u>Register</u></strong>
                                 </a>
 
-                                {isPopupOpen && (
-                                        <Popup content="" onClose={closePopup} />
+                                {isRegisterPopupOpen  && (
+                                        <RegisterPopup content="" onClose={closeRegisterPopup} />
                                     )}
                             </p>
                         </li>
