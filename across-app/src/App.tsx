@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import HomePage from "./pages/HomePage";
-import SearchPage from "./pages/SearchPage";
+import { SearchPage } from "./pages/SearchPage";
 
 const App: React.FC = () => {
   return (
