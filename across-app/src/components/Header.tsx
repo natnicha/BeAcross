@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Popup from '../components/RegisterationPopup';
 
 const Header: React.FC = () => {
+
+
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
+
+     // Function to open/close the popup
+     const openPopup = () => setIsPopupOpen(true);
+     const closePopup = () => setIsPopupOpen(false);
+
     return (
         <>
             <header className="site-header">
@@ -43,7 +52,22 @@ const Header: React.FC = () => {
                             </div>
                             <p className="d-flex align-items-center mt-2">
                                 Don't have an account?&nbsp; 
-                                <a className="click-scroll" href="#register"><strong><u>Register</u></strong></a>
+                                <a
+                                    className="click-scroll"
+                                    href="javascript:void(0)"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevent default if using href="#"
+                                        openPopup();
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    >
+                                    <strong><u>Register</u></strong>
+                                </a>
+
+                                {isPopupOpen && (
+                                        <Popup content="" onClose={closePopup} />
+                                    )}
                             </p>
                         </li>
                     </ul>

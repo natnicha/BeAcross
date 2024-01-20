@@ -9,7 +9,9 @@ type PopupProps = {
     return (
       <div className="popup-backdrop">
         <div className="popup-content">
-            <h5 className="mb-3" style={{ color: '#1e5af5' }}>Change your password</h5>
+            <div className="title-popup mb-4">
+            <h5 style={{ color: "white"}}>Change your password</h5>
+            </div>
             <span>Enter the new password below to change your password.</span>
             <button 
             onClick={onClose} 
