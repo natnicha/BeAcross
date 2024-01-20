@@ -10,8 +10,11 @@ type PopupProps = {
     return (
       <div className="popup-backdrop">
         <div className="popup-content">
-            <h5 className="mb-3" style={{ color: '#1e5af5' }}>Register your University Account</h5>
-            <span>Let's get your account set up</span>
+            <div className="title-popup mb-4">
+            <h5 style={{ color: "white"}}>Register your University Account</h5>
+            </div>
+            <h6>Let's get your account set up</h6>
+            &nbsp; 
             <button 
             onClick={onClose} 
             style={{ 
@@ -34,10 +37,13 @@ type PopupProps = {
                     placeholder="firstname.lastname@university.xx"
                 />
             </div>
+            
           <button className="custom-btn btn custom-link mt-4"
             onClick={onClose}>Submit</button>
+            <div style={{ marginTop: "20px" }}>
             <p>Already have an account?&nbsp; 
             <a className="click-scroll" href="#register"><strong><u>LOGIN</u></strong></a></p>
+            </div>
         </div>
       </div>
     );
