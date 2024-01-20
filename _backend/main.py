@@ -12,7 +12,11 @@ app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
 origins = ['http://localhost:3000']
 
 app.add_middleware(
-    CORSMiddleware, allow_origins=origins,
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.add_event_handler("startup", load_env)
