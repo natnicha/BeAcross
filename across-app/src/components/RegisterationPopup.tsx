@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { registerUser } from '../services/authenticationServices';
+import LoginPopup from '../components/LoginPopup';
 
 type PopupProps = {
     content: string;
@@ -13,6 +14,12 @@ type PopupProps = {
   const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
 
+  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false); // Login popup
+
+  // Functions to open/close the login popup
+  const openLoginPopup = () => setIsLoginPopupOpen(true);
+  const closeLoginPopup = () => setIsLoginPopupOpen(false);
+  
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmailToRegister(event.target.value);
@@ -22,15 +29,15 @@ type PopupProps = {
 const handleSubmit = async () => {
   try {
     // Call the registerUser function
-    const responseData = await registerUser(emailToRegister);
-    console.log('Registration successful:', responseData);
+    const response = await registerUser(emailToRegister);
+    console.log('Registration successful:', response);
         
-    if(responseData.status === 201) {
+    if(response.status === 201) {
       setIsSubmitted(true);
-      setResponseMessage(responseData.message);
+      setResponseMessage(response.message);
       setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
     } else {  
-      setResponseMessage(responseData.message);
+      setResponseMessage(response.message);
       setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
     }
   } catch (error) {
@@ -79,7 +86,23 @@ const handleSubmit = async () => {
             <p style={responseStyle}>{responseMessage}</p>
             <div style={{ marginTop: "20px" }}>
             <p>Already have an account?&nbsp; 
-            <a className="click-scroll" href="#register"><strong><u>LOGIN</u></strong></a></p>
+              <a 
+                className="click-scroll"
+                href="javascript:void(0)"
+                onClick={(e) => {
+                    e.preventDefault(); // Prevent default if using href="#"
+                    openLoginPopup();
+                }}
+                role="button"
+                tabIndex={0}
+                >
+                <strong><u>LOGIN</u></strong>
+                </a>
+
+                {isLoginPopupOpen  && (
+                  <LoginPopup content="" onClose={closeLoginPopup} />
+              )}
+            </p>           
             </div>
         </div>
       </div>

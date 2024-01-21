@@ -9,7 +9,7 @@ type PopupProps = {
 
 const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
-  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // reister popup
+  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // register popup
   
   const [emailToLogin, setEmailToLogin] = useState(''); // State for storing the email address
   const [passwordToLogin, setPasswordToLogin] = useState(''); // State for storing the password
