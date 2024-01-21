@@ -7,7 +7,7 @@ type PopupProps = {
     onClose: () => void;
   };
 
-  const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
+const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // reister popup
   
@@ -38,10 +38,10 @@ type PopupProps = {
       // Call the registerUser function
       const response = await loginUser(emailToLogin, passwordToLogin);
       if (response && response.token) {
-      setJwtToken(response.token); // Store the JWT token in the state
-      setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
-      console.log('Login successful:', response);
-      //onClose();
+        setJwtToken(response.token); // Store the JWT token in the state
+        setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
+        console.log('Login successful:', response);
+        //onClose();
       } else {
           setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
         }
@@ -81,7 +81,7 @@ type PopupProps = {
                     className="loginEmail full-width-input"
                     placeholder="firstname.lastname@university.xx"
                     value={emailToLogin}
-                    onChange={handleEmailChange}
+                    onChange={(e) => setEmailToLogin(e.target.value)}
                 />
             </div>
             <div className="personal-info-section">
@@ -91,7 +91,7 @@ type PopupProps = {
                     className="loginPassword full-width-input"
                     placeholder="********"
                     value={passwordToLogin}
-                    onChange={handlePasswordChange}
+                    onChange={(e) => setPasswordToLogin(e.target.value)}
                 />  
             </div>
             
@@ -99,7 +99,12 @@ type PopupProps = {
             
             <button className="custom-btn btn custom-link mt-4"
             onClick={handleLogin}>LOGIN</button>
-            <p>{responseMessage}</p>
+            <p style={responseStyle}>{responseMessage}</p>
+
+            {/* Display login status */}
+            {/* Display JWT Token for demonstration purposes (remove for production) */}
+            <p>Token: {jwtToken}</p>
+
 
             <div style={{ marginTop: "20px" }}>
             <p>Don't have an account?&nbsp; 

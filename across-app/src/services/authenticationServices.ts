@@ -7,6 +7,11 @@ interface LoginRequest {
     email: string;
     password: string;
   }
+
+  interface LoginResponse {
+    token?: string;
+    message: string;
+  }
     
 // Function to send a POST request to the register API
 export async function registerUser(email: string): Promise<any> {
@@ -39,7 +44,7 @@ export async function registerUser(email: string): Promise<any> {
 };
 
 // Function to send a POST request to the Login API
-export async function loginUser(email: string, password: string): Promise<any> {
+export async function loginUser(email: string, password: string): Promise<LoginResponse> {
     const url: string = 'http://localhost:8000/api/v1/auth/login';
     const payload: LoginRequest = { email, password };
 
@@ -56,11 +61,12 @@ export async function loginUser(email: string, password: string): Promise<any> {
         const responseData: any = await response.json();
 
         if (response.ok) {
-        return "Login successfully.";
+            sessionStorage.setItem('jwtToken', responseData.data.jwt); // store jwt until the tab closed, access via sessionStorage.getItem('jwtToken');
+            return { token: responseData.data.jwt, message: "Login successfully."};
         } else if (response.status == 400) {
-        return responseData.detail.message;
+            return { token: "", message: responseData.detail.message };
         } else {
-        throw new Error(`Error: ${response.status}`);
+            throw new Error(`Error: ${response.status}`);
         }
     } catch (error) {
         console.error('Error registering user:', error);
