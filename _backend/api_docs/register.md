@@ -49,55 +49,62 @@ To register a **student** to our system by email which is under Across universit
 ## Success Response 200 - OK
 ```json
 {
-  "message" : "Successful registered",
-  "data": {}
+  "detail": {
+    "message" : "Successful registered",
+  }
 }
 ```
 
 ## Error Response 400 - Bad Request (case: the email doesn't conform by email format)
 ```json
 {
-  "message" : "The email doesn't conform by email format, please input in format of example@university.de",
-  "data": {}
+  "detail": {
+    "message" : "The email doesn't conform by email format, please input in format of example@university.de",
+  }
 }
 ```
 
 ## Error Response 400 - Bad Request (case: the email's domain (university) isn't under Across)
 ```json
 {
-  "message" : "The email's domain isn't under Across, please input another email which is under Across",
-  "data": {}
+  "detail": {
+    "message" : "The email's domain isn't under Across, please input another email which is under Across",
+  }
 }
 ```
 
 ## Error Response 400 - Bad Request (case: the email is aleady existed.)
 ```json
 {
-  "message" : "The email is already taken, please check again",
-  "data": {}
+  "detail": {
+    "message" : "The email is already taken, please check again",
+  }
 }
 ```
 
 ## Error Response 422 - Unprocessable Entity (case: request body validation error)
 ```json
 {
-  "message": "Request body is invalid.",
-  "data": {}
+  "detail": {
+    "message": "Request body is invalid.",
+  }
 }
 ```
 
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
-  "message" : "Server error",
-  "data": {}
+  "detail": {
+    "message" : "Server error",
+  }
 }
 ```
 
 ## Error Response 503 - Service Unavailable (case: Can't connect to 3rd party)
 ```json
 {
-  "message" : "Couldn't connect to third party",
-  "data": {}
+  "detail": {
+    "message" : "Couldn't connect to third party",
+  }
 }
 ```
