@@ -68,7 +68,7 @@ export async function loginUser(email: string, password: string): Promise<LoginR
         if (response.ok) {
             sessionStorage.setItem('jwtToken', responseData.data.jwt); // store jwt until the tab closed, access via sessionStorage.getItem('jwtToken');
             return { token: responseData.data.jwt, message: "Login successfully."};
-        } else if (response.status == 400) {
+        } else if (response.status == 401) {
             return { token: "", message: responseData.detail.message };
         } else {
             throw new Error(`Error: ${response.status}`);

@@ -28,11 +28,12 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
       // Call the registerUser function
       const response = await loginUser(emailToLogin, passwordToLogin);
       console.log('Login successful:', response);
+      
       if (response && response.token) {
         setJwtToken(response.token); // Store the JWT token in the state
         setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
-        //onClose();
+        onClose(); // after success login, popup will close
       } else {
         setResponseMessage(response.message);  
         setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
