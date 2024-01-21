@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { loginUser } from '../services/authenticationServices';
+import RegisterPopup from '../components/RegisterationPopup';
 
 type PopupProps = {
     content: string;
@@ -8,9 +9,18 @@ type PopupProps = {
 
   const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
+  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // reister popup
+  
   const [emailToLogin, setEmailToLogin] = useState(''); // State for storing the email address
   const [passwordToLogin, setPasswordToLogin] = useState(''); // State for storing the password
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
+  const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
+
+  const [jwtToken, setJwtToken] = useState(''); // State to store JWT token
+
+  // Functions to open/close the register popup
+  const openRegisterPopup = () => setIsRegisterPopupOpen(true);
+  const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
 
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,10 +37,17 @@ type PopupProps = {
     try {
       // Call the registerUser function
       const response = await loginUser(emailToLogin, passwordToLogin);
-      setResponseMessage(response);
+      if (response && response.token) {
+      setJwtToken(response.token); // Store the JWT token in the state
+      setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
       console.log('Login successful:', response);
-      onClose();
+      //onClose();
+      } else {
+          setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+        }
     } catch (error) {
+      setResponseMessage('Login failed'); // Update message on catch
+      setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
       console.error('Login failed:', error);
     }
   };
@@ -70,7 +87,7 @@ type PopupProps = {
             <div className="personal-info-section">
                 <p>Password:</p>
                 <input
-                    type="text"
+                    type="password"
                     className="loginPassword full-width-input"
                     placeholder="********"
                     value={passwordToLogin}
@@ -86,7 +103,23 @@ type PopupProps = {
 
             <div style={{ marginTop: "20px" }}>
             <p>Don't have an account?&nbsp; 
-            <a className="click-scroll" href="#register"><strong><u>Register</u></strong></a></p>
+              <a 
+              className="click-scroll"
+              href="javascript:void(0)"
+              onClick={(e) => {
+                  e.preventDefault(); // Prevent default if using href="#"
+                  openRegisterPopup();
+              }}
+              role="button"
+              tabIndex={0}
+              >
+              <strong><u>Register</u></strong>
+              </a>
+
+              {isRegisterPopupOpen  && (
+                  <RegisterPopup content="" onClose={closeRegisterPopup} />
+              )}
+            </p>
             </div>
         </div>
       </div>
