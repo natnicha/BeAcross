@@ -22,18 +22,21 @@ type PopupProps = {
 const handleSubmit = async () => {
   try {
     // Call the registerUser function
-    const response = await registerUser(emailToRegister);
-    setResponseMessage(response);
-    console.log('Registration successful:', response);
-    if (response === "The registration email has been successfully sent to your email!") {
+    const responseData = await registerUser(emailToRegister);
+    console.log('Registration successful:', responseData);
+        
+    if(responseData.status === 201) {
       setIsSubmitted(true);
+      setResponseMessage(responseData.message);
       setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
-    } else {  setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
-      }
+    } else {  
+      setResponseMessage(responseData.message);
+      setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+    }
   } catch (error) {
-    console.error('Registration failed:', error);
-    setResponseMessage('Registration failed'); // Update message on catch
-    setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
+      setResponseMessage('Registration failed'); // Update message on catch
+      setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
+      console.error('Registration failed:', error);
   }
 };
 

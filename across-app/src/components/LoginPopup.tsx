@@ -21,29 +21,21 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
   // Functions to open/close the register popup
   const openRegisterPopup = () => setIsRegisterPopupOpen(true);
   const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
-
-  // Handle email input changes
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailToLogin(event.target.value);
-  };
-
-  // Handle password input changes
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordToLogin(event.target.value);
-  };
-  
+ 
    // Combined login handler
    const handleLogin = async () => {
     try {
       // Call the registerUser function
       const response = await loginUser(emailToLogin, passwordToLogin);
+      console.log('Login successful:', response);
       if (response && response.token) {
         setJwtToken(response.token); // Store the JWT token in the state
+        setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
-        console.log('Login successful:', response);
         //onClose();
       } else {
-          setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+        setResponseMessage(response.message);  
+        setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
         }
     } catch (error) {
       setResponseMessage('Login failed'); // Update message on catch
@@ -100,12 +92,6 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
             <button className="custom-btn btn custom-link mt-4"
             onClick={handleLogin}>LOGIN</button>
             <p style={responseStyle}>{responseMessage}</p>
-
-            {/* Display login status */}
-            {/* Display JWT Token for demonstration purposes (remove for production) */}
-            <p>Token: {jwtToken}</p>
-
-
             <div style={{ marginTop: "20px" }}>
             <p>Don't have an account?&nbsp; 
               <a 

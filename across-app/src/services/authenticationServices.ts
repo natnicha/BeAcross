@@ -1,20 +1,25 @@
 // Define the interface for the request payload
 interface RegisterRequest {
     email: string;
-  }
+}
+
+interface RegisterResponse {
+    status: number;
+    message: string;
+}
 
 interface LoginRequest {
     email: string;
     password: string;
-  }
+}
 
-  interface LoginResponse {
+interface LoginResponse {
     token?: string;
     message: string;
-  }
-    
+}
+  
 // Function to send a POST request to the register API
-export async function registerUser(email: string): Promise<any> {
+export async function registerUser(email: string): Promise<RegisterResponse> {
     const url: string = 'http://localhost:8000/api/v1/auth/register';
     const payload: RegisterRequest = { email };
 
@@ -31,11 +36,11 @@ export async function registerUser(email: string): Promise<any> {
         const responseData: any = await response.json();
 
         if (response.ok) {
-        return "The registration email has been successfully sent to your email!";
+            return { status: response.status, message: "The registration email has been successfully sent to your email!"};
         } else if (response.status == 400) {
-        return responseData.detail.message;
+            return { status: response.status, message: responseData.detail.message };
         } else {
-        throw new Error(`Error: ${response.status}`);
+            throw new Error(`Error: ${response.status}`);
         }
     } catch (error) {
         console.error('Error registering user:', error);
