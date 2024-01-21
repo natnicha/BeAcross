@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import RegisterPopup from '../components/RegisterationPopup';
 import LoginPopup from '../components/LoginPopup';
+import { useUser } from '../UserContext';
 
 const Header: React.FC = () => {
 
+    const { isLoggedIn, setIsLoggedIn } = useUser(); // check user status (login)
+    
     const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
     const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
 
@@ -53,18 +56,34 @@ const Header: React.FC = () => {
                         </li>
                         <li className="nav-item">
                             <div className="d-flex align-items-center mt-2">
-                                <a 
-                                    className="custom-btn btn custom-link"                                  
-                                    href="javascript:void(0)"
-                                    onClick={(e) => {
-                                        e.preventDefault(); // Prevent default if using href="#"
-                                        openLoginPopup();
-                                    }}
-                                    role="button"
-                                    tabIndex={0}
-                                    >
-                                    <strong><u>Login</u></strong>
-                                </a>
+                                {isLoggedIn ? (
+                                    <a 
+                                        className="custom-btn-red btn custom-link"                                  
+                                        href="javascript:void(0)"
+                                        onClick={(e) => {
+                                            e.preventDefault(); // Prevent default if using href="#"
+                                            setIsLoggedIn(false); // check user status
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
+                                        >
+                                        <strong><u>Logout</u></strong>
+                                    </a>
+                                ) : (
+<a 
+                                        className="custom-btn-green btn custom-link"                                  
+                                        href="javascript:void(0)"
+                                        onClick={(e) => {
+                                            e.preventDefault(); // Prevent default if using href="#"
+                                            openLoginPopup();                               
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
+                                        >
+                                        <strong><u>Login</u></strong>
+                                    </a>
+                                )}
+                                
                                 {isLoginPopupOpen  && (
                                         <LoginPopup content="" onClose={closeLoginPopup} />
                                     )}

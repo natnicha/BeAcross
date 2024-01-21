@@ -5,6 +5,7 @@ import "./bootstrap-icons.css";
 import "./magnific-popup.css";
 import "./tooplate-waso-strategy.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UserProvider } from './UserContext';
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -14,7 +15,7 @@ import StudentProfilePage from "./pages/StudentProfilepage";
 
 const App: React.FC = () => {
   return (
-    <>
+    <UserProvider>
       <Header />
       <Router>
         <Routes>
@@ -25,7 +26,7 @@ const App: React.FC = () => {
         </Routes>
       </Router>
       <Footer />
-    </>
+    </UserProvider>
   );
 };
 

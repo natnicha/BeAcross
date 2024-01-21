@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { loginUser } from '../services/authenticationServices';
 import RegisterPopup from '../components/RegisterationPopup';
+import { useUser } from '../UserContext';
 
 type PopupProps = {
     content: string;
@@ -9,6 +10,7 @@ type PopupProps = {
 
 const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
+  const { setIsLoggedIn } = useUser(); // user status (login)
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // register popup
   
   const [emailToLogin, setEmailToLogin] = useState(''); // State for storing the email address
@@ -31,6 +33,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
       
       if (response && response.token) {
         setJwtToken(response.token); // Store the JWT token in the state
+        setIsLoggedIn(true); // set user status for shared
         setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
         onClose(); // after success login, popup will close
