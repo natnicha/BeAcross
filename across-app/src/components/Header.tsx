@@ -56,6 +56,8 @@ const Header: React.FC = () => {
                         </li>
                         <li className="nav-item">
                             <div className="d-flex align-items-center mt-2">
+                                
+                                {/* Change button text base on user status */}
                                 {isLoggedIn ? (
                                     <a 
                                         className="custom-btn-red btn custom-link"                                  
@@ -70,7 +72,7 @@ const Header: React.FC = () => {
                                         <strong><u>Logout</u></strong>
                                     </a>
                                 ) : (
-<a 
+                                    <a 
                                         className="custom-btn-green btn custom-link"                                  
                                         href="javascript:void(0)"
                                         onClick={(e) => {
@@ -88,25 +90,45 @@ const Header: React.FC = () => {
                                         <LoginPopup content="" onClose={closeLoginPopup} />
                                     )}
                             </div>
-                            <p className="d-flex align-items-center mt-2">
-                                Don't have an account?&nbsp; 
-                                <a
-                                    className="click-scroll"
-                                    href="javascript:void(0)"
-                                    onClick={(e) => {
-                                        e.preventDefault(); // Prevent default if using href="#"
-                                        openRegisterPopup();
-                                    }}
-                                    role="button"
-                                    tabIndex={0}
-                                    >
-                                    <strong><u>Register</u></strong>
-                                </a>
 
-                                {isRegisterPopupOpen  && (
-                                        <RegisterPopup content="" onClose={closeRegisterPopup} />
-                                    )}
-                            </p>
+                            {/* Change welcome text base on user status */}
+                            {isLoggedIn ? (
+                                <p className="d-flex align-items-center mt-2">
+                                    Welcome, &nbsp;&nbsp;
+                                    <a
+                                        className="click-scroll"
+                                        href="javascript:void(0)"
+                                        onClick={(e) => {
+                                            e.preventDefault(); // Prevent default if using href="#"
+                                            setIsLoggedIn(false); // check user status
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
+                                        >
+                                        <strong><u>Firstname Lastname</u></strong>
+                                    </a>
+                                </p>
+                            ) : (
+                                <p className="d-flex align-items-center mt-2">
+                                    Don't have an account?&nbsp; 
+                                    <a
+                                        className="click-scroll"
+                                        href="javascript:void(0)"
+                                        onClick={(e) => {
+                                            e.preventDefault(); // Prevent default if using href="#"
+                                            openRegisterPopup();
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
+                                        >
+                                        <strong><u>Register</u></strong>
+                                    </a>
+
+                                    {isRegisterPopupOpen  && (
+                                            <RegisterPopup content="" onClose={closeRegisterPopup} />
+                                        )}
+                                </p> 
+                            )}
                         </li>
                     </ul>
                   </div>
