@@ -18,6 +18,12 @@ const Header: React.FC = () => {
     const openRegisterPopup = () => setIsRegisterPopupOpen(true);
     const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
 
+    const handleLogout = () => {
+    // Clear the token on logout
+    sessionStorage.removeItem('jwtToken');
+    setIsLoggedIn(false);
+    };
+
     return (
         <>
             <header className="site-header">
@@ -43,7 +49,7 @@ const Header: React.FC = () => {
                   <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <a className="nav-link click-scroll" href="#section_1"><strong>Home</strong></a>
+                            <a className="nav-link click-scroll" href="http://localhost:3000/"><strong>Home</strong></a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link click-scroll" href="#section_2"><strong>About</strong></a>
@@ -64,7 +70,7 @@ const Header: React.FC = () => {
                                         href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
-                                            setIsLoggedIn(false); // check user status
+                                            handleLogout(); // check user status
                                         }}
                                         role="button"
                                         tabIndex={0}
@@ -100,7 +106,6 @@ const Header: React.FC = () => {
                                         href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
-                                            setIsLoggedIn(false); // check user status
                                             window.location.href = 'http://localhost:3000/studentprofile';
                                         }}
                                         role="button"

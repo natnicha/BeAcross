@@ -9,6 +9,8 @@ interface UserContextType {
 // Create context with an initial undefined value
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+
+
 // Custom hook for using this context
 export const useUser = () => {
   const context = useContext(UserContext);
@@ -24,11 +26,13 @@ type UserProviderProps = {
 };
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  return (
-    <UserContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
+    const [isLoggedIn, setIsLoggedIn] = useState(
+      sessionStorage.getItem('jwtToken') !== null
+    );
+  
+    return (
+      <UserContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+        {children}
+      </UserContext.Provider>
+    );
+  };
