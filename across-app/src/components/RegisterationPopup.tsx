@@ -10,7 +10,8 @@ type PopupProps = {
 
   const [emailToRegister, setEmailToRegister] = useState(''); // State for storing the email address
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
+  const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
 
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,11 +25,15 @@ const handleSubmit = async () => {
     const response = await registerUser(emailToRegister);
     setResponseMessage(response);
     console.log('Registration successful:', response);
-    if (response.ok) {
+    if (response === "The registration email has been successfully sent to your email!") {
       setIsSubmitted(true);
-    }
+      setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
+    } else {  setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+      }
   } catch (error) {
     console.error('Registration failed:', error);
+    setResponseMessage('Registration failed'); // Update message on catch
+    setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
   }
 };
 
@@ -68,7 +73,7 @@ const handleSubmit = async () => {
             
           <button className="custom-btn btn custom-link mt-4"
             onClick={handleSubmit} disabled={isSubmitted}>Submit</button>
-            <p style={{ marginTop: "15px", color: "green"}} >{responseMessage}</p>
+            <p style={responseStyle}>{responseMessage}</p>
             <div style={{ marginTop: "20px" }}>
             <p>Already have an account?&nbsp; 
             <a className="click-scroll" href="#register"><strong><u>LOGIN</u></strong></a></p>
