@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                                         role="button"
                                         tabIndex={0}
                                         >
-                                        <strong><u>Logout</u></strong>
+                                        <strong>Logout</strong>
                                     </a>
                                 ) : (
                                     <a 
@@ -82,7 +82,7 @@ const Header: React.FC = () => {
                                         role="button"
                                         tabIndex={0}
                                         >
-                                        <strong><u>Login</u></strong>
+                                        <strong>Login</strong>
                                     </a>
                                 )}
                                 
@@ -93,26 +93,34 @@ const Header: React.FC = () => {
 
                             {/* Change welcome text base on user status */}
                             {isLoggedIn ? (
-                                <p className="d-flex align-items-center mt-2">
+                                <p className="d-flex align-items-end mt-2">
                                     Welcome, &nbsp;&nbsp;
                                     <a
-                                        className="click-scroll"
+                                        className="click-scroll d-flex align-items-end"
                                         href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             setIsLoggedIn(false); // check user status
+                                            window.location.href = 'http://localhost:3000/studentprofile';
                                         }}
                                         role="button"
                                         tabIndex={0}
                                         >
-                                        <strong><u>Firstname Lastname</u></strong>
+                                        <strong>Firstname Lastname</strong>
+                                        <i 
+                                        className="bi bi-gear-wide-connected d-flex align-items-end" 
+                                        style={{ 
+                                            fontSize: '24px',  
+                                            marginLeft: '10px'   
+                                        }}
+                                        ></i>
                                     </a>
                                 </p>
                             ) : (
-                                <p className="d-flex align-items-center mt-2">
+                                <p className="d-flex align-items-end mt-2">
                                     Don't have an account?&nbsp; 
                                     <a
-                                        className="click-scroll"
+                                        className="click-scroll d-flex align-items-end"
                                         href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
