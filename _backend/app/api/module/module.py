@@ -80,3 +80,42 @@ def get_no_of_recommend_module(db: MongoClient, module_id: ObjectId):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     return count
+
+
+@module.delete("/{module_id}/recommend", status_code=status.HTTP_200_OK)
+async def delete_recommend(
+        request: Request,
+        module_id: str = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    try:
+        module_recommend = ModuleRecommendModel(
+            module_id=ObjectId(module_id),
+            user_id=ObjectId(request.state.user_id)
+        )
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+
+    check_exist_module_recommend(db, module_recommend)
+    delete_module_recommend(db, module_recommend)
+    return 
+
+def check_exist_module_recommend(db: MongoClient, module_recommend: ModuleRecommendModel):
+    rows = MODULE_RECOMMEND.get_module_recommend(db, module_recommend)
+    if len(list(rows)) == 0:
+        raise HTTPException(
+            detail={"message": "the module recommended by this user is not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+
+def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendModel):
+    try:
+        MODULE_RECOMMEND.delete_one(db, module_recommend)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

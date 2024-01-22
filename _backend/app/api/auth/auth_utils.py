@@ -29,7 +29,7 @@ def extractFullNameFromEmail(email, delimiter):
     return full_name.split(delimiter,1)
 
 def generate_password():
-    special_character = r"""!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
+    special_character = r"""!%&-.@^_"""
     password_length = 8
     alphabet = string.ascii_letters + string.digits + special_character
     while True:
@@ -110,7 +110,7 @@ def is_valid_jwt_token(request: Request):
 
 def has_permission(request: Request):
     api = request.url.path
-    if api.__contains__("/module/recommend"):
+    if api.__contains__("/recommend"):
         if request.state.role != "student":
             return False
     return True
