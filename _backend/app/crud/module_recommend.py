@@ -21,5 +21,16 @@ def get_module_recommend(conn: MongoClient, module_recommend: ModuleRecommendMod
         "user_id": module_recommend.user_id
     })
 
+def count_module_recommend(conn: MongoClient, module_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("module_recommend").count_documents({
+        "module_id": module_id,
+    })
+
+def delete_one(conn: MongoClient, module_recommend: ModuleRecommendModel):
+    return conn[env_config.DB_NAME].get_collection("module_recommend").delete_one({
+        "module_id": module_recommend.module_id,
+        "user_id": module_recommend.user_id
+    })
+
 def insert_one(conn: MongoClient, module_recommend: ModuleRecommendModel):
     return conn[env_config.DB_NAME].get_collection("module_recommend").insert_one(module_recommend.dict())

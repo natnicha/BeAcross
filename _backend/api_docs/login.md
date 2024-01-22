@@ -55,7 +55,19 @@ To login to a system after registration
 ```json
 {
   "data": {
-    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+      "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+      "user": {
+         "email": "example.z@tu-chemnitz.de",
+         "password": "09679f97a72df416ae47eca4b1d828c02163d045559d0e36e617494c3919a2a4:2b3f0c6c65ad49a4815cd9ad1e67ff52",
+         "first_name": "example",
+         "last_name": "z",
+         "registration_number": null,
+         "course_of_study": null,
+         "semester": 1,
+         "user_roles_id": "65a8041efbc5863974a6d4e4",
+         "created_at": "2024-01-18T20:21:41.138000",
+         "updated_at": "2024-01-18T20:21:41.138000"
+      }
   }
 }
 ```

@@ -16,7 +16,11 @@ app.include_router(module, prefix='/api/v1/module', tags=['module'])
 frontend_origins = ['http://localhost:3000']
 
 app.add_middleware(
-    CORSMiddleware, allow_origins=frontend_origins,
+    CORSMiddleware,
+    allow_origins=frontend_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.add_event_handler("startup", load_env)
