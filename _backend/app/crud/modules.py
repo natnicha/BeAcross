@@ -26,23 +26,64 @@ class ModulesModel(BaseModel):
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
-def find(conn: MongoClient, term: str, limit: int, offset: int, sortby: str, orderby: str):
+def find(conn: MongoClient, term: str, 
+         level: list[str], ects: list[int], university: list[str], type: list[str], 
+         limit: int, offset: int, sortby: str, orderby: str):
     is_asc = 1
     if orderby.lower() == 'desc':
         is_asc = -1
 
-    like_term = convert_to_like(term=term)
-    return conn[env_config.DB_NAME].get_collection("modules").find({
-        "name": like_term
-    }).sort({
+    condition = {}
+    like_term = convert_str_to_like(term=term)
+
+    if level or ects or university or type:
+        condition['$and'] = [{"name": like_term}]
+        
+        if level: #like
+            level_like_cond = convert_list_to_like_list(level)
+            level_cond = condition_list_to_query('degree_level', level_like_cond)
+            condition['$and'].append(level_cond)
+
+        if ects: #=
+            ects_cond = condition_list_to_query('ects', ects)
+            condition['$and'].append(ects_cond)
+
+        if university: #=
+            university_cond = condition_list_to_query('university', university)
+            condition['$and'].append(university_cond)
+
+        if type: #like
+            type_like_cond = convert_list_to_like_list(type)
+            type_cond = condition_list_to_query('type', type_like_cond)
+            condition['$and'].append(type_cond)
+
+    else:
+        condition["name"] = like_term
+    
+    print(condition)
+
+    return conn[env_config.DB_NAME].get_collection("modules").find(condition).sort({
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
 
 def count(conn: MongoClient, term: str):
-    like_term = convert_to_like(term=term)
+    like_term = convert_str_to_like(term=term)
     return conn[env_config.DB_NAME].get_collection("modules").count_documents({
         "name": like_term
     })
 
-def convert_to_like(term: str):
+def convert_str_to_like(term: str):
     return re.compile('.*'+term+'.*', re.IGNORECASE)
+
+def convert_list_to_like_list(conditon: list):
+    query = []
+    for cond in conditon:
+        query.append(convert_str_to_like(cond))
+    return query
+
+def condition_list_to_query(target_column_name: str, condition_list: list):
+    query = []
+    for cond in condition_list:
+        query.append({target_column_name: cond})
+    
+    return { "$or": query }

@@ -143,10 +143,14 @@ async def no_of_recommend(
     count = MODULES.count(db, term)
     if count == 0:
         raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
-    items = MODULES.find(db, term, limit, offset, sortby_database_col_mapping[sortby], orderby)
+    items = MODULES.find(db, term, level, ects, university, type, limit, offset, sortby_database_col_mapping[sortby], orderby)
     data = prepare_item(db, items)
     return {
         "data":{
+            "level": level,
+            "ects": ects,
+            "university": university,
+            "type": type,
             "total_results": count,
             "total_items": len(data),
             "items": data
