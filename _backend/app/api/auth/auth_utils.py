@@ -110,7 +110,7 @@ def is_valid_jwt_token(request: Request):
 
 def has_permission(request: Request):
     api = request.url.path
-    if api.__contains__("/module/recommend"):
+    if api.__contains__("/recommend"):
         if request.state.role != "student":
             return False
     return True
