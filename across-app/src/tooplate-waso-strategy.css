@@ -262,8 +262,6 @@ strong {
 }
 
 
-
-
 /*---------------------------------------
   NAVIGATION              
 -----------------------------------------*/
@@ -375,9 +373,9 @@ strong {
 .flex-row {
   display: flex;
   flex-direction: row; /* Aligns children horizontally */
-  justify-content: space-around; /* Adjusts spacing between items */
   align-items: center; /* Aligns items vertically */
   padding-bottom: 10%;
+  padding-left: 10%;
 }
 
 
@@ -651,7 +649,6 @@ td {
 .search-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid black;
 }
 
 .search-header {
@@ -669,18 +666,74 @@ td {
 
 .search-row {
   display: flex;
+  flex-wrap: wrap;
   border-bottom: 1px solid #ddd;
   padding: 8px;
 }
 
+.search-row .search-column {
+  flex: 1;
+  padding: 10px;
+  min-width: 150px;
+}
+
 .search-row:hover {
   background-color: #f5f5f5;
+  cursor: pointer;
 }
 
 .search-column {
   flex: 1;
   padding: 10px;
-  border: 1px solid black;
+}
+
+/*---------------------------------------
+  SEARCH-TABLE BUTTONS          
+-----------------------------------------*/
+
+.search-feature-control-btn {
+  display: flex; /* Use flexbox to layout the buttons */
+  justify-content: flex-end; /* Aligns the buttons to the end (right) of the container */
+  gap: 30px; /* This creates equal spacing between the buttons */
+  width: 100%; /* Takes full width */
+}
+
+.custom-btn-yellow-number {
+  background: var(--secondary-color);
+  border-radius: 10px;
+  color: var(--dark-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 5px 10px 0; /* top | right | bottom | left */
+}
+
+.custom-btn-green-number {
+  background: var(--green-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 0 10px 5px; /* top | right | bottom | left */
+}
+
+.custom-btn-number {
+  background: var(--primary-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 0 10px 0; /* top | right | bottom | left */
+}
+
+.number-count {
+  margin-left: 8px; /* Space between text and count */
+  background-color: white;
+  color: var(--dark-color);
+  border-radius: 10px; /* Roundness of the count background */
+  padding: 2px 6px;
 }
 
 
