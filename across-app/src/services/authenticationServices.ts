@@ -68,8 +68,16 @@ export async function loginUser(email: string, password: string): Promise<LoginR
         const responseData: any = await response.json();
 
         if (response.ok) {
+            // Store data
+            sessionStorage.setItem('firstname', responseData.data.user.first_name);
+            sessionStorage.setItem('lastname', responseData.data.user.last_name);
             sessionStorage.setItem('jwtToken', responseData.data.jwt); // store jwt until the tab closed, access via sessionStorage.getItem('jwtToken');
-            return { token: responseData.data.jwt, message: "Login successfully.", firstname: responseData.data.firstname, lastname: responseData.data.lastname};
+            return { 
+                token: responseData.data.jwt, 
+                message: "Login successfully.", 
+                firstname: responseData.data.firstname, 
+                lastname: responseData.data.lastname
+            };
         } else if (response.status == 401) {
             return { token: "", message: responseData.detail.message, firstname: "", lastname: "" };
         } else {

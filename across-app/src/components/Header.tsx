@@ -111,7 +111,9 @@ const Header: React.FC = () => {
                                         role="button"
                                         tabIndex={0}
                                         >
-                                        <strong>Firstname Lastname</strong>
+                                        <strong>
+                                            {sessionStorage.getItem('firstname')} {sessionStorage.getItem('lastname')}
+                                        </strong>
                                         <i 
                                         className="bi bi-gear-wide-connected d-flex align-items-end" 
                                         style={{ 
