@@ -407,6 +407,7 @@ padding-bottom: 10px;
 
 .searchbarContent {
   display: flex;
+  flex-direction: column; /* Stack children vertically */
   position: absolute;
   width: 65%;
   top: 35%;
@@ -415,7 +416,17 @@ padding-bottom: 10px;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 10px;
   border-radius: 5px;
-  align-items: center; 
+}
+
+.searchbarRow, .advancedSearchRow {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  width: 100%; /* Take full width of parent */
+}
+
+.advancedSearchRow {
+  justify-content: end; /* Center the link horizontally */
+  margin-top: 10px; /* Add some space above the link */
 }
 
 .bi-search {
