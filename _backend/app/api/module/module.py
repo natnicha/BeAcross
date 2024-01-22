@@ -15,7 +15,7 @@ from app.api.module.model import CountRecommendResponseModel, RecommendRequestMo
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module-name":"name", "offered-by":"university", "ect-credits":"ECTS", "degree-level":"level", "year-of-study": "Year of study"}
+sortby_database_col_mapping = {"module_name":"name", "no_of_recommend":"", "no_of_suggested_modules":"", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type"}
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
@@ -136,15 +136,24 @@ async def no_of_recommend(
         module_type: Annotated[Union[list[str], None], Query()] = None,
         limit: int = Query(20, description="a limitation number of modules"),
         offset: int = Query(0, description="a starting position in the dataset of a particular record"),
-        sortby: str = Query('module-name', description="an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester`"),
+        sortby: str = Query('module_name', description="an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester`"),
         orderby: str = Query('asc', description="a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse"),
         db: MongoClient = Depends(get_database),
     ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
         raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
-    items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_database_col_mapping[sortby], orderby)
+    
+    sortby_column = sortby_database_col_mapping[sortby] 
+    if is_manual_calculated_sortby(sortby=sortby):
+        sortby_column = 'module_name'
+    
+    items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_column, orderby)
     data = prepare_item(db, items)
+
+    if is_manual_calculated_sortby(sortby=sortby):
+        data = sort(data, sortby, orderby)
+
     return {
         "data":{
             "total_results": count,
@@ -161,8 +170,17 @@ def prepare_item(db: MongoClient, items: Cursor):
         del entry["_id"]
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
         # TODO: call OWL service for number of sugggested modules
-        entry['suggested_modules'] = 0
+        entry['no_of_suggested_modules'] = 0
     return data
+
+def sort(data: list, sortby: str, orderby: str):
+    is_reverse = False
+    if orderby.lower() == 'desc':
+        is_reverse = True
+    return sorted(data, reverse=is_reverse, key=lambda d: d[sortby])
+
+def is_manual_calculated_sortby(sortby: str):
+    return (sortby == 'no_of_recommend' or sortby == 'no_of_suggested_modules')
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))

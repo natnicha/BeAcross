@@ -40,7 +40,7 @@ To search modules using OWL ontology regarding a given term
 | type      | string    | false        | NULL          | a condition uses to filter modules by **module_type** supoorts only `Erasmus`, `Obiligitory`, and `Elective`In case of there are more than 1 conditions of module_type, repeatedly define module_type multiple times, e.x., &module_type=Obiligitory&module_type=elective |
 | limit     | int       | false        | 20            | a limitation of module in number                            |
 | offset    | int       | false        | 0             | a starting position in the dataset of a particular record   |
-| sortby    | string    | false        | module-name   | an entity referring how rows will be sorted in the response supports only `module-name`, `no-of-recommend`, `offered-by`, `ect-credits`, `degree-level` and `year-of-study` |
+| sortby    | string    | false        | module_name   | an entity referring how rows will be sorted in the response supports only `module_name`, `degree_program`, `no_of_recommend`, `no_of_suggested_modules`, `degree_level`, `ects`, `university`, and `module_type` |
 | orderby   | string    | false        | asc           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
 
 ## Body Parameters
@@ -60,38 +60,37 @@ To search modules using OWL ontology regarding a given term
     {
       "module_id": "65ac17dfd2815b505f3e37b4",
       "content": "Content: Basics of data mining: definition, CRISP-DM, business areas of application of data mining, web mining and text mining Overview of the essential methods and technologies for evaluating and pattern recognition in data using appropriate methods Aim:The students will be able to evaluate structured data sets in a targeted manner using the available methods and technologies.",
-      "program": "Data Science",
       "type": "elective",
       "university": "Technische Universitat Chemnitz",
-      "degree_program": "Professorship of Business Informatics II, in particular system development and application systems in business and administration",
+      "degree_program": "Data Science",
       "module_code": "W44",
       "ects": 5,
       "degree_level": " \nMaster",
       "module_id": "65ac17b1d2815b505f3e3679",
       "module_name": "Data mining",
       "no_of_recommend": 89,
-      "suggested_modules": 10
+      "no_of_suggested_modules": 10
     },
     {
       "module_id": "65ac17dfd2815b505f3e37e9",
       "content": "Content:Turing machines; predictability; NP completeness; classic and modern cryptographic methods; digital signatures; Hash functions Aim:Understanding aspects of the complexity of algorithmic problems and their importance for data security",
-      "program": "Applied Computer Science",
       "type": "obligatory",
       "university": "Technische Universitat Chemnitz",
-      "degree_program": "Professorship of Theoretical Computer Science (and Information Security)",
+      "degree_program": "Applied Computer Science",
       "module_code": "543070",
       "ects": 5,
       "degree_level": " Bachelor",
       "module_id": "65ac17b1d2815b505f3e354b",
       "module_name": "Data security and cryptography",
       "no_of_recommend": 108,
-      "suggested_modules": 6
+      "no_of_suggested_modules": 6
     },
     // ... more entries ...
     ]
   }
 }
 ```
+Note: some fields in items may disappear depending on raw data.
 
 
 ## Error Response 404 - Not Found (case: no module not found for a given term)
