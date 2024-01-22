@@ -6,16 +6,16 @@ To search modules using OWL ontology regarding a given term
 
 | ** Method **     | GET                                                                |
 | ---------------- | ------------------------------------------------------------------ |
-| ** Structure **  | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{type}&{limit}&{offset}&{orderby}&{order}`  |
-| ** Example **    | `/api/v1/module/search?term=database&level=bachelor&level=master&ects=3&ects=6&university=Bialystok%20University%20Of%20Technology&type=elective&limit=100&offset=10&orderby=relevant&order=DESC` |
+| ** Structure **  | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}`  |
+| ** Example **    | `/api/v1/module/search?term=database&level=bachelor&degree_level=master&ects=3&ects=6&university=Bialystok%20University%20Of%20Technology&module_type=elective&limit=100&offset=10&orderby=relevant&order=desc` |
 
 ## Permissions
 
-| Method          | Allow Acess                                                                                          |
-| ----------------| ---------------------------------------------------------------------------------------------------- |
-| student         | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{type}&{limit}&{offset}&{orderby}&{order}` |
-| uni-admin       | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{type}&{limit}&{offset}&{orderby}&{order}` |
-| sys-admin       | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{type}&{limit}&{offset}&{orderby}&{order}` |
+| Method          | Allow Acess                                                                                                 |
+| ----------------| ----------------------------------------------------------------------------------------------------------- |
+| student         | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}` |
+| uni-admin       | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}` |
+| sys-admin       | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}` |
 
 ## Header Parameters
 
@@ -31,17 +31,17 @@ To search modules using OWL ontology regarding a given term
 
 ## Query Parameters
 
-| Key       | Type      | Required     | Default Value | Description                                                 |
-| --------- | :-------: | :----------: | :-----------: | ----------------------------------------------------------- |
-| term      | string    | true         |               | a search term to acquire modules                            |
-| level     | string    | false        | NULL          | a condition uses to filter modules by **degree_level** supoorts only `Bachelor`, `Master`, and `Doctoral`. In case of there are more than 1 conditions of degree_level, repeatedly define degree_level multiple times, e.x., &degree_level=bachelor&degree_level=master |
-| ects      | int       | false        | NULL          | a condition uses to filter modules by **ects** supoorts only integer. In case of there are more than 1 conditions of ects, repeatedly define ects multiple times, e.x., &ects=3&ects=5  |
-| university| string    | false        | NULL          | a condition uses to filter modules by **university** supoorts only `Bialystok University Of Technology`, `Technische Universitat Chemnitz`, and `University of Nova Gorica`. In case of there are more than 1 conditions of university, repeatedly define university multiple times, e.x., &ects=Bialystok University Of Technology&ects=University of Nova GoricaBachelor |
-| type      | string    | false        | NULL          | a condition uses to filter modules by **module_type** supoorts only `Erasmus`, `Obiligitory`, and `Elective`In case of there are more than 1 conditions of module_type, repeatedly define module_type multiple times, e.x., &module_type=Obiligitory&module_type=elective |
-| limit     | int       | false        | 20            | a limitation of module in number                            |
-| offset    | int       | false        | 0             | a starting position in the dataset of a particular record   |
-| sortby    | string    | false        | module_name   | an entity referring how rows will be sorted in the response supports only `module_name`, `degree_program`, `no_of_recommend`, `no_of_suggested_modules`, `degree_level`, `ects`, `university`, and `module_type` |
-| orderby   | string    | false        | asc           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
+| Key          | Type      | Required     | Default Value | Description                                                 |
+| ------------ | :-------: | :----------: | :-----------: | ----------------------------------------------------------- |
+| term         | string    | true         |               | a search term to acquire modules                            |
+| degree_level | string    | false        | NULL          | a condition uses to filter modules by **degree_level** supoorts only `Bachelor`, `Master`, and `Doctoral`. In case of there are more than 1 conditions of degree_level, repeatedly define degree_level multiple times, e.x., &degree_level=bachelor&degree_level=master |
+| ects         | int       | false        | NULL          | a condition uses to filter modules by **ects** supoorts only integer. In case of there are more than 1 conditions of ects, repeatedly define ects multiple times, e.x., &ects=3&ects=5  |
+| university   | string    | false        | NULL          | a condition uses to filter modules by **university** supoorts only `Bialystok University Of Technology`, `Technische Universitat Chemnitz`, and `University of Nova Gorica`. In case of there are more than 1 conditions of university, repeatedly define university multiple times, e.x., &university=Bialystok University Of Technology&university=University of Nova GoricaBachelor |
+| module_type  | string    | false        | NULL          | a condition uses to filter modules by **module_type** supoorts only `Erasmus`, `obiligitory`, and `elective`. In case of there are more than 1 conditions of module_type, repeatedly define module_type multiple times, e.x., &module_type=obiligitory&module_type=elective |
+| limit        | int       | false        | 20            | a limitation of module in number                            |
+| offset       | int       | false        | 0             | a starting position in the dataset of a particular record   |
+| sortby       | string    | false        | module_name   | an entity referring how rows will be sorted in the response supports only `module_name`, `degree_program`, `no_of_recommend`, `no_of_suggested_modules`, `degree_level`, `ects`, `university`, and `module_type` |
+| orderby      | string    | false        | asc           | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
 
 ## Body Parameters
 
