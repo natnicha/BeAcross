@@ -14,6 +14,7 @@ mongomock = "*"
 pytest-env = "*"
 pytest-mock = "*"
 pyjwt = "*"
+nltk = "*"
 
 [dev-packages]
 

@@ -24,3 +24,4 @@ _backend/env
 .vscode
 .env
 *__pycache__
+.idea
