@@ -5,7 +5,7 @@ from mongomock import MongoClient
 import app.crud.module_recommend as MODULE_RECOMMEND
 from app.crud.module_recommend import ModuleRecommendModel
 from app.db.mongodb import get_database
-from app.api.module.model import RecommendRequestModel
+from app.api.module.model import CountRecommendResponseModel, RecommendRequestModel
 
 
 module = APIRouter()
@@ -47,3 +47,36 @@ def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@module.get("/{module_id}/recommend", response_model=CountRecommendResponseModel)
+async def no_of_recommend(
+        module_id: str = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    module_id_obj = None
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+
+    count = get_no_of_recommend_module(db, module_id_obj)
+    return CountRecommendResponseModel(
+        data={
+            "module_id": module_id,
+            "no_of_recommend": str(count)
+        }
+    )
+
+def get_no_of_recommend_module(db: MongoClient, module_id: ObjectId):
+    count = 0
+    try:
+        count = MODULE_RECOMMEND.count_module_recommend(db, module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return count
