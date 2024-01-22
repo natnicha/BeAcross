@@ -5,7 +5,6 @@ from typing import Optional
 from bson import ObjectId
 from mongomock import MongoClient
 from pydantic import BaseModel, Field
-from bson.objectid import ObjectId as BsonObjectId
 from app.config.config_utils import env_config
 
 class BaseModel(BaseModel):
@@ -32,7 +31,33 @@ def find(conn: MongoClient, term: str,
     is_asc = 1
     if orderby.lower() == 'desc':
         is_asc = -1
+    condition = convert_conditions_to_query(term, level, ects, university, type)
+    return conn[env_config.DB_NAME].get_collection("modules").find(condition).sort({
+        sortby : int(is_asc)
+    }).skip(offset).limit(limit)
 
+def count(conn: MongoClient, term: str,
+          level: list[str], ects: list[int], university: list[str], type: list[str]):
+    condition = convert_conditions_to_query(term, level, ects, university, type)
+    return conn[env_config.DB_NAME].get_collection("modules").count_documents(condition)
+
+def convert_str_to_like(term: str):
+    return re.compile('.*'+term+'.*', re.IGNORECASE)
+
+def convert_list_to_like_list(conditon: list):
+    query = []
+    for cond in conditon:
+        query.append(convert_str_to_like(cond))
+    return query
+
+def condition_list_to_query(target_column_name: str, condition_list: list):
+    query = []
+    for cond in condition_list:
+        query.append({target_column_name: cond})
+    
+    return { "$or": query }
+
+def convert_conditions_to_query(term: str, level: list[str], ects: list[int], university: list[str], type: list[str]):
     condition = {}
     like_term = convert_str_to_like(term=term)
 
@@ -60,30 +85,4 @@ def find(conn: MongoClient, term: str,
     else:
         condition["name"] = like_term
     
-    print(condition)
-
-    return conn[env_config.DB_NAME].get_collection("modules").find(condition).sort({
-        sortby : int(is_asc)
-    }).skip(offset).limit(limit)
-
-def count(conn: MongoClient, term: str):
-    like_term = convert_str_to_like(term=term)
-    return conn[env_config.DB_NAME].get_collection("modules").count_documents({
-        "name": like_term
-    })
-
-def convert_str_to_like(term: str):
-    return re.compile('.*'+term+'.*', re.IGNORECASE)
-
-def convert_list_to_like_list(conditon: list):
-    query = []
-    for cond in conditon:
-        query.append(convert_str_to_like(cond))
-    return query
-
-def condition_list_to_query(target_column_name: str, condition_list: list):
-    query = []
-    for cond in condition_list:
-        query.append({target_column_name: cond})
-    
-    return { "$or": query }
+    return condition

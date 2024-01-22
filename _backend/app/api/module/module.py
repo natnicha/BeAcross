@@ -130,27 +130,23 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
         term: str = Query('', description="a search term to acquire modules"),
-        level: Annotated[Union[list[str], None], Query()] = None,
+        degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
         university: Annotated[Union[list[str], None], Query()] = None,
-        type: Annotated[Union[list[str], None], Query()] = None,
+        module_type: Annotated[Union[list[str], None], Query()] = None,
         limit: int = Query(20, description="a limitation number of modules"),
         offset: int = Query(0, description="a starting position in the dataset of a particular record"),
         sortby: str = Query('module-name', description="an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester`"),
         orderby: str = Query('asc', description="a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse"),
         db: MongoClient = Depends(get_database),
     ):
-    count = MODULES.count(db, term)
+    count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
         raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
-    items = MODULES.find(db, term, level, ects, university, type, limit, offset, sortby_database_col_mapping[sortby], orderby)
+    items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_database_col_mapping[sortby], orderby)
     data = prepare_item(db, items)
     return {
         "data":{
-            "level": level,
-            "ects": ects,
-            "university": university,
-            "type": type,
             "total_results": count,
             "total_items": len(data),
             "items": data
