@@ -42,7 +42,7 @@ Free Bootstrap 5 HTML Template
 body {
     background: var(--white-color);
     font-family: var(--body-font-family); 
-}
+    }
 
 
 /*---------------------------------------
@@ -383,9 +383,9 @@ strong {
   SITE HEADER              
 -----------------------------------------*/
 .site-header {
-  background: var(--primary-color);
+    background: var(--primary-color);
   padding-top: 10px;
-  padding-bottom: 10px;
+padding-bottom: 10px;
 }
 
 .site-header-icon {
@@ -649,6 +649,8 @@ td {
 .search-table {
   width: 100%;
   border-collapse: collapse;
+  max-height: 500px; /* Set a fixed maximum height */
+  overflow-y: auto;
 }
 
 .search-header {
@@ -706,6 +708,10 @@ td {
   font-weight: var(--font-weight-bold);
   padding: 5px 10px;
   margin: 5px 5px 10px 0; /* top | right | bottom | left */
+}
+
+.custom-btn-yellow-number:hover {
+  color: var(--white-color);
 }
 
 .custom-btn-green-number {
@@ -1001,10 +1007,10 @@ td {
   SITE FOOTER              
 -----------------------------------------*/
 .site-footer {
-  background: var(--primary-color);
+    background: var(--primary-color);
   padding-top: 20px;
   padding-bottom: 10px;
-}
+  }
 
 .site-footer .copyright-text {
   color: var(--white-color);

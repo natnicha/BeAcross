@@ -54,7 +54,7 @@ const SearchPage: React.FC = (props) => {
       
         {/*Search list*/}
         <section className="tm-content" style={{ margin: "0px"}} id="profileinformation">
-          <div className="nav nav-tabs flex-row align-items-baseline" style={{ paddingLeft: "5%", width: "118%"}} >
+          <div className="nav nav-tabs flex-row align-items-baseline" style={{ paddingLeft: "5%", width: "118%", paddingBottom: "2%"}} >
               <div className="about-thumb bg-white shadow-lg">
                 <div className="search-header">
                   <div className="search-column"><strong>Module Code</strong></div>
@@ -65,6 +65,7 @@ const SearchPage: React.FC = (props) => {
                 </div>
 
                 <div className="search-table">
+                  {/*SR start here*/}
                   <div className="search-row">
                       <div className="search-column" id="moduleCode">
                         563090
@@ -81,7 +82,7 @@ const SearchPage: React.FC = (props) => {
                       <div className="search-column" id ="university">
                       Chemnitz University of Technology
                       </div>
-                      
+                    
                       <div className="search-feature-control-btn">
                         <button className="custom-btn-yellow-number btn custom-link">                                       
                           <i className="bi bi-hand-thumbs-up"></i> Recommened <span className="number-count">81</span>
@@ -92,9 +93,10 @@ const SearchPage: React.FC = (props) => {
                         <button className="custom-btn-green-number btn custom-link">                                       
                         Compare
                         </button>
-                      </div>
+                      </div>  
+                    </div> 
                     
-                  </div>
+                                
                 </div>
               </div>
             </div>
