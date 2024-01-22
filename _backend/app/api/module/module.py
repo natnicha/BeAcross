@@ -129,7 +129,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
-        term: str = Query('', description="a search term to acquire modules"),
+        term: str = Query(min_length=1, description="a search term to acquire modules"),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
         university: Annotated[Union[list[str], None], Query()] = None,
