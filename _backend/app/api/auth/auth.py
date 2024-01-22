@@ -10,7 +10,7 @@ import app.crud.users as USERS
 import app.crud.user_logs as USER_LOGS
 
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
@@ -120,7 +120,11 @@ async def register(
     host = request.headers.get('host')
     user_agent = request.headers.get('user-agent')
     insert_user_logs(db, user["_id"], host, user_agent)
-    return LoginResponseModel(data={"jwt": jwt})
+    LoginResponseData = LoginResponseDataModel(
+        jwt=jwt,
+        user=user
+    )
+    return LoginResponseModel(data=LoginResponseData)
 
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
