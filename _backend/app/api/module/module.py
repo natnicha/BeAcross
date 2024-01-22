@@ -130,23 +130,23 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
         term: str = Query(min_length=1),
-        degree_level: Annotated[Union[list[str], None], Query(pattern='Bachelor|Master|Doctoral')] = None,
+        degree_level: Annotated[Union[list[str], None], Query(pattern='^Bachelor$|^Master$|^Doctoral$')] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
-        university: Annotated[Union[list[str], None], Query(pattern='Bialystok University Of Technology|Technische Universitat Chemnitz|University of Nova Gorica')] = None,
-        module_type: Annotated[Union[list[str], None], Query(pattern='Erasmus|obiligitory|elective')] = None,
+        university: Annotated[Union[list[str], None], Query(pattern='^Bialystok University Of Technology$|^Technische Universitat Chemnitz$|^University of Nova Gorica$')] = None,
+        module_type: Annotated[Union[list[str], None], Query(pattern='^Erasmus$|^obiligitory$|^elective$')] = None,
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
-        sortby: str = Query('module_name', pattern='module_name|degree_program|no_of_recommend|no_of_suggested_modules|degree_level|ects|university|module_type'),
-        orderby: str = Query('asc', pattern='asc|desc'),
+        sortby: str = Query('module_name', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
+        orderby: str = Query('asc', pattern='^asc$|^desc$'),
         db: MongoClient = Depends(get_database),
     ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
         raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
     
-    sortby_column = sortby_database_col_mapping[sortby] 
-    if is_manual_calculated_sortby(sortby=sortby):
-        sortby_column = 'module_name'
+    sortby_column = 'module_name'
+    if not is_manual_calculated_sortby(sortby=sortby):
+        sortby_column = sortby_database_col_mapping[sortby] 
     
     items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_column, orderby)
     data = prepare_item(db, items)
