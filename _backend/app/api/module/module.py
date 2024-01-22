@@ -130,10 +130,10 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
         term: str = Query(min_length=1),
-        degree_level: Annotated[Union[list[str], None], Query(pattern='^Bachelor$|^Master$|^Doctoral$')] = None,
+        degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
-        university: Annotated[Union[list[str], None], Query(pattern='^Bialystok University Of Technology$|^Technische Universitat Chemnitz$|^University of Nova Gorica$')] = None,
-        module_type: Annotated[Union[list[str], None], Query(pattern='^Erasmus$|^obiligitory$|^elective$')] = None,
+        university: Annotated[Union[list[str], None], Query()] = None,
+        module_type: Annotated[Union[list[str], None], Query()] = None,
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
         sortby: str = Query('module_name', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
