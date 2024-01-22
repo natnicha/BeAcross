@@ -9,7 +9,7 @@ from app.config.config_utils import env_config
 class BaseModel(BaseModel):
     class Config:
         arbitrary_types_allowed = True
-        allow_population_by_field_name = True
+        populate_by_name = True
         json_encoders = {ObjectId: str}
 
 class UserRolesModel(BaseModel):

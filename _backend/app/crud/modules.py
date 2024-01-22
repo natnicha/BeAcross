@@ -11,7 +11,7 @@ from app.config.config_utils import env_config
 class BaseModel(BaseModel):
     class Config:
         arbitrary_types_allowed = True
-        allow_population_by_field_name = True
+        populate_by_name = True
         json_encoders = {ObjectId: str}
 
 class ModulesModel(BaseModel):
@@ -20,8 +20,8 @@ class ModulesModel(BaseModel):
     level: str = Field(...)
     code: str = Field(...)
     university: str = Field(...)
-    ect_credits: decimal = Field(...)
-    year_of_study: decimal = Field(...)
+    ect_credits: int = Field(...)
+    year_of_study: str = Field(...)
     content: str = Field(...)   
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
