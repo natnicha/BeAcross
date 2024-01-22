@@ -129,15 +129,15 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
-        term: str = Query(min_length=1, description="a search term to acquire modules"),
-        degree_level: Annotated[Union[list[str], None], Query()] = None,
+        term: str = Query(min_length=1),
+        degree_level: Annotated[Union[list[str], None], Query(pattern='Bachelor|Master|Doctoral')] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
-        university: Annotated[Union[list[str], None], Query()] = None,
-        module_type: Annotated[Union[list[str], None], Query()] = None,
-        limit: int = Query(20, description="a limitation number of modules"),
-        offset: int = Query(0, description="a starting position in the dataset of a particular record"),
-        sortby: str = Query('module_name', description="an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester`"),
-        orderby: str = Query('asc', description="a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse"),
+        university: Annotated[Union[list[str], None], Query(pattern='Bialystok University Of Technology|Technische Universitat Chemnitz|University of Nova Gorica')] = None,
+        module_type: Annotated[Union[list[str], None], Query(pattern='Erasmus|obiligitory|elective')] = None,
+        limit: int = Query(20, gt=0),
+        offset: int = Query(0, gt=0),
+        sortby: str = Query('module_name', pattern='module_name|degree_program|no_of_recommend|no_of_suggested_modules|degree_level|ects|university|module_type'),
+        orderby: str = Query('asc', pattern='asc|desc'),
         db: MongoClient = Depends(get_database),
     ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
