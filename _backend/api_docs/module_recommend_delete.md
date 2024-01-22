@@ -1,19 +1,19 @@
-# ** [DELETE] Unrecommend Module **
+# ** [DELETE] Recommend Module **
 
 After a student performed 'recommend a module', (s)he can **undo or revert the recommend** by making a request with delete method to a system. This action shows that this course is canceled to recommend from the student anymore. But it **doesn't means that this course is contested**.
 
 ## Request
 
-| ** Method **     | DELTE                                                 |
+| ** Method **     | DELETE                                                |
 | ---------------- | ----------------------------------------------------- |
-| ** Structure **  | `/api/v1/module/{module_id}/unrecommend`              |
-| ** Example **    | `/api/v1/module/65a81c0502ed558ac053a095/unrecommend` |
+| ** Structure **  | `/api/v1/module/{module_id}/recommend`                |
+| ** Example **    | `/api/v1/module/65a81c0502ed558ac053a095/recommend`   |
 
 ## Permissions
 
 | Method          | Allow Acess                                |
 | ----------------| ------------------------------------------ |
-| student         | `/api/v1/module/{module_id}/unrecommend`   |
+| student         | `/api/v1/module/{module_id}/recommend`     |
 | uni-admin       | -                                          |
 | sys-admin       | -                                          |
 

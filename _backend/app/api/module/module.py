@@ -82,8 +82,8 @@ def get_no_of_recommend_module(db: MongoClient, module_id: ObjectId):
     return count
 
 
-@module.delete("/{module_id}/unrecommend", status_code=status.HTTP_200_OK)
-async def unrecommend(
+@module.delete("/{module_id}/recommend", status_code=status.HTTP_200_OK)
+async def delete_recommend(
         request: Request,
         module_id: str = None,
         db: MongoClient = Depends(get_database),
