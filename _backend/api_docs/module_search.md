@@ -56,25 +56,36 @@ To search modules using OWL ontology regarding a given term
   "data" : {
     "total_results": 76,
     "total_items": 20,
-    "items": [{
-      "module_id": "65a81c0502ed558ac053a095",
-      "module_name": "Database and Object Orientation",
-      "offered_by": "Chemnitz University of Technology",
-      "ect_credits": 5.0,
-      "degree_level": "Full-time Master",
-      "semester": "Summer",
-      "no_of_recommend": 213,
-      "suggested_modules": 7,
+    "items": [
+    {
+      "module_id": "65ac17dfd2815b505f3e37b4",
+      "content": "Content: Basics of data mining: definition, CRISP-DM, business areas of application of data mining, web mining and text mining Overview of the essential methods and technologies for evaluating and pattern recognition in data using appropriate methods Aim:The students will be able to evaluate structured data sets in a targeted manner using the available methods and technologies.",
+      "program": "Data Science",
+      "type": "elective",
+      "university": "Technische Universitat Chemnitz",
+      "degree_program": "Professorship of Business Informatics II, in particular system development and application systems in business and administration",
+      "module_code": "W44",
+      "ects": 5,
+      "degree_level": " \nMaster",
+      "module_id": "65ac17b1d2815b505f3e3679",
+      "module_name": "Data mining",
+      "no_of_recommend": 89,
+      "suggested_modules": 10
     },
     {
-      "module_id": "65a81c0502ed558ac053a096",
-      "module_name": "Cloud & Web Application",
-      "offered_by": "Chemnitz University of Technology",
-      "ect_credits": 5.0,
-      "degree_level": "Full-time Master",
-      "semester": "Winter",
-      "no_of_recommend": 89,
-      "suggested_modules": 8,
+      "module_id": "65ac17dfd2815b505f3e37e9",
+      "content": "Content:Turing machines; predictability; NP completeness; classic and modern cryptographic methods; digital signatures; Hash functions Aim:Understanding aspects of the complexity of algorithmic problems and their importance for data security",
+      "program": "Applied Computer Science",
+      "type": "obligatory",
+      "university": "Technische Universitat Chemnitz",
+      "degree_program": "Professorship of Theoretical Computer Science (and Information Security)",
+      "module_code": "543070",
+      "ects": 5,
+      "degree_level": " Bachelor",
+      "module_id": "65ac17b1d2815b505f3e354b",
+      "module_name": "Data security and cryptography",
+      "no_of_recommend": 108,
+      "suggested_modules": 6
     },
     // ... more entries ...
     ]
