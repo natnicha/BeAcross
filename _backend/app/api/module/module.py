@@ -131,7 +131,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 async def no_of_recommend(
         term: str = Query('', description="a search term to acquire modules"),
         level: Annotated[Union[list[str], None], Query()] = None,
-        ects: Annotated[Union[list[str], None], Query()] = None,
+        ects: Annotated[Union[list[int], None], Query()] = None,
         university: Annotated[Union[list[str], None], Query()] = None,
         type: Annotated[Union[list[str], None], Query()] = None,
         limit: int = Query(20, description="a limitation number of modules"),
