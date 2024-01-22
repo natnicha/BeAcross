@@ -55,11 +55,11 @@ export async function loginUser(email: string, password: string): Promise<LoginR
 
     try {
         const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
         });
 
         // Parse the JSON response
