@@ -78,3 +78,33 @@ export async function loginUser(email: string, password: string): Promise<LoginR
         throw error;
     }
 };
+
+// Function to send a POST request to the Forgot password API
+export async function forgotPassword(email: string): Promise<RegisterResponse> {
+    const url: string = '';
+    const payload: RegisterRequest = { email };
+
+    try {
+        const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+        });
+
+        // Parse the JSON response
+        const responseData: any = await response.json();
+
+        if (response.ok) {
+            return { status: response.status, message: ""};
+        } else if (response.status == 400) {
+            return { status: response.status, message: responseData.detail.message };
+        } else {
+            throw new Error(`Error: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error forgot password:', error);
+        throw error;
+    }
+};

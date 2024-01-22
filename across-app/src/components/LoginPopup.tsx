@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { loginUser } from '../services/authenticationServices';
 import RegisterPopup from '../components/RegisterationPopup';
+import ForgotPasswordPopup from '../components/ForgotPasswordPopup';
 import { useUser } from '../UserContext';
 
 type PopupProps = {
@@ -12,6 +13,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
   const { setIsLoggedIn } = useUser(); // user status (login)
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // register popup
+  const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false); // forgot password popup
   
   const [emailToLogin, setEmailToLogin] = useState(''); // State for storing the email address
   const [passwordToLogin, setPasswordToLogin] = useState(''); // State for storing the password
@@ -23,6 +25,10 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
   // Functions to open/close the register popup
   const openRegisterPopup = () => setIsRegisterPopupOpen(true);
   const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
+
+   // Functions to open/close the fotgot password popup
+   const openForgotPasswordPopup = () => setIsForgotPasswordPopupOpen(true);
+   const closeForgotPasswordPopup = () => setIsForgotPasswordPopupOpen(false);
  
    // Combined login handler
    const handleLogin = async () => {
@@ -91,7 +97,23 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
                 />  
             </div>
             
-            <p><a className="click-scroll" href="#forgotpassword"><strong><u>Forgot your password?</u></strong></a></p>
+            <p><a 
+              className="click-scroll"
+              href="javascript:void(0)"
+              onClick={(e) => {
+                  e.preventDefault(); // Prevent default if using href="#"
+                  openForgotPasswordPopup();
+              }}
+              role="button"
+              tabIndex={0}
+              >
+              <strong><u>Forgot password?</u></strong>
+              </a>
+
+              {isForgotPasswordPopupOpen  && (
+                  <ForgotPasswordPopup content="" onClose={closeForgotPasswordPopup} />
+              )}
+            </p>
             
             <button className="custom-btn btn custom-link mt-4"
             onClick={handleLogin}>LOGIN</button>
