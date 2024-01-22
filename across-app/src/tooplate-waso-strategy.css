@@ -636,6 +636,45 @@ td {
 }
 
 /*---------------------------------------
+  SEARCH-TABLE             
+-----------------------------------------*/
+.search-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.search-header {
+  width: 100%; /* Full width */
+  background: #d8d8d8;
+  display: flex;
+  border: 1px solid black;
+  padding: 8px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.search-header .search-column {
+  border: none; /* Removes border */
+}
+
+.search-row {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.search-row:hover {
+  background-color: #f5f5f5;
+}
+
+.search-column {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+
+/*--------------------------------------- 
  POP UP            
 -----------------------------------------*/
 .popup-backdrop {
