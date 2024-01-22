@@ -1,36 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { registerUser } from '../services/authenticationServices';
-import LoginPopup from '../components/LoginPopup';
+import { forgotPassword } from '../services/authenticationServices';
 
 type PopupProps = {
     content: string;
     onClose: () => void;
   };
 
-  const RegisterationPopup: React.FC<PopupProps> = ({ content, onClose }) => {
+  const ForgotPasswordPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
-  const [emailToRegister, setEmailToRegister] = useState(''); // State for storing the email address
+  const [emailToForgotPassword, setEmailToForgotPassword] = useState(''); // State for storing the email address
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
   const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
 
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false); // Login popup
-
-  // Functions to open/close the login popup
-  const openLoginPopup = () => setIsLoginPopupOpen(true);
-  const closeLoginPopup = () => setIsLoginPopupOpen(false);
-  
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailToRegister(event.target.value);
+    setEmailToForgotPassword(event.target.value);
   };
   
 // Combined submit handler
 const handleSubmit = async () => {
   try {
     // Call the registerUser function
-    const response = await registerUser(emailToRegister);
-    console.log('Registration successful:', response);
+    const response = await forgotPassword(emailToForgotPassword);
+    console.log('Request Forgot password successful:', response);
         
     if(response.status === 201) {
       setIsSubmitted(true);
@@ -41,9 +34,9 @@ const handleSubmit = async () => {
       setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
     }
   } catch (error) {
-      setResponseMessage('Registration failed'); // Update message on catch
+      setResponseMessage('Request Forgot password failed'); // Update message on catch
       setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
-      console.error('Registration failed:', error);
+      console.error('Request Forgot password failed:', error);
   }
 };
 
@@ -51,9 +44,9 @@ const handleSubmit = async () => {
       <div className="popup-backdrop">
         <div className="popup-content">
             <div className="title-popup mb-4">
-            <h5 style={{ color: "white"}}>Register your University Account</h5>
+            <h5 style={{ color: "white"}}>Forgot your password?</h5>
             </div>
-            <h6>Let's get your account set up</h6>
+            <h6>Enter University Email associated with your account</h6>
             &nbsp; 
             <button 
             onClick={onClose} 
@@ -75,38 +68,18 @@ const handleSubmit = async () => {
                     type="email"
                     className="registerEmail full-width-input"
                     placeholder="firstname.lastname@university.xx"
-                    value={emailToRegister}
+                    value={emailToForgotPassword}
                     onChange={handleEmailChange}
                     disabled={isSubmitted}
                 />
             </div>
-            
-          <button className="custom-btn btn custom-link mt-4"
-            onClick={handleSubmit} disabled={isSubmitted}>Submit</button>
-            <p style={responseStyle}>{responseMessage}</p>
-            <div style={{ marginTop: "20px" }}>
-            <p>Already have an account?&nbsp; 
-              <a 
-                className="click-scroll"
-                href="javascript:void(0)"
-                onClick={(e) => {
-                    e.preventDefault(); // Prevent default if using href="#"
-                    openLoginPopup();
-                }}
-                role="button"
-                tabIndex={0}
-                >
-                <strong><u>LOGIN</u></strong>
-                </a>
 
-                {isLoginPopupOpen  && (
-                  <LoginPopup content="" onClose={closeLoginPopup} />
-              )}
-            </p>           
-            </div>
+            <button className="custom-btn btn custom-link mt-4"
+            onClick={handleSubmit} disabled={isSubmitted}>Submit</button>
+              <p style={responseStyle}>{responseMessage}</p>
         </div>
       </div>
     );
   };
 
-export default RegisterationPopup;
+export default ForgotPasswordPopup;

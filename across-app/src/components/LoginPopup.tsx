@@ -1,36 +1,55 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { loginUser } from '../services/authenticationServices';
+import RegisterPopup from '../components/RegisterationPopup';
+import ForgotPasswordPopup from '../components/ForgotPasswordPopup';
+import { useUser } from '../UserContext';
 
 type PopupProps = {
     content: string;
     onClose: () => void;
   };
 
-  const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
+const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
 
+  const { setIsLoggedIn } = useUser(); // user status (login)
+  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // register popup
+  const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false); // forgot password popup
+  
   const [emailToLogin, setEmailToLogin] = useState(''); // State for storing the email address
   const [passwordToLogin, setPasswordToLogin] = useState(''); // State for storing the password
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
+  const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
 
-  // Handle email input changes
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmailToLogin(event.target.value);
-  };
+  const [jwtToken, setJwtToken] = useState(''); // State to store JWT token
 
-  // Handle password input changes
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordToLogin(event.target.value);
-  };
-  
+  // Functions to open/close the register popup
+  const openRegisterPopup = () => setIsRegisterPopupOpen(true);
+  const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
+
+   // Functions to open/close the fotgot password popup
+   const openForgotPasswordPopup = () => setIsForgotPasswordPopupOpen(true);
+   const closeForgotPasswordPopup = () => setIsForgotPasswordPopupOpen(false);
+ 
    // Combined login handler
    const handleLogin = async () => {
     try {
       // Call the registerUser function
       const response = await loginUser(emailToLogin, passwordToLogin);
-      setResponseMessage(response);
       console.log('Login successful:', response);
-      onClose();
+      
+      if (response && response.token) {
+        setJwtToken(response.token); // Store the JWT token in the state
+        setIsLoggedIn(true); // set user status for shared
+        setResponseMessage(response.message);
+        setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
+        onClose(); // after success login, popup will close
+      } else {
+        setResponseMessage(response.message);  
+        setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+        }
     } catch (error) {
+      setResponseMessage('Login failed'); // Update message on catch
+      setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
       console.error('Login failed:', error);
     }
   };
@@ -64,29 +83,60 @@ type PopupProps = {
                     className="loginEmail full-width-input"
                     placeholder="firstname.lastname@university.xx"
                     value={emailToLogin}
-                    onChange={handleEmailChange}
+                    onChange={(e) => setEmailToLogin(e.target.value)}
                 />
             </div>
             <div className="personal-info-section">
                 <p>Password:</p>
                 <input
-                    type="text"
+                    type="password"
                     className="loginPassword full-width-input"
                     placeholder="********"
                     value={passwordToLogin}
-                    onChange={handlePasswordChange}
+                    onChange={(e) => setPasswordToLogin(e.target.value)}
                 />  
             </div>
             
-            <p><a className="click-scroll" href="#forgotpassword"><strong><u>Forgot your password?</u></strong></a></p>
+            <p><a 
+              className="click-scroll"
+              href="javascript:void(0)"
+              onClick={(e) => {
+                  e.preventDefault(); // Prevent default if using href="#"
+                  openForgotPasswordPopup();
+              }}
+              role="button"
+              tabIndex={0}
+              >
+              <strong><u>Forgot password?</u></strong>
+              </a>
+
+              {isForgotPasswordPopupOpen  && (
+                  <ForgotPasswordPopup content="" onClose={closeForgotPasswordPopup} />
+              )}
+            </p>
             
             <button className="custom-btn btn custom-link mt-4"
             onClick={handleLogin}>LOGIN</button>
-            <p>{responseMessage}</p>
-
+            <p style={responseStyle}>{responseMessage}</p>
             <div style={{ marginTop: "20px" }}>
             <p>Don't have an account?&nbsp; 
-            <a className="click-scroll" href="#register"><strong><u>Register</u></strong></a></p>
+              <a 
+              className="click-scroll"
+              href="javascript:void(0)"
+              onClick={(e) => {
+                  e.preventDefault(); // Prevent default if using href="#"
+                  openRegisterPopup();
+              }}
+              role="button"
+              tabIndex={0}
+              >
+              <strong><u>Register</u></strong>
+              </a>
+
+              {isRegisterPopupOpen  && (
+                  <RegisterPopup content="" onClose={closeRegisterPopup} />
+              )}
+            </p>
             </div>
         </div>
       </div>
