@@ -1,4 +1,5 @@
 import json
+from typing import Annotated, Union
 from bson import json_util
 from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
@@ -129,6 +130,10 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def no_of_recommend(
         term: str = Query('', description="a search term to acquire modules"),
+        level: Annotated[Union[list[str], None], Query()] = None,
+        ects: Annotated[Union[list[str], None], Query()] = None,
+        university: Annotated[Union[list[str], None], Query()] = None,
+        type: Annotated[Union[list[str], None], Query()] = None,
         limit: int = Query(20, description="a limitation number of modules"),
         offset: int = Query(0, description="a starting position in the dataset of a particular record"),
         sortby: str = Query('module-name', description="an entity referring how rows will be sorted in the response supports only `module-name`, `offered-by`, `ect-credits`, `degree-level` and `semester`"),
@@ -155,6 +160,8 @@ def prepare_item(db: MongoClient, items: Cursor):
         del entry['name']
         del entry["_id"]
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
+        # TODO: call OWL service for number of sugggested modules
+        entry['suggested_modules'] = 0
     return data
 
 def parse_json(data):
