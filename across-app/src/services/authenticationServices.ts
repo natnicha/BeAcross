@@ -16,6 +16,8 @@ interface LoginRequest {
 interface LoginResponse {
     token?: string;
     message: string;
+    firstname: string;
+    lastname: string;
 }
   
 // Function to send a POST request to the register API
@@ -67,9 +69,9 @@ export async function loginUser(email: string, password: string): Promise<LoginR
 
         if (response.ok) {
             sessionStorage.setItem('jwtToken', responseData.data.jwt); // store jwt until the tab closed, access via sessionStorage.getItem('jwtToken');
-            return { token: responseData.data.jwt, message: "Login successfully."};
+            return { token: responseData.data.jwt, message: "Login successfully.", firstname: responseData.data.firstname, lastname: responseData.data.lastname};
         } else if (response.status == 401) {
-            return { token: "", message: responseData.detail.message };
+            return { token: "", message: responseData.detail.message, firstname: "", lastname: "" };
         } else {
             throw new Error(`Error: ${response.status}`);
         }
