@@ -53,6 +53,7 @@ const SearchPage: React.FC = (props) => {
           </nav>
         </section> 
       
+        {/*Search Result*/}
         <SearchResult />
       
       </div>
