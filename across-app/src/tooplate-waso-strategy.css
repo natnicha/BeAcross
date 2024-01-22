@@ -425,7 +425,7 @@ padding-bottom: 10px;
 }
 
 .advancedSearchRow {
-  justify-content: end; /* Center the link horizontally */
+  justify-content: left; /* Center the link horizontally */
   margin-top: 10px; /* Add some space above the link */
 }
 
