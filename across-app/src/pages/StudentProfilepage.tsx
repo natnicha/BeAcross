@@ -230,13 +230,11 @@ const StudentProfilepage: React.FC = () => {
                                     </button>
 
                                     {isPopupOpen && (
-                                        <Popup content="This is the popup content!" onClose={closePopup} />
+                                        <Popup content="" onClose={closePopup} />
                                     )}
-
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <button 
                                         className="custom-btn-green btn custom-link mt-4" >                                       
-                                        &nbsp;&nbsp; Save &nbsp;&nbsp;
+                                        Save
                                     </button>
                                 </div>
                             </div>

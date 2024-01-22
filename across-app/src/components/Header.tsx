@@ -1,6 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import RegisterPopup from '../components/RegisterationPopup';
+import LoginPopup from '../components/LoginPopup';
 
 const Header: React.FC = () => {
+
+    const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+    const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
+
+    // Functions to open/close the login popup
+    const openLoginPopup = () => setIsLoginPopupOpen(true);
+    const closeLoginPopup = () => setIsLoginPopupOpen(false);
+
+    // Functions to open/close the register popup
+    const openRegisterPopup = () => setIsRegisterPopupOpen(true);
+    const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
+
     return (
         <>
             <header className="site-header">
@@ -39,11 +53,40 @@ const Header: React.FC = () => {
                         </li>
                         <li className="nav-item">
                             <div className="d-flex align-items-center mt-2">
-                                <a className="custom-btn btn custom-link" href="#login">Login</a>
+                                <a 
+                                    className="custom-btn btn custom-link"                                  
+                                    href="javascript:void(0)"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevent default if using href="#"
+                                        openLoginPopup();
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    >
+                                    <strong><u>Login</u></strong>
+                                </a>
+                                {isLoginPopupOpen  && (
+                                        <LoginPopup content="" onClose={closeLoginPopup} />
+                                    )}
                             </div>
                             <p className="d-flex align-items-center mt-2">
                                 Don't have an account?&nbsp; 
-                                <a className="click-scroll" href="#register"><strong><u>Register</u></strong></a>
+                                <a
+                                    className="click-scroll"
+                                    href="javascript:void(0)"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevent default if using href="#"
+                                        openRegisterPopup();
+                                    }}
+                                    role="button"
+                                    tabIndex={0}
+                                    >
+                                    <strong><u>Register</u></strong>
+                                </a>
+
+                                {isRegisterPopupOpen  && (
+                                        <RegisterPopup content="" onClose={closeRegisterPopup} />
+                                    )}
                             </p>
                         </li>
                     </ul>
