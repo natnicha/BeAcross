@@ -6,7 +6,7 @@ import secrets
 import string
 from .emailtemplates import password_reset_template, registration_template
 from ..config.config_utils import env_config
-from ..api.auth.model import UserRegistrationRequest, PasswordResetRequest
+from ..api.auth.model import LoginRequestModel, RegisterRequestModel
 
 
 
@@ -34,7 +34,7 @@ def pass_maker(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
     return ''.join(secrets.choice(characters) for i in range(length))
 
-async def send_newpass_email(request: PasswordResetRequest):
+async def send_newpass_email(request: RegisterRequestModel):
     new_password = pass_maker()
     user_name= "TestUser" #name or the email address of the user
     email_body = password_reset_template.format(password=new_password, user=user_name)
