@@ -80,6 +80,13 @@ const StudentProfilepage: React.FC = () => {
   // Function to open/close the popup
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
+  // Function to change the chevron icon
+  const [chevron, setChevron] = useState(true);
+  const [chevron2, setChevron2] = useState(true);
+
+  const handleChevron = (prop: any) => {
+    prop = chevron ? setChevron(!chevron) : setChevron2(!chevron2);
+  };
 
   return (
     <>
@@ -107,9 +114,16 @@ const StudentProfilepage: React.FC = () => {
                   data-bs-target="#collapseUniModules"
                   aria-expanded="false"
                   aria-controls="collapseUniModules"
+                  onClick={handleChevron}
                 >
                   &nbsp;&nbsp;
                   <i className="bi bi-bookmark"></i>University Moduels
+                  <i
+                    className={
+                      chevron ? "bi bi-chevron-down" : "bi bi-chevron-up"
+                    }
+                    style={{ marginLeft: "auto" }}
+                  ></i>
                 </a>
                 <ul className="collapse show" id="collapseUniModules">
                   <li
@@ -142,9 +156,16 @@ const StudentProfilepage: React.FC = () => {
                   data-bs-target="#collapseStudentAccount"
                   aria-expanded="false"
                   aria-controls="collapseStudentAccount"
+                  onClick={handleChevron}
                 >
                   &nbsp;&nbsp;
                   <i className="bi bi-person-fill-add"></i>Student Account
+                  <i
+                    className={
+                      chevron2 ? "bi bi-chevron-down" : "bi bi-chevron-up"
+                    }
+                    style={{ marginLeft: "auto" }}
+                  ></i>
                 </a>
                 <ul className="collapse show" id="collapseStudentAccount">
                   <li
@@ -468,6 +489,7 @@ const StudentProfilepage: React.FC = () => {
             </div>
           </section>
         )}
+
         {/*Personal Plan*/}
         {/* Conditional rendering for personal plan section */}
         {showPersonalPlan && (
