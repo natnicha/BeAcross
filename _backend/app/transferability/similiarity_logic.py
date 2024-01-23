@@ -3,10 +3,14 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from unidecode import unidecode
+from nltk.stem import WordNetLemmatizer
+
+
 
 # comparing module a to b -> is A transferable to B
 # module A : 6 ects
-# Module B : 7 ects 
+# Module B : 7 ects
 
 def check_ects(ects_a, ects_b):
     if(abs(ects_a - ects_b)) > 1:
@@ -36,7 +40,10 @@ def check_content(text_a, text_b):
     text_a = pre_process(text_a)
     text_b = pre_process(text_b)
 
-    # Compute TF-IDF vectors
+    text_a = lemma(text_a)
+    text_b = lemma(text_b)
+    print(text_a)
+    print(text_b)
     corpus = [text_a, text_b]
     vectorizer = TfidfVectorizer()
     tfidf_matrix = vectorizer.fit_transform(corpus)
@@ -44,13 +51,31 @@ def check_content(text_a, text_b):
     cosine_sim = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
     print(cosine_sim)
 
-#def check_program()
-#def check_name()
+def compare_titles(name_a, name_b):
+    text1 = name_a.lower()
+    text2 = name_b.lower()
+
+    text1 = lemma(text1)
+    text2 = lemma(text2)
+
+    corpus = [text1, text2]
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(corpus)
+
+    cosine_sim = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
+    print(cosine_sim)
+
+
 def pre_process(text):
     text = text.lower()
+    text = unidecode(text)
     stopset = set(stopwords.words('english'))
     words = word_tokenize(text)
     words = [word.lower() for word in words if word.isalnum() and word.lower() not in stopset]
     return ' '.join(words)
 
-
+def lemma(text):
+    lemmatizer = WordNetLemmatizer()
+    words = word_tokenize(text)
+    lemmatized_string = ' '.join([lemmatizer.lemmatize(words) for words in words])
+    return lemmatized_string

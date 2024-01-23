@@ -18,6 +18,7 @@ python -m pip install "pymongo[srv]"
 python -m pip install python-dotenv
 python -m pip install pytest
 python -m pip install nltk
+python -m pip install unidecode
 python -m pip install scikit-learn
 python -m pip install httpx
 python -m pip install mongomock
