@@ -1,4 +1,5 @@
 import json
+import re
 from typing import Annotated, Union
 from bson import json_util
 from bson import ObjectId
@@ -187,11 +188,13 @@ def parse_json(data):
 
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
-        term: str = Query(min_length=1, pattern=r'(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":(\w+)\)(AND|OR|NOT)*)+'),
+        term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":(\w+)\)(AND|OR|NOT)*)+''' ),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
         sortby: str = Query('no_of_recommend', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
         orderby: str = Query('asc', pattern='^asc$|^desc$'),
         db: MongoClient = Depends(get_database),
     ):
+    pattern = r'''\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":(\w+)\)(AND|OR|NOT)*''' 
+    matches = re.findall(pattern, term)
     return 
