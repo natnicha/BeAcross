@@ -7,7 +7,7 @@ To advnaced search modules regarding given conditions
 | ** Method **     | GET                                                                         |
 | ---------------- | --------------------------------------------------------------------------- |
 | ** Structure **  | `/api/v1/module/search/advanced?{term}&{limit}&{offset}&{sortby}&{orderby}` |
-| ** Example **    | `/api/v1/module/search/advanced?term=("all%2Dmetadata":Database)%20AND%20("module_name":SQL)%20NOT%20("content":Mongo)&limit=100&offset=10&sortby=degree_program&orderby=desc` |
+| ** Example **    | `/api/v1/module/search/advanced?term=("all%5Fmetadata":Database)AND("module%5Fname":SQL)NOT("content":Mongo)&limit=100&offset=10&sortby=degree_program&orderby=desc` |
 
 ## Permissions
 
