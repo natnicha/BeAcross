@@ -11,6 +11,8 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
+import AdminBackofficePage from "./pages/AdminBackofficePage";
+// import Test from "./pages/TestPage";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,8 @@ const App: React.FC = () => {
           <Route index path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/studentprofile" element={<StudentProfilePage />} />
+          <Route path="/admin" element={<AdminBackofficePage />} />
+          {/* <Route path="/test" element={<Test />} /> */}
           <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
         </Routes>
       </Router>
