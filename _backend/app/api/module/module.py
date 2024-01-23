@@ -190,7 +190,7 @@ async def advanced_search(
         term: str = Query(min_length=1),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
-        sortby: str = Query('no_of_recommend', pattern='^module_name|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
+        sortby: str = Query('no_of_recommend', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
         orderby: str = Query('asc', pattern='^asc$|^desc$'),
         db: MongoClient = Depends(get_database),
     ):
