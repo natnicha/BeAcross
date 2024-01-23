@@ -1,21 +1,21 @@
 # ** [GET] Search Module **
 
-To search modules using OWL ontology regarding a given term
+To search modules regarding a given term, filter, limit, and offset
 
 ## Request
 
 | ** Method **     | GET                                                                |
 | ---------------- | ------------------------------------------------------------------ |
-| ** Structure **  | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}`  |
-| ** Example **    | `/api/v1/module/search?term=database&level=bachelor&degree_level=master&ects=3&ects=6&university=Bialystok%20University%20Of%20Technology&module_type=elective&limit=100&offset=10&orderby=relevant&order=desc` |
+| ** Structure **  | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}`                                                                                              |
+| ** Example **    | `/api/v1/module/search?term=database&level=bachelor&degree_level=master&ects=3&ects=6&university=Bialystok%20University%20Of%20Technology&module_type=elective&limit=100&offset=10&sortby=relevant&orderby=desc` |
 
 ## Permissions
 
-| Method          | Allow Acess                                                                                                 |
-| ----------------| ----------------------------------------------------------------------------------------------------------- |
-| student         | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}` |
-| uni-admin       | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}` |
-| sys-admin       | `/api/v1/module/search?{term}&{level}&{ects}&{university}&{module_type}&{limit}&{offset}&{orderby}&{order}` |
+| Method          | Allow Acess                                                                                                         |
+| ----------------| ------------------------------------------------------------------------------------------------------------------- |
+| student         | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
+| uni-admin       | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
+| sys-admin       | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
 
 ## Header Parameters
 
