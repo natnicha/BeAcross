@@ -1,55 +1,65 @@
+from _backend.app import config
+from _backend.app.config import config_utils
 from similiarity_logic import check_level, check_ects
 from similiarity_logic import check_content
 from similiarity_logic import compare_titles
+from pymongo import MongoClient
+from _backend.app.config.config_utils import env_config, load_env
 
 
-module_a = {
-    "name": "statistics",
-    "degree-program": "Dean of Studies for all courses in the Faculty of Mathematics (except Data Science, MINT, Advanced and Computational Mathematics)",
-    "level": " \nBachelor",
-    "content": "Content: Descriptive statistics Basics of probability calculation o Random variables and special distributions Inferential statistics o Parameter estimation o Significance tests Correlations and regression Selected statistical methods Aim:After successfully completing the module, students are able to apply basic knowledge to statistical investigations and analyzes of economic problems, interpret them and test their significance. During the internships, the students acquired methodological skills for solving mathematical concepts and can apply them independently.",
-    "uni-code": "220000-603",
-    "ECTS": 6,
-    "program": "industrial engineering",
-    "university": "Technische Universitat Chemnitz"
-  }
+def get_data(uni):
+    #get all data and prepare for run
+    conn = MongoClient("mongodb+srv://vpsad:Across1234#@across-db.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000")
+    print(conn)
+    db = conn["admin"]
+    collec = db.get_collection("modules").find({"university": uni})
+    return list(collec)
 
-module_b = {
-    "name": "Statistics",
-    "degree-program": "Environment (first cycle)",
-    "level": "Bachelor",
-    "content": "\u2022 The ability to use the statistic for data analysis \u2022 The knowledge in the field of measurements' uncetainity estimation \u2022 The development of skills needed for problems' solving in the field of problem's understanding, finding the appropriate data, solving planning, solving, results' checking and received data analysis Secondary-school knowledge of mathematics h1. 1. Descriptive statistics \u2022 Basic definitions \u2022 Measures of location \u2022 Histogram \u2022 Bar chart \u2022 Time diagram h1. 2. Probability \u2022 Basic definitions \u2022 Conditional probability \u2022 Total probability h1. 3. Distributions \u2022 Stationary \u2022 Poisson \u2022 Normal \u2022 Eksponential h1. 4. Measurements and their uncertainity \u2022 Data collection, strategies \u2022 Sources of the measurement uncertanities \u2022 Propagation of the measurement uncertanities h1. 5. Parameters\u2019 estimation \u2022 Estimators \u2022 Confidence interval h1. 6. Hyphotesis test \u2022 Hyphotesis test for the mean \u2022 Hyphotesis test for the variance \u2022 Hyphotesis test for difference between mean h1. 7. Comparison of two population \u2022 Two independance samples \u2022 Two dependance samples h1. 8. Variance analysis \u2022 Basic \u2022 Tukey\u2019s test h1. 9. Linear regression \u2022 Linear diferencial equation of the first order \u2022 Linear diferencial equation of the second order with the constant coefficients By the end of this course students will be able to: \u2022 select an appropriate statistical method for the analysis of a given dataset and provide its interpretation, \u2022 calculate statistical parameters (expected value, average, variance, median, standard deviation, etc.), \u2022 determine the probability of an event. \u2022 A. Vadnjal, Elementarni uvod v verjetnostni ra\u010dun, DZS, Ljubljana, 1979. Catalogue \u2022 M. Omladi\u010d, V. Omladi\u010d, Matematika in denar, Knji\u017enica Sigma, DMFA, Ljubljana, 1995. \u2022 M. Omladi\u010d, D. Kobal, M. Jerman, Poslovna matematika, Visoka strokovna \u0161ola za podjetni\u0161tvo, Portoro\u017e, 2002. \u2022 D. C. Montgomery in G. C. Runger, Applied statistics and probability for engineers, 2nd ed., Wiley, New Cork, 1999. Catalogue E-version \u2022 J. Devore, Probability and Statistics for Engineering and the Sciences, 6th Ed., Thomson, Belmont, 2004. E-version Written examination (100 %) Prof. dr. Dorota Korte is an assiociate professor of Physics at the University of Nova Gorica. Principal education and research areas: physics, materials\u2019 analysis, lasers\u2019 methods Professional career: Associate Prof. Dr. Dorota Korte received her PhD in physics in 2006 at the Technica University of Silesia in Poland. Her researech work started in 2007 at the Technical Univeristy of Silesia in Poland, where she was employed as an assistant for one year and three years as an assistant profesor. Since June 2008 she has been working at the Univeristy of Nova Gorica. She is a lecturer of Physics at the School of Viticulture and Enology, and a lecturer of Statistics at the School of Engineering and Management and at the School of Environmental Sciences. Selected bibliography: BARRECA, Davide, CARRARO, Giorgio, GASPAROTTO, Alberto, MACCATO, Chiara, ROSSI, Francesca, SALVIATI, Giancarlo, TALLARIDA, Massimo, DAS, Chittaranjan, FRESNO, Fernando, KORTE KOBYLINSKA, Dorota, LAVREN\u010cI\u010c \u0160TANGAR, Ur\u0161ka, FRANKO, Mladen, SCHMEISSER, Dieter. Surface functionalization of nanostructured Fe [sub] 2 O [sub] 3 polymorphs : from design to light-activated applications. ACS applied materials & interfaces, ISSN 1944-8244. [Print ed.], 2013, vol. 5, no. 15, str. 7130-7138, doi: 10.1021/am401475g. [COBISS.SI-ID 2875387] KORTE KOBYLINSKA, Dorota, PAVLICA, Egon, BRATINA, Gvido, FRANKO, Mladen. Characterization of pure and modified TiO [sub] 2 layer on glass and aluminum support by beam deflection spectrometry. International journal of thermophysics, ISSN 0195-928X, 11 str., doi: 10.1007/s10765-013-1538-4. [COBISS.SI-ID 2979067] LIU, Mingqiang, KORTE KOBYLINSKA, Dorota, FRANKO, Mladen. Theoretical description of thermal lens spectrometry in micro space. Journal of applied physics, ISSN 0021-8979, 2012, vol. 111, no. 3, str. 033109-1-033109-12. [COBISS.SI-ID 2156283] KORTE KOBYLINSKA, Dorota, BRUZZONITI, Maria Concetta, SARZANINI, Corrado, FRANKO, Mladen. Influence of foreign ions on determination of ionic Ag in water by formation of nanoparticles in a FIA-TLS system. V: First International Conference IC-ANMBES 2010, Brasov, Romania, 18. - 20. 6. 2010, (Analytical letters, ISSN 0003-2719, vol. 44, no. 18). New York: M. Dekker, 2011, vol. 44, no. 18, str. 2901-2910. [COBISS.SI-ID 2054651] tipologija 1.08 -> 1.01 KORTE KOBYLINSKA, Dorota, BRUZZONITI, Maria Concetta, SARZANINI, Corrado, FRANKO, Mladen. Thermal lens spectrometric determination of colloidal and ionic silver in water. V: Selected papers presented at the 15th Workshop on Photoacoustics and Thermal Wave Methods and the 6th Workshop on Molecular Acoustics, Relaxation and Calorimetric Methods, (International journal of thermophysics, ISSN 0195-928X, vol. 32, no. 4). Dordrecht: Springer, 2011, vol. 32, no. 4, str. 818-827, doi: 10.1007/s10765-010-0856-z. [COBISS.SI-ID 1635323] tipologija 1.08 -> 1.01 BRUZZONITI, Maria Concetta, KORTE KOBYLINSKA, Dorota, FRANKO, Mladen, SARZANINI, Corrado. Flow injection method for the determination of silver concentration in drinking water for spacecrafts. Analytica chimica acta, ISSN 0003-2670. [Print ed.], 2010, vol. 665, str. 69-73. [COBISS.SI-ID 1456123] KA\u0179MIERCZAK-BALATA, Anna, BODZENTA, Jerzy, KORTE KOBYLINSKA, Dorota, MAZUR, Jacek, GO\u0141ASZEWSKA, Krystyna, KAMI\u0143SKA, Eliana, PIOTROWSKA, Anna. Determination of thermal conductivity of thin layers used as transparent contacts and antireflection coatings with a photothermal method. Applied optics, ISSN 0003-6935, 2009, vol. 48, no. 7, str. C74-C80. [COBISS.SI-ID 1238523] KORTE KOBYLINSKA, Dorota, BUKOWSKI, Roman J., BODZENTA, Jerzy, KOCHOWSKI, Stanislaw, KA\u0179MIERCZAK-BALATA, Anna. Detector effects in photothermal deflection experiments. Applied optics, ISSN 0003-6935, 2008, vol. 47, no. 10, str. 1559-1566. [COBISS.SI-ID 1238267] KORTE KOBYLINSKA, Dorota, BUKOWSKI, Roman J., BODZENTA, Jerzy, KOCHOWSKI, Stanislaw. Thermal parameters of solids determination by the photodeflection method : theories and experiment comparison. Optica Applicata, ISSN 0078-5466, 2008, vol. 38, no. 2, str. 445-458. [COBISS.SI-ID 1237499] KORTE KOBYLINSKA, Dorota, BUKOWSKI, Roman J., BURAK, Bogus\u0142aw, BODZENTA, Jerzy, KOCHOWSKI, Stanislaw. Photodeflection signal formation in photothermal measurements : comparison of the complex ray theory, the ray theory, the wave theory, and experimental results. Applied optics, ISSN 0003-6935, 2007, vol. 46, no. 22, str. 5216-5227. [COBISS.SI-ID 1237755] KORTE KOBYLINSKA, Dorota. Comparison of theories describing the photodeflection detection in photothermal experiments : the complex geometrical optics, the ray model and the wave geometrical optics. V: BODZENTA, Jerzy (ur.), DZIDA, M. (ur.), PUSTELNY, T. (ur.). 35th Winter School on Wave and Quantum Acoustics, W&QA, Ustro\u0144, Poland, 27 February-3 March, 2006, (Journal de physique, IV, Proceedings, vol. 137). Les Ulis: EDP Sciences, 2006, vol. 137, str. 297-303. http://jp4.journaldephysique.org/index.php?option=com_article&access=standard&Itemid=129&url=/articles/jp4/abs/2006/06/jp4137058/jp4137058. html, doi: 10.1051/jp4:2006137058. [COBISS.SI-ID 1646587] tipologija 1.08 -> 1.01 KORTE KOBYLINSKA, Dorota, BUKOWSKI, Roman J., BURAK, Bogus\u0142aw, BODZENTA, Jerzy. Experimental verification of theory of photodeflection detection based on complex geometrical optics. V: BODZENTA, Jerzy (ur.), DZIDA, M. (ur.), PUSTELNY, T. (ur.). 35th Winter School on Wave and Quantum Acoustics, W&QA, Ustro\u0144, Poland, 27 February-3 March, 2006, (Journal de physique, IV, Proceedings, vol. 137). Les Ulis: EDP Sciences, 2006, vol. 137, str. 305-308. http://jp4.journaldephysique.org/index.php?option=com_article&access=standard&Itemid=129&url=/articles/jp4/abs/2006/06/jp4137059/jp4137059. html, doi: 10.1051/jp4:2006137059. [COBISS.SI-ID 1646843] tipologija 1.08 -> 1.01 KORTE KOBYLINSKA, Dorota, BUKOWSKI, Roman J., BURAK, Bogus\u0142aw, BODZENTA, Jerzy, KOCHOWSKI, Stanislaw. The complex ray theory of photodeflection signal formation : comparison with the ray theory and the experimental results. Journal of applied physics, ISSN 0021-8979, 2006, vol. 100, no. 6, str. 063501-1-063501-9. [COBISS.SI-ID 1238011] KORTE KOBYLINSKA, Dorota, BUKOWSKI, Roman J., BURAK, Bogus\u0142aw, KOCHOWSKI, Stanislaw. Gaussian optical beam propagation in thermal wave field : the ray theory, the complex ray theory and experimental results. V: B\u0139ACHOWICZ, T. (ur.), BODZENTA, Jerzy (ur.), PUSTELNY, T. (ur.). 34th Winter School on Wave and Quantum Acoustics, Ustro\u0144, Poland, 28 February-4 March, 2005, (Journal de physique, IV, Proceedings, vol. 129). Les Ulis: EDP Sciences, 2005, vol. 129, str. 231-236. http://jp4.journaldephysique.org/index.php?option=com_article&access=standard&Itemid=129&url=/articles/jp4/abs/2005/07/jp4129047/jp4129047. html, doi: 10.1051/jp4:2005129047. [COBISS.SI-ID 1646331] tipologija 1.08 -> 1.01 BUKOWSKI, Roman J., KORTE KOBYLINSKA, Dorota. Deflective signal analysis in photothermal measurements in the frame of complex geometrical optics. Optica Applicata, ISSN 0078-5466, 2005, vol. 35, no. 1, str. 77-97. [COBISS.SI-ID 1237243] BUKOWSKI, Roman J., KORTE KOBYLINSKA, Dorota. Perturbation calculus for eikonal application to analysis of the deflectional signal in photothermal measurements. Optica Applicata, ISSN 0078-5466, 2002, vol. 32, no. 4, str. 817-828. [COBISS.SI-ID 1239291]",
-    "uni-code": "1OK003",
-    "Year": "1. year",
-    "ECTS": 5,
-    "url": "https://www.ung.si/en/schools/school-of-environmental-sciences/programmes/1OK/2023/1OK003/2023/",
-    "university": "University of Nova Gorica"
-}
 
 def start():
-    level = check_level(module_a.get("level"),module_b.get("level"))
-    content = check_content(module_a.get("content"),module_b.get("content"))
-    name = compare_titles(module_a.get("name"),module_b.get("name"))
-    ects = check_ects(module_a.get("ECTS"), module_b.get("ECTS"))
 
-#def retrieve_modules():
+    UNG = get_data("University of Nova Gorica")
+    TUC = get_data("Technische Universitat Chemnitz")
+    BUT = get_data("Bialystok University Of Technology")
+    print(len(UNG))
+    print(len(TUC))
+    print(len(BUT))
 
-def check_similarity(level, content, name, degree_program, ects):
+    results = dict()
+    for mod in BUT:
+        results[mod.get("_id")] = []
+        for comp_mod in TUC:
+            if check_similarity(mod, comp_mod):
+                results[mod.get("_id")].append(comp_mod.get("_id"))
+
+    for key, value in results.items():
+        print(key, value)
+
+
+
+
+
+def check_similarity(module_a, module_b):
+
+    level = check_level(module_a.get("degree_level"), module_b.get("level"))
+    content = check_content(module_a.get("content"), module_b.get("content"))
+    name = compare_titles(module_a.get("name"), module_b.get("name"))
+    ects = check_ects(module_a.get("ects"), module_b.get("ects"))
+
     # content is not at all similiar and ects don't match and level does not match
-    if content < 0 or not ects or not level:
+    if content < -0.19 or not ects or not level:
         return False
     # very similar content
-    if level and ects and content > 0.6:
+    if level and ects and content > 0.4:
         return True
     # name matches good and some similar content
-    if level and ects and name > 0.8 and content > 0.2:
+    if level and ects and name > 0.7 and content > 0.19:
         return True
     # good ratio between name and content
-    if level and ects and name > 0.5 and content > 0.4:
+    if level and ects and name > 0.4 and content > 0.4:
         return True
+    return False
 
 start()
 
-def get_data():
-    print("get data")
-    #get all data and prepare for run
+
