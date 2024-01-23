@@ -292,7 +292,7 @@ const StudentProfilepage: React.FC = () => {
                     disabled
                   />
                 </div>
-
+                <hr />
                 <div className="personal-info-container">
                   <div className="personal-info-section">
                     <p>Password:</p>
