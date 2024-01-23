@@ -8,6 +8,9 @@ class EnvConfig:
     JWT_DURATION_MINUTE = None
     JWT_SECRET = None
 
+    EMAIL_SENDER= None
+    EMAIL_PASSWORD= None
+
 env_config = EnvConfig()
 
 def load_env():
@@ -18,3 +21,6 @@ def load_env():
 
     env_config.JWT_DURATION_MINUTE = os.getenv('JWT_DURATION_MINUTE')
     env_config.JWT_SECRET = os.getenv('JWT_SECRET')
+
+    env_config.EMAIL_SENDER = os.getenv('EMAIL_SENDER')
+    env_config.EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
