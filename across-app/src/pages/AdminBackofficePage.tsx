@@ -283,6 +283,16 @@ const StudentProfilepage: React.FC = () => {
                     disabled
                   />
                 </div>
+                <div className="personal-info-section">
+                  <p>University Affiliation:</p>
+                  <input
+                    type="text"
+                    className="uniInfo full-width-input"
+                    placeholder="Chemnitz University of Technology"
+                    disabled
+                  />
+                </div>
+
                 <div className="personal-info-container">
                   <div className="personal-info-section">
                     <p>Password:</p>
@@ -445,6 +455,19 @@ const StudentProfilepage: React.FC = () => {
           </section>
         )}
 
+        {/*Personal Plan*/}
+        {/* Conditional rendering for personal plan section */}
+        {showPersonalPlan && (
+          <section className="tm-content" id="profileinformation">
+            <div className="nav nav-tabs flex-row align-items-baseline">
+              <div className="about-thumb bg-white shadow-lg">
+                <h5 className="mb-3" style={{ color: "#1e5af5" }}>
+                  My Personal Plan
+                </h5>
+              </div>
+            </div>
+          </section>
+        )}
         {/*Personal Plan*/}
         {/* Conditional rendering for personal plan section */}
         {showPersonalPlan && (
