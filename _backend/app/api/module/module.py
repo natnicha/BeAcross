@@ -128,7 +128,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
         )
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
-async def no_of_recommend(
+async def search(
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
@@ -184,3 +184,14 @@ def is_manual_calculated_sortby(sortby: str):
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
+@module.get("/search/advanced/", status_code=status.HTTP_200_OK)
+async def advanced_search(
+        term: str = Query(min_length=1),
+        limit: int = Query(20, gt=0),
+        offset: int = Query(0, gt=0),
+        sortby: str = Query('no_of_recommend', pattern='^module_name|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
+        orderby: str = Query('asc', pattern='^asc$|^desc$'),
+        db: MongoClient = Depends(get_database),
+    ):
+    return 
