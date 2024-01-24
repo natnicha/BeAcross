@@ -218,7 +218,7 @@ async def no_of_recommend(
     ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
-        raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail={"message": "No module found"}, status_code=status.HTTP_404_NOT_FOUND)
     
     sortby_column = 'module_name'
     if not is_manual_calculated_sortby(sortby=sortby):

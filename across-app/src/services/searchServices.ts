@@ -41,7 +41,7 @@ export async function searchServices(term: string, offset: number): Promise<Sear
                 total_results: responseData.data.total_results, 
                 items: responseData.data.items,
             };
-        } else if (responseData.detail && responseData.detail.message === "no module found") {
+        } else if (responseData.detail && responseData.detail.message === "No module found") {
             return { message: responseData.detail.message };
         } else {
             throw new Error(`Error: ${response.status}`);

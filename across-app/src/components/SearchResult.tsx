@@ -20,6 +20,12 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         <div className="search-column"><strong>University</strong></div>
                     </div>
 
+                    {/*Display No Item*/}
+                    {!props.searchResult.items &&
+                        <h2 style={{ textAlign: "center", color: "red" , marginTop: "15px"}}> {props.searchResult.message} </h2>
+                    }
+
+                    {/*Display Items*/}
                     {props.searchResult.items && props.searchResult.items.map((item, index) => (
                         <div className="search-table" key={index}>
                             <div className="search-row">
