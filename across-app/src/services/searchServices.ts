@@ -36,15 +36,15 @@ export async function searchServices(term: string, offset: number): Promise<Sear
         if (response.ok) {
             return { 
                 total_results: responseData.data.total_results, 
-                content: responseData.data.items.content, 
-                university: responseData.data.items.university,
-                degree_program: responseData.data.items.degree_program,
-                module_code: responseData.data.items.module_code,
-                ects: responseData.data.items.ects,
-                degree_level: responseData.data.items.degree_level,
-                module_name: responseData.data.items.module_name,
-                no_of_recommend: responseData.data.items.no_of_recommend,
-                no_of_suggested_modules: responseData.data.items.no_of_suggested_modules,
+                content: responseData.data.items.map((item: any) => item.content), 
+                university: responseData.data.items.map((item: any) => item.university), 
+                degree_program: responseData.data.items.map((item: any) => item.degree_program), 
+                module_code: responseData.data.items.map((item: any) => item.module_code), 
+                ects: responseData.data.items.map((item: any) => item.ects), 
+                degree_level: responseData.data.items.map((item: any) => item.degree_level), 
+                module_name: responseData.data.items.map((item: any) => item.module_name), 
+                no_of_recommend: responseData.data.items.map((item: any) => item.no_of_recommend), 
+                no_of_suggested_modules: responseData.data.items.map((item: any) => item.no_of_suggested_modules), 
             };
         } else if (responseData.detail && responseData.detail.message === "no module found") {
             return { message: responseData.detail.message };
