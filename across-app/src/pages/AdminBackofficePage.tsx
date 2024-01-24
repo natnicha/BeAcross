@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Popup from "../components/ChangepasswordPopup";
+import { registerUser } from "../services/authenticationServices";
+
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -79,6 +81,40 @@ const StudentProfilepage: React.FC = () => {
 
   const handleChevron = (prop: any) => {
     prop = chevron ? setChevron(!chevron) : setChevron2(!chevron2);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Call the registerUser function
+      const response = await registerUser(emailToRegister);
+      setResponseMessage(response);
+      console.log("Registration successful:", response);
+      if (
+        response ===
+        "The registration email has been successfully sent to your email!"
+      ) {
+        setIsSubmitted(true);
+        setResponseStyle({ margin: "15px", color: "green" }); // Set to green on success
+      } else {
+        setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+      }
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setResponseMessage("Registration failed"); // Update message on catch
+      setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
+    }
+  };
+  const [emailToRegister, setEmailToRegister] = useState(""); // State for storing the email address
+  const [responseMessage, setResponseMessage] = useState(""); // State for storing response
+  const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
+  const [responseStyle, setResponseStyle] = useState({
+    margin: "15px",
+    color: "green",
+  }); // response text style
+
+  // Handle email input changes
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailToRegister(event.target.value);
   };
 
   return (
@@ -378,17 +414,18 @@ const StudentProfilepage: React.FC = () => {
                     type="email"
                     className="registerEmail full-width-input"
                     placeholder="firstname.lastname@university.xx"
-                    // value={emailToRegister}
-                    // onChange={handleEmailChange}
-                    // disabled={isSubmitted}
+                    value={emailToRegister}
+                    onChange={handleEmailChange}
+                    disabled={isSubmitted}
                   />
                   <button
                     className="custom-btn btn custom-link mt-4"
-                    // onClick={handleSubmit} disabled={isSubmitted}
+                    onClick={handleSubmit}
+                    disabled={isSubmitted}
                   >
                     Submit
                   </button>
-                  {/* <p style={responseStyle}>{responseMessage}</p> */}
+                  <p style={responseStyle}>{responseMessage}</p>
                 </div>
               </div>
             </div>
