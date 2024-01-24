@@ -1040,6 +1040,54 @@ td {
   width: 100px;
 }
 
+/*---------------------------------------
+  PAGINATION               
+-----------------------------------------*/
+.pagination {
+  display: flex;
+  padding-left: 200px;
+  list-style: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.page-link {
+  border-color: var(--border-color);
+  border-radius: var(--border-radius-large);
+  color: var(--p-color);
+  font-size: var(--copyright-font-size);
+  padding: 0;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.page-item.active .page-link,
+.page-link:hover {
+  background: var(--primary-color);
+  border-color: transparent;
+  color: var(--white-color);
+}
+
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+  border: 0;
+  border-radius: var(--border-radius-large);
+}
+
+.page-item:not(:first-child) .page-link {
+  margin-left: 5px;
+}
+
+.page-link.disabled {
+  color: #ccc; /* Grayed out */
+  cursor: not-allowed; /* Show a 'not-allowed' cursor */
+  pointer-events: none; /* Prevents click events */
+}
+
 
 /*---------------------------------------
   SITE FOOTER              

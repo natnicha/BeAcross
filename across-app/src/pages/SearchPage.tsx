@@ -3,6 +3,7 @@ import SearchResult from '../components/SearchResult';
 import SearchBar from "../components/SearchBar";
 import { Location, useLocation } from "react-router-dom";
 import { SearchResponse, searchServices } from "../services/searchServices";
+import Pagination from '../components/Pagination';
 
 interface SearchPageProps {
   location: Location;  // Define other props as needed
@@ -10,22 +11,50 @@ interface SearchPageProps {
 
 interface SearchPageState {
   query: string;
-  searchResult: SearchResponse; // Define the correct type for your search result
+  searchResult: SearchResponse;
+  currentPage: number; 
+  totalPages: number;  
+}
+
+interface ParentState {
+  currentPage: number;
 }
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
+    
   constructor(props: SearchPageProps) {
     super(props);
     this.state = {
       query: new URLSearchParams(this.props.location.search).get('query') || "",
-      searchResult: {}
+      searchResult: {},
+      currentPage: 1, 
+      totalPages: 10, 
     };
     this.setQuery = this.setQuery.bind(this);
   }
 
   async componentDidMount() {
     this.performSearch();
+    this.calculateTotalPages();
   }
+
+  async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
+    // Recalculate total pages if total results change
+    if (prevState.searchResult.total_results !== this.state.searchResult.total_results) {
+      this.calculateTotalPages();
+    }
+  }
+
+  calculateTotalPages = () => {
+    const itemsPerPage = 20;
+    let totalPages = 0;
+
+    if (this.state.searchResult && this.state.searchResult.total_results) {
+        totalPages = Math.ceil(this.state.searchResult.total_results / itemsPerPage);
+    }
+
+    this.setState({ totalPages });
+}
 
   async performSearch() {
     try {
@@ -42,6 +71,12 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   setQuery(newQuery: string) {
     this.setState({ query: newQuery });
   }
+
+  handlePageChange = (newPage: number) => {
+    this.setState({ currentPage: newPage });
+    // Trigger new search or data fetch based on the new page
+  };
+
   render() {
     return (
           <div className ="SearchPage">
@@ -71,8 +106,14 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                 </section>  
                 {/*Search Result*/}
                 <SearchResult searchResult={this.state.searchResult}/>     
-              </div>
-              
+                </div>  
+                <div>
+                <Pagination
+                  currentPage={this.state.currentPage}
+                  totalPages={this.state.totalPages}
+                  onPageChange={this.handlePageChange}
+                />
+              </div>             
           </div>
     );
   }
