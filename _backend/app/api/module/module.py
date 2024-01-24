@@ -1,14 +1,21 @@
+import json
+from typing import Annotated, Union
+from bson import json_util
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Request, status
-from mongomock import MongoClient
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from pymongo import MongoClient
+from pymongo.cursor import Cursor
 
 import app.crud.module_recommend as MODULE_RECOMMEND
+import app.crud.modules as MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, RecommendRequestModel
 
 
 module = APIRouter()
+
+sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type"}
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
@@ -119,3 +126,61 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+@module.get("/search/", status_code=status.HTTP_200_OK)
+async def no_of_recommend(
+        term: str = Query(min_length=1),
+        degree_level: Annotated[Union[list[str], None], Query()] = None,
+        ects: Annotated[Union[list[int], None], Query()] = None,
+        university: Annotated[Union[list[str], None], Query()] = None,
+        module_type: Annotated[Union[list[str], None], Query()] = None,
+        limit: int = Query(20, gt=0),
+        offset: int = Query(0, gt=0),
+        sortby: str = Query('module_name', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
+        orderby: str = Query('asc', pattern='^asc$|^desc$'),
+        db: MongoClient = Depends(get_database),
+    ):
+    count = MODULES.count(db, term, degree_level, ects, university, module_type)
+    if count == 0:
+        raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
+    
+    sortby_column = 'module_name'
+    if not is_manual_calculated_sortby(sortby=sortby):
+        sortby_column = sortby_database_col_mapping[sortby] 
+    
+    items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_column, orderby)
+    data = prepare_item(db, items)
+
+    if is_manual_calculated_sortby(sortby=sortby):
+        data = sort(data, sortby, orderby)
+
+    return {
+        "data":{
+            "total_results": count,
+            "total_items": len(data),
+            "items": data
+    }}
+
+def prepare_item(db: MongoClient, items: Cursor):
+    data = parse_json(items)
+    for entry in data:
+        entry["module_id"] = entry["_id"]['$oid']
+        entry["module_name"] = entry["name"]
+        del entry['name']
+        del entry["_id"]
+        entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
+        # TODO: call OWL service for number of sugggested modules
+        entry['no_of_suggested_modules'] = 0
+    return data
+
+def sort(data: list, sortby: str, orderby: str):
+    is_reverse = False
+    if orderby.lower() == 'desc':
+        is_reverse = True
+    return sorted(data, reverse=is_reverse, key=lambda d: d[sortby])
+
+def is_manual_calculated_sortby(sortby: str):
+    return (sortby == 'no_of_recommend' or sortby == 'no_of_suggested_modules')
+
+def parse_json(data):
+    return json.loads(json_util.dumps(data))
