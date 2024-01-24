@@ -1,9 +1,4 @@
 // Define the interface for the request payload
-interface SearchRequest {
-    term: string;
-    offset: number;
-}
-
 interface SearchItem {
     content?: string;
     university?: string;
@@ -23,8 +18,8 @@ export interface SearchResponse {
 }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: number): Promise<SearchResponse> {
-    const url: string = 'http://localhost:8000/api/v1/module/search?term=' + term + '&offset=' + offset;
+export async function searchServices(term: string, offset: string): Promise<SearchResponse> {
+    const url: string = 'http://localhost:8000/api/v1/module/search?term=' + term + offset;
 
     try {
         const response = await fetch(url, {

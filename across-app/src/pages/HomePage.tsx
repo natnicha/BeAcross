@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 //searchBG
 import acrossBG from "../images/across-bg.png";
