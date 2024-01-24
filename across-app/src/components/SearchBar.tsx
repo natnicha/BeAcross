@@ -74,8 +74,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent }) => {
                                 type="text"
                                 className="searchInput"
                                 placeholder="Search module here..."
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)} 
+                                value={""}
                             />
                         </>                   
                     )}

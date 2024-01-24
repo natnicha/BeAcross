@@ -48,6 +48,8 @@ const SearchResult: React.FC = () => {
                         </div>  
                         </div>                                     
                     </div>
+
+                    
                 </div>
                 </div>
         </section>
