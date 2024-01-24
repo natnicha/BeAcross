@@ -1,7 +1,20 @@
 import React from "react";
 
-const SearchResult: React.FC = () => {
-    
+interface SearchResultProps {
+    university?: string;
+    degree_program?: string;
+    module_code?: number;
+    ects?: number;
+    degree_level?: string;
+    module_name?: string;
+    no_of_recommend?: number;
+    no_of_suggested_modules?: number;
+}
+
+const SearchResult: React.FC<SearchResultProps> = (props) => {
+
+    // Destructure the props
+    const { university, module_code, ects, degree_level, module_name, no_of_recommend, no_of_suggested_modules } = props;
     return (
         <>
         {/*Search list*/}
@@ -20,27 +33,27 @@ const SearchResult: React.FC = () => {
                     {/*SR start here*/}
                     <div className="search-row">
                         <div className="search-column" id="moduleCode">
-                            563090
+                            {module_code}
                         </div>
                         <div className="search-column" id ="moduleName">
-                            Databases and object orientation
+                            {module_name}
                         </div>
                         <div className="search-column" id ="ect">
-                            5.0
+                            {ects}
                         </div>
                         <div className="search-column" id ="degree">
-                            Master
+                            {degree_level}
                         </div>
                         <div className="search-column" id ="university">
-                        Chemnitz University of Technology
+                            {university}
                         </div>
                         
                         <div className="search-feature-control-btn">
                             <button className="custom-btn-yellow-number btn custom-link">                                       
-                            <i className="bi bi-hand-thumbs-up"></i> Recommened <span className="number-count">81</span>
+                            <i className="bi bi-hand-thumbs-up"></i> Recommened <span className="number-count">{no_of_recommend}</span>
                             </button>
                             <button className="custom-btn-number btn custom-link">                                       
-                            <i className="bi bi-stars"></i> Suggestion Modules  <span className="number-count">81</span>
+                            <i className="bi bi-stars"></i> Suggestion Modules  <span className="number-count">{no_of_suggested_modules}</span>
                             </button>
                             <button className="custom-btn-green-number btn custom-link">                                       
                             Compare
