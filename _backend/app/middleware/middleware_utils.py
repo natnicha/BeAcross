@@ -11,6 +11,9 @@ def is_public_path(api: str):
     if api.__contains__('/docs') or api.__contains__('/openapi.json') :
         return True
     
+    if api.__contains__('/api/v1/module/search'):
+        return True
+
     return False
 
 async def is_include_request_body_if_post(request: Request):
