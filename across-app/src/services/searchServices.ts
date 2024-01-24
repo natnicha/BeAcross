@@ -4,9 +4,7 @@ interface SearchRequest {
     offset: number;
 }
 
-interface SearchResponse {
-    message?: string;
-    total_results?: number;
+interface SearchItem {
     content?: string;
     university?: string;
     degree_program?: string;
@@ -16,6 +14,12 @@ interface SearchResponse {
     module_name?: string;
     no_of_recommend?: number;
     no_of_suggested_modules?: number;
+} 
+
+export interface SearchResponse {
+    message?: string;
+    total_results?: number;
+    items?: SearchItem[];
 }
  
 // Function to send a GET request to the search API
@@ -36,15 +40,7 @@ export async function searchServices(term: string, offset: number): Promise<Sear
         if (response.ok) {
             return { 
                 total_results: responseData.data.total_results, 
-                content: responseData.data.items.map((item: any) => item.content), 
-                university: responseData.data.items.map((item: any) => item.university), 
-                degree_program: responseData.data.items.map((item: any) => item.degree_program), 
-                module_code: responseData.data.items.map((item: any) => item.module_code), 
-                ects: responseData.data.items.map((item: any) => item.ects), 
-                degree_level: responseData.data.items.map((item: any) => item.degree_level), 
-                module_name: responseData.data.items.map((item: any) => item.module_name), 
-                no_of_recommend: responseData.data.items.map((item: any) => item.no_of_recommend), 
-                no_of_suggested_modules: responseData.data.items.map((item: any) => item.no_of_suggested_modules), 
+                items: responseData.data.items,
             };
         } else if (responseData.detail && responseData.detail.message === "no module found") {
             return { message: responseData.detail.message };

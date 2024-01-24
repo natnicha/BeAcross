@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import SearchResult from '../components/SearchResult';
 import SearchBar from "../components/SearchBar";
 import { Location, useLocation } from "react-router-dom";
-import { searchServices } from "../services/searchServices";
+import { SearchResponse, searchServices } from "../services/searchServices";
 
 //const SearchPage: React.FC = (props) => {
 //  const location = useLocation();
@@ -49,27 +49,30 @@ interface SearchPageProps {
 
 interface SearchPageState {
   query: string;
-  searchResult: any; // Define the correct type for your search result
+  searchResult: SearchResponse; // Define the correct type for your search result
 }
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   constructor(props: SearchPageProps) {
     super(props);
     this.state = {
-      query: "",
-      searchResult: null
+      query: new URLSearchParams(this.props.location.search).get('query') || "",
+      searchResult: {}
     };
     this.setQuery = this.setQuery.bind(this);
   }
 
   async componentDidMount() {
-    try {
-      // Extract 'query' parameter from URL search string
-      const searchParams = new URLSearchParams(this.props.location.search);
-      const query = searchParams.get('query') || ""; // 'data' in your case
+    this.performSearch();
+  }
 
-      const result = await searchServices(query, 20);
-      this.setState({ searchResult: result, query });
+  async performSearch() {
+    try {
+      this.setState({ query: this.state.query }, async () => {
+        // Perform the search after state is updated
+        const result = await searchServices(this.state.query, 20);
+        this.setState({ searchResult: result });
+      });
     } catch (error) {
       console.error('Error fetching search results:', error);
       // Handle error appropriately
@@ -79,10 +82,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   setQuery(newQuery: string) {
     this.setState({ query: newQuery });
   }
-
   render() {
-    const { query, searchResult } = this.state;
-
     return (
           <div className ="SearchPage">
               {/*Search title*/}
@@ -91,12 +91,12 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                   <div className="row">
                     <div className="col-12 text-left mb-4" style={{ display: 'flex', alignItems: 'center' }}>
                       <h2 style={{ display: "inline" }}>Browsing within...&nbsp;&nbsp;</h2> 
-                      <h2 style={{ display: "inline", color: "#1e5af5" , marginRight: "auto"}}>{query}</h2>
+                      <h2 style={{ display: "inline", color: "#1e5af5" , marginRight: "auto"}}>{this.state.query}</h2>
                       <p style={{ margin: 0 }}>Number of results found: 64</p>
                     </div>
                   </div>
                   {/*Searchbar*/}
-                  <SearchBar content={query} setContent={this.setQuery} />
+                  <SearchBar content={this.state.query} setContent={this.setQuery} onSearch={() => this.performSearch()}/>
                 </div>
               </section>
               <div className="profile-container">
@@ -106,7 +106,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                   
                 </section>  
                 {/*Search Result*/}
-                <SearchResult />     
+                <SearchResult searchResult={this.state.searchResult}/>     
               </div>
               
           </div>

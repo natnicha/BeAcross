@@ -6,28 +6,14 @@ import SearchResult from '../components/SearchResult';
 interface SearchBarProps {
     content: string;
     setContent: (value: string) => void;
+    onSearch?: () => void;
   }
 
-interface SearchResponse {
-    message?: string;
-    total_results?: number;
-    content?: string;
-    university?: string;
-    degree_program?: string;
-    module_code?: number;
-    ects?: number;
-    degree_level?: string;
-    module_name?: string;
-    no_of_recommend?: number;
-    no_of_suggested_modules?: number;
-}
-
-const SearchBar: React.FC<SearchBarProps> = ({ content, setContent }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) => {
     
     const navigate = useNavigate();
     const [showAdvanceSearch, setAdvanceSearch] = useState(false); // State to manage visibility of the advance search panel
     const [selectedValue, setSelectedValue] = useState('AND');
-    const [searchResults, setSearchResults] = useState<SearchResponse | null>(null); // Type the state
 
     const AdvanceSearchClick = () => {
         setAdvanceSearch(true);
@@ -39,14 +25,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent }) => {
 
     const handleSearch = async () => {
         try {
-            //const results = await searchServices(content, 20);
-            //setSearchResults(results);
-            //navigate("/search?query=" + encodeURIComponent(content), { state: { content, results } });
-            navigate("/search?query=" + encodeURIComponent(content));
+          if (onSearch) {
+            await onSearch();
+          }
+          navigate("/search?query=" + encodeURIComponent(content));
         } catch (error) {
-            console.error('Error during search:', error);
+          console.error('Error during search:', error);
         }
-    };
+      };
     
     return (
        <>
