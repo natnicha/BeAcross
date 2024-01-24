@@ -19,9 +19,11 @@ export interface SearchResponse {
 }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: string): Promise<SearchResponse> {
-    const url: string = 'http://localhost:8000/api/v1/module/search?term=' + term + offset;
-
+export async function searchServices(term: string, offset: number): Promise<SearchResponse> {
+    
+    let baseUrl = 'http://localhost:8000/api/v1/module/search?term=';
+    
+    let url = offset === 0 ? `${baseUrl}${term}` : `${baseUrl}${term}&offset=${offset}`;
     try {
         const response = await fetch(url, {
             method: 'GET',

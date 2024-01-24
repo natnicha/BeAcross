@@ -58,11 +58,11 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   async performSearch() {
     try {
-      this.setState({ query: this.state.query }, async () => {
-        // Perform the search after state is updated
-        const result = await searchServices(this.state.query, "");
-        this.setState({ searchResult: result });
-      });
+      let offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
+      const result = await searchServices(this.state.query, offset);
+      this.setState({ searchResult: result });
+      // Set the search results and reset the current page to 1
+      this.setState({ searchResult: result, currentPage: 1 });
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
@@ -73,9 +73,10 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   }
 
   handlePageChange = (newPage: number) => {
-    this.setState({ currentPage: newPage });
-    // Trigger new search or data fetch based on the new page
-  };
+    this.setState({ currentPage: newPage }, () => {
+        this.performSearch(); // Call performSearch after setting the new page
+    });
+};
 
   render() {
     return (
