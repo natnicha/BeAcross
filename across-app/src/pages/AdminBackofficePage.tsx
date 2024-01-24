@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import Popup from "../components/ChangepasswordPopup";
 import { registerUser } from "../services/authenticationServices";
+import FileUploader from "../components/FileUploader";
 
+// Bootstrap
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -380,9 +382,7 @@ const StudentProfilepage: React.FC = () => {
           <section className="tm-content" id="profileinformation">
             <div className="nav nav-tabs flex-row align-items-baseline">
               <div className="about-thumb bg-white shadow-lg">
-                <h5 className="mb-3" style={{ color: "#1e5af5" }}>
-                  Upload University Modules (format *.json only)
-                </h5>
+                <FileUploader />
               </div>
             </div>
           </section>
