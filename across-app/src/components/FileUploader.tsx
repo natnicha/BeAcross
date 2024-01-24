@@ -14,7 +14,7 @@ const FileUploader = () => {
   };
 
   const handleUpload = async () => {
-    if (file) {
+    if (file?.type == "application/json") {
       setStatus("uploading");
 
       const formData = new FormData();
@@ -34,6 +34,8 @@ const FileUploader = () => {
         console.error(error);
         setStatus("fail");
       }
+    } else {
+      alert("File type not supported. Please upload a JSON file.");
     }
   };
 
