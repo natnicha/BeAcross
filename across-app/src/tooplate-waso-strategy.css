@@ -405,6 +405,22 @@ padding-bottom: 10px;
   width: 100%;
 }
 
+.SearchPage .searchbar {
+  position: relative;
+  height: 100px;
+  margin-left: -345px;
+  width: 155%;
+}
+
+.SearchPage .searchbarContent {
+  width: 76%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(68, 68, 68, 0.514);
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .searchbarContent {
   display: flex;
   flex-direction: column; /* Stack children vertically */

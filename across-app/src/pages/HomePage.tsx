@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 //searchBG
 import acrossBG from "../images/across-bg.png";

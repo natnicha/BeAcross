@@ -21,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent }) => {
   };
     
     return (
-        <>
+       <>
        {/*Searchbar*/}
         <section className="searchbar">
             <div className="searchbarContent">
