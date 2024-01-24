@@ -10,6 +10,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 //thumbnail images
 import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
+import editProfileImage from "../images/projects/edit-profile.png";
 
 const StudentProfilepage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -296,6 +297,22 @@ const StudentProfilepage: React.FC = () => {
                   >
                     <i className="bi bi-bookmark"></i>{" "}
                     <strong> &nbsp; Student List</strong>
+                  </a>
+                </button>
+                <button
+                  className="nav-link active"
+                  id="editprofile"
+                  onClick={() => profileNavClick("profile")}
+                >
+                  <img
+                    src={editProfileImage}
+                    className="img-fluid projects-image"
+                    alt="Edit Profile"
+                  />
+
+                  <a className="click-scroll" href="#profile">
+                    <i className="bi bi-file-earmark-text"></i>{" "}
+                    <strong> &nbsp; Edit Profile</strong>
                   </a>
                 </button>
               </div>
