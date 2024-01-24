@@ -22,7 +22,6 @@ const SearchPage: React.FC = (props) => {
             </div>
             {/*Searchbar*/}
             <SearchBar content={content} setContent={setContent} />
-
           </div>
         </section>
 
@@ -30,32 +29,7 @@ const SearchPage: React.FC = (props) => {
           
           {/*Filter*/}
           <section className="tm-sidebar" id="tm-sidebar">
-            <nav className="tm-nav" id="tm-nav">            
-                <ul className="tm-nav-items">
-                    <li className="tm-nav-item" >
-                        <a href="#home" className="tm-nav-link">&nbsp;&nbsp;
-                        <i className="bi bi-house-door"></i> Home
-                        </a>
-                    </li>
-                    <li className="tm-nav-item" >
-                        <a href="#mypersonalplan" className="tm-nav-link">&nbsp;&nbsp;
-                        <i className="bi bi-bookmark"></i> My Personal Plan
-                        </a>
-                    </li>
-                    <li className="tm-nav-item" >
-                        <a href="#myexamresult" className="tm-nav-link">&nbsp;&nbsp;
-                        <i className="bi bi-file-earmark-text"></i> My Exam Results
-                        </a>
-                    </li>
-                </ul>
-                <ul>
-                    <li className="tm-nav-item" >
-                        <a href="#profile" className="tm-nav-link">&nbsp;&nbsp;
-                        <i className="bi bi-file-person"></i>    Profile
-                        </a>
-                    </li>
-                </ul>   
-            </nav>
+            
           </section>  
 
           {/*Search Result*/}
