@@ -13,6 +13,7 @@ interface SearchItem {
 
 export interface SearchResponse {
     message?: string;
+    total_items?: number;
     total_results?: number;
     items?: SearchItem[];
 }
@@ -34,6 +35,7 @@ export async function searchServices(term: string, offset: string): Promise<Sear
 
         if (response.ok) {
             return { 
+                total_items: responseData.data.total_items, 
                 total_results: responseData.data.total_results, 
                 items: responseData.data.items,
             };

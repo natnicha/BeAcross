@@ -52,7 +52,11 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                     <div className="col-12 text-left mb-4" style={{ display: 'flex', alignItems: 'center' }}>
                       <h2 style={{ display: "inline" }}>Browsing within...&nbsp;&nbsp;</h2> 
                       <h2 style={{ display: "inline", color: "#1e5af5" , marginRight: "auto"}}>{this.state.query}</h2>
-                      <p>Number of results found: <span style={{ color: "#1e5af5"}}><strong> {this.state.searchResult.total_results} </strong></span></p>
+                      <p>Show 
+                        <span style={{ color: "#1e5af5"}}><strong> {this.state.searchResult.total_items} </strong></span>
+                        of 
+                        <span style={{ color: "#1e5af5"}}><strong> {this.state.searchResult.total_results} </strong></span>
+                      Search results founded.</p>
                     </div>
                   </div>
                   {/*Searchbar*/}
