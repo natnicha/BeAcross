@@ -131,7 +131,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 
 @module.post("/comment", response_model=ModuleCommentResponseModel, status_code=status.HTTP_201_CREATED)
-async def unrecommend(
+async def comment(
         request: Request,
         items: ModuleCommentRequestModel,
         db: MongoClient = Depends(get_database),
@@ -169,7 +169,7 @@ def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
 
 
 @module.delete("/comment/{module_comment_id}", status_code=status.HTTP_200_OK)
-async def unrecommend(
+async def delete_comment(
         request: Request,
         module_comment_id: str = None,
         db: MongoClient = Depends(get_database),
@@ -204,7 +204,7 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
         )
     
 @module.get("/search/", status_code=status.HTTP_200_OK)
-async def no_of_recommend(
+async def search(
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
