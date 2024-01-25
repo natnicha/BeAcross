@@ -59,7 +59,7 @@ Both university and system administrators can add new modules by making a reques
         <module_code>563100</module_code>
         <content>Content:Requirements for today's data management systems include scalability, continuous availability, frequent changes, location independence, the management of a wide ....</content>
         <ects>5</ects>
-        <type>elective</type>
+        <module_type>elective</module_type>
     </module>
     <module>
         <module_name>Artificial Intelligence for Data Analysis</module_name>
@@ -69,7 +69,7 @@ Both university and system administrators can add new modules by making a reques
         <module_code>2GI018n</module_code>
         <content>AI-assisted data analysis is a process of discovering patterns and models, described by rules or other human- understandable representation formalisms...</content>
         <ects>6</ects>
-        <type>elective</type>
+        <module_type>elective</module_type>
     </module>
 </data>
 ```
