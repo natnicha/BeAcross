@@ -165,6 +165,12 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                           </div>
                         </div>
                       </div>
+
+                      <div className ="filter-item" style={{ borderBottom: "none", marginTop: "20px"}}>
+                        <button className="custom-btn-green btn custom-link" style={{ width: "100%"}}>                                       
+                        Apply
+                        </button>
+                      </div>
                   </div>
                 </section>
 
