@@ -278,10 +278,25 @@ async def create_module(
 
     tree = ET.ElementTree(ET.fromstring(body))
     modules_graph = tree.getroot()
-    modules = []
+    upload_modules_list = []
+    db_modules_list = []
     for module in modules_graph:
-        model = UploadModulesModel()
+        uploading_model = UploadModulesModel()
         for entity in module:
-            setattr(model, sortby_database_col_mapping[entity.tag], entity.text)
-        modules.append(model)
-    return modules
+            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+        db_model = MODULES.ModulesModel(
+            name=str(uploading_model.name),
+            degree_program=str(uploading_model.degree_program),
+            level=str(uploading_model.degree_level),
+            code=str(uploading_model.module_code),
+            university=str(uploading_model.university),
+            ect_credits=int(uploading_model.ects),
+            year_of_study="",
+            content=str(uploading_model.content),
+        )
+        upload_modules_list.append(uploading_model)
+        db_modules_list.append(db_model)
+    # insert into db
+    # call similarity calculation function
+    # get module detail for each similar module 
+    return db_modules_list
