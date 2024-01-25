@@ -20,10 +20,17 @@ interface SearchResultProps {
 const SearchResult: React.FC<SearchResultProps> = (props) => {
     
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
 
     const handleRowClick = (item: Item) => {
         setSelectedItem(item);
+        openDetailPopup();
     };
+
+    
+    // Functions to open/close the register popup
+    const openDetailPopup = () => setIsDetailPopupOpen(true);
+    const closeDetailPopup = () => setIsDetailPopupOpen(false);
     
     return (
         <>
@@ -80,7 +87,13 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     ))}
                     
                     {/* Conditionally render ModuleDetailPopup */}
-            {selectedItem && <ModuleDetailPopup selectedItem={selectedItem} />}
+                    {selectedItem && isDetailPopupOpen && (
+                    <ModuleDetailPopup 
+                        content="" 
+                        selectedItem={selectedItem} 
+                        onClose={closeDetailPopup} 
+                    />
+                    )}  
                 </div>
             </div>
         </section>

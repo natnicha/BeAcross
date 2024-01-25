@@ -1,5 +1,4 @@
 import React from 'react';
-import { SearchResponse  } from "../services/searchServices";
 
 // Define the Item type based on your data structure
 interface Item {
@@ -16,7 +15,12 @@ interface ModuleDetailPopupProps {
     selectedItem: Item; // Corrected prop type
 }
 
-const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
+type PopupProps = {
+    content: string;
+    onClose: () => void;
+  };
+
+  const ModuleDetailPopup: React.FC<ModuleDetailPopupProps & PopupProps> = ({ selectedItem, content, onClose }) => {
     return (
         <>
             <div className="popup-backdrop">
@@ -24,6 +28,19 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     <div className="title-popup mb-4">
                     <h5 style={{ color: "white"}}>{selectedItem.module_code} {selectedItem.module_name}</h5>
                     </div>
+                    <button 
+                        onClick={onClose} 
+                        style={{ 
+                            position: 'absolute', 
+                            top: '10px', 
+                            right: '10px', 
+                            border: 'none', 
+                            background: 'transparent', 
+                            cursor: 'pointer' 
+                        }}
+                        >
+                        X
+                    </button>
                 <div className="search-table">
                     <div className="search-row">
                         <div className="search-column" id="degreeProgram">
