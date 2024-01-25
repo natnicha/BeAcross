@@ -260,3 +260,7 @@ def is_manual_calculated_sortby(sortby: str):
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
+@module.post("/", status_code=status.HTTP_201_CREATED)
+async def create_module(db: MongoClient = Depends(get_database)):
+    return {"sssssssssssss"}
