@@ -2,9 +2,11 @@ import json
 from typing import Annotated, Union
 from bson import json_util
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
+from owlready2 import *
+import xml.etree.ElementTree as ET
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
@@ -262,5 +264,28 @@ def parse_json(data):
     return json.loads(json_util.dumps(data))
 
 @module.post("/", status_code=status.HTTP_201_CREATED)
-async def create_module(db: MongoClient = Depends(get_database)):
-    return {"sssssssssssss"}
+async def create_module(
+    request: Request,
+    content_type: str = Header(...),
+    db: MongoClient = Depends(get_database)):
+    if content_type != "application/xml":
+        raise HTTPException(
+            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            f"Unsupported media type: {content_type}."
+            " It must be application/xml",
+        )
+    body = await request.body()
+
+    # print(request.body())
+    # prod_path = "./app/api/module/tuc_modules_2038.xml"
+    # # Load the product XML file
+    # prod_tree = ET.parse(prod_path)
+    # prod_root = prod_tree.getroot()
+    # for x in prod_root[0]:
+    #     print(x.tag, x.attrib, x.text)
+
+    tree = ET.ElementTree(ET.fromstring(body))
+    prod_root = tree.getroot()
+    for x in prod_root[0]:
+        print(x.tag, x.attrib, x.text)
+    return 
