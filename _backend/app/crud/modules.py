@@ -16,12 +16,13 @@ class BaseModel(BaseModel):
 class ModulesModel(BaseModel):
     name: str = Field(...)
     degree_program: str = Field(...)
-    level: str = Field(...)
-    code: str = Field(...)
-    university: str = Field(...)
-    ect_credits: int = Field(...)
-    year_of_study: str = Field(...)
+    degree_level: str = Field(...)
     content: str = Field(...)   
+    university: str = Field(...)
+    module_code: str = Field(...)
+    ects: int = Field(...)
+    year: str = Field(...)
+    type: str = Field(...)
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 

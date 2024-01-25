@@ -24,8 +24,8 @@ class UploadModulesModel(BaseModel):
     name: str = None
     degree_program: str = None
     degree_level: str = None
-    module_code: str = None
     university: str = None
+    module_code: str = None
+    content: str = None   
     ects: int = None
     type: str = None
-    content: str = None   
