@@ -159,6 +159,25 @@ Both university and system administrators can add new modules by making a reques
 }
 ```
 
+## Error Response 422 - Unprocessable Entity (case: mismatched tag in XML file)
+```json
+{
+    "detail": {
+        "message": "Expected tag not found or unexpected tag found. Please check you XML file tags",
+        "hint": "mismatched tag: line 14, column 64"
+    }
+}
+```
+
+## Error Response 422 - Unprocessable Entity (case: mismatched tag in XML file)
+```json
+{
+    "detail": {
+        "message": "Expected tag not found or unexpected tag found. Please check you XML file tags",
+        "hint": "mismatched tag: line 14, column 64"
+    }
+}
+```
 
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
 ```json
