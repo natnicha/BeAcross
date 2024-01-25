@@ -12,7 +12,6 @@ import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
-// import Test from "./pages/TestPage";
 
 const App: React.FC = () => {
   return (
