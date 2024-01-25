@@ -41,7 +41,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, con
             <div className="popup-backdrop">
                 <div className="popup-content">
                     <div className="title-popup mb-2">
-                    <h5 style={{ color: "white", alignItems:"left"}}>{selectedItem.module_code} {selectedItem.module_name}</h5>
+                    <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                     </div>
                     <button 
                         onClick={onClose} 
