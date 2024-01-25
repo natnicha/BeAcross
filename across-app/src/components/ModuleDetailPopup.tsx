@@ -7,7 +7,6 @@ interface Item {
     degree_program?: string;
     module_code?: number;
     ects?: number;
-    degree_level?: string;
     module_name?: string;
 }
 
@@ -22,10 +21,10 @@ type PopupProps = {
 
   const ModuleDetailPopup: React.FC<ModuleDetailPopupProps & PopupProps> = ({ selectedItem, content, onClose }) => {
     return (
-        <>
+        <div className="module-detail">
             <div className="popup-backdrop">
                 <div className="popup-content">
-                    <div className="title-popup mb-4">
+                    <div className="title-popup mb-2">
                     <h5 style={{ color: "white"}}>{selectedItem.module_code} {selectedItem.module_name}</h5>
                     </div>
                     <button 
@@ -41,25 +40,39 @@ type PopupProps = {
                         >
                         X
                     </button>
-                <div className="search-table">
-                    <div className="search-row">
-                        <div className="search-column" id="degreeProgram">
-                            
+                    <div className="detail-table">
+                        <div className="details">
+                            <div className="detail-row">
+                                <div className="detail-column"><strong>University offer:</strong></div>
+                                <div className="detail-column" id="university">
+                                    {selectedItem.university}
+                                </div>
+                            </div>
+
+                            <div className="detail-row">
+                                <div className="detail-column"><strong>Degree Program:</strong></div>
+                                <div className="detail-column" id="degreeProgram">
+                                    {selectedItem.degree_program}
+                                </div>
+                            </div>
+
+                            <div className="detail-row">
+                                <div className="detail-column"><strong>ECTS credit:</strong></div>
+                                <div className="detail-column" id="ectCredit">
+                                    {selectedItem.ects}
+                                </div>
+                            </div>
                         </div>
-                        <div className="search-column" id="ectCredit">
-                            Master
-                        </div>
-                        <div className="search-column" id="content">
-                           5
-                        </div>
-                        <div className="search-column" id="university">
-                            Summer
-                        </div>
+                        <div className="detail-row">
+                                <div className="detail-column"><strong>Module Content:</strong></div>
+                                <div className="detail-column" id="content">
+                                    {selectedItem.content}
+                                </div>
+                            </div>
                     </div>
                 </div>
-                </div>
             </div>
-        </>
+        </div>
     );
 };
 
