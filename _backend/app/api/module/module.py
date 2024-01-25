@@ -14,12 +14,12 @@ import app.crud.module_comment as MODULE_COMMENT
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
+from app.api.module.model import *
 
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type"}
+sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "module_code": "module_code", "content": "content"}
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
@@ -277,7 +277,11 @@ async def create_module(
     body = await request.body()
 
     tree = ET.ElementTree(ET.fromstring(body))
-    prod_root = tree.getroot()
-    for x in prod_root[0]:
-        print(x.tag, x.attrib, x.text)
-    return 
+    modules_graph = tree.getroot()
+    modules = []
+    for module in modules_graph:
+        model = UploadModulesModel()
+        for entity in module:
+            setattr(model, sortby_database_col_mapping[entity.tag], entity.text)
+        modules.append(model)
+    return modules

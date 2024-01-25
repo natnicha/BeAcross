@@ -19,3 +19,13 @@ class ModuleCommentDataModel(ModuleCommentModel):
 class ModuleCommentResponseModel(BaseModel):
     message: str
     data: ModuleCommentDataModel
+
+class UploadModulesModel(BaseModel):
+    name: str = None
+    degree_program: str = None
+    degree_level: str = None
+    module_code: str = None
+    university: str = None
+    ects: int = None
+    type: str = None
+    content: str = None   
