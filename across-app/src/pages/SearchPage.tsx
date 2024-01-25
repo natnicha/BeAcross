@@ -108,28 +108,39 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                       <div className ="filter-item">
                         <h6 style={{ width: "300px", marginLeft: "10px"}}>Degree level:</h6>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="icheck" /> Bachelor</label>
+                            <label><input type="checkbox" className="pointer-checkbox" /> Bachelor</label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="icheck" /> Master</label>
+                            <label><input type="checkbox" className="pointer-checkbox" /> Master</label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="icheck" /> Doctoral</label>
+                            <label><input type="checkbox" className="pointer-checkbox" /> Doctoral</label>
                         </div>
                       </div> 
 
                       <div className ="filter-item">
                         <h6 style={{ width: "300px", marginLeft: "10px"}}>Module type:</h6>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="icheck" /> Erasmus</label>
+                            <label><input type="checkbox" className="pointer-checkbox" /> Erasmus</label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="icheck" /> Obiligitory</label>
+                            <label><input type="checkbox" className="pointer-checkbox" /> Obiligitory</label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="icheck" /> Elective</label>
+                            <label><input type="checkbox" className="pointer-checkbox" /> Elective</label>
                         </div>
                       </div> 
+
+                      <div className ="filter-item">
+                        <div className="dropdown">
+                          <button className="dropbtn">University... <i className="bi bi-caret-down-fill"></i></button>
+                          <div className="dropdown-content">
+                              <label><input type="checkbox" className="pointer-checkbox" value="Uni1" /> Bialystok University Of Technology</label>
+                              <label><input type="checkbox" className="pointer-checkbox" value="Uni2" /> Technische Universitat Chemnitz</label>
+                              <label><input type="checkbox" className="pointer-checkbox" value="Uni3" /> University of Nova Gorica</label>
+                          </div>
+                        </div>
+                      </div>
                   </div>
                 </section>
 
