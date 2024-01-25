@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useState } from 'react';
+import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
+
+// Define the Item type based on your data structure
+interface Item {
+    content?: string;
+    university?: string;
+    degree_program?: string;
+    module_code?: number;
+    ects?: number;
+    degree_level?: string;
+    module_name?: string;
+}
 
 interface SearchResultProps {
     searchResult: SearchResponse;
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
+    
+    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+
+    const handleRowClick = (item: Item) => {
+        setSelectedItem(item);
+    };
+    
     return (
         <>
         {/*Search list*/}
@@ -28,7 +47,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     {/*Display Items*/}
                     {props.searchResult.items && props.searchResult.items.map((item, index) => (
                         <div className="search-table" key={index}>
-                            <div className="search-row">
+                            <div className="search-row" onClick={() => handleRowClick(item)}>
                                 <div className="search-column" id="moduleCode">
                                     {item.module_code}
                                 </div>
@@ -60,6 +79,8 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         </div>
                     ))}
                     
+                    {/* Conditionally render ModuleDetailPopup */}
+            {selectedItem && <ModuleDetailPopup selectedItem={selectedItem} />}
                 </div>
             </div>
         </section>

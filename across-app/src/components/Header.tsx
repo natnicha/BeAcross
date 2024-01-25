@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import RegisterPopup from '../components/RegisterationPopup';
 import LoginPopup from '../components/LoginPopup';
 import { useUser } from '../UserContext';
