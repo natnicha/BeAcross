@@ -283,30 +283,24 @@ async def create_module(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"message": "Unexpected tag found. Please check you XML file tags",
+            detail={"message": "Expected tag not found or unexpected tag found. Please check you XML file tags",
                 "hint": str(e)},
         )
     
     inserted_modules = MODULES.insert_many(db, db_modules_list)
     item_response_list = []
     for index, element in enumerate(uploaded_modules_list):
-        try: 
-            item = UploadModulesResponseItemModel(
-                    module_id=str(inserted_modules.inserted_ids[index]),
-                    module_name=element.name,
-                    degree_program=element.degree_program,
-                    degree_level=element.degree_level,
-                    university=element.university,
-                    module_code=element.module_code,
-                    content=element.content,
-                    ects=element.ects,
-                    type=element.type
-                )
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail={"message": "Expected tag not found. Please check you XML file tags",
-                    "hint": str(e)},
+        module_id = str(inserted_modules.inserted_ids[index])
+        item = UploadModulesResponseItemModel(
+                module_id=module_id,
+                module_name=element.name,
+                degree_program=element.degree_program,
+                degree_level=element.degree_level,
+                university=element.university,
+                module_code=element.module_code,
+                content=element.content,
+                ects=element.ects,
+                type=element.type
             )
         item_response_list.append(item)
 
@@ -328,20 +322,17 @@ def get_data_from_xml(text: bytes) -> (list, list) :
     for module in modules_graph:
         uploading_model = UploadModulesModel()
         for entity in module:
-            try:
-                setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
-            except Exception as e:
-                raise e
+            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
         db_model = MODULES.ModulesModel(
-            name=str(uploading_model.name),
-            degree_program=str(uploading_model.degree_program),
-            degree_level=str(uploading_model.degree_level),
-            university=str(uploading_model.university),
-            module_code=str(uploading_model.module_code),
-            content=str(uploading_model.content),
+            name=uploading_model.name,
+            degree_program=uploading_model.degree_program,
+            degree_level=uploading_model.degree_level,
+            university=uploading_model.university,
+            module_code=uploading_model.module_code,
+            content=uploading_model.content,
             ects=int((uploading_model.ects or 0)),
             year="",
-            type=str(uploading_model.type),
+            type=uploading_model.type,
         )
         uploaded_modules_list.append(uploading_model)
         db_modules_list.append(db_model)
