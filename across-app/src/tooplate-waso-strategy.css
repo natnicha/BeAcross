@@ -600,6 +600,19 @@ padding-bottom: 10px;
   height: 70px;
 }
 
+/*---------------------------------------
+ MODULE DETAIL             
+-----------------------------------------*/
+.module-detail .popup-content {
+width: 60%;
+}
+
+.uni-logo {
+  border-radius: 20px;
+  height: 162px;
+  margin-left: 27%;
+  margin-top: 5%;
+}
 
 /*---------------------------------------
  PERSONAL INFO             
@@ -725,6 +738,43 @@ td {
 .search-column {
   flex: 1;
   padding: 10px;
+}
+
+/*---------------------------------------
+  DETAIL-TABLE             
+-----------------------------------------*/
+.detail-table {
+  display: grid;
+  width: 100%;
+  border-collapse: collapse;
+  max-height: 500px; /* Set a fixed maximum height */
+  overflow-y: auto;
+}
+
+.detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.detail-row .search-column {
+  flex: 1;
+  padding: 10px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.detail-column {
+  padding: 10px;
+}
+
+.detail-table .detail-row .detail-column:first-child {
+  width: 200px;
+}
+
+.detail-table .details{
+  width: 50%;
 }
 
 /*---------------------------------------

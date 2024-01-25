@@ -99,7 +99,6 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
             
             <p><a 
               className="click-scroll"
-              href="javascript:void(0)"
               onClick={(e) => {
                   e.preventDefault(); // Prevent default if using href="#"
                   openForgotPasswordPopup();
@@ -122,7 +121,6 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
             <p>Don't have an account?&nbsp; 
               <a 
               className="click-scroll"
-              href="javascript:void(0)"
               onClick={(e) => {
                   e.preventDefault(); // Prevent default if using href="#"
                   openRegisterPopup();

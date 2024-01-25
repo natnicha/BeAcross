@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { searchServices } from '../services/searchServices';
 import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
@@ -58,7 +57,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                     <div className="advancedSearchRow">
                         <a
                             className="click-scroll d-flex align-items-end"
-                            href="javascript:void(0)"
                             onClick={(e) => {
                                 e.preventDefault(); // Prevent default if using href="#"
                                 AdvanceSearchClick();

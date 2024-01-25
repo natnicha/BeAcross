@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import RegisterPopup from '../components/RegisterationPopup';
 import LoginPopup from '../components/LoginPopup';
 import { useUser } from '../UserContext';
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
 
@@ -18,10 +19,13 @@ const Header: React.FC = () => {
     const openRegisterPopup = () => setIsRegisterPopupOpen(true);
     const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
 
+    const navigate = useNavigate(); // redirect user back to homepage
+
     const handleLogout = () => {
     // Clear the token on logout
     sessionStorage.removeItem('jwtToken');
     setIsLoggedIn(false);
+    navigate('/');
     };
 
     return (
@@ -67,10 +71,10 @@ const Header: React.FC = () => {
                                 {isLoggedIn ? (
                                     <a 
                                         className="custom-btn-red btn custom-link"                                  
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             handleLogout(); // check user status
+                                            
                                         }}
                                         role="button"
                                         tabIndex={0}
@@ -80,7 +84,6 @@ const Header: React.FC = () => {
                                 ) : (
                                     <a 
                                         className="custom-btn-green btn custom-link"                                  
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             openLoginPopup();                               
@@ -103,7 +106,6 @@ const Header: React.FC = () => {
                                     Welcome, &nbsp;&nbsp;
                                     <a
                                         className="click-scroll d-flex align-items-end"
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             window.location.href = 'http://localhost:3000/studentprofile';
@@ -128,7 +130,6 @@ const Header: React.FC = () => {
                                     Don't have an account?&nbsp; 
                                     <a
                                         className="click-scroll d-flex align-items-end"
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             openRegisterPopup();
