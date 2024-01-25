@@ -30,12 +30,14 @@ async def send_email(receiver_email: str, subject: str, body: str, sender_email:
         raise HTTPException(status_code=500, detail=str(e))
      
 
-def pass_maker(length=8):
-    characters = string.ascii_letters + string.digits + string.punctuation
+def password_generator(length=8):
+    characters = string.ascii_letters + string.digits
+    allowed_punctuation = "!#$%&()*+,-./:;<=>?@[\]^_`{|}~"
+    characters += allowed_punctuation
     return ''.join(secrets.choice(characters) for i in range(length))
 
 async def send_newpass_email(request: RegisterRequestModel):
-    new_password = pass_maker()
+    new_password = password_generator()
     user_name= "TestUser" #name or the email address of the user
     email_body = password_reset_template.format(password=new_password, user=user_name)
 

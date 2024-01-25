@@ -2,7 +2,7 @@
 password_reset_template = """
 Dear {user},
 
-Your password has been reset. Your new password is: "{password}"
+Your password has been reset. Your new password is: {password}
 
 Please change it after your next login.
 
