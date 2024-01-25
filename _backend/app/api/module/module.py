@@ -279,32 +279,10 @@ async def create_module(
 
     try:
         body = await request.body()
-
-        tree = ET.ElementTree(ET.fromstring(body))
-        modules_graph = tree.getroot()
-        upload_modules_list = []
-        db_modules_list = []
-        for module in modules_graph:
-            uploading_model = UploadModulesModel()
-            for entity in module:
-                setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
-            db_model = MODULES.ModulesModel(
-                name=str(uploading_model.name),
-                degree_program=str(uploading_model.degree_program),
-                degree_level=str(uploading_model.degree_level),
-                university=str(uploading_model.university),
-                module_code=str(uploading_model.module_code),
-                content=str(uploading_model.content),
-                ects=int(uploading_model.ects),
-                year="",
-                type=str(uploading_model.type),
-            )
-            upload_modules_list.append(uploading_model)
-            db_modules_list.append(db_model)
-        
+        uploaded_modules_list, db_modules_list = get_data_from_xml(body)
         inserted_modules = MODULES.insert_many(db, db_modules_list)
         item_response_list = []
-        for index, element in enumerate(upload_modules_list):
+        for index, element in enumerate(uploaded_modules_list):
             item = UploadModulesResponseItemModel(
                     module_id=str(inserted_modules.inserted_ids[index]),
                     module_name=element.name,
@@ -332,3 +310,27 @@ async def create_module(
             "items": item_response_list,
         }
     }
+
+def get_data_from_xml(text: bytes) -> (list, list) :
+    tree = ET.ElementTree(ET.fromstring(text))
+    modules_graph = tree.getroot()
+    uploaded_modules_list = []
+    db_modules_list = []
+    for module in modules_graph:
+        uploading_model = UploadModulesModel()
+        for entity in module:
+            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+        db_model = MODULES.ModulesModel(
+            name=str(uploading_model.name),
+            degree_program=str(uploading_model.degree_program),
+            degree_level=str(uploading_model.degree_level),
+            university=str(uploading_model.university),
+            module_code=str(uploading_model.module_code),
+            content=str(uploading_model.content),
+            ects=int(uploading_model.ects),
+            year="",
+            type=str(uploading_model.type),
+        )
+        uploaded_modules_list.append(uploading_model)
+        db_modules_list.append(db_model)
+    return uploaded_modules_list, db_modules_list
