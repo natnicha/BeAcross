@@ -9,6 +9,7 @@ from pymongo.cursor import Cursor
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
 import app.crud.module_comment as MODULE_COMMENT
+import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
@@ -246,8 +247,7 @@ def prepare_item(db: MongoClient, items: Cursor):
         del entry['name']
         del entry["_id"]
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
-        # TODO: call OWL service for number of sugggested modules
-        entry['no_of_suggested_modules'] = 0
+        entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
     return data
 
 def sort(data: list, sortby: str, orderby: str):
