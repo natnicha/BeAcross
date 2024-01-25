@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import RegisterPopup from '../components/RegisterationPopup';
 import LoginPopup from '../components/LoginPopup';
 import { useUser } from '../UserContext';
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
 
@@ -18,10 +19,13 @@ const Header: React.FC = () => {
     const openRegisterPopup = () => setIsRegisterPopupOpen(true);
     const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
 
+    const navigate = useNavigate(); // redirect user back to homepage
+
     const handleLogout = () => {
     // Clear the token on logout
     sessionStorage.removeItem('jwtToken');
     setIsLoggedIn(false);
+    navigate('/');
     };
 
     return (
@@ -71,6 +75,7 @@ const Header: React.FC = () => {
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             handleLogout(); // check user status
+                                            
                                         }}
                                         role="button"
                                         tabIndex={0}

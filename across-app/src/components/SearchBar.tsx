@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { searchServices } from '../services/searchServices';
 import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
