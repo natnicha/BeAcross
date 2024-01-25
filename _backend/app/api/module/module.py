@@ -276,14 +276,6 @@ async def create_module(
         )
     body = await request.body()
 
-    # print(request.body())
-    # prod_path = "./app/api/module/tuc_modules_2038.xml"
-    # # Load the product XML file
-    # prod_tree = ET.parse(prod_path)
-    # prod_root = prod_tree.getroot()
-    # for x in prod_root[0]:
-    #     print(x.tag, x.attrib, x.text)
-
     tree = ET.ElementTree(ET.fromstring(body))
     prod_root = tree.getroot()
     for x in prod_root[0]:
