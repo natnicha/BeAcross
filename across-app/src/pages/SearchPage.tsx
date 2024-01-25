@@ -1,4 +1,4 @@
-import React, { } from "react";
+import React, { useEffect, useRef } from 'react';
 import SearchResult from '../components/SearchResult';
 import SearchBar from "../components/SearchBar";
 import { Location, useLocation } from "react-router-dom";
@@ -13,7 +13,8 @@ interface SearchPageState {
   query: string;
   searchResult: SearchResponse;
   currentPage: number; 
-  totalPages: number;  
+  totalPages: number; 
+  sliderValue: number;
 }
 
 interface ParentState {
@@ -22,6 +23,12 @@ interface ParentState {
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     
+  private rangeSliderRef = React.createRef<HTMLInputElement>();
+
+  handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ sliderValue: parseInt(event.target.value) });
+  };
+  
   constructor(props: SearchPageProps) {
     super(props);
     this.state = {
@@ -29,6 +36,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       searchResult: {},
       currentPage: 1, 
       totalPages: 10, 
+      sliderValue: 1,
     };
     this.setQuery = this.setQuery.bind(this);
   }
@@ -77,6 +85,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
         this.performSearch(); // Call performSearch after setting the new page
     });
 };
+
 
   render() {
     return (
@@ -132,6 +141,21 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                       </div> 
 
                       <div className ="filter-item">
+                      <h6 style={{ width: "300px", marginLeft: "10px"}}>ECTS credits:</h6>
+                        <input style={{ marginLeft: "5px"}}
+                          type="range" 
+                          min="1" 
+                          max="15" 
+                          step="1" 
+                          value={this.state.sliderValue} 
+                          onChange={this.handleSliderChange} 
+                          ref={this.rangeSliderRef} 
+                        />
+                        <span> {this.state.sliderValue}</span>
+                      </div>
+                      
+                      <div className ="filter-item">
+                      <h6 style={{ width: "300px", marginLeft: "10px"}}>Offer by:</h6>
                         <div className="dropdown">
                           <button className="dropbtn">University... <i className="bi bi-caret-down-fill"></i></button>
                           <div className="dropdown-content">
