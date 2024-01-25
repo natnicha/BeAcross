@@ -270,34 +270,65 @@ async def create_module(
     db: MongoClient = Depends(get_database)):
     if content_type != "application/xml":
         raise HTTPException(
-            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            f"Unsupported media type: {content_type}."
-            " It must be application/xml",
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail={
+                "message": f"Unsupported media type: {content_type}."
+                " It must be application/xml"
+            }
         )
-    body = await request.body()
 
-    tree = ET.ElementTree(ET.fromstring(body))
-    modules_graph = tree.getroot()
-    upload_modules_list = []
-    db_modules_list = []
-    for module in modules_graph:
-        uploading_model = UploadModulesModel()
-        for entity in module:
-            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
-        db_model = MODULES.ModulesModel(
-            name=str(uploading_model.name),
-            degree_program=str(uploading_model.degree_program),
-            degree_level=str(uploading_model.degree_level),
-            university=str(uploading_model.university),
-            module_code=str(uploading_model.module_code),
-            content=str(uploading_model.content),
-            ects=int(uploading_model.ects),
-            year="",
-            type=str(uploading_model.type),
+    try:
+        body = await request.body()
+
+        tree = ET.ElementTree(ET.fromstring(body))
+        modules_graph = tree.getroot()
+        upload_modules_list = []
+        db_modules_list = []
+        for module in modules_graph:
+            uploading_model = UploadModulesModel()
+            for entity in module:
+                setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+            db_model = MODULES.ModulesModel(
+                name=str(uploading_model.name),
+                degree_program=str(uploading_model.degree_program),
+                degree_level=str(uploading_model.degree_level),
+                university=str(uploading_model.university),
+                module_code=str(uploading_model.module_code),
+                content=str(uploading_model.content),
+                ects=int(uploading_model.ects),
+                year="",
+                type=str(uploading_model.type),
+            )
+            upload_modules_list.append(uploading_model)
+            db_modules_list.append(db_model)
+        
+        inserted_modules = MODULES.insert_many(db, db_modules_list)
+        item_response_list = []
+        for index, element in enumerate(upload_modules_list):
+            item = UploadModulesResponseItemModel(
+                    module_id=str(inserted_modules.inserted_ids[index]),
+                    module_name=element.name,
+                    degree_program=element.degree_program,
+                    degree_level=element.degree_level,
+                    university=element.university,
+                    module_code=element.module_code,
+                    content=element.content,
+                    ects=element.ects,
+                    type=element.type
+                )
+            item_response_list.append(item)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"message": e},
         )
-        upload_modules_list.append(uploading_model)
-        db_modules_list.append(db_model)
-    # insert into db
+    
     # TODO: call similarity calculation function
     # TODO: get module detail for each similar module 
-    return db_modules_list
+    
+    return {
+        "data": {
+            "total_items": len(item_response_list),
+            "items": item_response_list,
+        }
+    }

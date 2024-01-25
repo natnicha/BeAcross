@@ -29,3 +29,15 @@ class UploadModulesModel(BaseModel):
     content: str = None   
     ects: int = None
     type: str = None
+
+class UploadModulesResponseItemModel(BaseModel):
+    module_id: str = None
+    module_name: str = None
+    degree_program: str = None
+    degree_level: str = None
+    university: str = None
+    module_code: str = None
+    content: str = None   
+    ects: int = None
+    type: str = None
+    similar_modules: list = None
