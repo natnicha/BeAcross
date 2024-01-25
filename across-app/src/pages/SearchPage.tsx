@@ -102,9 +102,37 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
               <div className="profile-container">
                 
                 {/*Filter*/}
-                <section className="tm-sidebar" id="tm-sidebar">
-                  
-                </section>  
+                <section>
+                  <div className="filter">
+                  <h4 style={{ width: "300px", marginTop: "5px"}}>&nbsp;&nbsp; <i className="bi bi-funnel-fill"></i> Filters with ... </h4>
+                      <div className ="filter-item">
+                        <h6 style={{ width: "300px", marginLeft: "10px"}}>Degree level:</h6>
+                        <div className="checkbox">
+                            <label><input type="checkbox" className="icheck" /> Bachelor</label>
+                        </div>
+                        <div className="checkbox">
+                            <label><input type="checkbox" className="icheck" /> Master</label>
+                        </div>
+                        <div className="checkbox">
+                            <label><input type="checkbox" className="icheck" /> Doctoral</label>
+                        </div>
+                      </div> 
+
+                      <div className ="filter-item">
+                        <h6 style={{ width: "300px", marginLeft: "10px"}}>Module type:</h6>
+                        <div className="checkbox">
+                            <label><input type="checkbox" className="icheck" /> Erasmus</label>
+                        </div>
+                        <div className="checkbox">
+                            <label><input type="checkbox" className="icheck" /> Obiligitory</label>
+                        </div>
+                        <div className="checkbox">
+                            <label><input type="checkbox" className="icheck" /> Elective</label>
+                        </div>
+                      </div> 
+                  </div>
+                </section>
+
                 {/*Search Result*/}
                 <SearchResult searchResult={this.state.searchResult}/>     
                 </div>  

@@ -36,7 +36,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         <>
         {/*Search list*/}
         <section className="tm-content" style={{ margin: "0px"}} id="profileinformation">
-            <div className="nav nav-tabs flex-row align-items-baseline" style={{ paddingLeft: "5%", width: "118%", paddingBottom: "2%"}}>
+            <div className="nav nav-tabs flex-row align-items-baseline" style={{ paddingLeft: "1%", width: "118%", paddingBottom: "2%"}}>
                 <div className="about-thumb bg-white shadow-lg">
                     <div className="search-header">
                         <div className="search-column"><strong>Module Code</strong></div>
