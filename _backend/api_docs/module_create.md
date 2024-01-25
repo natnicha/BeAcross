@@ -22,7 +22,7 @@ Both university and system administrators can add new modules by making a reques
 
 | Key                 | Type       | Required  | Description                                         |
 | ------------------- | :--------: | :-------: | --------------------------------------------------- |
-| content-type        | string     | true      | Content-Type has to be `application/xml`           |
+| content-type        | string     | true      | Content-Type has to be `application/xml`            |
 | Authorization       | string     | true      | Authorization JWT token in format of `Bearer <JWT>` |
 
 ## Path Parameters
@@ -43,9 +43,37 @@ Both university and system administrators can add new modules by making a reques
 | ------------ | :----------: | :----------: | ----------------------------------------- |
 |              |              |              |                                           |
 
+| IMPORTANT: Attached files must be a valid XML! |
+| --- |
+
 
 ## Sample XML attached file
-<!-- TODO -->
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <module>
+        <module_name>Advanced Management of Data</module_name>
+        <degree_program>Computer Science</degree_program>
+        <degree_level>Master</degree_level>
+        <university>Technische Universitat Chemnitz</university>
+        <module_code>563100</module_code>
+        <content>Content:Requirements for today's data management systems include scalability, continuous availability, frequent changes, location independence, the management of a wide ....</content>
+        <ects>5</ects>
+        <type>elective</type>
+    </module>
+    <module>
+        <module_name>Artificial Intelligence for Data Analysis</module_name>
+        <degree_program>Engineering and Management</degree_program>
+        <degree_level>Master</degree_level>
+        <university>Technische Universitat Chemnitz</university>
+        <module_code>2GI018n</module_code>
+        <content>AI-assisted data analysis is a process of discovering patterns and models, described by rules or other human- understandable representation formalisms...</content>
+        <ects>6</ects>
+        <type>elective</type>
+    </module>
+</data>
+```
+
 
 ## Success Response 201 - Created
 ```json
