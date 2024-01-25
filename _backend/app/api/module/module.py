@@ -299,11 +299,10 @@ async def create_module(
                 university=element.university,
                 module_code=element.module_code,
                 content=element.content,
-                ects=element.ects,
+                ects=int(element.ects or 0),
                 type=element.type
             )
         item_response_list.append(item)
-
     # TODO: call similarity calculation function
     # TODO: get module detail for each similar module 
     
@@ -330,7 +329,7 @@ def get_data_from_xml(text: bytes) -> (list, list) :
             university=uploading_model.university,
             module_code=uploading_model.module_code,
             content=uploading_model.content,
-            ects=int((uploading_model.ects or 0)),
+            ects=int(uploading_model.ects or 0),
             year="",
             type=uploading_model.type,
         )
