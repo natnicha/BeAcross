@@ -280,9 +280,17 @@ async def create_module(
     try:
         body = await request.body()
         uploaded_modules_list, db_modules_list = get_data_from_xml(body)
-        inserted_modules = MODULES.insert_many(db, db_modules_list)
-        item_response_list = []
-        for index, element in enumerate(uploaded_modules_list):
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"message": "Unexpected tag found. Please check you XML file tags",
+                "hint": str(e)},
+        )
+    
+    inserted_modules = MODULES.insert_many(db, db_modules_list)
+    item_response_list = []
+    for index, element in enumerate(uploaded_modules_list):
+        try: 
             item = UploadModulesResponseItemModel(
                     module_id=str(inserted_modules.inserted_ids[index]),
                     module_name=element.name,
@@ -294,13 +302,14 @@ async def create_module(
                     ects=element.ects,
                     type=element.type
                 )
-            item_response_list.append(item)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail={"message": e},
-        )
-    
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"message": "Expected tag not found. Please check you XML file tags",
+                    "hint": str(e)},
+            )
+        item_response_list.append(item)
+
     # TODO: call similarity calculation function
     # TODO: get module detail for each similar module 
     
@@ -319,7 +328,10 @@ def get_data_from_xml(text: bytes) -> (list, list) :
     for module in modules_graph:
         uploading_model = UploadModulesModel()
         for entity in module:
-            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+            try:
+                setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+            except Exception as e:
+                raise e
         db_model = MODULES.ModulesModel(
             name=str(uploading_model.name),
             degree_program=str(uploading_model.degree_program),
@@ -327,7 +339,7 @@ def get_data_from_xml(text: bytes) -> (list, list) :
             university=str(uploading_model.university),
             module_code=str(uploading_model.module_code),
             content=str(uploading_model.content),
-            ects=int(uploading_model.ects),
+            ects=int((uploading_model.ects or 0)),
             year="",
             type=str(uploading_model.type),
         )
