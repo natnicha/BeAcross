@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#" xml:base="http://www.victorypiesolutions.com/onto.owl"
+    xmlns="http://www.victorypiesolutions.com/onto.owl#">
+
+
+    <owl:Ontology rdf:about="#module"/>
+
+    <owl:DatatypeProperty rdf:about="#Similar">
+        <rdfs:domain rdf:resource="#Module"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+    <Module rdf:about="#65ac17b1d2815b505f3e352d">
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17dfd2815b505f3e37b4</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e38dd</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e38de</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e34c7</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e3936</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e396b</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17dfd2815b505f3e37e9</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e35e2</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17dfd2815b505f3e37eb</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e3970</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e3679</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e396f</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e3672</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e354b</Similar>
+    </Module>
+
+    <Module rdf:about="#65ac17dfd2815b505f3e37b4">
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e352d</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e378b</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17dfd2815b505f3e37ea</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e3559</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e3762</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e352e</Similar>
+    </Module>
+
+    <Module rdf:about="#65ac1847d2815b505f3e38dd">
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e352d</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e3936</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac1847d2815b505f3e396b</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e3762</Similar>
+        <Similar rdf:datatype="http://www.w3.org/2001/XMLSchema#string">65ac17b1d2815b505f3e352e</Similar>
+    </Module>
+</rdf:RDF>

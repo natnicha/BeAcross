@@ -9,6 +9,7 @@ from pymongo.cursor import Cursor
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
 import app.crud.module_comment as MODULE_COMMENT
+import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
@@ -131,7 +132,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 
 @module.post("/comment", response_model=ModuleCommentResponseModel, status_code=status.HTTP_201_CREATED)
-async def unrecommend(
+async def comment(
         request: Request,
         items: ModuleCommentRequestModel,
         db: MongoClient = Depends(get_database),
@@ -169,7 +170,7 @@ def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
 
 
 @module.delete("/comment/{module_comment_id}", status_code=status.HTTP_200_OK)
-async def unrecommend(
+async def delete_comment(
         request: Request,
         module_comment_id: str = None,
         db: MongoClient = Depends(get_database),
@@ -203,8 +204,9 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     
+
 @module.get("/search/", status_code=status.HTTP_200_OK)
-async def no_of_recommend(
+async def search(
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
@@ -245,8 +247,7 @@ def prepare_item(db: MongoClient, items: Cursor):
         del entry['name']
         del entry["_id"]
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
-        # TODO: call OWL service for number of sugggested modules
-        entry['no_of_suggested_modules'] = 0
+        entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
     return data
 
 def sort(data: list, sortby: str, orderby: str):

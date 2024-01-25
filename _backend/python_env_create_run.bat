@@ -25,6 +25,9 @@ python -m pip install mongomock
 python -m pip install pytest-env
 python -m pip install pytest-mock
 python -m pip install pyjwt
+python -m pip install owlready2
+python -m pip install Cython
+python -m pip install rdflib
 
 python -m uvicorn main:app --reload
 

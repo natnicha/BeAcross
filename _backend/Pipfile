@@ -14,6 +14,10 @@ mongomock = "*"
 pytest-env = "*"
 pytest-mock = "*"
 pyjwt = "*"
+cython = "*"
+wheel = "*"
+owlready2 = "*"
+rdflib = "*"
 nltk = "*"
 
 [dev-packages]
