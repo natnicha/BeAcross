@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FileUploader = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -41,9 +42,9 @@ const FileUploader = () => {
 
   return (
     <>
-      <div className="input-group">
+      <div className="d-flex flex-column">
         <label htmlFor="file" className="sr-only form-label">
-          Upload University Modules (format *.json only)
+          <strong>Upload University Modules (format *.json only)</strong>
         </label>
         <input
           className="form-control"
@@ -51,20 +52,20 @@ const FileUploader = () => {
           type="file"
           onChange={handleFileChange}
         />
+        {file && (
+          <section>
+            <ul style={{ listStyle: "none" }}>
+              <li>Name: {file.name}</li>
+              {/* <li>Type: {file.type}</li>
+              <li>Size: {file.size} bytes</li> */}
+            </ul>
+          </section>
+        )}
       </div>
-      {file && (
-        <section>
-          <ul>
-            <li>Name: {file.name}</li>
-            <li>Type: {file.type}</li>
-            <li>Size: {file.size} bytes</li>
-          </ul>
-        </section>
-      )}
 
       {file && (
         <button onClick={handleUpload} className="submit custom-btn btn">
-          upload
+          Upload
         </button>
       )}
 
@@ -74,8 +75,20 @@ const FileUploader = () => {
 };
 
 const Result = ({ status }: { status: string }) => {
+  const navigate = useNavigate();
+
   if (status === "success") {
-    return <p>✅ File uploaded successfully!</p>;
+    return (
+      <>
+        <p>✅ File uploaded successfully!</p>
+        <button
+          className="custom-btn btn custom-link"
+          onClick={() => navigate("/admin")}
+        >
+          Module List
+        </button>
+      </>
+    );
   } else if (status === "fail") {
     return <p>❌ File upload failed!</p>;
   } else if (status === "uploading") {
