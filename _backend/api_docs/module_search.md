@@ -93,11 +93,11 @@ To search modules regarding a given term, filter, limit, and offset
 Note: some fields in items may disappear depending on raw data.
 
 
-## Error Response 404 - Not Found (case: no module not found for a given term)
+## Error Response 404 - Not Found (case: No module not found for a given term)
 ```json
 {
   "detail" : {
-    "message": "no module found"
+    "message": "No module found"
   }
 }
 ```

@@ -26,18 +26,18 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <header className="site-header">
-              <div className="container">
-                  <div className="row align-items-center">
-                      <div>
-                          <p className="text-white mb-0">
-                              <i className="bi-globe site-header-icon me-2"></i>
-                              We Strongly Believe in an Educational Future Without Borders.
-                          </p>
-                      </div>   
-                  </div>
-              </div>
-          </header>
+        <header className="site-header">
+            <div className="container">
+                <div className="row align-items-center">
+                    <div>
+                        <p className="text-white mb-0">
+                            <i className="bi-globe site-header-icon me-2"></i>
+                            We Strongly Believe in an Educational Future Without Borders.
+                        </p>
+                    </div>   
+                </div>
+            </div>
+</header>
 
           <nav className="navbar navbar-expand-lg bg-white shadow-lg">
               <div className="container">
@@ -149,7 +149,7 @@ const Header: React.FC = () => {
                   </div>
               </div>
           </nav>
-        </>
+                </>
     );
 };
 
