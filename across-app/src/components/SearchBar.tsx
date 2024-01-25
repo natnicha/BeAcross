@@ -57,7 +57,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                     <div className="advancedSearchRow">
                         <a
                             className="click-scroll d-flex align-items-end"
-                            href="javascript:void(0)"
                             onClick={(e) => {
                                 e.preventDefault(); // Prevent default if using href="#"
                                 AdvanceSearchClick();

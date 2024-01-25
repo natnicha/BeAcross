@@ -71,7 +71,6 @@ const Header: React.FC = () => {
                                 {isLoggedIn ? (
                                     <a 
                                         className="custom-btn-red btn custom-link"                                  
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             handleLogout(); // check user status
@@ -85,7 +84,6 @@ const Header: React.FC = () => {
                                 ) : (
                                     <a 
                                         className="custom-btn-green btn custom-link"                                  
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             openLoginPopup();                               
@@ -108,7 +106,6 @@ const Header: React.FC = () => {
                                     Welcome, &nbsp;&nbsp;
                                     <a
                                         className="click-scroll d-flex align-items-end"
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             window.location.href = 'http://localhost:3000/studentprofile';
@@ -133,7 +130,6 @@ const Header: React.FC = () => {
                                     Don't have an account?&nbsp; 
                                     <a
                                         className="click-scroll d-flex align-items-end"
-                                        href="javascript:void(0)"
                                         onClick={(e) => {
                                             e.preventDefault(); // Prevent default if using href="#"
                                             openRegisterPopup();
