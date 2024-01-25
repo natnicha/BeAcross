@@ -412,7 +412,7 @@ const StudentProfilepage: React.FC = () => {
             <div className="nav nav-tabs flex-row align-items-baseline">
               <div className="about-thumb bg-white shadow-lg">
                 <h5 className="mb-3" style={{ color: "#1e5af5" }}>
-                  Modules List
+                  Module List
                 </h5>
               </div>
             </div>
