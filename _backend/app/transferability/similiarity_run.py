@@ -7,10 +7,12 @@ from _backend.app.transferability.similiarity_logic import check_content
 from _backend.app.transferability.similiarity_logic import compare_titles
 from pymongo import MongoClient
 from _backend.app.config.config_utils import env_config, load_env
+from _backend.app.owl.modules import add_modules_to_owl
 import json
 
 
-def get_data(uni):
+# TODO: ASK Natnicha for DB
+def get_all_module_data(uni):
     # get all data and prepare for run
     conn = MongoClient("mongodb+srv://vpsad:Across1234#@across-db.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000")
     print(conn)
@@ -18,14 +20,22 @@ def get_data(uni):
     data = db.get_collection("modules").find({"university": uni})
     return list(data)
 
+def get_specific_module_data(uni):
+    # get all data and prepare for run
+    conn = MongoClient("mongodb+srv://vpsad:Across1234#@across-db.mongocluster.cosmos.azure.com/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000")
+    print(conn)
+    db = conn["admin"]
+    data = db.get_collection("modules").find({"university": {"$ne": uni}})
+    return list(data)
+
 
 # Initial Run To Calculate Similarities Between All Modules
+# Only to be run manually ~ takes 8 hours
+def start_similarity_all():
 
-def start_similarity():
-
-    UNG = get_data("University of Nova Gorica")
-    TUC = get_data("Technische Universitat Chemnitz")
-    BUT = get_data("Bialystok University Of Technology")
+    UNG = get_all_module_data("University of Nova Gorica")
+    TUC = get_all_module_data("Technische Universitat Chemnitz")
+    BUT = get_all_module_data("Bialystok University Of Technology")
     # Add Universities Here
     #
     #
@@ -86,8 +96,28 @@ def start_similarity():
 
     # insert to ontology 
 
+def start_similarity_for_one(inserted_mod):
 
-# calculate transferability between modules
+    #calculate transferability between modules
+    data = get_specific_module_data(inserted_mod["university"])
+
+    similarity_results = read_similarity_file()
+
+    # TODO: Validate with Natnicha The Structure Of Module
+    similarity_results[str(inserted_mod.get("_id"))] = []
+
+    for modu in data:
+        # A to B
+        if check_similarity(inserted_mod, modu):
+            similarity_results[str(inserted_mod.get("_id"))].append(str(modu.get("_id")))
+        # B to A
+        if check_similarity(modu, inserted_mod):
+            similarity_results[str(modu.get("_id"))].append(str(inserted_mod.get("_id")))
+
+    write_back(similarity_results)
+    add_modules_to_owl()
+
+
 def check_similarity(module_a, module_b):
 
     degree_level = check_level(module_a.get("degree_level"), module_b.get("level"))
@@ -109,18 +139,39 @@ def check_similarity(module_a, module_b):
         return True
     return False
 
-################ FOR FUTURE USE #################################
 
-# Get the current working directory (your_script.py's directory)
-current_directory = os.path.dirname(os.path.abspath(__file__))
+def read_similarity_file():
 
-# Jump up two parent directories to the '_backend' directory
-backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-# Navigate to the 'owl' directory and access 'results.json'
-results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
-with open(results_path, 'r') as file:
-    content = file.read()
-print("File content:", content)
+    # Navigate to the 'owl' directory and access 'results.json'
+    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+
+
+    # Specify the path to your JSON file
+    with open(results_path, 'r') as file:
+        data = json.load(file)
+
+    # return the dictionary
+    return data
+
+
+# Write the updated dictionary back to the file
+def write_back(data):
+
+    # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+
+    # Navigate to the 'owl' directory and access 'results.json'
+    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+
+    with open(results_path, 'w') as file:
+        json.dump(data, file, indent=2)
 

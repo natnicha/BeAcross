@@ -3,10 +3,10 @@
          xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
          xmlns:owl="http://www.w3.org/2002/07/owl#"
-         xml:base="modules.owl"
-         xmlns="modules.owl#">
+         xml:base="D:\Across\victory-pie-solutions\_backend\app\owl\modules.owl"
+         xmlns="D:\Across\victory-pie-solutions\_backend\app\owl\modules.owl#">
 
-<owl:Ontology rdf:about="modules.owl"/>
+<owl:Ontology rdf:about="D:\Across\victory-pie-solutions\_backend\app\owl\modules.owl"/>
 
 <owl:ObjectProperty rdf:about="#similarTo">
   <rdfs:domain rdf:resource="#Module"/>

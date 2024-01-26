@@ -235,7 +235,7 @@ async def search(
         data = sort(data, sortby, orderby)
 
     return {
-        "data":{
+        "data": {
             "total_results": count,
             "total_items": len(data),
             "items": data
@@ -304,6 +304,8 @@ async def create_module(
                 type=element.type
             )
         item_response_list.append(item)
+
+
     # TODO: call similarity calculation function
     # TODO: get module detail for each similar module 
     

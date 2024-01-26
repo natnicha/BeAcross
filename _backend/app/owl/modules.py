@@ -3,29 +3,49 @@ import os
 import json
 
 def find_suggested_modules(module: str) -> list:
-    onto_path.append("./app/owl/")
-    get_ontology("modules.owl").load()
-    try:
-        return list(default_world.sparql("""
-            PREFIX myns: <http://www.victorypiesolutions.com/onto.owl#>
-            SELECT ?y
-            { myns:""" + module + """ myns:Similar ?y . }
-        """))
-    except:
-        return []
+
+    # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+
+    # Navigate to the 'owl' directory and access 'results.json'
+    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
+
+    onto = get_ontology(owl_path).load()
+    # Get the individual by its name
+    individual = onto.search_one(iri="*%s" % module)
+
+    res = []
+    if individual:
+        if individual.similarTo:
+            for i in individual.similarTo:
+                res.append(i.name)
+    return res
+
 
 
 def add_modules_to_owl():
+    # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # recreate ontology ## maybe as an improvement create a different file and then delete and replace
-    if os.path.isfile("modules.owl"):
-        os.remove("modules.owl")
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
-    fp = open('modules.owl', 'w')
+    # Navigate to the 'owl' directory and access 'results.json'
+    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
+
+    print(owl_path)
+
+    if os.path.isfile(owl_path):
+        print("File exists")
+        os.remove(owl_path)
+
+    fp = open(owl_path, 'w')
     fp.close()
 
-    onto_path.append("./app/owl/")
-    onto = get_ontology("modules.owl").load()
+    onto = get_ontology(owl_path).load()
 
     # define ontology classes
     with onto:
@@ -43,6 +63,7 @@ def add_modules_to_owl():
     # define Modules
     for key, item in sim_result.items():
         instance = Module()
+        print(key)
         instance.name = key
 
     # define relations
@@ -62,7 +83,7 @@ def add_modules_to_owl():
                 instance.name = inner
                 res.similarTo.append(instance)
 
-    onto.save("modules.owl")
+    onto.save(owl_path)
 
 
     # # Access classes in the ontology
@@ -81,14 +102,17 @@ def add_modules_to_owl():
 
 def get_results():
     # Specify the path to your JSON file
-    json_file_path = "result.json"
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+
+    # Navigate to the 'owl' directory and access 'results.json'
+    json_path = os.path.join(backend_directory, "app", "owl", "result.json")
 
     # Read the JSON file and load its content into a dictionary
-    with open(json_file_path, 'r') as json_file:
+    with open(json_path, 'r') as json_file:
         data_dict = json.load(json_file)
 
     # Now, data_dict contains the content of the JSON file as a Python dictionary
     return data_dict
-
-
-add_modules_to_owl()
