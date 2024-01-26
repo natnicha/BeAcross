@@ -85,10 +85,21 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.setState({ totalPages });
 }
 
-  async performSearch(filters) {
+  async performSearch() {
     try {
       let offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
-      const result = await searchServices(this.state.query, offset);
+
+      // Constructing the filters object from the state
+      const filters = {
+        degreeLevels: this.state.filters.degreeLevels,
+        moduleTypes: this.state.filters.moduleTypes,
+        universities: this.state.filters.universities,
+        ectsCredits: this.state.filters.ectsCredits
+      };
+
+      // Including the filters in the searchServices call
+      const result = await searchServices(this.state.query, offset, filters);
+      
       this.setState({ searchResult: result });
       // Set the search results and reset the current page to 1
       this.setState({ searchResult: result, currentPage: 1 });
@@ -108,25 +119,30 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 };
 
 // Function to update filter state
-handleFilterChange = (event) => {
+handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   const { name, value, checked, type } = event.target;
-  let newSelection;
+  
+  // Define newSelection as either a string array or a number
+  let newSelection: string[] | number;
 
   if (type === 'checkbox') {
-    newSelection = [...this.state.filters[name]];
+    // TypeScript needs assurance that the name is a valid key of filters
+    const filterName = name as keyof typeof this.state.filters;
+
+    // Ensure that the filter is an array before spreading it
+    newSelection = Array.isArray(this.state.filters[filterName])
+      ? [...this.state.filters[filterName] as string[]]
+      : [];
 
     if (checked) {
-      // Add the checkbox value to the array if it's checked and not already present
       if (!newSelection.includes(value)) {
         newSelection.push(value);
       }
     } else {
-      // Remove the checkbox value from the array if it's unchecked
       newSelection = newSelection.filter(item => item !== value);
     }
   } else if (type === 'range') {
-    // For range input, simply update the value
-    newSelection = value;
+    newSelection = parseInt(value);
   }
 
   this.setState(prevState => ({
@@ -139,7 +155,7 @@ handleFilterChange = (event) => {
 
 // Function to be called when 'Apply' is clicked
 onApplyFilters = () => {
-  this.performSearch(this.state.filters);
+  this.performSearch();
 };
 
 
