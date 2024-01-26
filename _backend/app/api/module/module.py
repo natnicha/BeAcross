@@ -17,6 +17,9 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import *
 
+from app.transferability.similiarity_run import start_similarity_for_one
+
+from app.owl.modules import find_suggested_modules
 
 module = APIRouter()
 
@@ -305,8 +308,11 @@ async def create_module(
             )
         item_response_list.append(item)
 
-
     # TODO: call similarity calculation function
+    for mod in item_response_list:
+        start_similarity_for_one(mod)
+        similar_list = find_suggested_modules(mod.module_id)
+
     # TODO: get module detail for each similar module 
     
     return {
