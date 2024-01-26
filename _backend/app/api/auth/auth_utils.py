@@ -116,4 +116,7 @@ def has_permission(request: Request):
     if api.__contains__("/module/comment"):
         if request.state.role != "student":
             return False
+    if api == ("/api/v1/module"):
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+            return False
     return True
