@@ -21,8 +21,18 @@ def validate_email(email):
     else:
         return False
 
-def extract_domain_from_email(email):
-    return email.split("@",1)[1]
+def extract_domain_from_email(email) -> str:
+    domain = str(email.split("@",1)[1])
+    # end with main domain ex. @tu-chemnitz.de
+    if domain.find(".") == 1:
+        return domain
+    # have sub domain ex. @ss.tu-chemnitz.de, @ss.yy.tu-chemnitz.de or,  @ss.yy.zz.tu-chemnitz.de 
+    else:
+        position = find_second_last(domain, ".")
+        return domain[position+1:]
+
+def find_second_last(text, pattern):
+    return text.rfind(pattern, 0, text.rfind(pattern))
 
 def extractFullNameFromEmail(email, delimiter):
     full_name = email.split("@",1)[0]
@@ -51,7 +61,13 @@ def match_hashed_text(hashedText, providedText):
     return _hashedText == hashlib.sha256(salt.encode() + providedText.encode()).hexdigest()
 
 def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
-    users = USERS.get_user(db, login_request_model.email)
+    users = list(USERS.get_user(db, login_request_model.email))
+    if len(users) == 0:
+        raise HTTPException(
+            detail={"message": "Incorrect email or password"},
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
+    
     password = bytes.decode(users[0]["password"], 'utf-8')
     isMatch = match_hashed_text(password, login_request_model.password)
     if not isMatch:
