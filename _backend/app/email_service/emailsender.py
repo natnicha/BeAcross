@@ -3,7 +3,7 @@ from email.message import EmailMessage
 from pydantic import BaseModel  
 from fastapi import HTTPException  
 
-from .emailtemplates import password_reset_template, registration_template
+from .email_templates import password_reset_template, registration_template
 from app.config.config_utils import env_config
 from app.api.auth.model import LoginRequestModel, RegisterRequestModel
 
