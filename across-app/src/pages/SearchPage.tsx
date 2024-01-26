@@ -21,7 +21,11 @@ interface SearchPageState {
     university: string[];
     ects: number;
   };
+
+  sortby: string;   // Add this
+  orderby: string;
 }
+
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     
@@ -47,6 +51,9 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       currentPage: 1, 
       totalPages: 0, 
       sliderValue: 0,
+
+      sortby: 'module_name',
+      orderby: 'asc',
 
       filters: {
         degree_level: [],
@@ -93,8 +100,14 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
         ects: this.state.filters.ects
       };
 
+      // Constructing the sorting object from the state
+      const sorting = {
+        sortby: [this.state.sortby], // Wrap in an array
+        orderby: [this.state.orderby] // Wrap in an array
+      };
+
       // Including the filters in the searchServices call
-      const result = await searchServices(this.state.query, offset, filters);
+      const result = await searchServices(this.state.query, offset, filters, sorting);
       
       this.setState({ searchResult: result });
       // Set the search results and reset the current page to 1
@@ -154,6 +167,11 @@ onApplyFilters = () => {
   this.performSearch();
 };
 
+// Function to update Sort state
+handleSortClick = (sortField: string) => {
+  // Set the sort field and always use 'desc' as the order for now
+  this.setState({ sortby: sortField, orderby: 'desc' }, this.performSearch);
+};
 
   render() {
     return (
@@ -179,14 +197,23 @@ onApplyFilters = () => {
               {/*Sorting*/}
               <div className="sort-container"> 
                 <h6>Sort by:</h6>
-                <button className="custom-btn btn custom-link">                                       
-                  <i className="bi bi-sort-alpha-down"></i> Module Name
+                <button
+                  className="custom-btn btn custom-link"
+                  onClick={() => this.handleSortClick('module_name')}
+                 >                                       
+                  <i className={"bi bi-sort-alpha-down"}></i> Module Name
                 </button>
-                <button className="custom-btn btn custom-link">                                       
-                  <i className="bi bi-sort-down"></i> Suggestion Modules
+                <button 
+                  className="custom-btn btn custom-link"
+                  onClick={() => this.handleSortClick('no_of_suggested_modules')}
+                >                                       
+                  <i className={"bi bi-sort-alpha-down"}></i> Suggestion Modules
                 </button>
-                <button className="custom-btn btn custom-link">                                       
-                <i className="bi bi-sort-down"></i>  Recommened Modules
+                <button 
+                  className="custom-btn btn custom-link"
+                  onClick={() => this.handleSortClick('no_of_recommend')}
+                >                                       
+                 <i className={"bi bi-sort-alpha-down"}></i> Recommended Modules
                 </button>
               </div>
 

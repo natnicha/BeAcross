@@ -25,9 +25,14 @@ interface FilterParams {
     university: string[];
     ects: number;
   }
+
+interface SortParams {
+    sortby: string[];
+    orderby: string[];
+  }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: number, filter: FilterParams): Promise<SearchResponse> {
+export async function searchServices(term: string, offset: number, filter: FilterParams, sort:SortParams): Promise<SearchResponse> {
     
     // Base URL including the term
     let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
@@ -45,12 +50,20 @@ export async function searchServices(term: string, offset: number, filter: Filte
         url += `&module_type=${encodeURIComponent(filter.module_type.join(','))}`;
     }
     if (filter.university.length > 0) {
-        url += `&university=${encodeURIComponent(filter.university.join(','))}`; // Also, make sure this should be 'universities' to match the query param name in your API
+        url += `&university=${encodeURIComponent(filter.university.join(','))}`;
     }
     if (filter.ects) {
         url += `&ects=${filter.ects}`;
     }
-    
+
+    // Add filters to the URL
+    if (sort.sortby.length > 0) {
+        url += `&sortby=${encodeURIComponent(sort.sortby.join(','))}`;
+    }
+    if (sort.orderby.length > 0) {
+        url += `&orderby=${encodeURIComponent(sort.orderby.join(','))}`;
+    }
+
     try {
         const response = await fetch(url, {
           method: 'GET',
