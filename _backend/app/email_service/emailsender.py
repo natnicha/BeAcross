@@ -50,11 +50,12 @@ async def send_registration_email(user_email: str, username: str):
     try:
         await send_email(
             receiver_email=user_email,
-            subject="Welcome to BeAcross",
+            subject="Welcome to Across",
             body=email_body,
             sender_email=env_config.EMAIL_SENDER, 
             sender_password=env_config.EMAIL_PASSWORD  # Gmail app password
         )
-        return {"message": "Registration email sent successfully"}
+        return True
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise e
+    
