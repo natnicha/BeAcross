@@ -1,8 +1,10 @@
+import os.path
+
 from _backend.app import config
 from _backend.app.config import config_utils
-from similiarity_logic import check_level, check_ects
-from similiarity_logic import check_content
-from similiarity_logic import compare_titles
+from _backend.app.transferability.similiarity_logic import check_level, check_ects
+from _backend.app.transferability.similiarity_logic import check_content
+from _backend.app.transferability.similiarity_logic import compare_titles
 from pymongo import MongoClient
 from _backend.app.config.config_utils import env_config, load_env
 import json
@@ -19,7 +21,7 @@ def get_data(uni):
 
 # Initial Run To Calculate Similarities Between All Modules
 
-def start_similarity_():
+def start_similarity():
 
     UNG = get_data("University of Nova Gorica")
     TUC = get_data("Technische Universitat Chemnitz")
@@ -99,10 +101,26 @@ def check_similarity(module_a, module_b):
     # very similar content
     if degree_level and ects and content > 0.4:
         return True
-    # name matches good and some similar content
+    # name matches good and some similar contentcd
     if degree_level and ects and module_name > 0.7 and content > 0.19:
         return True
     # good ratio between name and content
     if degree_level and ects and module_name > 0.4 and content > 0.4:
         return True
     return False
+
+################ FOR FUTURE USE #################################
+
+# Get the current working directory (your_script.py's directory)
+current_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Jump up two parent directories to the '_backend' directory
+backend_directory = os.path.dirname(os.path.dirname(current_directory))
+
+# Navigate to the 'owl' directory and access 'results.json'
+results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+
+with open(results_path, 'r') as file:
+    content = file.read()
+print("File content:", content)
+
