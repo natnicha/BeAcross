@@ -7,6 +7,7 @@ interface SearchItem {
     ects?: number;
     degree_level?: string;
     module_name?: string;
+    type?: string;
     no_of_recommend?: number;
     no_of_suggested_modules?: number;
 } 

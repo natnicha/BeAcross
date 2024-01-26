@@ -11,6 +11,7 @@ interface Item {
     ects?: number;
     degree_level?: string;
     module_name?: string;
+    type?: string;
 }
 
 interface SearchResultProps {
@@ -43,6 +44,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         <div className="search-column"><strong>Module Name</strong></div>
                         <div className="search-column"><strong>ECTS Credits</strong></div>
                         <div className="search-column"><strong>Degree Level</strong></div>
+                        <div className="search-column"><strong>Module Type</strong></div>
                         <div className="search-column"><strong>University</strong></div>
                     </div>
 
@@ -66,6 +68,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 <div className="search-column" id="degree">
                                     {item.degree_level}
+                                </div>
+                                <div className="search-column" id="type">
+                                    {item.type}
                                 </div>
                                 <div className="search-column" id="university">
                                     {item.university}
