@@ -14,6 +14,11 @@ class BaseModel(BaseModel):
 class RegisterRequestModel(BaseModel):
     email: str
 
+
+class ForgotPasswordRequestModel(BaseModel):
+    email: str
+
+
 class RegisterResponseModel(BaseModel):
     message: str
     data: UsersModel

@@ -11,7 +11,7 @@ BeAcross Team
 """
 
 registration_template = """
-Welcome, New User!
+Welcome, {user}!
 
 Thank you for registering with us. Please keep your account information safe.
 

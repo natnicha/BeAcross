@@ -8,9 +8,10 @@ from app.crud.users import UsersModel
 import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
 import app.crud.user_logs as USER_LOGS
+from app.email_service.emailsender import *
 
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel, ForgotPasswordRequestModel
 
 auth = APIRouter()
 
@@ -42,7 +43,7 @@ async def register(
     encrypted_password = hash_text(password)
     
     # TODO: send email
-    
+    send_registration_email(password, full_name)
     # if sent success, insert into db & return 200 - OK 
     new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password, settings.user_roles["student"])
     return RegisterResponseModel(
@@ -142,3 +143,19 @@ def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: st
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     return 
+
+
+# email sender password reset
+@auth.post("/forgot-password")
+async def reset_password(
+        item: ForgotPasswordRequestModel = None,
+        db: MongoClient = Depends(get_database)):
+    
+    new_password = generate_password()
+    user_detail = USERS.get_user(db, item.email)
+    # if len(user_detail) == 0:
+    #     raise HTTPException(
+    #         detail={"message": "no account found"}
+    #     )
+    await send_newpass_email(item.email, new_password, user_detail[0]["first_name"])
+    return {"password": new_password}

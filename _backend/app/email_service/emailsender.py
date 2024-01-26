@@ -5,10 +5,8 @@ from fastapi import HTTPException
 import secrets
 import string
 from .emailtemplates import password_reset_template, registration_template
-from ..config.config_utils import env_config
-from ..api.auth.model import LoginRequestModel, RegisterRequestModel
-
-
+from app.config.config_utils import env_config
+from app.api.auth.model import LoginRequestModel, RegisterRequestModel
 
 async def send_email(receiver_email: str, subject: str, body: str, sender_email: str, sender_password: str):
     message = EmailMessage()
@@ -30,32 +28,25 @@ async def send_email(receiver_email: str, subject: str, body: str, sender_email:
         raise HTTPException(status_code=500, detail=str(e))
      
 
-def password_generator(length=8):
-    characters = string.ascii_letters + string.digits
-    allowed_punctuation = "!#$%&()*+,-./:;<=>?@[\]^_`{|}~"
-    characters += allowed_punctuation
-    return ''.join(secrets.choice(characters) for i in range(length))
 
-async def send_newpass_email(request: RegisterRequestModel):
-    new_password = password_generator()
-    user_name= "TestUser" #name or the email address of the user
-    email_body = password_reset_template.format(password=new_password, user=user_name)
+async def send_newpass_email(user_email: str, password: str, user_name: str):
+    email_body = password_reset_template.format(password=password, user=user_name)
 
     try:
         await send_email(
-            receiver_email=request.email,
+            receiver_email=user_email,
             subject="Password Reset",
             body=email_body,                            # template with the new password
             sender_email=env_config.EMAIL_SENDER,       # Gmail username
             sender_password=env_config.EMAIL_PASSWORD   # Gmail app password
         )
-        return {"message": "Password reset email sent successfully", "new_password": new_password}
+        return {"message": "Password reset email sent successfully", "new_password": password}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def send_registration_email(user_email: str):
-    email_body = registration_template
+async def send_registration_email(user_email: str, username: str):
+    email_body = registration_template.format(user=username)
 
     try:
         await send_email(
