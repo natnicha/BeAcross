@@ -15,6 +15,12 @@ interface SearchPageState {
   currentPage: number; 
   totalPages: number; 
   sliderValue: number;
+  filters: {
+    degreeLevels: string[];
+    moduleTypes: string[];
+    universities: string[];
+    ectsCredits: number;
+  };
 }
 
 interface ParentState {
@@ -26,7 +32,15 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   private rangeSliderRef = React.createRef<HTMLInputElement>();
 
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ sliderValue: parseInt(event.target.value) });
+    const newSliderValue = parseInt(event.target.value);
+    this.setState(prevState => ({
+      ...prevState, // Spread the rest of the previous state
+      sliderValue: newSliderValue,
+      filters: {
+        ...prevState.filters,
+        ectsCredits: newSliderValue,
+      },
+    }));
   };
   
   constructor(props: SearchPageProps) {
@@ -37,6 +51,13 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       currentPage: 1, 
       totalPages: 10, 
       sliderValue: 1,
+
+      filters: {
+        degreeLevels: [],
+        moduleTypes: [],
+        universities: [],
+        ectsCredits: 1, // Assuming a default value
+      },
     };
     this.setQuery = this.setQuery.bind(this);
   }
@@ -64,7 +85,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.setState({ totalPages });
 }
 
-  async performSearch() {
+  async performSearch(filters) {
     try {
       let offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
       const result = await searchServices(this.state.query, offset);
@@ -84,6 +105,41 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.setState({ currentPage: newPage }, () => {
         this.performSearch(); // Call performSearch after setting the new page
     });
+};
+
+// Function to update filter state
+handleFilterChange = (event) => {
+  const { name, value, checked, type } = event.target;
+  let newSelection;
+
+  if (type === 'checkbox') {
+    newSelection = [...this.state.filters[name]];
+
+    if (checked) {
+      // Add the checkbox value to the array if it's checked and not already present
+      if (!newSelection.includes(value)) {
+        newSelection.push(value);
+      }
+    } else {
+      // Remove the checkbox value from the array if it's unchecked
+      newSelection = newSelection.filter(item => item !== value);
+    }
+  } else if (type === 'range') {
+    // For range input, simply update the value
+    newSelection = value;
+  }
+
+  this.setState(prevState => ({
+    filters: {
+      ...prevState.filters,
+      [name]: newSelection
+    },
+  }));
+};
+
+// Function to be called when 'Apply' is clicked
+onApplyFilters = () => {
+  this.performSearch(this.state.filters);
 };
 
 
@@ -131,26 +187,80 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                       <div className ="filter-item">
                         <h6 style={{ width: "300px", marginLeft: "10px"}}>Degree level:</h6>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="pointer-checkbox" /> Bachelor</label>
+                            <label>
+                              <input 
+                                type="checkbox" 
+                                className="pointer-checkbox" 
+                                name="degreeLevels" 
+                                value="Bachelor" 
+                                onChange={this.handleFilterChange}
+                              /> 
+                              Bachelor
+                            </label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="pointer-checkbox" /> Master</label>
+                            <label>
+                              <input 
+                                type="checkbox" 
+                                className="pointer-checkbox" 
+                                name="degreeLevels" 
+                                value="Master" 
+                                onChange={this.handleFilterChange}
+                              />
+                              Master
+                            </label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="pointer-checkbox" /> Doctoral</label>
+                            <label>
+                              <input 
+                                type="checkbox" 
+                                className="pointer-checkbox" 
+                                name="degreeLevels" 
+                                value="Doctoral" 
+                                onChange={this.handleFilterChange}
+                              />
+                              Doctoral
+                            </label>
                         </div>
                       </div> 
 
                       <div className ="filter-item">
                         <h6 style={{ width: "300px", marginLeft: "10px"}}>Module type:</h6>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="pointer-checkbox" /> Erasmus</label>
+                            <label>
+                              <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="moduleTypes" 
+                                  value="Erasmus" 
+                                  onChange={this.handleFilterChange}
+                              /> 
+                              Erasmus
+                            </label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="pointer-checkbox" /> Obiligitory</label>
+                            <label>
+                              <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="moduleTypes" 
+                                  value="Obiligitory" 
+                                  onChange={this.handleFilterChange}
+                              />  
+                              Obiligitory
+                            </label>
                         </div>
                         <div className="checkbox">
-                            <label><input type="checkbox" className="pointer-checkbox" /> Elective</label>
+                            <label>
+                              <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="moduleTypes" 
+                                  value="Elective" 
+                                  onChange={this.handleFilterChange}
+                              /> 
+                              Elective
+                            </label>
                         </div>
                       </div> 
 
@@ -159,9 +269,10 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                         <input style={{ marginLeft: "5px"}}
                           type="range" 
                           min="1" 
-                          max="15" 
+                          max="20" 
                           step="1" 
-                          value={this.state.sliderValue} 
+                          name="ectsCredits"
+                          value={this.state.sliderValue}  
                           onChange={this.handleSliderChange} 
                           ref={this.rangeSliderRef} 
                         />
@@ -181,7 +292,11 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                       </div>
 
                       <div className ="filter-item" style={{ borderBottom: "none", marginTop: "20px"}}>
-                        <button className="custom-btn-green btn custom-link" style={{ width: "100%"}}>                                       
+                        <button 
+                        className="custom-btn-green btn custom-link" 
+                        style={{ width: "100%"}}
+                        onClick={this.onApplyFilters}
+                        >                                       
                         Apply
                         </button>
                       </div>
