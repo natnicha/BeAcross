@@ -32,10 +32,18 @@ interface SortParams {
   }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: number, filter: FilterParams, sort:SortParams): Promise<SearchResponse> {
+export async function searchServices(term: string, offset: number, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
     
     // Base URL including the term
     let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
+
+    // Function to append multiple filter values
+    const appendFilterParams = (url: string, paramName: string, values: string[]): string => {
+        values.forEach(value => {
+            url += `&${paramName}=${encodeURIComponent(value)}`;
+        });
+        return url;
+    };
 
     // Add offset to the URL if it's not 0
     if (offset !== 0) {
@@ -44,13 +52,13 @@ export async function searchServices(term: string, offset: number, filter: Filte
 
     // Add filters to the URL
     if (filter.degree_level.length > 0) {
-        url += `&degree_level=${encodeURIComponent(filter.degree_level.join(','))}`;
+        url = appendFilterParams(url, 'degree_level', filter.degree_level);
     }
     if (filter.module_type.length > 0) {
-        url += `&module_type=${encodeURIComponent(filter.module_type.join(','))}`;
+        url = appendFilterParams(url, 'module_type', filter.module_type);
     }
     if (filter.university.length > 0) {
-        url += `&university=${encodeURIComponent(filter.university.join(','))}`;
+        url = appendFilterParams(url, 'university', filter.university);
     }
     if (filter.ects) {
         url += `&ects=${filter.ects}`;
