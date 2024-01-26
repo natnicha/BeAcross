@@ -12,7 +12,6 @@ from app.api.module.model import UploadModulesResponseItemModel
 import json
 
 
-# TODO: ASK Natnicha for DB
 def get_all_module_data(uni):
     # get all data and prepare for run
     conn = MongoClient(env_config.DB_CONNECTION_STRING)
@@ -96,7 +95,7 @@ def start_similarity_all():
 
 
     # insert to ontology
-    #TODO insert to ontology
+    add_modules_to_owl()
 
 def start_similarity_for_one(inserted_mod : UploadModulesResponseItemModel):
 
@@ -105,8 +104,7 @@ def start_similarity_for_one(inserted_mod : UploadModulesResponseItemModel):
 
     similarity_results = read_similarity_file()
 
-    # TODO: Validate with Natnicha The Structure Of Module
-    similarity_results[str(inserted_mod.module_id)] = []
+    similarity_results[inserted_mod.module_id] = []
 
     for modu in data:
         # A to B
@@ -141,12 +139,12 @@ def check_similarity_db(module_a, module_b):
         return True
     return False
 
-#TODO change to call from class
+
 def check_similarity_class(module_a, module_b):
-    degree_level = check_level(module_a.get("degree_level"), module_b.get("level"))
-    content = check_content(module_a.get("content"), module_b.get("content"))
-    module_name = compare_titles(module_a.get("name"), module_b.get("name"))
-    ects = check_ects(module_a.get("ects"), module_b.get("ects"))
+    degree_level = check_level(module_a.degree_level, module_b.degree_level)
+    content = check_content(module_a.content, module_b.content)
+    module_name = compare_titles(module_a.module_name, module_b.module_name)
+    ects = check_ects(module_a.ects, module_b.ect)
 
     # content is not at all similar and ects don't match and level does not match
     if content < -0.19 or not ects or not degree_level:
@@ -162,17 +160,18 @@ def check_similarity_class(module_a, module_b):
         return True
     return False
 
+
+# read json similarity file
 def read_similarity_file():
 
     # Get the current working directory (your_script.py's directory)
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
     results_path = os.path.join(backend_directory, "app", "owl", "result.json")
-
 
     # Specify the path to your JSON file
     with open(results_path, 'r') as file:
@@ -182,14 +181,14 @@ def read_similarity_file():
     return data
 
 
-# Write the updated dictionary back to the file
+# Write the updated json results back to the file
 def write_back(data):
 
     # Get the current working directory (your_script.py's directory)
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
     results_path = os.path.join(backend_directory, "app", "owl", "result.json")

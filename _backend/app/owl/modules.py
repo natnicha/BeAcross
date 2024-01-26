@@ -8,7 +8,7 @@ def find_suggested_modules(module: str) -> list:
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
     owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
@@ -31,7 +31,7 @@ def add_modules_to_owl():
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
     owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
@@ -68,15 +68,17 @@ def add_modules_to_owl():
 
     # define relations
     for key, item in sim_result.items():
+        # exisitng
         for i in onto.individuals():
             if i.name == key:
                 res = i
 
+        # relations similar
         for inner in item:
             found = 0
-            for i in onto.individuals():
-                if i.name == inner:
-                    res.similarTo.append(i)
+            for indv in onto.individuals():
+                if indv.name == inner:
+                    res.similarTo.append(indv)
                     found = 1
             if found == 0:
                 instance = Module()
@@ -86,26 +88,12 @@ def add_modules_to_owl():
     onto.save(owl_path)
 
 
-    # # Access classes in the ontology
-    # for cls in onto.classes():
-    #     print("Class:", cls)
-    #
-    # # Access individuals in the ontology
-    # for ind in onto.individuals():
-    #     print("Individual:", ind)
-    #
-    # # Access properties in the ontology
-    # for prop in onto.properties():
-    #     print("Property:", prop)
-
-
-
 def get_results():
     # Specify the path to your JSON file
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
     json_path = os.path.join(backend_directory, "app", "owl", "result.json")
