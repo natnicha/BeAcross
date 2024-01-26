@@ -11,6 +11,7 @@ interface Item {
     ects?: number;
     degree_level?: string;
     module_name?: string;
+    type?: string;
 }
 
 interface SearchResultProps {
@@ -36,13 +37,14 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         <>
         {/*Search list*/}
         <section className="tm-content" style={{ margin: "0px"}} id="profileinformation">
-            <div className="nav nav-tabs flex-row align-items-baseline" style={{ paddingLeft: "5%", width: "118%", paddingBottom: "2%"}}>
+            <div className="nav nav-tabs flex-row align-items-baseline" style={{ paddingLeft: "1%", width: "118%", paddingBottom: "2%"}}>
                 <div className="about-thumb bg-white shadow-lg">
                     <div className="search-header">
                         <div className="search-column"><strong>Module Code</strong></div>
                         <div className="search-column"><strong>Module Name</strong></div>
                         <div className="search-column"><strong>ECTS Credits</strong></div>
                         <div className="search-column"><strong>Degree Level</strong></div>
+                        <div className="search-column"><strong>Module Type</strong></div>
                         <div className="search-column"><strong>University</strong></div>
                     </div>
 
@@ -66,6 +68,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 <div className="search-column" id="degree">
                                     {item.degree_level}
+                                </div>
+                                <div className="search-column" id="type">
+                                    {item.type}
                                 </div>
                                 <div className="search-column" id="university">
                                     {item.university}
