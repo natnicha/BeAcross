@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import SearchResult from '../components/SearchResult';
 import SearchBar from "../components/SearchBar";
 import { Location, useLocation } from "react-router-dom";
@@ -23,10 +23,6 @@ interface SearchPageState {
   };
 }
 
-interface ParentState {
-  currentPage: number;
-}
-
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     
   private rangeSliderRef = React.createRef<HTMLInputElement>();
@@ -49,14 +45,14 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       query: new URLSearchParams(this.props.location.search).get('query') || "",
       searchResult: {},
       currentPage: 1, 
-      totalPages: 10, 
-      sliderValue: 1,
+      totalPages: 0, 
+      sliderValue: 0,
 
       filters: {
         degreeLevels: [],
         moduleTypes: [],
         universities: [],
-        ectsCredits: 1, // Assuming a default value
+        ectsCredits: 0,
       },
     };
     this.setQuery = this.setQuery.bind(this);
@@ -284,9 +280,9 @@ onApplyFilters = () => {
                       <h6 style={{ width: "300px", marginLeft: "10px"}}>ECTS credits:</h6>
                         <input style={{ marginLeft: "5px"}}
                           type="range" 
-                          min="1" 
+                          min="0" 
                           max="20" 
-                          step="1" 
+                          step="0" 
                           name="ectsCredits"
                           value={this.state.sliderValue}  
                           onChange={this.handleSliderChange} 
