@@ -2,9 +2,11 @@ import json
 from typing import Annotated, Union
 from bson import json_util
 from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
+from owlready2 import *
+import xml.etree.ElementTree as ET
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
@@ -13,12 +15,12 @@ import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
+from app.api.module.model import *
 
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type"}
+sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "module_code": "module_code", "content": "content"}
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
@@ -261,3 +263,77 @@ def is_manual_calculated_sortby(sortby: str):
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
+@module.post("/", status_code=status.HTTP_201_CREATED)
+async def create_module(
+    request: Request,
+    content_type: str = Header(...),
+    db: MongoClient = Depends(get_database)):
+    if content_type != "application/xml":
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail={
+                "message": f"Unsupported media type: {content_type}."
+                " It must be application/xml"
+            }
+        )
+
+    try:
+        body = await request.body()
+        uploaded_modules_list, db_modules_list = get_data_from_xml(body)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"message": "Expected tag not found or unexpected tag found. Please check you XML file tags",
+                "hint": str(e)},
+        )
+    
+    inserted_modules = MODULES.insert_many(db, db_modules_list)
+    item_response_list = []
+    for index, element in enumerate(uploaded_modules_list):
+        module_id = str(inserted_modules.inserted_ids[index])
+        item = UploadModulesResponseItemModel(
+                module_id=module_id,
+                module_name=element.name,
+                degree_program=element.degree_program,
+                degree_level=element.degree_level,
+                university=element.university,
+                module_code=element.module_code,
+                content=element.content,
+                ects=int(element.ects or 0),
+                type=element.type
+            )
+        item_response_list.append(item)
+    # TODO: call similarity calculation function
+    # TODO: get module detail for each similar module 
+    
+    return {
+        "data": {
+            "total_items": len(item_response_list),
+            "items": item_response_list,
+        }
+    }
+
+def get_data_from_xml(text: bytes) -> (list, list) :
+    tree = ET.ElementTree(ET.fromstring(text))
+    modules_graph = tree.getroot()
+    uploaded_modules_list = []
+    db_modules_list = []
+    for module in modules_graph:
+        uploading_model = UploadModulesModel()
+        for entity in module:
+            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+        db_model = MODULES.ModulesModel(
+            name=uploading_model.name,
+            degree_program=uploading_model.degree_program,
+            degree_level=uploading_model.degree_level,
+            university=uploading_model.university,
+            module_code=uploading_model.module_code,
+            content=uploading_model.content,
+            ects=int(uploading_model.ects or 0),
+            year="",
+            type=uploading_model.type,
+        )
+        uploaded_modules_list.append(uploading_model)
+        db_modules_list.append(db_model)
+    return uploaded_modules_list, db_modules_list

@@ -2,7 +2,7 @@ import datetime
 import re
 from typing import Optional
 from bson import ObjectId
-from mongomock import MongoClient
+from pymongo import MongoClient
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
 from app.config.config_utils import env_config
@@ -16,12 +16,13 @@ class BaseModel(BaseModel):
 class ModulesModel(BaseModel):
     name: str = Field(...)
     degree_program: str = Field(...)
-    level: str = Field(...)
-    code: str = Field(...)
-    university: str = Field(...)
-    ect_credits: int = Field(...)
-    year_of_study: str = Field(...)
+    degree_level: str = Field(...)
     content: str = Field(...)   
+    university: str = Field(...)
+    module_code: str = Field(...)
+    ects: int = Field(...)
+    year: str = Field(...)
+    type: str = Field(...)
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
@@ -86,3 +87,6 @@ def convert_conditions_to_query(term: str, level: list[str], ects: list[int], un
         condition["name"] = like_term
     
     return condition
+
+def insert_many(conn: MongoClient, modules_model: ModulesModel):
+    return conn[env_config.DB_NAME].get_collection("modules").insert_many([i.dict() for i in modules_model])
