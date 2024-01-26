@@ -16,10 +16,10 @@ interface SearchPageState {
   totalPages: number; 
   sliderValue: number;
   filters: {
-    degreeLevels: string[];
-    moduleTypes: string[];
-    universities: string[];
-    ectsCredits: number;
+    degree_level: string[];
+    module_type: string[];
+    university: string[];
+    ects: number;
   };
 }
 
@@ -49,10 +49,10 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       sliderValue: 0,
 
       filters: {
-        degreeLevels: [],
-        moduleTypes: [],
-        universities: [],
-        ectsCredits: 0,
+        degree_level: [],
+        module_type: [],
+        university: [],
+        ects: 0,
       },
     };
     this.setQuery = this.setQuery.bind(this);
@@ -87,10 +87,10 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
       // Constructing the filters object from the state
       const filters = {
-        degreeLevels: this.state.filters.degreeLevels,
-        moduleTypes: this.state.filters.moduleTypes,
-        universities: this.state.filters.universities,
-        ectsCredits: this.state.filters.ectsCredits
+        degree_level: this.state.filters.degree_level,
+        module_type: this.state.filters.module_type,
+        university: this.state.filters.university,
+        ects: this.state.filters.ects
       };
 
       // Including the filters in the searchServices call
@@ -203,11 +203,11 @@ onApplyFilters = () => {
                               <input 
                                 type="checkbox" 
                                 className="pointer-checkbox" 
-                                name="degreeLevels" 
-                                value="Bachelor" 
+                                name="degree_level" 
+                                value="bachelor" 
                                 onChange={this.handleFilterChange}
                               /> 
-                              Bachelor
+                               &nbsp;Bachelor
                             </label>
                         </div>
                         <div className="checkbox">
@@ -215,11 +215,11 @@ onApplyFilters = () => {
                               <input 
                                 type="checkbox" 
                                 className="pointer-checkbox" 
-                                name="degreeLevels" 
-                                value="Master" 
+                                name="degree_level" 
+                                value="master" 
                                 onChange={this.handleFilterChange}
                               />
-                              Master
+                               &nbsp;Master
                             </label>
                         </div>
                         <div className="checkbox">
@@ -227,11 +227,11 @@ onApplyFilters = () => {
                               <input 
                                 type="checkbox" 
                                 className="pointer-checkbox" 
-                                name="degreeLevels" 
-                                value="Doctoral" 
+                                name="degree_level" 
+                                value="doctoral" 
                                 onChange={this.handleFilterChange}
                               />
-                              Doctoral
+                               &nbsp;Doctoral
                             </label>
                         </div>
                       </div> 
@@ -243,11 +243,11 @@ onApplyFilters = () => {
                               <input 
                                   type="checkbox" 
                                   className="pointer-checkbox" 
-                                  name="moduleTypes" 
-                                  value="Erasmus" 
+                                  name="module_type" 
+                                  value="erasmus" 
                                   onChange={this.handleFilterChange}
                               /> 
-                              Erasmus
+                               &nbsp;Erasmus
                             </label>
                         </div>
                         <div className="checkbox">
@@ -255,11 +255,11 @@ onApplyFilters = () => {
                               <input 
                                   type="checkbox" 
                                   className="pointer-checkbox" 
-                                  name="moduleTypes" 
-                                  value="Obiligitory" 
+                                  name="module_type" 
+                                  value="obiligitory" 
                                   onChange={this.handleFilterChange}
                               />  
-                              Obiligitory
+                               &nbsp;Obiligitory
                             </label>
                         </div>
                         <div className="checkbox">
@@ -267,11 +267,11 @@ onApplyFilters = () => {
                               <input 
                                   type="checkbox" 
                                   className="pointer-checkbox" 
-                                  name="moduleTypes" 
-                                  value="Elective" 
+                                  name="module_type" 
+                                  value="elective" 
                                   onChange={this.handleFilterChange}
                               /> 
-                              Elective
+                               &nbsp;Elective
                             </label>
                         </div>
                       </div> 
@@ -283,7 +283,7 @@ onApplyFilters = () => {
                           min="0" 
                           max="20" 
                           step="0" 
-                          name="ectsCredits"
+                          name="ects"
                           value={this.state.sliderValue}  
                           onChange={this.handleSliderChange} 
                           ref={this.rangeSliderRef} 
@@ -296,9 +296,36 @@ onApplyFilters = () => {
                         <div className="dropdown">
                           <button className="dropbtn">University... <i className="bi bi-caret-down-fill"></i></button>
                           <div className="dropdown-content">
-                              <label><input type="checkbox" className="pointer-checkbox" value="Uni1" /> Bialystok University Of Technology</label>
-                              <label><input type="checkbox" className="pointer-checkbox" value="Uni2" /> Technische Universitat Chemnitz</label>
-                              <label><input type="checkbox" className="pointer-checkbox" value="Uni3" /> University of Nova Gorica</label>
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="university" 
+                                  value="Bialystok University Of Technology" 
+                                  onChange={this.handleFilterChange}
+                                /> 
+                                &nbsp;Bialystok University Of Technology
+                                </label>
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="university" 
+                                  value="Technische Universitat Chemnitz" 
+                                  onChange={this.handleFilterChange}
+                                />
+                                &nbsp;Technische Universitat Chemnitz
+                                </label>
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="university" 
+                                  value="University of Nova Gorica" 
+                                  onChange={this.handleFilterChange}
+                                /> 
+                                &nbsp;University of Nova Gorica
+                                </label>
                           </div>
                         </div>
                       </div>

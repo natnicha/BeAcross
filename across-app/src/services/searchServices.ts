@@ -19,10 +19,10 @@ export interface SearchResponse {
 }
 
 interface FilterParams {
-    degreeLevels: string[];
-    moduleTypes: string[];
-    universities: string[];
-    ectsCredits: number;
+    degree_level: string[];
+    module_type: string[];
+    university: string[];
+    ects: number;
   }
  
 // Function to send a GET request to the search API
@@ -37,17 +37,17 @@ export async function searchServices(term: string, offset: number, filter: Filte
     }
 
     // Add filters to the URL
-    if (filter.degreeLevels.length > 0) {
-        url += `&degree_level=${encodeURIComponent(filter.degreeLevels.join(','))}`;
+    if (filter.degree_level.length > 0) {
+        url += `&degree_level=${encodeURIComponent(filter.degree_level.join(','))}`;
     }
-    if (filter.moduleTypes.length > 0) {
-        url += `&module_type=${encodeURIComponent(filter.moduleTypes.join(','))}`;
+    if (filter.module_type.length > 0) {
+        url += `&module_type=${encodeURIComponent(filter.module_type.join(','))}`;
     }
-    if (filter.universities.length > 0) {
-        url += `&universitie=${encodeURIComponent(filter.universities.join(','))}`;
+    if (filter.university.length > 0) {
+        url += `&university=${encodeURIComponent(filter.university.join(','))}`; // Also, make sure this should be 'universities' to match the query param name in your API
     }
-    if (filter.ectsCredits > 0) {
-        url += `&ects=${filter.ectsCredits}`;
+    if (filter.ects) {
+        url += `&ects=${filter.ects}`;
     }
     
     try {
