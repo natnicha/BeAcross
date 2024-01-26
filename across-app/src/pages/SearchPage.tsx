@@ -22,8 +22,8 @@ interface SearchPageState {
     ects: number;
   };
 
-  sortby: string;   // Add this
-  orderby: string;
+  currentSortField: string;
+  currentSortOrder: string;
 }
 
 
@@ -52,8 +52,8 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       totalPages: 0, 
       sliderValue: 0,
 
-      sortby: 'module_name',
-      orderby: 'asc',
+      currentSortField: 'module_name',
+      currentSortOrder: 'asc',
 
       filters: {
         degree_level: [],
@@ -102,8 +102,8 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
       // Constructing the sorting object from the state
       const sorting = {
-        sortby: [this.state.sortby], // Wrap in an array
-        orderby: [this.state.orderby] // Wrap in an array
+        sortby: [this.state.currentSortField],
+        orderby: [this.state.currentSortOrder]
       };
 
       // Including the filters in the searchServices call
@@ -169,8 +169,15 @@ onApplyFilters = () => {
 
 // Function to update Sort state
 handleSortClick = (sortField: string) => {
-  // Set the sort field and always use 'desc' as the order for now
-  this.setState({ sortby: sortField, orderby: 'desc' }, this.performSearch);
+  this.setState(prevState => {
+    // Toggle sort order if the same field is clicked again, else set to 'desc'
+    const newOrder = prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc';
+
+    return {
+      currentSortField: sortField,
+      currentSortOrder: newOrder
+    };
+  }, this.performSearch);
 };
 
   render() {
@@ -201,19 +208,19 @@ handleSortClick = (sortField: string) => {
                   className="custom-btn btn custom-link"
                   onClick={() => this.handleSortClick('module_name')}
                  >                                       
-                  <i className={"bi bi-sort-alpha-down"}></i> Module Name
+                  <i className={`bi ${this.state.currentSortField === 'module_name' && this.state.currentSortOrder === 'desc' ? 'bi-sort-alpha-up' : 'bi-sort-alpha-down'}`}></i> Module Name
                 </button>
                 <button 
                   className="custom-btn btn custom-link"
                   onClick={() => this.handleSortClick('no_of_suggested_modules')}
                 >                                       
-                  <i className={"bi bi-sort-alpha-down"}></i> Suggestion Modules
+                  <i className={`bi ${this.state.currentSortField === 'no_of_suggested_modules' && this.state.currentSortOrder === 'desc' ? 'bi-sort-up' : 'bi-sort-down'}`}></i> Suggestion Modules
                 </button>
                 <button 
                   className="custom-btn btn custom-link"
                   onClick={() => this.handleSortClick('no_of_recommend')}
                 >                                       
-                 <i className={"bi bi-sort-alpha-down"}></i> Recommended Modules
+                 <i className={`bi ${this.state.currentSortField === 'no_of_recommend' && this.state.currentSortOrder === 'desc' ? 'bi-sort-up' : 'bi-sort-down'}`}></i> Recommended Modules
                 </button>
               </div>
 
