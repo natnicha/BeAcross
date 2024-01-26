@@ -107,9 +107,23 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
                   {/*Searchbar*/}
                   <SearchBar content={this.state.query} setContent={this.setQuery} onSearch={() => this.performSearch()}/>
                 </div>
+              
+              {/*Sorting*/}
+              <div className="sort-container"> 
+                <h6>Sort by:</h6>
+                <button className="custom-btn btn custom-link">                                       
+                  <i className="bi bi-sort-alpha-down"></i> Module Name
+                </button>
+                <button className="custom-btn btn custom-link">                                       
+                  <i className="bi bi-sort-down"></i> Suggestion Modules
+                </button>
+                <button className="custom-btn btn custom-link">                                       
+                <i className="bi bi-sort-down"></i>  Recommened Modules
+                </button>
+              </div>
+
               </section>
-              <div className="profile-container">
-                
+              <div className="profile-container">               
                 {/*Filter*/}
                 <section>
                   <div className="filter">

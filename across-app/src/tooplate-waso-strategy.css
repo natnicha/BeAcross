@@ -261,6 +261,11 @@ strong {
   color: var(--dark-color);
 }
 
+.SearchPage .custom-btn {
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
+
 
 /*---------------------------------------
   NAVIGATION              
@@ -1039,6 +1044,11 @@ td {
 -----------------------------------------*/
 .profile-container {
   display: flex;
+}
+
+.sort-container {
+  display: flex;
+  margin-left: 16%;
 }
 
 .tm-content {
