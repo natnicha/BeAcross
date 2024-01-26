@@ -44,8 +44,8 @@ async def send_newpass_email(user_email: str, password: str, user_name: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def send_registration_email(user_email: str, username: str):
-    email_body = registration_template.format(user=username)
+async def send_registration_email(user_email: str, user_name: str):
+    email_body = registration_template.format(user=user_name)
 
     try:
         await send_email(

@@ -42,8 +42,13 @@ async def register(
     # encrypt password using salted hashing
     encrypted_password = hash_text(password)
     
-    # TODO: send email
-    send_registration_email(password, full_name)
+    # send email
+    try:
+        send_registration_email(password, full_name)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)}
+        )
     # if sent success, insert into db & return 200 - OK 
     new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password, settings.user_roles["student"])
     return RegisterResponseModel(
