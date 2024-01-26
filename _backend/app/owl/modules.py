@@ -31,7 +31,7 @@ def add_modules_to_owl():
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(current_directory)
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
     # Navigate to the 'owl' directory and access 'results.json'
     owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
@@ -93,7 +93,7 @@ def get_results():
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(current_directory)
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
     # Navigate to the 'owl' directory and access 'results.json'
     json_path = os.path.join(backend_directory, "app", "owl", "result.json")

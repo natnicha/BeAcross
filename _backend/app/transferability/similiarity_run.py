@@ -11,7 +11,10 @@ from app.owl.modules import add_modules_to_owl
 from app.api.module.model import UploadModulesResponseItemModel
 import json
 
+#TODO check if id already exists in similarity file
 
+
+# get all modules from a specific uni
 def get_all_module_data(uni):
     # get all data and prepare for run
     conn = MongoClient(env_config.DB_CONNECTION_STRING)
@@ -20,6 +23,7 @@ def get_all_module_data(uni):
     data = db.get_collection("modules").find({"university": uni})
     return list(data)
 
+# get all modules from a different uni
 def get_specific_module_data(uni):
     # get all data and prepare for run
     conn = MongoClient(env_config.DB_CONNECTION_STRING)
@@ -161,6 +165,50 @@ def check_similarity_class(module_a, module_b):
     return False
 
 
+# takes 2 module id numbers and removes the similarity from first to second
+def remove_similarity(module_to_remove_from : str, module_to_remove : str):
+
+    data = read_similarity_file()
+
+    index = -1
+
+    i = 0
+    while i < len(data[module_to_remove_from]):
+        if(data[module_to_remove_from][i] == module_to_remove):
+            index = i
+        i += 1
+
+    if index != -1:
+        del data[module_to_remove_from][index]
+        write_back(data)
+        add_modules_to_owl()
+
+
+
+# takes 2 module id numbers and add the similarity to the first
+def add_similarity(module_to_add_to: str, module_to_add: str):
+
+    data = read_similarity_file()
+
+    if module_to_add_to not in data.keys():
+        data[module_to_add_to] = []
+
+    index = -1
+    i = 0
+    while i < len(data[module_to_add_to]):
+        if data[module_to_add_to][i] == module_to_add:
+            index = i
+        i += 1
+
+    if index == -1:
+        data[module_to_add_to].append(module_to_add)
+        write_back(data)
+        add_modules_to_owl()
+
+
+
+
+
 # read json similarity file
 def read_similarity_file():
 
@@ -168,10 +216,10 @@ def read_similarity_file():
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(current_directory)
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
     # Navigate to the 'owl' directory and access 'results.json'
-    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+    results_path = os.path.join(backend_directory,"app", "owl", "result.json")
 
     # Specify the path to your JSON file
     with open(results_path, 'r') as file:
@@ -188,10 +236,10 @@ def write_back(data):
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(current_directory)
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
     # Navigate to the 'owl' directory and access 'results.json'
-    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+    results_path = os.path.join(backend_directory,"app", "owl", "result.json")
 
     with open(results_path, 'w') as file:
         json.dump(data, file, indent=2)
