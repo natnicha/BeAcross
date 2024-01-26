@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { registerUser } from '../services/authenticationServices';
 import LoginPopup from '../components/LoginPopup';
 
@@ -88,7 +88,6 @@ const handleSubmit = async () => {
             <p>Already have an account?&nbsp; 
               <a 
                 className="click-scroll"
-                href="javascript:void(0)"
                 onClick={(e) => {
                     e.preventDefault(); // Prevent default if using href="#"
                     openLoginPopup();

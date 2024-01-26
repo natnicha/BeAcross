@@ -16,8 +16,8 @@ import StudentProfilePage from "./pages/StudentProfilepage";
 const App: React.FC = () => {
   return (
     <UserProvider>
-      <Header />
       <Router>
+      <Header />
         <Routes>
           <Route index path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
