@@ -37,6 +37,9 @@ def find(conn: MongoClient, term: str,
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
 
+def find_one(conn: MongoClient, module_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("modules").find_one({"module_id": module_id})
+
 def count(conn: MongoClient, term: str,
           level: list[str], ects: list[int], university: list[str], type: list[str]):
     condition = convert_conditions_to_query(term, level, ects, university, type)

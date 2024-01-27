@@ -311,10 +311,14 @@ async def create_module(
     # TODO: call similarity calculation function
     for mod in item_response_list:
         start_similarity_for_one(mod)
-        similar_list = find_suggested_modules(mod.module_id)
+        similar_module_id_list = find_suggested_modules(mod.module_id)
 
-    # TODO: get module detail for each similar module 
-    
+        # TODO: get module detail for each similar module
+        similar_module_detail_list = []
+        for similar_module_id in similar_module_id_list:
+            similar_module_detail_list.append(MODULES.find_one(db, ObjectId(similar_module_id)))
+        mod.similar_modules = similar_module_detail_list
+
     return {
         "data": {
             "total_items": len(item_response_list),
