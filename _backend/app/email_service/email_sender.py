@@ -1,3 +1,4 @@
+from email.mime.text import MIMEText
 import aiosmtplib
 from email.message import EmailMessage
 from pydantic import BaseModel  
@@ -8,11 +9,10 @@ from app.config.config_utils import env_config
 from app.api.auth.model import LoginRequestModel, RegisterRequestModel
 
 async def send_email(receiver_email: str, subject: str, body: str, sender_email: str, sender_password: str):
-    message = EmailMessage()
+    message = MIMEText(body, "html")
     message["From"] = sender_email
     message["To"] = receiver_email
     message["Subject"] = subject
-    message.set_content(body)
 
     try:
         await aiosmtplib.send(
@@ -44,9 +44,8 @@ async def send_newpass_email(user_email: str, password: str, user_name: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def send_registration_email(user_email: str, user_name: str):
-    email_body = registration_template.format(user=user_name)
-
+async def send_registration_email(user_email: str, password: str, user_name: str):
+    email_body = registration_template.format(user=user_name, password=password, email=user_email)
     try:
         await send_email(
             receiver_email=user_email,

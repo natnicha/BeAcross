@@ -8,7 +8,7 @@ from app.crud.users import UsersModel
 import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
 import app.crud.user_logs as USER_LOGS
-from app.email_service.emailsender import *
+from app.email_service.email_sender import *
 
 from .auth_utils import *
 from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel, ForgotPasswordRequestModel
@@ -44,10 +44,11 @@ async def register(
     
     # send email
     try:
-        send_registration_email(password, full_name)
+        await send_registration_email(user_email=item.email, password=password, user_name=full_name[0])
     except Exception as e:
         raise HTTPException(
-            detail={"message": str(e)}
+            detail={"message": str(e)},
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE
         )
     # if sent success, insert into db & return 200 - OK 
     new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password, settings.user_roles["student"])
