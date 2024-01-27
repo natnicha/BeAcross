@@ -53,3 +53,4 @@ async def send_registration_email(user_email: str, password: str, user_name: str
     except Exception as e:
         raise e
     
+    
