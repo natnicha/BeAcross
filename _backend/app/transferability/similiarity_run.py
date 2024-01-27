@@ -144,11 +144,11 @@ def check_similarity_db(module_a, module_b):
     return False
 
 
-def check_similarity_class(module_a, module_b):
-    degree_level = check_level(module_a.degree_level, module_b.degree_level)
-    content = check_content(module_a.content, module_b.content)
-    module_name = compare_titles(module_a.module_name, module_b.module_name)
-    ects = check_ects(module_a.ects, module_b.ect)
+def check_similarity_class(module_a: UploadModulesResponseItemModel, module_b):
+    degree_level = check_level(module_a.degree_level, module_b["degree_level"])
+    content = check_content(module_a.content, module_b["content"])
+    module_name = compare_titles(module_a.module_name, module_b["name"])
+    ects = check_ects(module_a.ects, module_b["ects"])
 
     # content is not at all similar and ects don't match and level does not match
     if content < -0.19 or not ects or not degree_level:
@@ -219,7 +219,7 @@ def read_similarity_file():
     backend_directory = os.path.dirname(os.path.dirname(current_directory))
 
     # Navigate to the 'owl' directory and access 'results.json'
-    results_path = os.path.join(backend_directory,"app", "owl", "result.json")
+    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
 
     # Specify the path to your JSON file
     with open(results_path, 'r') as file:
