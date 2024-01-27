@@ -1,12 +1,9 @@
 from email.mime.text import MIMEText
 import aiosmtplib
-from email.message import EmailMessage
-from pydantic import BaseModel  
 from fastapi import HTTPException  
 
 from .email_templates import password_reset_template, registration_template
 from app.config.config_utils import env_config
-from app.api.auth.model import LoginRequestModel, RegisterRequestModel
 
 async def send_email(receiver_email: str, subject: str, body: str, sender_email: str, sender_password: str):
     message = MIMEText(body, "html")
@@ -25,8 +22,6 @@ async def send_email(receiver_email: str, subject: str, body: str, sender_email:
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-     
-
 
 async def send_newpass_email(user_email: str, password: str, user_name: str):
     email_body = password_reset_template.format(password=password, user=user_name)
