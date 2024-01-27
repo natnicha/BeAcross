@@ -19,6 +19,9 @@ wheel = "*"
 owlready2 = "*"
 rdflib = "*"
 nltk = "*"
+scikit-learn = "*"
+unidecode = "*"
+stopwords = "*"
 
 [dev-packages]
 
