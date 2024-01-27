@@ -11,7 +11,7 @@ import app.crud.user_logs as USER_LOGS
 from app.email_service.email_sender import *
 
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel, ForgotPasswordRequestModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 

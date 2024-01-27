@@ -22,3 +22,4 @@ async def check_mongo_connection():
         logging.error(result)
     except Exception as e:
         logging.error(e)
+
