@@ -1,4 +1,5 @@
 from email.mime.text import MIMEText
+from email.utils import formataddr
 import aiosmtplib
 from fastapi import HTTPException  
 
@@ -7,7 +8,7 @@ from app.config.config_utils import env_config
 
 async def send_email(receiver_email: str, subject: str, body: str, sender_email: str, sender_password: str):
     message = MIMEText(body, "html")
-    message["From"] = sender_email
+    message["From"] = formataddr(('Across', sender_email))
     message["To"] = receiver_email
     message["Subject"] = subject
 
