@@ -14,12 +14,12 @@ interface SearchPageState {
   searchResult: SearchResponse;
   currentPage: number; 
   totalPages: number; 
-  sliderValue: number;
+  sliderValue: number | null; 
   filters: {
     degree_level: string[];
     module_type: string[];
     university: string[];
-    ects: number;
+    ects: string | null;
   };
 
   currentSortField: string;
@@ -32,15 +32,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   private rangeSliderRef = React.createRef<HTMLInputElement>();
 
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newSliderValue = parseInt(event.target.value);
-    this.setState(prevState => ({
-      ...prevState, // Spread the rest of the previous state
-      sliderValue: newSliderValue,
-      filters: {
-        ...prevState.filters,
-        ectsCredits: newSliderValue,
-      },
-    }));
+    this.setState({ sliderValue: parseInt(event.target.value, 10) });
   };
   
   constructor(props: SearchPageProps) {
@@ -50,7 +42,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       searchResult: {},
       currentPage: 1, 
       totalPages: 0, 
-      sliderValue: 0,
+      sliderValue: null,
 
       currentSortField: 'module_name',
       currentSortOrder: 'asc',
@@ -59,7 +51,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
         degree_level: [],
         module_type: [],
         university: [],
-        ects: 0,
+        ects: '',
       },
     };
     this.setQuery = this.setQuery.bind(this);
@@ -91,13 +83,14 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   async performSearch() {
     try {
       let offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
+      let offsetString = offset.toString(); // Convert to String before passing data to BE
 
       // Constructing the filters object from the state
       const filters = {
         degree_level: this.state.filters.degree_level,
         module_type: this.state.filters.module_type,
         university: this.state.filters.university,
-        ects: this.state.filters.ects
+        ects: this.state.sliderValue?.toString() ?? ""
       };
 
       // Constructing the sorting object from the state
@@ -107,7 +100,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       };
 
       // Including the filters in the searchServices call
-      const result = await searchServices(this.state.query, offset, filters, sorting);
+      const result = await searchServices(this.state.query, offsetString, filters, sorting);
       
       this.setState({ searchResult: result });
       // Set the search results and reset the current page to 1
@@ -316,13 +309,13 @@ handleSortClick = (sortField: string) => {
                           type="range" 
                           min="0" 
                           max="20" 
-                          step="0" 
+                          step="1" 
                           name="ects"
-                          value={this.state.sliderValue}  
+                          value={this.state.sliderValue ?? 0}  
                           onChange={this.handleSliderChange} 
                           ref={this.rangeSliderRef} 
                         />
-                        <span> {this.state.sliderValue}</span>
+                        <span> {this.state.sliderValue !== null && this.state.sliderValue !== 0 ? this.state.sliderValue : ""} </span>
                       </div>
                       
                       <div className ="filter-item">

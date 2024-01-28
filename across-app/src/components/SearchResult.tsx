@@ -8,7 +8,7 @@ interface Item {
     university?: string;
     degree_program?: string;
     module_code?: number;
-    ects?: number;
+    ects?: string;
     degree_level?: string;
     module_name?: string;
     type?: string;
