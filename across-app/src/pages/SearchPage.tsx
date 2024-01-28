@@ -32,7 +32,12 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   private rangeSliderRef = React.createRef<HTMLInputElement>();
 
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ sliderValue: parseInt(event.target.value, 10) });
+    const value = parseInt(event.target.value, 10);
+    if (value === 0) {
+      this.setState({ sliderValue: null });
+    } else {
+      this.setState({ sliderValue: value });
+    }
   };
   
   constructor(props: SearchPageProps) {
