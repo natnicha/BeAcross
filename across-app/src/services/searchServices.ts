@@ -4,7 +4,7 @@ interface SearchItem {
     university?: string;
     degree_program?: string;
     module_code?: number;
-    ects?: number;
+    ects?: string;
     degree_level?: string;
     module_name?: string;
     type?: string;
@@ -23,7 +23,7 @@ interface FilterParams {
     degree_level: string[];
     module_type: string[];
     university: string[];
-    ects: number;
+    ects: string;
   }
 
 interface SortParams {
@@ -32,7 +32,7 @@ interface SortParams {
   }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: number, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
+export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
     
     // Base URL including the term
     let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
@@ -46,8 +46,8 @@ export async function searchServices(term: string, offset: number, filter: Filte
     };
 
     // Add offset to the URL if it's not 0
-    if (offset !== 0) {
-        url += `&offset=${offset}`;
+    if (offset !== '0') {
+      url += `&offset=${offset}`;
     }
 
     // Add filters to the URL
@@ -60,9 +60,12 @@ export async function searchServices(term: string, offset: number, filter: Filte
     if (filter.university.length > 0) {
         url = appendFilterParams(url, 'university', filter.university);
     }
+    /*if (filter.university.length > 0) {
+       url = appendFilterParams(url, 'ects', filter.ects);
+    }*/
     if (filter.ects) {
-        url += `&ects=${filter.ects}`;
-    }
+      url += `&ects=${filter.ects}`;
+  }
 
     // Add filters to the URL
     if (sort.sortby.length > 0) {
