@@ -11,7 +11,7 @@ def find_suggested_modules(module: str) -> list:
     backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
+    owl_path = os.path.join(backend_directory, "owl", "modules.owl")
 
     onto = get_ontology(owl_path).load()
     # Get the individual by its name
