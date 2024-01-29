@@ -109,15 +109,22 @@ def start_similarity_for_one(inserted_mod : UploadModulesResponseItemModel):
     similarity_results = read_similarity_file()
 
     similarity_results[inserted_mod.module_id] = []
-
     for modu in data:
         # A to B
-        if check_similarity_class(inserted_mod, modu):
-            similarity_results[inserted_mod.module_id].append(modu.module_id)
-        # B to A
-        if check_similarity_class(modu, inserted_mod):
-            similarity_results[modu.module_id].append(inserted_mod.module_id)
-
+        try:
+            if check_similarity_class(inserted_mod, modu):
+                similarity_results[inserted_mod.module_id].append(str(modu["_id"]))
+            # B to A
+            if check_similarity_class(modu, inserted_mod):
+                try:
+                    # case an existing module
+                    similarity_results[str(modu["_id"])].append(inserted_mod.module_id)
+                except:
+                    # case a new module which is another module in uploaded file
+                    similarity_results[str(modu["_id"])] = []
+                    similarity_results[str(modu["_id"])].append(inserted_mod.module_id)
+        except Exception as e:
+            raise e
     write_back(similarity_results)
     add_modules_to_owl()
 
@@ -143,12 +150,27 @@ def check_similarity_db(module_a, module_b):
         return True
     return False
 
+def get_attribute(module, attribute_name: str):
+    if type(module) == UploadModulesResponseItemModel:
+        if not (attribute_name == "module_name" or attribute_name == "name" ):
+            return getattr(module, attribute_name)
+        else:
+            try:
+                return getattr(module, "module_name")
+            except:
+                return getattr(module, "name")
+    else:
+        return module[attribute_name]
 
-def check_similarity_class(module_a: UploadModulesResponseItemModel, module_b):
-    degree_level = check_level(module_a.degree_level, module_b["degree_level"])
-    content = check_content(module_a.content, module_b["content"])
-    module_name = compare_titles(module_a.module_name, module_b["name"])
-    ects = check_ects(module_a.ects, module_b["ects"])
+def check_similarity_class(module_a , module_b):    
+    degree_level = check_level(get_attribute(module_a,"degree_level"), 
+                               get_attribute(module_b,"degree_level"))
+    content = check_content(get_attribute(module_a,"content"), 
+                            get_attribute(module_b,"content"))
+    module_name = compare_titles(get_attribute(module_a,"name"), 
+                                 get_attribute(module_b,"name"))
+    ects = check_ects(get_attribute(module_a,"ects"), 
+                      get_attribute(module_b,"ects"))
 
     # content is not at all similar and ects don't match and level does not match
     if content < -0.19 or not ects or not degree_level:
