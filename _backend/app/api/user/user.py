@@ -1,5 +1,6 @@
+from typing import Annotated, Union
 from bson import ObjectId
-from fastapi import APIRouter, Depends, status, Request
+from fastapi import APIRouter, Depends, Query, status, Request
 from pymongo import MongoClient
 
 import app.crud.users as USERS
@@ -34,6 +35,10 @@ def get_user_data(user: USERS.UsersModel) -> UserProfileResponseModel:
 
 @user.get("/profile/list", status_code=status.HTTP_200_OK)
 async def get_profile(
-        request: Request,
+        user_role: str = Query('student', pattern='^student$|^uni-admin$|^sys-admin$'),
+        limit: int = Query(20, gt=0),
+        offset: int = Query(0, gt=0),
+        sortby: str = Query('module_name', pattern='^first_name$|^user_role$'),
+        orderby: str = Query('asc', pattern='^asc$|^desc$'),
         db: MongoClient = Depends(get_database)):
     return 
