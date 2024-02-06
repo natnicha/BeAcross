@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { forgotPassword } from '../services/authenticationServices';
+import { usePopups } from '../PopupContext';
 
 type PopupProps = {
     content: string;
     onClose: () => void;
   };
 
-  const ForgotPasswordPopup: React.FC<PopupProps> = ({ content, onClose }) => {
+  const ForgotPasswordPopup: React.FC<PopupProps> = () => {
 
+  // Hook all popup control to PopupContext
+  const { closeAllPopups } = usePopups();
   const [emailToForgotPassword, setEmailToForgotPassword] = useState(''); // State for storing the email address
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
   const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
@@ -49,7 +52,7 @@ const handleSubmit = async () => {
             <h6>Enter University Email associated with your account</h6>
             &nbsp; 
             <button 
-            onClick={onClose} 
+            onClick={closeAllPopups} 
             style={{ 
                 position: 'absolute', 
                 top: '10px', 

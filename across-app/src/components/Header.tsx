@@ -3,20 +3,13 @@ import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
 import { Link, useNavigate } from "react-router-dom";
+import { usePopups } from '../PopupContext';
+import ForgotPasswordPopup from "./ForgotPasswordPopup";
 
 const Header: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useUser(); // check user status (login)
-
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
-  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
-
-  // Functions to open/close the login popup
-  const openLoginPopup = () => setIsLoginPopupOpen(true);
-  const closeLoginPopup = () => setIsLoginPopupOpen(false);
-
-  // Functions to open/close the register popup
-  const openRegisterPopup = () => setIsRegisterPopupOpen(true);
-  const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
+  // Hook all popup control to PopupContext
+  const { openLoginPopup, isLoginPopupOpen, openRegisterPopup, isRegisterPopupOpen, isForgotPasswordPopupOpen, closeAllPopups } = usePopups();
 
   const navigate = useNavigate(); // redirect user back to homepage
 
@@ -90,8 +83,7 @@ const Header: React.FC = () => {
                   {isLoggedIn ? (
                     <a
                       className="custom-btn-red btn custom-link"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent default if using href="#"
+                      onClick={() => {
                         handleLogout(); // check user status
                       }}
                       role="button"
@@ -102,8 +94,7 @@ const Header: React.FC = () => {
                   ) : (
                     <a
                       className="custom-btn-green btn custom-link"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent default if using href="#"
+                      onClick={() => {
                         openLoginPopup();
                       }}
                       role="button"
@@ -114,7 +105,7 @@ const Header: React.FC = () => {
                   )}
 
                   {isLoginPopupOpen && (
-                    <LoginPopup content="" onClose={closeLoginPopup} />
+                    <LoginPopup content="" onClose={closeAllPopups} />
                   )}
                 </div>
 
@@ -124,8 +115,7 @@ const Header: React.FC = () => {
                     Welcome, &nbsp;&nbsp;
                     <a
                       className="click-scroll d-flex align-items-end"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent default if using href="#"
+                      onClick={() => {
                         window.location.href =
                           "http://localhost:3000/studentprofile";
                       }}
@@ -150,8 +140,7 @@ const Header: React.FC = () => {
                     Don't have an account?&nbsp;
                     <a
                       className="click-scroll d-flex align-items-end"
-                      onClick={(e) => {
-                        e.preventDefault(); // Prevent default if using href="#"
+                      onClick={() => {
                         openRegisterPopup();
                       }}
                       role="button"
@@ -162,7 +151,7 @@ const Header: React.FC = () => {
                       </strong>
                     </a>
                     {isRegisterPopupOpen && (
-                      <RegisterPopup content="" onClose={closeRegisterPopup} />
+                      <RegisterPopup content="" onClose={closeAllPopups}/>
                     )}
                   </p>
                 )}
@@ -171,6 +160,10 @@ const Header: React.FC = () => {
           </div>
         </div>
       </nav>
+      {/* To render forget password popup */}
+      {isForgotPasswordPopupOpen  && (
+        <ForgotPasswordPopup content="" onClose={closeAllPopups} />
+      )}
     </>
   );
 };

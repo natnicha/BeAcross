@@ -1,34 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { loginUser } from '../services/authenticationServices';
 import RegisterPopup from '../components/RegisterationPopup';
 import ForgotPasswordPopup from '../components/ForgotPasswordPopup';
 import { useUser } from '../UserContext';
+import { usePopups } from '../PopupContext';
 
 type PopupProps = {
     content: string;
     onClose: () => void;
   };
 
-const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
+const LoginPopup: React.FC<PopupProps> = () => {
 
-  const { setIsLoggedIn } = useUser(); // user status (login)
-  const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false); // register popup
-  const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false); // forgot password popup
-  
-  const [emailToLogin, setEmailToLogin] = useState(''); // State for storing the email address
-  const [passwordToLogin, setPasswordToLogin] = useState(''); // State for storing the password
-  const [responseMessage, setResponseMessage] = useState(''); // State for storing response
-  const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
+  // Hook all popup control to PopupContext
+  const { openRegisterPopup, openForgotPasswordPopup, isForgotPasswordPopupOpen , isRegisterPopupOpen, closeAllPopups } = usePopups();
+  const { setIsLoggedIn } = useUser();
+
+  const [emailToLogin, setEmailToLogin] = useState('');
+  const [passwordToLogin, setPasswordToLogin] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+  const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" });
 
   const [jwtToken, setJwtToken] = useState(''); // State to store JWT token
-
-  // Functions to open/close the register popup
-  const openRegisterPopup = () => setIsRegisterPopupOpen(true);
-  const closeRegisterPopup = () => setIsRegisterPopupOpen(false);
-
-   // Functions to open/close the fotgot password popup
-   const openForgotPasswordPopup = () => setIsForgotPasswordPopupOpen(true);
-   const closeForgotPasswordPopup = () => setIsForgotPasswordPopupOpen(false);
  
    // Combined login handler
    const handleLogin = async () => {
@@ -42,7 +35,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
         setIsLoggedIn(true); // set user status for shared
         setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
-        onClose(); // after success login, popup will close
+        closeAllPopups(); // after success login, popup will close
       } else {
         setResponseMessage(response.message);  
         setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
@@ -63,7 +56,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
             <h6>Login to your account</h6>
             &nbsp; 
             <button 
-            onClick={onClose} 
+            onClick={closeAllPopups} 
             style={{ 
                 position: 'absolute', 
                 top: '10px', 
@@ -99,8 +92,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
             
             <p><a 
               className="click-scroll"
-              onClick={(e) => {
-                  e.preventDefault(); // Prevent default if using href="#"
+              onClick={() => {
                   openForgotPasswordPopup();
               }}
               role="button"
@@ -110,7 +102,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
               </a>
 
               {isForgotPasswordPopupOpen  && (
-                  <ForgotPasswordPopup content="" onClose={closeForgotPasswordPopup} />
+                  <ForgotPasswordPopup content="" onClose={closeAllPopups} />
               )}
             </p>
             
@@ -121,8 +113,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
             <p>Don't have an account?&nbsp; 
               <a 
               className="click-scroll"
-              onClick={(e) => {
-                  e.preventDefault(); // Prevent default if using href="#"
+              onClick={() => {
                   openRegisterPopup();
               }}
               role="button"
@@ -132,7 +123,7 @@ const LoginPopup: React.FC<PopupProps> = ({ content, onClose }) => {
               </a>
 
               {isRegisterPopupOpen  && (
-                  <RegisterPopup content="" onClose={closeRegisterPopup} />
+                  <RegisterPopup content="" onClose={closeAllPopups} />
               )}
             </p>
             </div>

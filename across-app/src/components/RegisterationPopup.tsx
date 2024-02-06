@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
 import { registerUser } from '../services/authenticationServices';
 import LoginPopup from '../components/LoginPopup';
+import { usePopups } from '../PopupContext';
 
 type PopupProps = {
-    content: string;
-    onClose: () => void;
-  };
+  content: string;
+  onClose: () => void;
+};
+const RegisterationPopup: React.FC<PopupProps> = () => {
 
-  const RegisterationPopup: React.FC<PopupProps> = ({ content, onClose }) => {
-
+  // Hook all popup control to PopupContext
+  const { openLoginPopup, isLoginPopupOpen, closeAllPopups } = usePopups();
   const [emailToRegister, setEmailToRegister] = useState(''); // State for storing the email address
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
   const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
 
-  const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false); // Login popup
-
-  // Functions to open/close the login popup
-  const openLoginPopup = () => setIsLoginPopupOpen(true);
-  const closeLoginPopup = () => setIsLoginPopupOpen(false);
-  
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmailToRegister(event.target.value);
@@ -56,7 +52,7 @@ const handleSubmit = async () => {
             <h6>Let's get your account set up</h6>
             &nbsp; 
             <button 
-            onClick={onClose} 
+            onClick={closeAllPopups} 
             style={{ 
                 position: 'absolute', 
                 top: '10px', 
@@ -88,8 +84,7 @@ const handleSubmit = async () => {
             <p>Already have an account?&nbsp; 
               <a 
                 className="click-scroll"
-                onClick={(e) => {
-                    e.preventDefault(); // Prevent default if using href="#"
+                onClick={() => {
                     openLoginPopup();
                 }}
                 role="button"
@@ -99,7 +94,7 @@ const handleSubmit = async () => {
                 </a>
 
                 {isLoginPopupOpen  && (
-                  <LoginPopup content="" onClose={closeLoginPopup} />
+                  <LoginPopup content="" onClose={closeAllPopups} />
               )}
             </p>           
             </div>
