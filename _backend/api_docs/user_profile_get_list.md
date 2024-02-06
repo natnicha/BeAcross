@@ -49,7 +49,10 @@ To get user profile list
 ## Success Response 200 - OK
 ```json
 {
-  "data": [{
+  "total_results": 25,
+  "total_items": 20,
+  "items": [{
+    "id": "65b038be6fe605cc9ce36df6",
     "email": "example.x@tu-chemnitz.de",
     "password": "09679f97a72df416ae47eca4b1d828c02163d045559d0e36e617494c3919a2a4:2b3f0c6c65ad49a4815cd9ad1e67ff52",
     "first_name": "example",
@@ -62,6 +65,7 @@ To get user profile list
     "updated_at": "2024-01-18T20:21:41.138000"
   },
   {
+    "id": "65b19027cb1bb81336500a6a",
     "email": "example.y@tu-chemnitz.de",
     "password": "09679f97a72df416ae47eca4b1d828c02163d045559d0e36e617494c3919a2a4:2b3f0c6c65ad49a4815cd9ad1e67ff52",
     "first_name": "example",
