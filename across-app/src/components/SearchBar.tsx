@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
@@ -39,6 +39,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
             setErrorMessage('An error occurred during the search. Please try again.');
         }
       };
+
+    // Function to handle Enter key press
+    const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>): Promise<void> => {
+        if (event.key === 'Enter') {
+        await handleSearch();
+        }
+    };
     
     return (
        <>
@@ -53,6 +60,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                         placeholder="Search module here..."
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
+                        onKeyDown={handleKeyDown} // Add onKeyDown event listener
                     />&nbsp;&nbsp;
                 <button
                     className="custom-btn btn custom-link"
