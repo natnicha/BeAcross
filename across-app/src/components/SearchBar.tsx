@@ -12,9 +12,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
     const navigate = useNavigate();
     const [showAdvanceSearch, setAdvanceSearch] = useState(false); // State to manage visibility of the advance search panel
     const [selectedValue, setSelectedValue] = useState('AND');
+    const [errorMessage, setErrorMessage] = useState(''); // New state for the error message
 
     const AdvanceSearchClick = () => {
-        setAdvanceSearch(true);
+        setAdvanceSearch(!showAdvanceSearch); // Toggle the visibility of the advance search panel
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -22,13 +23,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
     };
 
     const handleSearch = async () => {
+        if (!content.trim()) {
+            // If content is empty or only contains whitespace
+            setErrorMessage('Please enter a search term.');
+            return; // Exit the function early without searching
+        }
+        setErrorMessage(''); // Clear any previous error message
         try {
-          if (onSearch) {
-            await onSearch();
-          }
-          navigate("/search?query=" + encodeURIComponent(content));
+            if (onSearch) {
+                await onSearch();
+            }
+            navigate("/search?query=" + encodeURIComponent(content));
         } catch (error) {
-          console.error('Error during search:', error);
+            console.error('Error during search:', error);
+            setErrorMessage('An error occurred during the search. Please try again.');
         }
       };
     
@@ -53,7 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                     Search
                 </button>
                 </div>
-
+                {errorMessage && <div style={{ color: 'red', marginTop: '10px', marginLeft: '30px' }}>{errorMessage}</div>}
                     <div className="advancedSearchRow">
                         <a
                             className="click-scroll d-flex align-items-end"
