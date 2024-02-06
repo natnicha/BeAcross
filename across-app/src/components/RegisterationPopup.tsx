@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect, useRef } from 'react';
 import { registerUser } from '../services/authenticationServices';
 import LoginPopup from '../components/LoginPopup';
 import { usePopups } from '../PopupContext';
@@ -15,6 +15,7 @@ const RegisterationPopup: React.FC<PopupProps> = () => {
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
   const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
+  const popupRef = useRef<HTMLDivElement>(null);
 
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,9 +44,23 @@ const handleSubmit = async () => {
   }
 };
 
+// Close the popup if clicking outside of it
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      closeAllPopups();
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [closeAllPopups]);
+
     return (
       <div className="popup-backdrop">
-        <div className="popup-content">
+        <div ref={popupRef} className="popup-content">
             <div className="title-popup mb-4">
             <h5 style={{ color: "white"}}>Register your University Account</h5>
             </div>

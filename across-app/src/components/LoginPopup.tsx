@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect, useRef } from 'react';
 import { loginUser } from '../services/authenticationServices';
 import RegisterPopup from '../components/RegisterationPopup';
 import ForgotPasswordPopup from '../components/ForgotPasswordPopup';
@@ -20,6 +20,7 @@ const LoginPopup: React.FC<PopupProps> = () => {
   const [passwordToLogin, setPasswordToLogin] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" });
+  const popupRef = useRef<HTMLDivElement>(null);
 
   const [jwtToken, setJwtToken] = useState(''); // State to store JWT token
  
@@ -47,9 +48,23 @@ const LoginPopup: React.FC<PopupProps> = () => {
     }
   };
 
+  // Close the popup if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [closeAllPopups]);
+
     return (
       <div className="popup-backdrop">
-        <div className="popup-content">
+        <div ref={popupRef} className="popup-content">
             <div className="title-popup mb-4">
             <h5 style={{ color: "white"}}>Login to your University account</h5>
             </div>
