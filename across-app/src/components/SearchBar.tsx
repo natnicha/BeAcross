@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 interface SearchBarProps {
     content: string;
     setContent: (value: string) => void;
-    onSearch?: () => void;
+    onSearch?: () => Promise<void> | void;
   }
 
 const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) => {

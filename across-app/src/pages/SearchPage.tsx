@@ -60,10 +60,17 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       },
     };
     this.setQuery = this.setQuery.bind(this);
+    this.handleSearchBarSearch = this.handleSearchBarSearch.bind(this);
   }
 
+  handleSearchBarSearch = (): void => {
+    this.setState({ currentPage: 1 }, () => {
+      this.performSearch(true); // Add the true flag if your performSearch method accepts it for new searches
+    });
+  };
+
   async componentDidMount() {
-    this.performSearch();
+    this.handleSearchBarSearch();
     this.calculateTotalPages();
   }
 
@@ -85,10 +92,10 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.setState({ totalPages });
 }
 
-  async performSearch() {
+   performSearch = async (isNewSearch: boolean = false) => {
     try {
-      let offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
-      let offsetString = offset.toString(); // Convert to String before passing data to BE
+      const offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
+      const offsetString = offset.toString(); // Convert to String before passing data to BE
 
       // Constructing the filters object from the state
       const filters = {
@@ -107,9 +114,11 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       // Including the filters in the searchServices call
       const result = await searchServices(this.state.query, offsetString, filters, sorting);
       
-      this.setState({ searchResult: result });
-      // Set the search results and reset the current page to 1
-      this.setState({ searchResult: result, currentPage: 1 });
+      if (isNewSearch) {
+        this.setState({ searchResult: result, currentPage: 1 });
+      } else {
+        this.setState({ searchResult: result });
+      }
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
@@ -162,7 +171,7 @@ handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 // Function to be called when 'Apply' is clicked
 onApplyFilters = () => {
-  this.performSearch();
+  this.handleSearchBarSearch();
 };
 
 // Function to update Sort state
@@ -196,7 +205,11 @@ handleSortClick = (sortField: string) => {
                     </div>
                   </div>
                   {/*Searchbar*/}
-                  <SearchBar content={this.state.query} setContent={this.setQuery} onSearch={() => this.performSearch()}/>
+                  <SearchBar 
+                    content={this.state.query} 
+                    setContent={this.setQuery} 
+                    onSearch={() => this.handleSearchBarSearch()}
+                  />
                 </div>
               
               {/*Sorting*/}
