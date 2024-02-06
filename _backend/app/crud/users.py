@@ -24,11 +24,22 @@ class UsersModel(BaseModel):
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
+def count(conn: MongoClient, user_role: str) -> int:
+    return conn[env_config.DB_NAME].get_collection("users").count_documents({"user_roles_id": user_role})
+
 def get_user(conn: MongoClient, email: str):
     return conn[env_config.DB_NAME].get_collection("users").find({"email" : email})
 
 def get_user_by_id(conn: MongoClient, id: ObjectId):
     return conn[env_config.DB_NAME].get_collection("users").find_one({"_id" : id})
+
+def get_users(conn: MongoClient, user_role: str, limit: int, offset: int, sortby: str, orderby: str):
+    is_asc = 1
+    if orderby.lower() == 'desc':
+        is_asc = -1
+    return list(conn[env_config.DB_NAME].get_collection("users").find({"user_roles_id": user_role}).sort({
+        sortby : int(is_asc)
+    }).skip(offset).limit(limit))
 
 def insert_one(conn: MongoClient, user: UsersModel):
     return conn[env_config.DB_NAME].get_collection("users").insert_one(user.dict())

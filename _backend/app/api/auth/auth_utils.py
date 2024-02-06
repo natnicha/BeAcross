@@ -96,6 +96,12 @@ def get_user_role(user_roles_id: ObjectId):
             return role
     return ''
 
+def get_user_role_id(user_role: str) -> ObjectId:
+    for role, id in settings.user_roles.items():
+        if user_role == role:
+            return ObjectId(id)
+    return None
+
 def validate_jwt_token(token: str):
     try:
         jwt.decode(token, env_config.JWT_SECRET, algorithms="HS256")
