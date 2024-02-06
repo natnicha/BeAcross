@@ -64,7 +64,7 @@ To login to a system after registration
          "registration_number": null,
          "course_of_study": null,
          "semester": 1,
-         "user_roles_id": "65a8041efbc5863974a6d4e4",
+         "user_role": "student",
          "created_at": "2024-01-18T20:21:41.138000",
          "updated_at": "2024-01-18T20:21:41.138000"
       }
