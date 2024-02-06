@@ -58,7 +58,6 @@ async def register(
     )
 
 
-
 def check_email_format(email):
     isCorrectEmailFormat = validate_email(email)
     # if not conform email format, return error
@@ -114,9 +113,8 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: str, passwo
     return new_user
 
 
-
 @auth.post("/login", response_model=LoginResponseModel, status_code=status.HTTP_200_OK)
-async def register(
+async def login(
         request: Request,
         item: LoginRequestModel = None,
         db: MongoClient = Depends(get_database),
@@ -131,7 +129,6 @@ async def register(
         user=user
     )
     return LoginResponseModel(data=LoginResponseData)
-
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
     user_log = USER_LOGS.UserLogsModel(
