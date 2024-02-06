@@ -23,11 +23,13 @@ const HomePage: React.FC = () => {
       {/*Searchbar*/}
       <SearchBar content={content} setContent={setContent} />
       <div className="tooltipButton">
-        <i className="bi bi-lightbulb-fill"></i>
-        <span className="tooltipText">
+        <div className="tooltipIcon">
+          <i className="bi bi-lightbulb-fill"></i>
+          <span className="tooltipText">
             You can add searches condition by using "AND", "OR", "NOT" e.g.
             database AND introduction NOT design
-        </span>
+          </span>
+        </div>
       </div>
 
       {/*Course Categories*/}

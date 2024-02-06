@@ -25,7 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
     const handleSearch = async () => {
         if (!content.trim()) {
             // If content is empty or only contains whitespace
-            setErrorMessage('Please enter a search term.');
+            setErrorMessage('Please enter a search term first.');
             return; // Exit the function early without searching
         }
         setErrorMessage(''); // Clear any previous error message
