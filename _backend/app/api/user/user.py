@@ -31,3 +31,9 @@ def get_user_data(user: USERS.UsersModel) -> UserProfileResponseModel:
         created_at=user["created_at"],
         updated_at=user["updated_at"],
     )
+
+@user.get("/profile/list", status_code=status.HTTP_200_OK)
+async def get_profile(
+        request: Request,
+        db: MongoClient = Depends(get_database)):
+    return 
