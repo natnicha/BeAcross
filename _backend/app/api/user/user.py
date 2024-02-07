@@ -9,6 +9,10 @@ from app.api.user.model import UserProfileListResponseModel, UserProfileResponse
 
 user = APIRouter()
 
+@user.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user():
+    return
+
 @user.get("/profile", response_model= UserProfileResponseModel, status_code=status.HTTP_200_OK)
 async def get_profile(
         request: Request,
