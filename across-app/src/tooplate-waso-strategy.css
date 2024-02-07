@@ -467,10 +467,6 @@ padding-bottom: 10px;
   width: 100%;
 }
 
-.bi-lightbulb-fill:hover{
-  color: var(--secondary-color);
-}
-
 .tooltipButton {
   position: absolute;
   top: 33.3333333%;
@@ -485,8 +481,14 @@ padding-bottom: 10px;
   align-items: center;
 }
 
+.tooltipIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .tooltipText {
-  visibility: visible;
+  visibility: hidden; /* Initially hidden */
   width: 350px;
   background-color: white;
   color: var(--p-color);
@@ -503,9 +505,13 @@ padding-bottom: 10px;
   transition: opacity 0.3s;
 }
 
-.tooltipButton:hover .tooltipText {
+.tooltipIcon:hover .tooltipText {
   visibility: visible;
   opacity: 1;
+}
+
+.bi-lightbulb-fill:hover {
+  color: var(--secondary-color);
 }
 
 /*---------------------------------------
