@@ -1,5 +1,5 @@
 from bson import ObjectId
-from fastapi import APIRouter, Depends, Query, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from pymongo import MongoClient
 
 import app.crud.users as USERS
@@ -10,8 +10,36 @@ from app.api.user.model import UserProfileListResponseModel, UserProfileResponse
 user = APIRouter()
 
 @user.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user():
+async def delete_user(
+        user_id: str = None,
+        db: MongoClient = Depends(get_database)):
+    try:
+        user_id_obj = ObjectId(user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    check_exist_user_account(db, user_id_obj)
+    delete_user_account(db, user_id_obj)
     return
+
+def check_exist_user_account(db: MongoClient, user_id: ObjectId):
+    row = USERS.get_user_by_id(db, user_id)
+    if not row:
+        raise HTTPException(
+            detail={"message": "the user is not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+
+def delete_user_account(db: MongoClient, user_id: ObjectId):
+    try:
+        USERS.delete_one(db, user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 @user.get("/profile", response_model= UserProfileResponseModel, status_code=status.HTTP_200_OK)
 async def get_user_profile(
