@@ -13,3 +13,8 @@ class UserProfileResponseModel(BaseModel):
     user_role: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
+
+class UserProfileListResponseModel(BaseModel):
+    total_results: int
+    total_items: int
+    items: list

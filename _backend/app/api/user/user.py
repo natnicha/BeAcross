@@ -1,11 +1,11 @@
 from bson import ObjectId
-from fastapi import APIRouter, Depends, status, Request
+from fastapi import APIRouter, Depends, Query, status, Request
 from pymongo import MongoClient
 
 import app.crud.users as USERS
 from app.db.mongodb import get_database
-from app.api.auth.auth_utils import get_user_role
-from app.api.user.model import UserProfileResponseModel
+from app.api.auth.auth_utils import get_user_role, get_user_role_id
+from app.api.user.model import UserProfileListResponseModel, UserProfileResponseModel
 
 user = APIRouter()
 
@@ -30,4 +30,24 @@ def get_user_data(user: USERS.UsersModel) -> UserProfileResponseModel:
         user_role=get_user_role(user_roles_id=user["user_roles_id"]),
         created_at=user["created_at"],
         updated_at=user["updated_at"],
+    )
+
+@user.get("/profile/list", response_model=UserProfileListResponseModel, status_code=status.HTTP_200_OK)
+async def get_profile_list(
+        user_role: str = Query('student', pattern='^student$|^uni-admin$|^sys-admin$'),
+        limit: int = Query(20, gt=0),
+        offset: int = Query(0, gt=0),
+        sortby: str = Query('first_name', pattern='^first_name$|^user_role$'),
+        orderby: str = Query('asc', pattern='^asc$|^desc$'),
+        db: MongoClient = Depends(get_database)):
+    if sortby == "user_role":
+        sortby = "user_roles_id"
+    users = USERS.get_users(db, get_user_role_id(user_role), limit, offset, sortby, orderby)
+    for user in users:
+        user["id"] = str(user.pop("_id"))
+        user["user_role"] = get_user_role(ObjectId(user.pop("user_roles_id")))
+    return UserProfileListResponseModel(
+        total_results=USERS.count(db, get_user_role_id(user_role)),
+        total_items=len(users),
+        items=users,
     )
