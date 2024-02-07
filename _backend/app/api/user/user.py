@@ -14,7 +14,7 @@ async def delete_user():
     return
 
 @user.get("/profile", response_model= UserProfileResponseModel, status_code=status.HTTP_200_OK)
-async def get_profile(
+async def get_user_profile(
         request: Request,
         db: MongoClient = Depends(get_database)):
     user_id=ObjectId(request.state.user_id)
@@ -37,7 +37,7 @@ def get_user_data(user: USERS.UsersModel) -> UserProfileResponseModel:
     )
 
 @user.get("/profile/list", response_model=UserProfileListResponseModel, status_code=status.HTTP_200_OK)
-async def get_profile_list(
+async def get_user_profile_list(
         user_role: str = Query('student', pattern='^student$|^uni-admin$|^sys-admin$'),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
