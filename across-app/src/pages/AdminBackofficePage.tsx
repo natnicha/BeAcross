@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Popup from "../components/ChangepasswordPopup";
 import { registerUser } from "../services/authenticationServices";
 import FileUploader from "../components/FileUploader";
@@ -12,7 +12,7 @@ import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 
-const StudentProfilepage: React.FC = () => {
+const AdminBackofficePage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
   const [showProfileInformation, setShowProfileInformation] = useState(false); // State to manage visibility of the sections
   const [showUniModuleUpload, setUniModuleUpload] = useState(false); // State to manage visibility of the sections
@@ -90,21 +90,20 @@ const StudentProfilepage: React.FC = () => {
     try {
       // Call the registerUser function
       const response = await registerUser(emailToRegister);
-      setResponseMessage(response);
       console.log("Registration successful:", response);
-      if (
-        response ===
-        "The registration email has been successfully sent to your email!"
-      ) {
+
+      if (response.status === 201) {
         setIsSubmitted(true);
+        setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "green" }); // Set to green on success
       } else {
+        setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
       }
     } catch (error) {
-      console.error("Registration failed:", error);
       setResponseMessage("Registration failed"); // Update message on catch
       setResponseStyle({ margin: "15px", color: "red" }); // Set to red on error
+      console.error("Registration failed:", error);
     }
   };
   const [emailToRegister, setEmailToRegister] = useState(""); // State for storing the email address
@@ -467,4 +466,4 @@ const StudentProfilepage: React.FC = () => {
   );
 };
 
-export default StudentProfilepage;
+export default AdminBackofficePage;
