@@ -11,6 +11,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
+import { set } from "mongoose";
 
 const AdminBackofficePage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -82,10 +83,6 @@ const AdminBackofficePage: React.FC = () => {
   const [chevron, setChevron] = useState(true);
   const [chevron2, setChevron2] = useState(true);
 
-  const handleChevron = (prop: any) => {
-    prop = chevron ? setChevron(!chevron) : setChevron2(!chevron2);
-  };
-
   const handleSubmit = async () => {
     try {
       // Call the registerUser function
@@ -145,7 +142,7 @@ const AdminBackofficePage: React.FC = () => {
                   data-bs-target="#collapseUniModules"
                   aria-expanded="false"
                   aria-controls="collapseUniModules"
-                  onClick={handleChevron}
+                  onClick={() => setChevron(!chevron)}
                 >
                   &nbsp;&nbsp;
                   <i className="bi bi-bookmark"></i>University Moduels
@@ -187,7 +184,7 @@ const AdminBackofficePage: React.FC = () => {
                   data-bs-target="#collapseStudentAccount"
                   aria-expanded="false"
                   aria-controls="collapseStudentAccount"
-                  onClick={handleChevron}
+                  onClick={() => setChevron2(!chevron2)}
                 >
                   &nbsp;&nbsp;
                   <i className="bi bi-person-fill-add"></i>Student Account
