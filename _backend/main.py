@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth.auth import auth
 from app.api.module.module import module
+from app.api.user.user import user
 from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
 from app.db.settings_utils import load_settings
 from app.config.config_utils import load_env
@@ -12,6 +13,7 @@ app = FastAPI()
 
 app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
 app.include_router(module, prefix='/api/v1/module', tags=['module'])
+app.include_router(user, prefix='/api/v1/user', tags=['user'])
 
 frontend_origins = ['http://localhost:3000']
 

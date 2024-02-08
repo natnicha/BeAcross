@@ -1,5 +1,4 @@
-import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
 //searchBG
 import acrossBG from "../images/across-bg.png";
@@ -13,42 +12,25 @@ import mechanicalEngineeringImage from "../images/projects/mechanical-engineerin
 import humanityImage from "../images/projects/humanity.png";
 import electricalEnginerringImage from "../images/projects/electrical-enginerring.png";
 import MusicAndArtImage from "../images/projects/music-and-art.png";
+import SearchBar from "../components/SearchBar";
 
-const HomePage: React.FC = (props) => {
-  const navigate = useNavigate();
+const HomePage: React.FC = () => {
   const [content, setContent] = useState("");
 
   return (
     <>
+    <img src={acrossBG} alt="Background" />
       {/*Searchbar*/}
-      <section className="searchbar">
-        <img src={acrossBG} alt="Background" />
-
-        <div className="searchbarContent">
-          <i className="bi bi-search"></i>
-          <input
-            type="text"
-            className="searchInput"
-            placeholder="Search module here..."
-            onChange={(e) => setContent(e.target.value)}
-          />&nbsp;&nbsp;
-          <button
-            className="custom-btn btn custom-link"
-            onClick={() =>
-              navigate("/search?query=" + content, { state: { content } })
-            }
-          >
-            Search
-          </button>
-        </div>
-        <div className="tooltipButton">
+      <SearchBar content={content} setContent={setContent} />
+      <div className="tooltipButton">
+        <div className="tooltipIcon">
           <i className="bi bi-lightbulb-fill"></i>
           <span className="tooltipText">
             You can add searches condition by using "AND", "OR", "NOT" e.g.
             database AND introduction NOT design
           </span>
         </div>
-      </section>
+      </div>
 
       {/*Course Categories*/}
       <section className="projects section-padding pb-0">
