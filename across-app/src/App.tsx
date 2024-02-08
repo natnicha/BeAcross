@@ -17,18 +17,21 @@ import AdminBackofficePage from "./pages/AdminBackofficePage";
 
 const App: React.FC = () => {
   return (
-    <>
-      <Header />
-      <Router>
-        <Routes>
-          <Route index path="/" element={<HomePage />} />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/studentprofile" element={<StudentProfilePage />} />
-          <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
-        </Routes>
-      </Router>
-      <Footer />
-    </>
+    <UserProvider>
+      <PopupProvider>
+        <Router>
+          <Header />
+          <Routes>
+            <Route index path="/" element={<HomePage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/studentprofile" element={<StudentProfilePage />} />
+            <Route path="/admin" element={<AdminBackofficePage />} />
+            <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
+          </Routes>
+          <Footer />
+        </Router>
+      </PopupProvider>
+    </UserProvider>
   );
 };
 
