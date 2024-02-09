@@ -1,0 +1,124 @@
+import React, { useState } from "react";
+import { Link, Routes, Route } from "react-router-dom";
+import AdminHome from "../components/AdminHome";
+import FileUploader from "../components/FileUploader";
+import ModuleList from "../components/ModuleList";
+import StudAcctCreate from "../components/StudAcctCreate";
+import StudList from "../components/StudList";
+import Profile from "../components/Profile";
+
+// Bootstrap
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+const Test: React.FC = () => {
+  const [chevron, setChevron] = useState(true);
+  const [chevron2, setChevron2] = useState(true);
+
+  return (
+    <>
+      <div className="profile-container">
+        <section className="tm-sidebar" id="tm-sidebar">
+          <nav className="tm-nav" id="tm-nav">
+            {/* Submenu links */}
+            <ul className="tm-nav-items">
+              <li className="tm-nav-item">
+                <Link to="home" className="tm-nav-link">
+                  &nbsp;&nbsp;<i className="bi bi-house-door"></i>Home
+                </Link>
+              </li>
+              <li className="tm-nav-item">
+                <a
+                  className="tm-nav-link"
+                  role="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseUniModules"
+                  aria-expanded="false"
+                  aria-controls="collapseUniModules"
+                  onClick={() => setChevron(!chevron)}
+                >
+                  &nbsp;&nbsp;<i className="bi bi-bookmark"></i>University
+                  Moduels
+                  <i
+                    className={
+                      chevron ? "bi bi-chevron-down" : "bi bi-chevron-up"
+                    }
+                    style={{ marginLeft: "auto" }}
+                  ></i>
+                </a>
+                <ul className="collapse show" id="collapseUniModules">
+                  <li className="tm-nav-item">
+                    <Link to="upload" className="nav-link">
+                      Upload Modules
+                    </Link>
+                  </li>
+                  <li className="tm-nav-item">
+                    <Link to="list" className="nav-link">
+                      Module List
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+              <li className="tm-nav-item">
+                <a
+                  className="tm-nav-link"
+                  role="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseUniModules"
+                  aria-expanded="false"
+                  aria-controls="collapseUniModules"
+                  onClick={() => setChevron2(!chevron2)}
+                >
+                  &nbsp;&nbsp;<i className="bi bi-person-fill-add"></i>Student
+                  Account
+                  <i
+                    className={
+                      chevron ? "bi bi-chevron-down" : "bi bi-chevron-up"
+                    }
+                    style={{ marginLeft: "auto" }}
+                  ></i>
+                </a>
+                <ul className="collapse show" id="collapseUniModules">
+                  <li className="tm-nav-item">
+                    <Link to="create" className="nav-link">
+                      {" "}
+                      Create Student Account
+                    </Link>
+                  </li>
+                  <li className="tm-nav-item">
+                    <Link to="studlist" className="nav-link">
+                      {" "}
+                      Student List
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <ul>
+              <li className="tm-nav-item">
+                <Link to="profile" className="tm-nav-link">
+                  &nbsp;&nbsp;<i className="bi bi-file-person"></i>Profile
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </section>
+
+        <section className="tm-content">
+          <div className="nav nav-tabs flex-row align-items-baseline">
+            <Routes>
+              <Route index path="home" element={<AdminHome />} />
+              <Route path="upload" element={<FileUploader />} />
+              <Route path="list" element={<ModuleList />} />
+              <Route path="create" element={<StudAcctCreate />} />
+              <Route path="studlist" element={<StudList />} />
+              <Route path="profile" element={<Profile />} />
+            </Routes>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+};
+
+export default Test;

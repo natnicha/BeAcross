@@ -42,34 +42,36 @@ const FileUploader = () => {
 
   return (
     <>
-      <div className="d-flex flex-column">
-        <label htmlFor="file" className="sr-only form-label">
-          <strong>Upload University Modules (format *.json only)</strong>
-        </label>
-        <input
-          className="form-control"
-          id="file"
-          type="file"
-          onChange={handleFileChange}
-        />
-        {file && (
-          <section>
-            <ul style={{ listStyle: "none" }}>
-              <li>Name: {file.name}</li>
-              {/* <li>Type: {file.type}</li>
+      <div className="about-thumb bg-white shadow-lg">
+        <div className="d-flex flex-column">
+          <label htmlFor="file" className="sr-only form-label">
+            <strong>Upload University Modules (format *.json only)</strong>
+          </label>
+          <input
+            className="form-control"
+            id="file"
+            type="file"
+            onChange={handleFileChange}
+          />
+          {file && (
+            <section>
+              <ul style={{ listStyle: "none" }}>
+                <li>Name: {file.name}</li>
+                {/* <li>Type: {file.type}</li>
               <li>Size: {file.size} bytes</li> */}
-            </ul>
-          </section>
+              </ul>
+            </section>
+          )}
+        </div>
+
+        {file && (
+          <button onClick={handleUpload} className="submit custom-btn btn">
+            Upload
+          </button>
         )}
+
+        <Result status={status} />
       </div>
-
-      {file && (
-        <button onClick={handleUpload} className="submit custom-btn btn">
-          Upload
-        </button>
-      )}
-
-      <Result status={status} />
     </>
   );
 };
@@ -81,16 +83,17 @@ const Result = ({ status }: { status: string }) => {
     return (
       <>
         <p>✅ File uploaded successfully!</p>
-        <button
-          className="custom-btn btn custom-link"
-          onClick={() => navigate("/admin")}
-        >
-          Module List
-        </button>
       </>
     );
   } else if (status === "fail") {
-    return <p>❌ File upload failed!</p>;
+    return (
+      <button
+        className="custom-btn btn custom-link"
+        onClick={() => navigate("../list")}
+      >
+        Module List
+      </button>
+    );
   } else if (status === "uploading") {
     return <p>⏳ Uploading selected file...</p>;
   } else {
