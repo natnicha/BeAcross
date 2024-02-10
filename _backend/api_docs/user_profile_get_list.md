@@ -91,6 +91,15 @@ To get user profile list
 }
 ```
 
+## Error Response 403 - Forbidden (case: no right to access this route)
+```json
+{
+  "detail" : {
+    "message": "insufficient permissions"
+  }
+}
+```
+
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
