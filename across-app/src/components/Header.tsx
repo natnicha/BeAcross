@@ -3,13 +3,21 @@ import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
 import { Link, useNavigate } from "react-router-dom";
-import { usePopups } from '../PopupContext';
+import { usePopups } from "../PopupContext";
 import ForgotPasswordPopup from "./ForgotPasswordPopup";
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 
 const Header: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useUser(); // check user status (login)
   // Hook all popup control to PopupContext
-  const { openLoginPopup, isLoginPopupOpen, openRegisterPopup, isRegisterPopupOpen, isForgotPasswordPopupOpen, closeAllPopups } = usePopups();
+  const {
+    openLoginPopup,
+    isLoginPopupOpen,
+    openRegisterPopup,
+    isRegisterPopupOpen,
+    isForgotPasswordPopupOpen,
+    closeAllPopups,
+  } = usePopups();
 
   const navigate = useNavigate(); // redirect user back to homepage
 
@@ -111,30 +119,34 @@ const Header: React.FC = () => {
 
                 {/* Change welcome text base on user status */}
                 {isLoggedIn ? (
-                  <p className="d-flex align-items-end mt-2">
-                    Welcome, &nbsp;&nbsp;
-                    <a
-                      className="click-scroll d-flex align-items-end"
-                      onClick={() => {
-                        window.location.href =
-                          "http://localhost:3000/studentprofile";
-                      }}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      <strong>
-                        {sessionStorage.getItem("firstname")}{" "}
-                        {sessionStorage.getItem("lastname")}
-                      </strong>
-                      <i
-                        className="bi bi-gear-wide-connected d-flex align-items-end"
-                        style={{
-                          fontSize: "24px",
-                          marginLeft: "10px",
+                  (console.log("role:" + sessionStorage.getItem("userrole")),
+                  (
+                    <p className="d-flex align-items-end mt-2">
+                      Welcome, &nbsp;&nbsp;
+                      <a
+                        className="click-scroll d-flex align-items-end"
+                        onClick={() => {
+                          sessionStorage.getItem("userrole") === "uni-admin"
+                            ? navigate("/test")
+                            : navigate("/studentprofile");
                         }}
-                      ></i>
-                    </a>
-                  </p>
+                        role="button"
+                        tabIndex={0}
+                      >
+                        <strong>
+                          {sessionStorage.getItem("firstname")}{" "}
+                          {sessionStorage.getItem("lastname")}
+                        </strong>
+                        <i
+                          className="bi bi-gear-wide-connected d-flex align-items-end"
+                          style={{
+                            fontSize: "24px",
+                            marginLeft: "10px",
+                          }}
+                        ></i>
+                      </a>
+                    </p>
+                  ))
                 ) : (
                   <p className="d-flex align-items-end mt-2">
                     Don't have an account?&nbsp;
@@ -151,7 +163,7 @@ const Header: React.FC = () => {
                       </strong>
                     </a>
                     {isRegisterPopupOpen && (
-                      <RegisterPopup content="" onClose={closeAllPopups}/>
+                      <RegisterPopup content="" onClose={closeAllPopups} />
                     )}
                   </p>
                 )}
@@ -161,7 +173,7 @@ const Header: React.FC = () => {
         </div>
       </nav>
       {/* To render forget password popup */}
-      {isForgotPasswordPopupOpen  && (
+      {isForgotPasswordPopupOpen && (
         <ForgotPasswordPopup content="" onClose={closeAllPopups} />
       )}
     </>
