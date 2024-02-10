@@ -1,21 +1,23 @@
 # ** [DELETE] User **
 
-To delete user account according to a provided user ID in path parameter
+To delete user account according to a provided user ID in path parameter or by Authentication token. If there is no user ID provided in path parameter (see: structure 2), the system would use a user ID from Authentication token instead.
 
 ## Request
 
-| ** Method **     | DELETE                                  |
-| ---------------- | --------------------------------------- |
-| ** Structure **  | `/api/v1/user/{user-id}`                |
-| ** Example **    | `/api/v1/user/65b038be6fe605cc9ce36df6` |
+| ** Method **      | DELETE                                  |
+| ----------------- | --------------------------------------- |
+| ** Structure 1 ** | `/api/v1/user/{user-id}`                |
+| ** Structure 2 ** | `/api/v1/user`                          |
+| ** Example 1 **   | `/api/v1/user/65b038be6fe605cc9ce36df6` |
+| ** Example 2 **   | `/api/v1/user`                          |
 
 ## Permissions
 
-| Method          | Allow Acess                       |
-| ----------------| ----------------------------------|
-| student         | -                                 |
-| uni-admin       | `/api/v1/user/{user-id}`          |
-| sys-admin       | `/api/v1/user/{user-id}`          |
+| Method          | Allow Acess                                 |
+| ----------------| ------------------------------------------- |
+| student         | `/api/v1/user`                              |
+| uni-admin       | `/api/v1/user` and `/api/v1/user/{user-id}` |
+| sys-admin       | `/api/v1/user` and `/api/v1/user/{user-id}` |
 
 ## Header Parameters
 
@@ -25,9 +27,9 @@ To delete user account according to a provided user ID in path parameter
 
 ## Path Parameters
 
-| Key       | Type      | Required     | Permissions  | Description                          |
-| --------- | :-------: | :----------: | :----------: | ------------------------------------ |
-| user-id   | string    | true         |              | a user ID which would like to delete |
+| Key       | Type      | Required     | Permissions  | Description                                          |
+| --------- | :-------: | :----------: | :----------: | ---------------------------------------------------- |
+| user-id   | string    | false        |              | a user ID indicating an account would like to delete |
 
 ## Query Parameters
 

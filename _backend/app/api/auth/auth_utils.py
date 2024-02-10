@@ -142,7 +142,9 @@ def has_permission(request: Request):
     if api.__contains__("/user/profile/list"):
         if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
             return False
-    if api.__contains__("/user/") and method == "DELETE":
+    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "DELETE": #/api/v1/user/{user-id}
         if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
             return False
+    if api.endswith("/user/") and method == "DELETE": #/api/v1/user/
+        return True
     return True

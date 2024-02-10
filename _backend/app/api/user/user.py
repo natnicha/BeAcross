@@ -41,6 +41,21 @@ def delete_user_account(db: MongoClient, user_id: ObjectId):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+@user.delete("/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(
+        request: Request,
+        db: MongoClient = Depends(get_database)):
+    try:
+        user_id_obj = ObjectId(request.state.user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    check_exist_user_account(db, user_id_obj)
+    delete_user_account(db, user_id_obj)
+    return
+
 @user.get("/profile", response_model= UserProfileResponseModel, status_code=status.HTTP_200_OK)
 async def get_user_profile(
         request: Request,
