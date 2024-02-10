@@ -26,7 +26,7 @@ const Test: React.FC = () => {
             {/* Submenu links */}
             <ul className="tm-nav-items">
               <li className="tm-nav-item">
-                <Link to="home" className="tm-nav-link">
+                <Link to="" className="tm-nav-link">
                   &nbsp;&nbsp;<i className="bi bi-house-door"></i>Home
                 </Link>
               </li>
@@ -50,12 +50,12 @@ const Test: React.FC = () => {
                   ></i>
                 </a>
                 <ul className="collapse show" id="collapseUniModules">
-                  <li className="tm-nav-item">
+                  <li className="tm-nav-item" style={{ border: "none" }}>
                     <Link to="upload" className="nav-link">
                       Upload Modules
                     </Link>
                   </li>
-                  <li className="tm-nav-item">
+                  <li className="tm-nav-item" style={{ border: "none" }}>
                     <Link to="list" className="nav-link">
                       Module List
                     </Link>
@@ -72,8 +72,8 @@ const Test: React.FC = () => {
                   aria-controls="collapseUniModules"
                   onClick={() => setChevron2(!chevron2)}
                 >
-                  &nbsp;&nbsp;<i className="bi bi-person-fill-add"></i>Student
-                  Account
+                  &nbsp;&nbsp;<i className="bi bi-person-fill"></i>
+                  University Students
                   <i
                     className={
                       chevron2 ? "bi bi-chevron-down" : "bi bi-chevron-up"
@@ -82,13 +82,13 @@ const Test: React.FC = () => {
                   ></i>
                 </a>
                 <ul className="collapse show" id="collapseUniModules">
-                  <li className="tm-nav-item">
+                  <li className="tm-nav-item" style={{ border: "none" }}>
                     <Link to="create" className="nav-link">
                       {" "}
                       Create Student Account
                     </Link>
                   </li>
-                  <li className="tm-nav-item">
+                  <li className="tm-nav-item" style={{ border: "none" }}>
                     <Link to="studlist" className="nav-link">
                       {" "}
                       Student List
@@ -110,12 +110,12 @@ const Test: React.FC = () => {
         <section className="tm-content">
           <div className="nav nav-tabs flex-row align-items-baseline">
             <Routes>
-              <Route index path="home" element={<AdminHome />} />
               <Route path="upload" element={<FileUploader />} />
               <Route path="list" element={<ModuleList />} />
               <Route path="create" element={<StudAcctCreate />} />
               <Route path="studlist" element={<StudList />} />
               <Route path="profile" element={<Profile />} />
+              <Route index path="/" element={<AdminHome />} />
             </Routes>
           </div>
         </section>

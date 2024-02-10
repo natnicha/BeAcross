@@ -3,7 +3,7 @@ import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 import { Link } from "react-router-dom";
 
-export default function SubMenu1() {
+export default function AdminHome() {
   return (
     <>
       <button className="nav-link active" id="personalplan">
@@ -13,13 +13,12 @@ export default function SubMenu1() {
           alt="Personal Plan"
         />
         <Link to="../upload" className="click-scroll">
-          <i className="bi bi-bookmark"></i>{" "}
+          <i className="bi bi-box-arrow-up"></i>{" "}
           <strong> &nbsp; Upload Modules</strong>
         </Link>
         <br />
         <Link to="../list" className="click-scroll">
-          <i className="bi bi-bookmark"></i>{" "}
-          <strong> &nbsp; Module List</strong>
+          <i className="bi bi-list-ul"></i> <strong> &nbsp; Module List</strong>
         </Link>
       </button>
 
@@ -30,12 +29,12 @@ export default function SubMenu1() {
           alt="Exam Result"
         />
         <Link to="../create" className="click-scroll">
-          <i className="bi bi-bookmark"></i>{" "}
+          <i className="bi bi-person-add"></i>{" "}
           <strong> &nbsp; Create Student Account</strong>
         </Link>
         <br />
         <Link to="../studlist" className="click-scroll">
-          <i className="bi bi-bookmark"></i>{" "}
+          <i className="bi bi-person-lines-fill"></i>{" "}
           <strong> &nbsp; Student List</strong>
         </Link>
       </button>
