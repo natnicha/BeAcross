@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
+
+// Submenu
 import AdminHome from "../components/AdminHome";
 import FileUploader from "../components/FileUploader";
 import ModuleList from "../components/ModuleList";
@@ -11,6 +13,7 @@ import Profile from "../components/Profile";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+// Toggle Submenu
 const Test: React.FC = () => {
   const [chevron, setChevron] = useState(true);
   const [chevron2, setChevron2] = useState(true);
@@ -73,7 +76,7 @@ const Test: React.FC = () => {
                   Account
                   <i
                     className={
-                      chevron ? "bi bi-chevron-down" : "bi bi-chevron-up"
+                      chevron2 ? "bi bi-chevron-down" : "bi bi-chevron-up"
                     }
                     style={{ marginLeft: "auto" }}
                   ></i>
