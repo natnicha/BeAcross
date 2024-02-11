@@ -86,3 +86,7 @@ def convert_conditions_to_query(term: str, level: list[str], ects: list[int], un
         condition["name"] = like_term
     
     return condition
+
+def find_one(conn: MongoClient, module_id: ObjectId):
+    collection = conn[env_config.DB_NAME].get_collection("modules")
+    return collection.find_one({'_id': module_id})

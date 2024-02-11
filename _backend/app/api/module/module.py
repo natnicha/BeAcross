@@ -14,6 +14,9 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
+#CRUD - GET module
+from app.api.module.model import ModuleResponseModel
+
 
 module = APIRouter()
 
@@ -260,3 +263,28 @@ def is_manual_calculated_sortby(sortby: str):
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
+
+def find_one(db: MongoClient, module_id_obj: ObjectId):
+    collection = db.get_collection('modules')  # Correctly reference the 'modules' collection
+    return collection.find_one({'_id': module_id_obj})
+
+@module.get("/{module_id}", response_model=ModuleResponseModel)
+async def get_module(module_id: str, db: MongoClient = Depends(get_database)):
+    # Convert the string ID to ObjectId
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    # Fetch the module from the database
+    module_data = MODULES.find_one(db, module_id_obj)
+    if not module_data:
+        raise HTTPException(
+            detail={"message": "Module not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    module_data['id'] = str(module_data.pop("_id"))
+    return module_data
