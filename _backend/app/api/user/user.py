@@ -99,6 +99,36 @@ def update_user_account(db: MongoClient, user_id: ObjectId, item: UserPutRequest
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
+@user.put("/", response_model=UserPutResponseModel, status_code=status.HTTP_200_OK)
+async def update_user(
+        request: Request,
+        item: UserPutRequestModel = None,
+        db: MongoClient = Depends(get_database)):
+    try:
+        user_id_obj = ObjectId(request.state.user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    is_new_password = check_password_contains_colon(item)
+    if is_new_password:
+        if not (len(item.password) >= 8 and len(item.password) <= 64) or not is_aligned_by_defined_conditions(item.password):
+            raise HTTPException(
+                detail={"message": str("password must contain 8-64 characters with at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_]")},
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        item.password = hash_text(item.password)
+        
+    check_exist_user_account(db, user_id_obj)
+    updated_user = update_user_account(db, user_id_obj, item)
+    updated_user["id"] = str(updated_user.pop("_id"))
+    updated_user["user_role"] = get_user_role(user_roles_id=updated_user.pop("user_roles_id"))
+    return updated_user
+
+
 @user.get("/profile", response_model= UserProfileResponseModel, status_code=status.HTTP_200_OK)
 async def get_user_profile(
         request: Request,
