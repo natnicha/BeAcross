@@ -48,8 +48,12 @@ def generate_password():
             break
     return password
 
-# password must contain at least 1 lower letter, at least 1 upper letter, and at least 1 special character
+# password must contain at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_]
 def is_aligned_by_defined_conditions(password: str):
+    special_character = r"""[!%&-.@^_]"""
+    matches = re.search(special_character, password)
+    if matches is None:
+        return False
     if (sum(c.islower() for c in password) >=1
         and sum(c.isupper() for c in password) >=1
         and sum(c.isdigit() for c in password) >=1):
