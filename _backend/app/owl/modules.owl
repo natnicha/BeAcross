@@ -1672,7 +1672,6 @@
 
 <owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e34fa">
   <rdf:type rdf:resource="#Module"/>
-  <similarTo rdf:resource="#65ac17dfd2815b505f3e3841"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e34fb">
