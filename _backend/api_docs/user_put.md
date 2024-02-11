@@ -41,13 +41,13 @@ To update user account according to a provided user ID in path parameter or by A
 
 | Key                 | Type         | Required     | Description                                  |
 | ------------------- | :----------: | :----------: | -------------------------------------------- |
-| email               | string(128)  | false        | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
-| password            | string(64)   | false        | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character |
-| first_name          | string(64)   | false        | a user's first name                          |
-| last_name           | string(64)   | false        | a user's last name                           |
-| registration_number | string(64)   | false        | a user's registration number, AKA student ID |
-| course_of_study     | string(128)  | false        | a user's course of study                     |
-| semester            | int          | false        | a user's semester where (s)he is in          |
+| email               | string(128)  | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
+| password            | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character (only `!%&-.@^_`). If password is unchanged, send the encoded password back |
+| first_name          | string(64)   | true         | a user's first name                          |
+| last_name           | string(64)   | true         | a user's last name                           |
+| registration_number | string(64)   | true         | a user's registration number, AKA student ID |
+| course_of_study     | string(128)  | true         | a user's course of study                     |
+| semester            | int          | true         | a user's semester where (s)he is in          |
 
 
 ## Success Response 200 - Success
