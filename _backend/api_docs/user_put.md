@@ -42,7 +42,7 @@ To update user account according to a provided user ID in path parameter or by A
 | Key                 | Type         | Required     | Description                                  |
 | ------------------- | :----------: | :----------: | -------------------------------------------- |
 | email               | string(128)  | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
-| password            | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character (only `!%&-.@^_`). If password is unchanged, send the encoded password back |
+| password            | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_]. If password is unchanged, send the encoded password back |
 | first_name          | string(64)   | true         | a user's first name                          |
 | last_name           | string(64)   | true         | a user's last name                           |
 | registration_number | string(64)   | true         | a user's registration number, AKA student ID |

@@ -40,7 +40,7 @@ To login to a system after registration
 | Key          | Type         | Required     | Description                                                                                                                  |
 | ------------ | :----------: | :----------: | ---------------------------------------------------------------------------------------------------------------------------- |
 | email        | string(128)  | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
-| password     | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character |
+| password     | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_] |
 
 
 ## Sample Body Parameter Json Request
