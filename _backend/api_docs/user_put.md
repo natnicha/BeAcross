@@ -69,6 +69,16 @@ To update user account according to a provided user ID in path parameter or by A
 }
 ```
 
+## Error Response 400 - Bad Request (case: invalid password format)
+```json
+{
+  "detail" : {
+    "message": "password must contain 8-64 characters with at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_]"
+  }
+}
+```
+
+
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
 ```json
 {
