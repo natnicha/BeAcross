@@ -44,11 +44,17 @@ def generate_password():
     alphabet = string.ascii_letters + string.digits + special_character
     while True:
         password = ''.join(secrets.choice(alphabet) for i in range(password_length))
-        if (sum(c.islower() for c in password) >=1
-                and sum(c.isupper() for c in password) >=1
-                and sum(c.isdigit() for c in password) >=1):
+        if is_aligned_by_defined_conditions(password):
             break
     return password
+
+# password must contain at least 1 lower letter, at least 1 upper letter, and at least 1 special character
+def is_aligned_by_defined_conditions(password: str):
+    if (sum(c.islower() for c in password) >=1
+        and sum(c.isupper() for c in password) >=1
+        and sum(c.isdigit() for c in password) >=1):
+        return True
+    return False
 
 # Basic hashing function for a text using random unique salt.
 def hash_text(text):
