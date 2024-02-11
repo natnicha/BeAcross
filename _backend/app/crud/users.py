@@ -2,7 +2,7 @@ import datetime
 from typing import Optional
 from bson import ObjectId
 from pydantic import BaseModel, Field
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 
 from app.config.config_utils import env_config
 
@@ -46,3 +46,13 @@ def insert_one(conn: MongoClient, user: UsersModel):
 
 def delete_one(conn: MongoClient, user_id: ObjectId):
     return conn[env_config.DB_NAME].get_collection("users").delete_one({"_id": user_id})
+
+def update_one(conn: MongoClient, user_id: ObjectId, item: dict):
+    item["updated_at"] = datetime.datetime.utcnow()
+    return conn[env_config.DB_NAME].get_collection("users").find_one_and_update({"_id": user_id},
+        {
+            '$set': item
+        },
+        return_document=ReturnDocument.AFTER,
+        upsert=False
+    )
