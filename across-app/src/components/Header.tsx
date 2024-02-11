@@ -119,34 +119,31 @@ const Header: React.FC = () => {
 
                 {/* Change welcome text base on user status */}
                 {isLoggedIn ? (
-                  (console.log("role:" + sessionStorage.getItem("userrole")),
-                  (
-                    <p className="d-flex align-items-end mt-2">
-                      Welcome, &nbsp;&nbsp;
-                      <a
-                        className="click-scroll d-flex align-items-end"
-                        onClick={() => {
-                          sessionStorage.getItem("userrole") === "uni-admin"
-                            ? navigate("/test")
-                            : navigate("/studentprofile");
+                  <p className="d-flex align-items-end mt-2">
+                    Welcome, &nbsp;&nbsp;
+                    <a
+                      className="click-scroll d-flex align-items-end"
+                      onClick={() => {
+                        sessionStorage.getItem("userrole") === "uni-admin"
+                          ? navigate("/test")
+                          : navigate("/studentprofile");
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <strong>
+                        {sessionStorage.getItem("firstname")}{" "}
+                        {sessionStorage.getItem("lastname")}
+                      </strong>
+                      <i
+                        className="bi bi-gear-wide-connected d-flex align-items-end"
+                        style={{
+                          fontSize: "24px",
+                          marginLeft: "10px",
                         }}
-                        role="button"
-                        tabIndex={0}
-                      >
-                        <strong>
-                          {sessionStorage.getItem("firstname")}{" "}
-                          {sessionStorage.getItem("lastname")}
-                        </strong>
-                        <i
-                          className="bi bi-gear-wide-connected d-flex align-items-end"
-                          style={{
-                            fontSize: "24px",
-                            marginLeft: "10px",
-                          }}
-                        ></i>
-                      </a>
-                    </p>
-                  ))
+                      ></i>
+                    </a>
+                  </p>
                 ) : (
                   <p className="d-flex align-items-end mt-2">
                     Don't have an account?&nbsp;
