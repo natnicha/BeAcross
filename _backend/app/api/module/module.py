@@ -264,11 +264,6 @@ def is_manual_calculated_sortby(sortby: str):
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
-
-def find_one(db: MongoClient, module_id_obj: ObjectId):
-    collection = db.get_collection('modules')  # reference the 'modules' collection
-    return collection.find_one({'_id': module_id_obj})
-
 @module.get("/{module_id}", response_model=ModuleResponseModel)
 async def get_module(module_id: str, db: MongoClient = Depends(get_database)):
     # Convert the string ID to ObjectId
