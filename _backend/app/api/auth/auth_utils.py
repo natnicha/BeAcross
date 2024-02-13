@@ -132,6 +132,7 @@ def is_valid_jwt_token(request: Request):
 
 def has_permission(request: Request):
     api = request.url.path
+    method = request.method
     if api.__contains__("/recommend"):
         if request.state.role != "student":
             return False
@@ -141,4 +142,9 @@ def has_permission(request: Request):
     if api.__contains__("/user/profile/list"):
         if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
             return False
+    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "DELETE": #/api/v1/user/{user-id}
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+            return False
+    if api.endswith("/user/") and method == "DELETE": #/api/v1/user/
+        return True
     return True
