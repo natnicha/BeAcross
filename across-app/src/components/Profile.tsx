@@ -19,7 +19,7 @@ export default function Profile() {
 
   useEffect(() => {
     // Fetch user profile data
-    fetch("http://localhost:8000/api/v1/module/profile", {
+    fetch("http://localhost:8000/api/v1/user/profile", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
