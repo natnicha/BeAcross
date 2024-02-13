@@ -67,9 +67,9 @@ const Test: React.FC = () => {
                   className="tm-nav-link"
                   role="button"
                   data-bs-toggle="collapse"
-                  data-bs-target="#collapseUniModules"
+                  data-bs-target="#collapseStudentAccount"
                   aria-expanded="false"
-                  aria-controls="collapseUniModules"
+                  aria-controls="collapseStudentAccount"
                   onClick={() => setChevron2(!chevron2)}
                 >
                   &nbsp;&nbsp;<i className="bi bi-person-fill"></i>
@@ -81,7 +81,7 @@ const Test: React.FC = () => {
                     style={{ marginLeft: "auto" }}
                   ></i>
                 </a>
-                <ul className="collapse show" id="collapseUniModules">
+                <ul className="collapse show" id="collapseStudentAccount">
                   <li className="tm-nav-item" style={{ border: "none" }}>
                     <Link to="create" className="nav-link">
                       {" "}
