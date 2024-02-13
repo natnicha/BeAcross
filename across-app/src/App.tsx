@@ -14,7 +14,6 @@ import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
-import Test from "./pages/Test";
 
 const App: React.FC = () => {
   return (
@@ -27,7 +26,6 @@ const App: React.FC = () => {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/studentprofile" element={<StudentProfilePage />} />
             <Route path="/admin/*" element={<AdminBackofficePage />} />
-            <Route path="/test/*" element={<Test />} />
             <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
           </Routes>
           <Footer />
