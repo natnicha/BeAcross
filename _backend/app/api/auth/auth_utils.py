@@ -44,11 +44,21 @@ def generate_password():
     alphabet = string.ascii_letters + string.digits + special_character
     while True:
         password = ''.join(secrets.choice(alphabet) for i in range(password_length))
-        if (sum(c.islower() for c in password) >=1
-                and sum(c.isupper() for c in password) >=1
-                and sum(c.isdigit() for c in password) >=1):
+        if is_aligned_by_defined_conditions(password):
             break
     return password
+
+# password must contain at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_]
+def is_aligned_by_defined_conditions(password: str):
+    special_character = r"""[!%&-.@^_]"""
+    matches = re.search(special_character, password)
+    if matches is None:
+        return False
+    if (sum(c.islower() for c in password) >=1
+        and sum(c.isupper() for c in password) >=1
+        and sum(c.isdigit() for c in password) >=1):
+        return True
+    return False
 
 # Basic hashing function for a text using random unique salt.
 def hash_text(text):
@@ -146,5 +156,10 @@ def has_permission(request: Request):
         if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
             return False
     if api.endswith("/user/") and method == "DELETE": #/api/v1/user/
+        return True
+    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "PUT": #/api/v1/user/{user-id}
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+            return False
+    if api.endswith("/user/") and method == "PUT": #/api/v1/user/
         return True
     return True
