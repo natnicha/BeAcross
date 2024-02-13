@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.api.auth.auth import auth
 from app.api.module.module import module
@@ -32,6 +33,14 @@ app.add_event_handler("shutdown", close_mongo_connection)
 
 @app.middleware("http")
 async def middleware_checking(request: Request, call_next):
+    if request.method == "OPTIONS":
+        headers = {
+            "Access-Control-Allow-Origin": frontend_origins[0],
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true",
+        }
+        return JSONResponse(content="", status_code=status.HTTP_200_OK, headers=headers)
     return await security_checking(request, call_next)
 
 @app.get("/")
