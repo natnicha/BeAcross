@@ -266,7 +266,7 @@ def parse_json(data):
 
 
 def find_one(db: MongoClient, module_id_obj: ObjectId):
-    collection = db.get_collection('modules')  # Correctly reference the 'modules' collection
+    collection = db.get_collection('modules')  # reference the 'modules' collection
     return collection.find_one({'_id': module_id_obj})
 
 @module.get("/{module_id}", response_model=ModuleResponseModel)
