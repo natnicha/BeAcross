@@ -22,7 +22,7 @@ export default function Profile() {
     fetch("http://localhost:8000/api/v1/module/profile", {
       method: "GET",
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjViNGY3NzYwMDM1M2EyNDY1NmMyNDhlIiwicm9sZSI6InVuaS1hZG1pbiIsImlhdCI6MTcwNzc4ODE5OCwiZXhwIjoxNzA3NzkxNzk4fQ.E-B4IOmjM1881Tr7mxcLqXL7mGPtUHmezFdXYtCgIx0`,
+        Authorization: `Bearer ${jwtToken}`,
       },
       // credentials: "include", // Uncomment this line if using cookies for authentication
     })
