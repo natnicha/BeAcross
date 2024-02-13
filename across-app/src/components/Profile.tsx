@@ -5,7 +5,9 @@ interface UserProfile {
   first_name: string;
   last_name: string;
   email: string;
+  registration_number: string; //for the student
   course_of_study: string;
+  semester: string;
 }
 
 export default function Profile() {
@@ -24,12 +26,11 @@ export default function Profile() {
       headers: {
         Authorization: `Bearer ${jwtToken}`,
       },
-      // credentials: "include", // Uncomment this line if using cookies for authentication
     })
       .then((response) => response.json())
       .then((data) => setUserProfile(data))
       .catch((error) => console.error("Error fetching profile:", error));
-  }, []); // Run once when component mounts
+  }, []);
 
   return (
     <div className="about-thumb bg-white shadow-lg">
@@ -66,15 +67,46 @@ export default function Profile() {
               disabled
             />
           </div>
-          <div className="personal-info-section">
-            <p>University Affiliation:</p>
-            <input
-              type="text"
-              className="uniInfo full-width-input"
-              placeholder="Chemnitz University of Technology"
-              disabled
-            />
-          </div>
+          {sessionStorage.getItem("userrole") !== "uni-admin" ? (
+            <>
+              <div className="personal-info-section">
+                <p>Registration Number:</p>
+                <input
+                  type="text"
+                  className="registrationnumber full-width-input"
+                  placeholder={userProfile?.registration_number}
+                  disabled
+                />
+              </div>
+              <div className="personal-info-section">
+                <p>Course of Study:</p>
+                <input
+                  type="text"
+                  className="courseofstudy full-width-input"
+                  placeholder=""
+                />
+              </div>
+              <div className="personal-info-section">
+                <p>Study Semester:</p>
+                <input
+                  type="text"
+                  className="cut"
+                  placeholder={userProfile?.semester}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="personal-info-section">
+              <p>University Affiliation:</p>
+              <input
+                type="text"
+                className="uniInfo full-width-input"
+                placeholder="Chemnitz University of Technology"
+                disabled
+              />
+            </div>
+          )}
+
           <hr />
           <div className="personal-info-container">
             <div className="personal-info-section">
