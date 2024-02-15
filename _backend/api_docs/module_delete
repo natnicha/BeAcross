@@ -6,7 +6,7 @@ An admin can delete a module using module_id
 
 | ** Method **     | DELETE                                            |
 | ---------------- | ------------------------------------------------- |
-| ** Structure **  | `/api/v1/module/{module-comment-id}`      |
+| ** Structure **  | `/api/v1/module/{module_id}`      |
 | ** Example **    | `/api/v1/module/65cbbc481a97c41f581cfc1c` |
 
 ## Permissions
@@ -14,7 +14,7 @@ An admin can delete a module using module_id
 | Method          | Allow Acess                       |
 | ----------------| ----------------------------------|
 | student         | -                                 |
-| uni-admin       | -                                 |
+| uni-admin       | `/api/v1/module`                  |
 | sys-admin       | `/api/v1/module`                  |
 
 ## Header Parameters
