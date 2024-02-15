@@ -61,7 +61,7 @@ An admin can fetch a module with its fields using the module id.
 }
 ```
 
-## Error Response 404 - Not Found (case: no comment found by this user is not found)
+## Error Response 404 - Not Found (case: no module found by this id)
 ```json
 {
     "detail": {
