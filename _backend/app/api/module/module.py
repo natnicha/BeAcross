@@ -14,6 +14,7 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
+from app.crud.modules import delete_one
 
 module = APIRouter()
 
@@ -260,3 +261,24 @@ def is_manual_calculated_sortby(sortby: str):
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
+#delCRUD
+@module.delete("/{module_id}", status_code=status.HTTP_200_OK)
+async def delete_module(module_id: str, db: MongoClient = Depends(get_database)):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    deletion_result = delete_one(db, module_id_obj)
+    if deletion_result.deleted_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+
+    # Since deletion was successful, return a success message
+    return {"message": "Module is successfully deleted"}
