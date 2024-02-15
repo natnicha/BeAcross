@@ -262,7 +262,6 @@ def is_manual_calculated_sortby(sortby: str):
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
-#delCRUD
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
 async def delete_module(module_id: str, db: MongoClient = Depends(get_database)):
     try:
@@ -280,5 +279,4 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database))
             status_code=status.HTTP_404_NOT_FOUND
         )
 
-    # Since deletion was successful, return a success message
     return {"message": "Module is successfully deleted"}
