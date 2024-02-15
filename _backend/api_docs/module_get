@@ -79,15 +79,6 @@ An admin can fetch a module with its fields using the module id.
 }
 ```
 
-## Error Response 403 - Forbidden (case: no right to access this route)
-```json
-{
-  "detail" : {
-    "message": "insufficient permissions"
-  }
-}
-```
-
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {

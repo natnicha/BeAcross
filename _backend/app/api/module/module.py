@@ -14,7 +14,6 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
-#CRUD - GET module
 from app.api.module.model import ModuleResponseModel
 
 
