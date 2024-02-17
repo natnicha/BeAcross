@@ -29,7 +29,7 @@ export default function AdminHome() {
           alt="Exam Result"
         />
         <Link to="../create" className="click-scroll">
-          <i className="bi bi-person-add"></i>{" "}
+          <i className="bi bi-person-plus-fill"></i>{" "}
           <strong> &nbsp; Create Student Account</strong>
         </Link>
         <br />

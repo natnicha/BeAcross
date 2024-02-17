@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-
 import React, { useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 
@@ -13,7 +12,6 @@ import Profile from "../components/Profile";
 
 // Bootstrap
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-// import "bootstrap-icons/font/bootstrap-icons.css";
 
 // Toggle Submenu usestate
 const AdminBackofficePage: React.FC = () => {
