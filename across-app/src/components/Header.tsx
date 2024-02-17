@@ -3,13 +3,21 @@ import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
 import { Link, useNavigate } from "react-router-dom";
-import { usePopups } from '../PopupContext';
+import { usePopups } from "../PopupContext";
 import ForgotPasswordPopup from "./ForgotPasswordPopup";
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 
 const Header: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useUser(); // check user status (login)
   // Hook all popup control to PopupContext
-  const { openLoginPopup, isLoginPopupOpen, openRegisterPopup, isRegisterPopupOpen, isForgotPasswordPopupOpen, closeAllPopups } = usePopups();
+  const {
+    openLoginPopup,
+    isLoginPopupOpen,
+    openRegisterPopup,
+    isRegisterPopupOpen,
+    isForgotPasswordPopupOpen,
+    closeAllPopups,
+  } = usePopups();
 
   const navigate = useNavigate(); // redirect user back to homepage
 
@@ -116,8 +124,9 @@ const Header: React.FC = () => {
                     <a
                       className="click-scroll d-flex align-items-end"
                       onClick={() => {
-                        window.location.href =
-                          "http://localhost:3000/studentprofile";
+                        sessionStorage.getItem("userrole") === "uni-admin"
+                          ? navigate("/admin")
+                          : navigate("/studentprofile");
                       }}
                       role="button"
                       tabIndex={0}
@@ -151,7 +160,7 @@ const Header: React.FC = () => {
                       </strong>
                     </a>
                     {isRegisterPopupOpen && (
-                      <RegisterPopup content="" onClose={closeAllPopups}/>
+                      <RegisterPopup content="" onClose={closeAllPopups} />
                     )}
                   </p>
                 )}
@@ -161,7 +170,7 @@ const Header: React.FC = () => {
         </div>
       </nav>
       {/* To render forget password popup */}
-      {isForgotPasswordPopupOpen  && (
+      {isForgotPasswordPopupOpen && (
         <ForgotPasswordPopup content="" onClose={closeAllPopups} />
       )}
     </>
