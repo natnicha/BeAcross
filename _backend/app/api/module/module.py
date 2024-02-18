@@ -13,8 +13,10 @@ from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
-
 from app.crud.modules import delete_one
+
+from app.api.auth.auth_utils import is_valid_jwt_token, get_payload_from_auth
+from fastapi.security import OAuth2PasswordBearer
 
 module = APIRouter()
 
@@ -262,8 +264,27 @@ def is_manual_calculated_sortby(sortby: str):
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
-async def delete_module(module_id: str, db: MongoClient = Depends(get_database)):
+#async def delete_module(module_id: str, db: MongoClient = Depends(get_database)):
+async def delete_module(module_id: str, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):    
+    # Validate JWT Token and Extract Payload
+    payload = get_payload_from_auth(token)
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials",
+        )
+    
+    # Check if the user role is sys-admin
+    if payload['role'] != 'sys-admin':  # Replace with the role check logic if necessary
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to perform this action",
+        )
+
+    # proceed!
     try:
         module_id_obj = ObjectId(module_id)
     except Exception as e:
@@ -271,7 +292,7 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database))
             detail={"message": f"Invalid ObjectId format: {str(e)}"},
             status_code=status.HTTP_400_BAD_REQUEST
         )
-    
+
     deletion_result = delete_one(db, module_id_obj)
     if deletion_result.deleted_count == 0:
         raise HTTPException(
