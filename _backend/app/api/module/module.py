@@ -267,9 +267,7 @@ def parse_json(data):
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
-#async def delete_module(module_id: str, db: MongoClient = Depends(get_database)):
 async def delete_module(module_id: str, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):    
-    # Validate JWT Token and Extract Payload
     payload = get_payload_from_auth(token)
     if not payload:
         raise HTTPException(
@@ -277,14 +275,12 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database),
             detail="Could not validate credentials",
         )
     
-    # Check if the user role is sys-admin
-    if payload['role'] != 'sys-admin':  # Replace with the role check logic if necessary
+    if payload['role'] != 'sys-admin': 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform this action",
         )
 
-    # proceed!
     try:
         module_id_obj = ObjectId(module_id)
     except Exception as e:
