@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
-import { getComment } from '../services/getDataServices';
+import { getComment } from '../services/commentServices';
+import { postComment } from '../services/commentServices';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -80,16 +81,19 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         }
     };
 
-    const handleCommentSubmit = (e: React.FormEvent) => {
+    const handleCommentSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!commentText.trim()) return;
-        const newComment: Comment = {
-          id: Date.now(), // Simple ID generation
-          text: commentText,
-        };
-        setComments([...comments, newComment]);
-        setCommentText(''); // Clear the input after submission
-      };
+    
+        try {
+            const response = await postComment(selectedItem.module_id, jwtToken, commentText);
+            alert(response.message); // Show success or error message
+            // Optionally refresh comments here or update UI to show the new comment
+            setCommentText(''); // Clear the comment box after submission
+        } catch (error) {
+            console.error("Failed to submit comment:", error);
+        }
+    };
 
     // Close the popup if clicking outside of it
     useEffect(() => {
