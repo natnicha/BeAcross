@@ -15,6 +15,8 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
+from app.api.module.model import ModuleResponseModel
+
 
 module = APIRouter()
 

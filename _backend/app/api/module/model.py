@@ -1,6 +1,7 @@
 import datetime
 from bson import ObjectId
 from pydantic import BaseModel
+from typing import Optional
 
 from app.crud.module_comment import ModuleCommentModel
 
