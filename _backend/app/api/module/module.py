@@ -260,3 +260,10 @@ def is_manual_calculated_sortby(sortby: str):
 
 def parse_json(data):
     return json.loads(json_util.dumps(data))
+
+
+@module.get("/{module_id}/comment", status_code=status.HTTP_200_OK)
+async def get_module_comment(
+        db: MongoClient = Depends(get_database),
+    ):
+    pass
