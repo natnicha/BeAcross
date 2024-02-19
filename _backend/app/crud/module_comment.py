@@ -28,6 +28,11 @@ def find(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
     })
 
 
+def find_by_module_id(db: MongoClient, module_id: ObjectId):
+    return db[env_config.DB_NAME].get_collection("module_comments").find({
+        "module_id": module_id, 
+    })
+
 def delete_one(conn: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
     return conn[env_config.DB_NAME].get_collection("module_comments").delete_one({
         "_id": module_comment_id,
