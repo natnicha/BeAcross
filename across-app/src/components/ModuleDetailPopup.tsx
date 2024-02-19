@@ -42,6 +42,7 @@ interface ModuleComment {
 const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
    
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
+    const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
 
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
@@ -49,7 +50,6 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
-    const userRole = sessionStorage.getItem('userRole'); // check to show comment section if student
     
     useEffect(() => {
         const fetchComments = async () => {
@@ -212,25 +212,30 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     </div>
                     
                     {/*Comment Box Section*/}
-                    <div className="comment-box">
-                        <h6>You can share your feedback here..</h6><p>The comment will post as an anonymous</p>
-                        <form onSubmit={handleCommentSubmit} className="comment-form">
-                            <textarea
-                            className="comment-input"
-                            value={commentText}
-                            onChange={(e) => setCommentText(e.target.value)}
-                            placeholder="Write a comment..."
-                            />
-                            <button type="submit" className="custom-btn-green btn custom-link" disabled={!commentText.trim()}>Submit</button>
-                        </form>
-                        <ul className="comments-list">
-                            {comments.map((comment) => (
-                            <li key={comment.id} className="comment">
-                                {comment.text}
-                            </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {
+                        user_role === 'student' && (
+                            <div className="comment-box">
+                            <h6>You can share your feedback here..</h6>
+                            <p>The comment will post as an anonymous</p>
+                            <form onSubmit={handleCommentSubmit} className="comment-form">
+                                <textarea
+                                className="comment-input"
+                                value={commentText}
+                                onChange={(e) => setCommentText(e.target.value)}
+                                placeholder="Write a comment..."
+                                />
+                                <button type="submit" className="custom-btn-green btn custom-link" disabled={!commentText.trim()}>Submit</button>
+                            </form>
+                            <ul className="comments-list">
+                                {comments.map((comment) => (
+                                <li key={comment.id} className="comment">
+                                    {comment.text}
+                                </li>
+                                ))}
+                            </ul>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         </div>

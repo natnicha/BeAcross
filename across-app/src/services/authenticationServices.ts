@@ -79,7 +79,7 @@ export async function loginUser(
       // Store data
       sessionStorage.setItem("firstname", responseData.data.user.first_name);
       sessionStorage.setItem("lastname", responseData.data.user.last_name);
-      sessionStorage.setItem("userrole", responseData.data.user.user_role);
+      sessionStorage.setItem("user_role", responseData.data.user.user_role);
 
       sessionStorage.setItem("jwtToken", responseData.data.jwt); // store jwt until the tab closed, access via sessionStorage.getItem('jwtToken');
       return {
