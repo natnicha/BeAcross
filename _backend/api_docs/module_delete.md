@@ -60,21 +60,30 @@ An admin can delete a module using module_id
 }
 ```
 
-## Error Response 404 - Not Found (case: no module found by this id)
-```json
-{
-    "detail": {
-        "message": "Module not found"
-    }
-}
-```
-
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
 ```json
 {
   "detail" : {
     "message": "invalid authorization token or token expired"
   }
+}
+```
+
+## Error Response 403 - Unauthorized (case: user-role that is performing the request doesn't have the permission)
+```json
+{
+  "detail" : {
+    "message": "Not authorized to perform this action"
+  }
+}
+```
+
+## Error Response 404 - Not Found (case: no module found by this id)
+```json
+{
+    "detail": {
+        "message": "Module not found"
+    }
 }
 ```
 

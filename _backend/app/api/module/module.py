@@ -269,18 +269,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
 async def delete_module(module_id: str, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):    
     payload = get_payload_from_auth(token)
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Could not validate credentials",
-        )
-    
     if payload['role'] != 'sys-admin': 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform this action",
         )
-
     try:
         module_id_obj = ObjectId(module_id)
     except Exception as e:
@@ -288,12 +281,10 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database),
             detail={"message": f"Invalid ObjectId format: {str(e)}"},
             status_code=status.HTTP_400_BAD_REQUEST
         )
-
     deletion_result = delete_one(db, module_id_obj)
     if deletion_result.deleted_count == 0:
         raise HTTPException(
             detail="Module not found",
             status_code=status.HTTP_404_NOT_FOUND
         )
-
     return {"message": "Module is successfully deleted"}
