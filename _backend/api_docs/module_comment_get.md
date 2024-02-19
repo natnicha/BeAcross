@@ -48,7 +48,7 @@ Anyone (guest, student, uni-admin, and sys-admin) can see all comments commented
 {
   "module_id": "65a54de25eb0e12eb0a93e3a",
   "total_items": 3,
-  "item": [
+  "items": [
     {
       "id": "65aaafcf55de1fe16e64fdd3",
       "message": "this course is awesome!",
