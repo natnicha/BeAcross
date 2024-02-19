@@ -9,10 +9,11 @@ from pymongo.cursor import Cursor
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
 import app.crud.module_comment as MODULE_COMMENT
+import app.crud.users as USERS
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
 from app.api.module.model import ModuleResponseModel
 
@@ -60,7 +61,7 @@ def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
         )
 
 @module.get("/{module_id}/recommend", response_model=CountRecommendResponseModel)
-async def no_of_recommend(
+async def get_no_of_recommend(
         module_id: str = None,
         db: MongoClient = Depends(get_database),
     ):
@@ -133,7 +134,7 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 
 @module.post("/comment", response_model=ModuleCommentResponseModel, status_code=status.HTTP_201_CREATED)
-async def unrecommend(
+async def comment(
         request: Request,
         items: ModuleCommentRequestModel,
         db: MongoClient = Depends(get_database),
@@ -171,7 +172,7 @@ def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
 
 
 @module.delete("/comment/{module_comment_id}", status_code=status.HTTP_200_OK)
-async def unrecommend(
+async def delete_comment(
         request: Request,
         module_comment_id: str = None,
         db: MongoClient = Depends(get_database),
@@ -206,7 +207,7 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
         )
     
 @module.get("/search/", status_code=status.HTTP_200_OK)
-async def no_of_recommend(
+async def search(
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
@@ -263,9 +264,12 @@ def is_manual_calculated_sortby(sortby: str):
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
-@module.get("/{module_id}", response_model=ModuleResponseModel)
-async def get_module(module_id: str, db: MongoClient = Depends(get_database)):
-    # Convert the string ID to ObjectId
+
+@module.get("/{module_id}/comment", response_model=GetModuleCommentResponseModel, status_code=status.HTTP_200_OK)
+async def get_module_comment(
+        module_id: str = None,
+        db: MongoClient = Depends(get_database),
+    ):
     try:
         module_id_obj = ObjectId(module_id)
     except Exception as e:
@@ -273,12 +277,35 @@ async def get_module(module_id: str, db: MongoClient = Depends(get_database)):
             detail={"message": str(e)},
             status_code=status.HTTP_400_BAD_REQUEST
         )
-    # Fetch the module from the database
-    module_data = MODULES.find_one(db, module_id_obj)
-    if not module_data:
-        raise HTTPException(
-            detail={"message": "Module not found"},
-            status_code=status.HTTP_404_NOT_FOUND
-        )
-    module_data['id'] = str(module_data.pop("_id"))
-    return module_data
+    module_comments = list(MODULE_COMMENT.find_by_module_id(db, module_id=module_id_obj))
+    items = prepare_module_comment_item(db, module_comments)
+    return GetModuleCommentResponseModel(
+        module_id = module_id,
+        total_items = len(module_comments),
+        items = items
+    )
+
+def prepare_module_comment_item(db: MongoClient, module_comments: list):
+    item = []
+    for mod_com in module_comments:
+        user = USERS.get_user_by_id(db, mod_com["user_id"])
+        user_name = ""
+        if user is not None:
+            user_name = user["first_name"]
+        item.append(GetModuleCommentItemResponseModel(
+            id = str(mod_com["_id"]),
+            message = mod_com["message"],
+            user = mask_user_name(user_name),
+            created_at = mod_com["created_at"],
+            updated_at = mod_com["updated_at"]
+        ))
+    return item
+
+def mask_user_name(name="", mask="*"):
+    if name == "" or name is None:
+        return "*****"
+    mask_string = mask+mask+mask
+    if len(name)>=3:
+        return name[0:2]+mask_string+name[-1]
+    else:
+        return name

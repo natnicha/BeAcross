@@ -20,6 +20,8 @@ across-app/npm-debug.log*
 across-app/yarn-debug.log*
 across-app/yarn-error.log*
 _backend/env
+_backend/.DS_Store
+
 
 .vscode
 .env

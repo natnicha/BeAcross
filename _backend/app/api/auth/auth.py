@@ -58,7 +58,6 @@ async def register(
     )
 
 
-
 def check_email_format(email):
     isCorrectEmailFormat = validate_email(email)
     # if not conform email format, return error
@@ -114,24 +113,23 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: str, passwo
     return new_user
 
 
-
 @auth.post("/login", response_model=LoginResponseModel, status_code=status.HTTP_200_OK)
-async def register(
+async def login(
         request: Request,
         item: LoginRequestModel = None,
         db: MongoClient = Depends(get_database),
     ):
     user = authenicate(db, item)
     jwt = generate_jwt(user["_id"], get_user_role(user_roles_id=user["user_roles_id"]))
-    host = request.headers.get('host')
-    user_agent = request.headers.get('user-agent')
-    insert_user_logs(db, user["_id"], host, user_agent)
+    insert_user_logs(db, user["_id"], 
+                     host=request.headers.get('host'), 
+                     user_agent=request.headers.get('user-agent'))
+    user_data_response = get_user_data(user)
     LoginResponseData = LoginResponseDataModel(
         jwt=jwt,
-        user=user
+        user=user_data_response
     )
     return LoginResponseModel(data=LoginResponseData)
-
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
     user_log = USER_LOGS.UserLogsModel(
@@ -149,3 +147,17 @@ def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: st
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     return 
+
+def get_user_data(user: UsersModel) -> dict:
+    return {
+        "email": user["email"],
+        "password": user["password"],
+        "first_name": user["first_name"],
+        "last_name": user["last_name"],
+        "registration_number": user["registration_number"],
+        "course_of_study": user["course_of_study"],
+        "semester": user["semester"],
+        "user_role": get_user_role(user_roles_id=user["user_roles_id"]),
+        "created_at": user["created_at"],
+        "updated_at": user["updated_at"],
+    }

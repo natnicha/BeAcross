@@ -25,7 +25,7 @@ class LoginRequestModel(BaseModel):
 
 class LoginResponseDataModel(BaseModel):
     jwt: str = None
-    user: UsersModel = None
+    user: dict = None
 
 class LoginResponseModel(BaseModel):
     data: LoginResponseDataModel

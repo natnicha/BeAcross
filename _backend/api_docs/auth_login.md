@@ -40,7 +40,7 @@ To login to a system after registration
 | Key          | Type         | Required     | Description                                                                                                                  |
 | ------------ | :----------: | :----------: | ---------------------------------------------------------------------------------------------------------------------------- |
 | email        | string(128)  | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
-| password     | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character |
+| password     | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_] |
 
 
 ## Sample Body Parameter Json Request
@@ -64,7 +64,7 @@ To login to a system after registration
          "registration_number": null,
          "course_of_study": null,
          "semester": 1,
-         "user_roles_id": "65a8041efbc5863974a6d4e4",
+         "user_role": "student",
          "created_at": "2024-01-18T20:21:41.138000",
          "updated_at": "2024-01-18T20:21:41.138000"
       }
