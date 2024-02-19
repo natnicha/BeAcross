@@ -151,35 +151,21 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     </div>
                     
                     {/*Comment Section*/}
-                    <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
-                    <div className="detail-table">
-                        <div>
-                            <div className="comments">
-                                <div className="detail-row">
-                                    <div className="detail-column-date"><strong>Date:</strong></div>
-                                    <div className="detail-column-date" id="date">
-                                        19-02-2024
-                                    </div>
-                                    <div className="comment-control">
-                                        This course is super!!
-                                    </div>
-                                </div>
-                                <div className="detail-row">
-                                    <div className="detail-column-date"><strong>Date:</strong></div>
-                                    <div className="detail-column-date" id="date">
-                                        18-02-2024
-                                    </div>
-                                    <div className="comment-control">
-                                        This course is great!!
-                                    </div>
-                                </div>
-                                <div className="detail-row">
-                                    <div className="detail-column-date"><strong>Date:</strong></div>
-                                    <div className="detail-column-date" id="date">
-                                        20-02-2024
-                                    </div>
-                                    <div className="comment-control">
-                                        This course is cool!!
+                    <div className="feedback-section">
+                        <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
+                        <div className="detail-table" style={{ height: '40%'}}>
+                            <div>
+                                <div className="comments">
+                                    <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%'}}>
+                                        <div className="detail-column-date" id="user">
+                                            <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>User01</strong>
+                                        </div>
+                                        <div className="detail-column-date" id="date">
+                                            <span style={{ fontSize: '12px', fontStyle: 'italic', marginLeft: '0%' }}>Date: 19-02-2024</span>
+                                        </div>
+                                        <div className="comment-control">
+                                            This course is super!!
+                                        </div>
                                     </div>
                                 </div>
                             </div>

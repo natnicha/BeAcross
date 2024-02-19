@@ -1561,6 +1561,11 @@ margin-left: 10px;
 /*---------------------------------------
   COMMENT SECTION             
 -----------------------------------------*/
+.feedback-section {
+  width: 100%;
+  border-top: 1px solid #ddd;
+  margin-left: 40px;
+}
 #uniqueCommentFeedback {
   text-align: left;
   color: var(--primary-color);
@@ -1584,7 +1589,7 @@ margin-left: 10px;
   display: inline;
 }
 
-.comment-box p {
+.comment-box p, .comment-date{
   margin-left: 10px;
   font-size: 12px;
   font-style: italic; 
