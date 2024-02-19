@@ -61,6 +61,7 @@ To login to a system after registration
          "password": "09679f97a72df416ae47eca4b1d828c02163d045559d0e36e617494c3919a2a4:2b3f0c6c65ad49a4815cd9ad1e67ff52",
          "first_name": "example",
          "last_name": "z",
+         "university": "Technische Universitat Chemnitz",
          "registration_number": null,
          "course_of_study": null,
          "semester": 1,
