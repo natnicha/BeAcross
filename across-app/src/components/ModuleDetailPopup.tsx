@@ -11,6 +11,8 @@ interface Item {
     content?: string;
     university?: string;
     degree_program?: string;
+    degree_level?: string;
+    module_type?: string;
     module_code?: number;
     ects?: string;
     module_name?: string;
@@ -111,6 +113,20 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                                 </div>
 
                                 <div className="detail-row">
+                                    <div className="detail-column"><strong>Degree Level:</strong></div>
+                                    <div className="detail-column" id="degreeLevel">
+                                        {selectedItem.degree_level}
+                                    </div>
+                                </div>
+
+                                <div className="detail-row">
+                                    <div className="detail-column"><strong>Module Type:</strong></div>
+                                    <div className="detail-column" id="moduleTypr">
+                                        {selectedItem.module_type}
+                                    </div>
+                                </div>
+
+                                <div className="detail-row">
                                     <div className="detail-column"><strong>ECTS credit:</strong></div>
                                     <div className="detail-column" id="ectCredit">
                                         {selectedItem.ects}
@@ -134,6 +150,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     </div>
                     
                     {/*Comment Section*/}
+                    <h6 style={{ textAlign: 'left' }}>Comment Feedback from Student</h6>
                     <div className="detail-table">
                         <div>
                             <div className="details">
