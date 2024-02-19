@@ -172,7 +172,9 @@ async def get_user_profile_list(
         sortby = "user_roles_id"
     users = USERS.get_users(db, get_user_role_id(user_role), limit, offset, sortby, orderby)
     for user in users:
+        university_id = get_universities(db, user["email"])[0]["university_id"]
         user["id"] = str(user.pop("_id"))
+        user["university"] = UNIVERSITIES.find_one(db, university_id)["name"]
         user["user_role"] = get_user_role(ObjectId(user.pop("user_roles_id")))
     return UserProfileListResponseModel(
         total_results=USERS.count(db, get_user_role_id(user_role)),
