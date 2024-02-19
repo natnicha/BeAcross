@@ -43,3 +43,6 @@ def get_users(conn: MongoClient, user_role: str, limit: int, offset: int, sortby
 
 def insert_one(conn: MongoClient, user: UsersModel):
     return conn[env_config.DB_NAME].get_collection("users").insert_one(user.dict())
+
+def delete_one(conn: MongoClient, user_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("users").delete_one({"_id": user_id})
