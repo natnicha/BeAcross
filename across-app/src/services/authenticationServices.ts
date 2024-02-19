@@ -18,7 +18,7 @@ interface LoginResponse {
   message: string;
   firstname: string;
   lastname: string;
-  userrole?: string;
+  user_role: string;
 }
 
 // Function to send a POST request to the register API
@@ -87,6 +87,7 @@ export async function loginUser(
         message: "Login successfully.",
         firstname: responseData.data.firstname,
         lastname: responseData.data.lastname,
+        user_role: responseData.data.user_role,
       };
     } else if (response.status == 401) {
       return {
@@ -94,6 +95,7 @@ export async function loginUser(
         message: responseData.detail.message,
         firstname: "",
         lastname: "",
+        user_role: "",
       };
     } else {
       throw new Error(`Error: ${response.status}`);

@@ -53,9 +53,10 @@ export async function getComment(moduleID: string, token: string): Promise<getCo
 }
 
 // Function to send a POST request to the createComment API
-export async function postComment(id: string, token: string, message: string): Promise<submitCommentResponse> {
+export async function postComment(module_id: string, token: string, message: string): Promise<submitCommentResponse> {
   const url: string = `http://localhost:8000/api/v1/module/comment`;
-  const payload: submitCommentRequest = { id, token, message };
+  // Adjust the payload to match the backend expectation
+  const payload = { module_id, message }; // Use module_id as per your successful Postman test
 
   try {
     const response = await fetch(url, {
@@ -67,22 +68,18 @@ export async function postComment(id: string, token: string, message: string): P
       body: JSON.stringify(payload),
     });
 
-    // Parse the JSON response
-    const responseData: any = await response.json();
+    const responseData = await response.json();
 
     if (response.ok) {
       return {
         status: response.status,
-        message:
-          "Successfully submit your feedback!, please refresh page to see your comment.",
+        message: "Successfully submitted your feedback! Please refresh the page to see your comment.",
       };
-    } else if (response.status == 400) {
-      return { status: response.status, message: responseData.detail.message };
     } else {
-      throw new Error(`Error: ${response.status}`);
+      throw new Error(`Error: ${response.status} ${responseData.detail ? responseData.detail.message : ''}`);
     }
   } catch (error) {
-    console.error("Error submit feedback user:", error);
+    console.error("Error submitting feedback:", error);
     throw error;
   }
 }

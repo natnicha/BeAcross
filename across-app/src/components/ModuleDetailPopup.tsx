@@ -49,6 +49,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+    const userRole = sessionStorage.getItem('userRole'); // check to show comment section if student
     
     useEffect(() => {
         const fetchComments = async () => {
