@@ -7,6 +7,7 @@ class UserProfileResponseModel(BaseModel):
     password: str
     first_name: str
     last_name: Optional[str]
+    university: str
     registration_number: Optional[str]
     course_of_study: Optional[str]
     semester: Optional[int]
