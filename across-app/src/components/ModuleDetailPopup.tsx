@@ -224,7 +224,12 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                                 onChange={(e) => setCommentText(e.target.value)}
                                 placeholder="Write a comment..."
                                 />
-                                <button type="submit" className="custom-btn-green btn custom-link" disabled={!commentText.trim()}>Submit</button>
+                                <button 
+                                    type="submit" 
+                                    className="custom-btn-green btn custom-link" 
+                                    disabled={!commentText.trim()}>
+                                Submit
+                                </button>
                             </form>
                             <ul className="comments-list">
                                 {comments.map((comment) => (
