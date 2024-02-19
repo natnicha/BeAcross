@@ -183,22 +183,26 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     {/*Comment Section*/}
                     <div className="feedback-section">
                         <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
-                        <div className="detail-table">
-                            {moduleComments.map((comment, index) => (
-                                <div key={index} className="comments">
-                                    <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%' }}>
-                                        <div className="detail-column-date" id="user">
-                                            <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>{comment.user}</strong>
-                                        </div>
-                                        <div className="detail-column-date" id="date">
-                                            <span style={{ fontSize: '12px', fontStyle: 'italic', marginLeft: '0%' }}>Date: {comment.created_at}</span>
-                                        </div>
-                                        <div className="comment-control">
-                                            {comment.message}
+                        <div className="detail-table" style={{ height: '40%' }}>
+                            {moduleComments.length > 0 ? (
+                                moduleComments.map((comment, index) => (
+                                    <div key={index} className="comments">
+                                        <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%' }}>
+                                            <div className="detail-column-date" id="user">
+                                                <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>{comment.user}</strong>
+                                            </div>
+                                            <div className="detail-column-date" id="date">
+                                                <span style={{ fontSize: '12px', fontStyle: 'italic', marginLeft: '0%' }}>Date: {comment.created_at}</span>
+                                            </div>
+                                            <div className="comment-control">
+                                                {comment.message}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            ) : (
+                                <h6 style={{ color: '#717275', marginTop: '5px' }}>There is no feedback for this module yet.</h6>
+                            )}
                         </div>
                     </div>
                     

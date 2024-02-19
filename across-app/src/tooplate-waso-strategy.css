@@ -759,8 +759,7 @@ td {
   display: grid;
   width: 100%;
   border-collapse: collapse;
-  max-height: 500px; /* Set a fixed maximum height */
-  overflow-y: auto;
+  flex: 2;
 }
 
 .detail-row {
@@ -880,6 +879,7 @@ td {
   align-items: center; 
   max-height: 100vh;
   overflow-y: auto;
+  justify-content: flex-start;
 }
 
 .title-popup {
@@ -892,10 +892,6 @@ td {
 
 .popup-content span {
   margin-left: 5%;
-}
-
-.popup-content > .comment-section, .popup-content > .comment-box{
-  flex: 1;
 }
 
 /*---------------------------------------
@@ -1562,10 +1558,15 @@ margin-left: 10px;
   COMMENT SECTION             
 -----------------------------------------*/
 .feedback-section {
-  width: 100%;
-  border-top: 1px solid #ddd;
-  margin-left: 40px;
+  width: 98%;
+  flex: 1;
+  padding-left: 3%;
 }
+
+.detail-table, .feedback-section {
+  width: 100%;
+}
+
 #uniqueCommentFeedback {
   text-align: left;
   color: var(--primary-color);
@@ -1573,10 +1574,7 @@ margin-left: 10px;
 }
 
 .comment-box {
-  margin: 20px;
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
   width: 100%;
 }
 
