@@ -2,9 +2,11 @@ from bson import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, Query, status, Request
 from pymongo import MongoClient
 
+import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
+import app.crud.universities as UNIVERSITIES
 from app.db.mongodb import get_database
-from app.api.auth.auth_utils import get_user_role, get_user_role_id, hash_text, is_aligned_by_defined_conditions
+from app.api.auth.auth_utils import extract_domain_from_email, get_user_role, get_user_role_id, hash_text, is_aligned_by_defined_conditions
 from app.api.user.model import UserProfileListResponseModel, UserProfileResponseModel, UserPutRequestModel, UserPutResponseModel
 
 user = APIRouter()
@@ -135,15 +137,21 @@ async def get_user_profile(
         db: MongoClient = Depends(get_database)):
     user_id=ObjectId(request.state.user_id)
     user = USERS.get_user_by_id(db, user_id)
-    return get_user_data(user)
+    return get_user_data(db, user)
 
+def get_universities(db: MongoClient, email: str):
+    request_domain = extract_domain_from_email(email)
+    email_domains = EMAIL_DOMAINS.get_email_domain(db, request_domain)
+    return list(email_domains)
 
-def get_user_data(user: USERS.UsersModel) -> UserProfileResponseModel:
+def get_user_data(db: MongoClient, user: USERS.UsersModel) -> UserProfileResponseModel:
+    university_id = get_universities(db, user["email"])[0]["university_id"]
     return UserProfileResponseModel(
         email=user["email"],
         password=user["password"],
         first_name=user["first_name"],
         last_name=user["last_name"],
+        university=UNIVERSITIES.find_one(db, university_id)["name"],
         registration_number=user["registration_number"],
         course_of_study=user["course_of_study"],
         semester=user["semester"],
@@ -164,7 +172,9 @@ async def get_user_profile_list(
         sortby = "user_roles_id"
     users = USERS.get_users(db, get_user_role_id(user_role), limit, offset, sortby, orderby)
     for user in users:
+        university_id = get_universities(db, user["email"])[0]["university_id"]
         user["id"] = str(user.pop("_id"))
+        user["university"] = UNIVERSITIES.find_one(db, university_id)["name"]
         user["user_role"] = get_user_role(ObjectId(user.pop("user_roles_id")))
     return UserProfileListResponseModel(
         total_results=USERS.count(db, get_user_role_id(user_role)),
