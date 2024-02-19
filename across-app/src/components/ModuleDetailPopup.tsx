@@ -57,7 +57,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                 const mappedComments = response.items.map(item => ({
                     user: item.user,
                     message: item.message,
-                    created_at: item.created_at, // Align the 'created_at' field with 'date'
+                    created_at: item.created_at.split('T')[0],
                 }));
                 setModuleComments(mappedComments);
             } catch (error) {
@@ -183,7 +183,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     {/*Comment Section*/}
                     <div className="feedback-section">
                         <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
-                        <div className="detail-table" style={{ height: '40%' }}>
+                        <div className="detail-table">
                             {moduleComments.map((comment, index) => (
                                 <div key={index} className="comments">
                                     <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%' }}>
