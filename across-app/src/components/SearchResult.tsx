@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
+import { usePopups } from '../PopupContext';
 
 // Define the Item type based on your data structure
 interface Item {
@@ -19,19 +20,15 @@ interface SearchResultProps {
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
-    
+
+    // Hook all popup control to PopupContext
+    const { openModuleDetailPopup, isModuleDetailPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-    const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
 
     const handleRowClick = (item: Item) => {
         setSelectedItem(item);
-        openDetailPopup();
+        openModuleDetailPopup();
     };
-
-    
-    // Functions to open/close the register popup
-    const openDetailPopup = () => setIsDetailPopupOpen(true);
-    const closeDetailPopup = () => setIsDetailPopupOpen(false);
     
     return (
         <>
@@ -92,11 +89,11 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     ))}
                     
                     {/* Conditionally render ModuleDetailPopup */}
-                    {selectedItem && isDetailPopupOpen && (
+                    {selectedItem && isModuleDetailPopupOpen && (
                     <ModuleDetailPopup 
                         content="" 
                         selectedItem={selectedItem} 
-                        onClose={closeDetailPopup} 
+                        onClose={closeAllPopups} 
                     />
                     )}  
                 </div>
