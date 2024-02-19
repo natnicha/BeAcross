@@ -616,7 +616,7 @@ padding-bottom: 10px;
 -----------------------------------------*/
 .module-detail .popup-content {
 width: 60%;
-height: 80%;
+height: 95%;
 }
 
 .uni-logo {
@@ -785,6 +785,10 @@ td {
   width: 200px;
 }
 
+.detail-column-date{
+  padding: 10px;
+}
+
 .detail-table .details{
   width: 50%;
 }
@@ -874,6 +878,8 @@ td {
   flex-direction: column;
   justify-content: center;
   align-items: center; 
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .title-popup {
@@ -886,6 +892,10 @@ td {
 
 .popup-content span {
   margin-left: 5%;
+}
+
+.popup-content > .comment-section, .popup-content > .comment-box{
+  flex: 1;
 }
 
 /*---------------------------------------
@@ -1541,7 +1551,7 @@ margin-left: 10px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: blue;
+  background-color: var(--primary-color);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -1551,16 +1561,33 @@ margin-left: 10px;
 /*---------------------------------------
   COMMENT SECTION             
 -----------------------------------------*/
+#uniqueCommentFeedback {
+  text-align: left;
+  color: var(--primary-color);
+  margin-top: 20px;
+}
 
 .comment-box {
   margin: 20px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  width: 100%;
 }
 
-.comment-form {
-  margin-bottom: 20px;
+.comment-box h6{
+  text-align: left;
+  color: var(--primary-color);
+}
+
+.comment-box h6, .comment-box p {
+  display: inline;
+}
+
+.comment-box p {
+  margin-left: 10px;
+  font-size: 12px;
+  font-style: italic; 
 }
 
 .comment-input {
@@ -1596,4 +1623,11 @@ margin-left: 10px;
   background-color: #f9f9f9;
   border: 1px solid #eee;
   border-radius: 4px;
+}
+
+.comment-control {
+  display: flex; 
+  justify-content: flex-start;
+  width: 100%; 
+  margin-left: 10px;
 }

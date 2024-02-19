@@ -95,6 +95,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                         >
                         X
                     </button>
+                    {/*Module Details Section*/}
                     <div className="detail-table">
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <div className="details">
@@ -150,38 +151,44 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     </div>
                     
                     {/*Comment Section*/}
-                    <h6 style={{ textAlign: 'left' }}>Comment Feedback from Student</h6>
+                    <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
                     <div className="detail-table">
                         <div>
-                            <div className="details">
+                            <div className="comments">
                                 <div className="detail-row">
-                                    <div className="detail-column"><strong>Date:</strong></div>
-                                    <div className="detail-column" id="university">
+                                    <div className="detail-column-date"><strong>Date:</strong></div>
+                                    <div className="detail-column-date" id="date">
                                         19-02-2024
                                     </div>
+                                    <div className="comment-control">
+                                        This course is super!!
+                                    </div>
                                 </div>
                                 <div className="detail-row">
-                                    <div className="detail-column"><strong>Date:</strong></div>
-                                    <div className="detail-column" id="university">
+                                    <div className="detail-column-date"><strong>Date:</strong></div>
+                                    <div className="detail-column-date" id="date">
                                         18-02-2024
                                     </div>
-                                </div>
-                                <div className="detail-row">
-                                    <div className="detail-column"><strong>Date:</strong></div>
-                                    <div className="detail-column" id="university">
-                                        20-02-2024
+                                    <div className="comment-control">
+                                        This course is great!!
                                     </div>
                                 </div>
                                 <div className="detail-row">
-                                    <div className="detail-column"><strong>Date:</strong></div>
-                                    <div className="detail-column" id="university">
-                                        21-02-2024
+                                    <div className="detail-column-date"><strong>Date:</strong></div>
+                                    <div className="detail-column-date" id="date">
+                                        20-02-2024
+                                    </div>
+                                    <div className="comment-control">
+                                        This course is cool!!
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
+                    {/*Comment Box Section*/}
                     <div className="comment-box">
+                        <h6>You can share your feedback here..</h6><p>The comment will post as an anonymous</p>
                         <form onSubmit={handleCommentSubmit} className="comment-form">
                             <textarea
                             className="comment-input"
@@ -189,7 +196,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                             onChange={(e) => setCommentText(e.target.value)}
                             placeholder="Write a comment..."
                             />
-                            <button type="submit" className="submit-btn">Post Comment</button>
+                            <button type="submit" className="custom-btn-green btn custom-link" disabled={!commentText.trim()}>Submit</button>
                         </form>
                         <ul className="comments-list">
                             {comments.map((comment) => (
