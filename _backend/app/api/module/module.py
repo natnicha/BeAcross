@@ -264,6 +264,14 @@ def parse_json(data):
 
 @module.get("/{module_id}/comment", status_code=status.HTTP_200_OK)
 async def get_module_comment(
+        module_id: str = None,
         db: MongoClient = Depends(get_database),
     ):
-    pass
+    try:
+        module_id=ObjectId(module_id),
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    return 
