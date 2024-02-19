@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
+import { getComment } from '../services/getDataServices';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -16,6 +17,7 @@ interface Item {
     module_code?: number;
     ects?: string;
     module_name?: string;
+    module_id: string;
 }
 
 interface ModuleDetailPopupProps {
@@ -29,13 +31,41 @@ interface Comment {
     text: string;
 }
 
+interface ModuleComment {
+    user: string;
+    message: string;
+    created_at: string;
+}
+
+
 const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
-    
+   
+    const jwtToken = sessionStorage.getItem("jwtToken") || '';
+
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
     const [comments, setComments] = useState<Comment[]>([]);
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
+    const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+    
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const response = await getComment(selectedItem.module_id, jwtToken);
+                // Map the response to match the ModuleComment type
+                const mappedComments = response.items.map(item => ({
+                    user: item.user,
+                    message: item.message,
+                    created_at: item.created_at, // Align the 'created_at' field with 'date'
+                }));
+                setModuleComments(mappedComments);
+            } catch (error) {
+                console.error('Failed to fetch comments:', error);
+            }
+        };
+        fetchComments();
+    }, [selectedItem.module_id, jwtToken]);
     
     const handleUniLogo = (university: string) => {
         switch (university) {
@@ -153,22 +183,22 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     {/*Comment Section*/}
                     <div className="feedback-section">
                         <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
-                        <div className="detail-table" style={{ height: '40%'}}>
-                            <div>
-                                <div className="comments">
-                                    <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%'}}>
+                        <div className="detail-table" style={{ height: '40%' }}>
+                            {moduleComments.map((comment, index) => (
+                                <div key={index} className="comments">
+                                    <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%' }}>
                                         <div className="detail-column-date" id="user">
-                                            <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>User01</strong>
+                                            <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>{comment.user}</strong>
                                         </div>
                                         <div className="detail-column-date" id="date">
-                                            <span style={{ fontSize: '12px', fontStyle: 'italic', marginLeft: '0%' }}>Date: 19-02-2024</span>
+                                            <span style={{ fontSize: '12px', fontStyle: 'italic', marginLeft: '0%' }}>Date: {comment.created_at}</span>
                                         </div>
                                         <div className="comment-control">
-                                            This course is super!!
+                                            {comment.message}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                     

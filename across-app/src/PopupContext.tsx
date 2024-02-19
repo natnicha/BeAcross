@@ -9,7 +9,7 @@ interface PopupContextType {
   openForgotPasswordPopup: () => void;
   closeAllPopups: () => void;
   isModuleDetailPopupOpen: boolean;
-  openModuleDetailPopup: () => void;
+  openModuleDetailPopup: (module_id: string) => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -32,6 +32,8 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false);
   const [isModuleDetailPopupOpen, setIsModuleDetailPopupOpen] = useState(false);
 
+  const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
+
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
     setIsRegisterPopupOpen(false);
@@ -52,7 +54,8 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     document.body.classList.add('no-scroll');
   };
 
-  const openModuleDetailPopup = () => {
+  const openModuleDetailPopup = (module_id: string) => {
+    setCurrentModuleId(module_id); // Store the current module_id
     setIsModuleDetailPopupOpen(true);
     document.body.classList.add('no-scroll');
   };

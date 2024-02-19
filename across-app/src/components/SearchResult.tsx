@@ -13,6 +13,7 @@ interface Item {
     degree_level?: string;
     module_name?: string;
     type?: string;
+    module_id: string;
 }
 
 interface SearchResultProps {
@@ -27,7 +28,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
 
     const handleRowClick = (item: Item) => {
         setSelectedItem(item);
-        openModuleDetailPopup();
+        openModuleDetailPopup(item.module_id || "default_module_id");
     };
     
     return (
@@ -53,7 +54,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     {/*Display Items*/}
                     {props.searchResult.items && props.searchResult.items.map((item, index) => (
                         <div className="search-table" key={index}>
-                            <div className="search-row" onClick={() => handleRowClick(item)}>
+                            <div className="search-row" onClick={() => handleRowClick(item as Item)}>
                                 <div className="search-column" id="moduleCode">
                                     {item.module_code}
                                 </div>
