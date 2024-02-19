@@ -1,4 +1,5 @@
 
+import re
 from fastapi import Request
 
 def is_public_path(api: str):
@@ -14,7 +15,8 @@ def is_public_path(api: str):
     if api.__contains__('/api/v1/module/search'):
         return True
 
-    if api.__contains__('/api/v1/module/') and api.__contains__('/comment'):
+    module_comment_pattern = '''^/api/v1/module/[a-zA-Z0-9]+/comment$'''
+    if re.match(module_comment_pattern, api):
         return True
     
     return False
