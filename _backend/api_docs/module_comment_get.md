@@ -75,16 +75,6 @@ Anyone (guest, student, uni-admin, and sys-admin) can see all comments commented
 ```
 
 
-## Error Response 401 - Unauthorized (case: no authorization in a request header)
-```json
-{
-  "detail" : {
-    "message": "invalid authorization token or token expired"
-  }
-}
-```
-
-
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
