@@ -372,11 +372,11 @@ handleSortClick = (sortField: string) => {
                                   type="checkbox" 
                                   className="pointer-checkbox" 
                                   name="module_type" 
-                                  value="obiligitory" 
-                                  checked={this.state.filters.module_type.includes('obiligitory')}
+                                  value="obligatory" 
+                                  checked={this.state.filters.module_type.includes('obligatory')}
                                   onChange={this.handleFilterChange}
                               />  
-                               &nbsp;Obiligitory
+                               &nbsp;Obligatory
                             </label>
                         </div>
                         <div className="checkbox">
