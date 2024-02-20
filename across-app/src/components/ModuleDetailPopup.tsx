@@ -11,7 +11,7 @@ interface Item {
     university?: string;
     degree_program?: string;
     module_code?: number;
-    ects?: number;
+    ects?: string;
     module_name?: string;
 }
 

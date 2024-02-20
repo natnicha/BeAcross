@@ -16,7 +16,8 @@ import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import *
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
+import app.crud.users as USERS
 
 from app.transferability.similiarity_run import start_similarity_for_one, add_module_to_res
 
@@ -71,7 +72,7 @@ def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
 
 
 @module.get("/{module_id}/recommend", response_model=CountRecommendResponseModel)
-async def no_of_recommend(
+async def get_no_of_recommend(
         module_id: str = None,
         db: MongoClient = Depends(get_database),
 ):
@@ -375,3 +376,49 @@ def get_data_from_xml(text: bytes) -> (list, list):
         uploaded_modules_list.append(uploading_model)
         db_modules_list.append(db_model)
     return uploaded_modules_list, db_modules_list
+
+
+@module.get("/{module_id}/comment", response_model=GetModuleCommentResponseModel, status_code=status.HTTP_200_OK)
+async def get_module_comment(
+        module_id: str = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_comments = list(MODULE_COMMENT.find_by_module_id(db, module_id=module_id_obj))
+    items = prepare_module_comment_item(db, module_comments)
+    return GetModuleCommentResponseModel(
+        module_id = module_id,
+        total_items = len(module_comments),
+        items = items
+    )
+
+def prepare_module_comment_item(db: MongoClient, module_comments: list):
+    item = []
+    for mod_com in module_comments:
+        user = USERS.get_user_by_id(db, mod_com["user_id"])
+        user_name = ""
+        if user is not None:
+            user_name = user["first_name"]
+        item.append(GetModuleCommentItemResponseModel(
+            id = str(mod_com["_id"]),
+            message = mod_com["message"],
+            user = mask_user_name(user_name),
+            created_at = mod_com["created_at"],
+            updated_at = mod_com["updated_at"]
+        ))
+    return item
+
+def mask_user_name(name="", mask="*"):
+    if name == "" or name is None:
+        return "*****"
+    mask_string = mask+mask+mask
+    if len(name)>=3:
+        return name[0:2]+mask_string+name[-1]
+    else:
+        return name

@@ -22,6 +22,7 @@ nltk = "*"
 scikit-learn = "*"
 unidecode = "*"
 stopwords = "*"
+aiosmtplib = "*"
 
 [dev-packages]
 

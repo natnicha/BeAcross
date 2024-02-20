@@ -261,6 +261,11 @@ strong {
   color: var(--dark-color);
 }
 
+.SearchPage .custom-btn {
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
+
 
 /*---------------------------------------
   NAVIGATION              
@@ -462,10 +467,6 @@ padding-bottom: 10px;
   width: 100%;
 }
 
-.bi-lightbulb-fill:hover{
-  color: var(--secondary-color);
-}
-
 .tooltipButton {
   position: absolute;
   top: 33.3333333%;
@@ -480,8 +481,14 @@ padding-bottom: 10px;
   align-items: center;
 }
 
+.tooltipIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .tooltipText {
-  visibility: visible;
+  visibility: hidden; /* Initially hidden */
   width: 350px;
   background-color: white;
   color: var(--p-color);
@@ -498,9 +505,13 @@ padding-bottom: 10px;
   transition: opacity 0.3s;
 }
 
-.tooltipButton:hover .tooltipText {
+.tooltipIcon:hover .tooltipText {
   visibility: visible;
   opacity: 1;
+}
+
+.bi-lightbulb-fill:hover {
+  color: var(--secondary-color);
 }
 
 /*---------------------------------------
@@ -1041,6 +1052,11 @@ td {
   display: flex;
 }
 
+.sort-container {
+  display: flex;
+  margin-left: 16%;
+}
+
 .tm-content {
   flex-grow: 1;
   margin-top: 5%;
@@ -1435,3 +1451,93 @@ ul {
   }
 }
 
+/*---------------------------------------
+  FILTER SECTION             
+-----------------------------------------*/
+.checkbox{
+width: 300px;
+margin-left: 10px;
+}
+
+.filter {
+  margin-left: 15px;
+  width: 262px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter .filter-item {
+  border-bottom: 1px solid var(--p-color);
+  padding-bottom: 10px;
+  padding-top: 5px;
+}
+
+/* Style for the dropdown button */
+.dropbtn {
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* Container for the dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 300px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Items in the dropdown */
+.dropdown-content label {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content label:hover {
+  background-color: #f1f1f1;
+}
+
+.pointer-checkbox {
+  cursor: pointer;
+}
+
+#range-slider {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#slider-knob {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: blue;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

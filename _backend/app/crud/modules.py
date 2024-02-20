@@ -42,8 +42,8 @@ def find(conn: MongoClient, term: str,
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
 
-def find_one(conn: MongoClient, module_id: ObjectId):
-    return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id}, {"_id": 0})
+# def find_one(conn: MongoClient, module_id: ObjectId):
+#     return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id}, {"_id": 0})
 
 def count(conn: MongoClient, term: str,
           level: list[str], ects: list[int], university: list[str], type: list[str]):
@@ -98,3 +98,7 @@ def convert_conditions_to_query(term: str, level: list[str], ects: list[int], un
 
 def insert_many(conn: MongoClient, modules_model: ModulesModel):
     return conn[env_config.DB_NAME].get_collection("modules").insert_many([i.dict() for i in modules_model])
+
+def find_one(conn: MongoClient, module_id: ObjectId):
+    collection = conn[env_config.DB_NAME].get_collection("modules")
+    return collection.find_one({'_id': module_id})
