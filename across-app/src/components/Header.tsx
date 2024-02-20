@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
@@ -22,8 +22,9 @@ const Header: React.FC = () => {
   const navigate = useNavigate(); // redirect user back to homepage
 
   const handleLogout = () => {
-    // Clear the token on logout
+    // Clear the token and user_role on logout
     sessionStorage.removeItem("jwtToken");
+    sessionStorage.removeItem("user_role");
     setIsLoggedIn(false);
     navigate("/");
   };
@@ -124,7 +125,7 @@ const Header: React.FC = () => {
                     <a
                       className="click-scroll d-flex align-items-end"
                       onClick={() => {
-                        sessionStorage.getItem("userrole") === "uni-admin"
+                        sessionStorage.getItem("user_role") === "uni-admin"
                           ? navigate("/admin")
                           : navigate("/studentprofile");
                       }}
