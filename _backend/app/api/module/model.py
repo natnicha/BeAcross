@@ -41,6 +41,7 @@ class GetModuleCommentResponseModel(BaseModel):
     items: list = None
 
 class ModuleResponseModel(BaseModel):
+    id: str
     name: str
     content: str
     program: Optional[str] = None
@@ -51,4 +52,3 @@ class ModuleResponseModel(BaseModel):
     degree_level: str
     url: Optional[str] = None
     type: Optional[str] = None
-    id: str
