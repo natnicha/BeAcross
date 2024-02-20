@@ -88,15 +88,6 @@ To advnaced search modules regarding given conditions
 }
 ```
 
-## Error Response 401 - Unauthorized (case: no authorization in a request header)
-```json
-{
-  "detail" : {
-    "message": "invalid authorization token or token expired"
-  }
-}
-```
-
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
