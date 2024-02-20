@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import "./bootstrap.min.css";
 import "./bootstrap-icons.css";
@@ -16,6 +16,13 @@ import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
 
 const App: React.FC = () => {
+
+  /*useEffect(() => {
+    //Always clear token and user_role when first landing to application
+    sessionStorage.removeItem("jwtToken");
+    sessionStorage.removeItem("user_role");
+  }, []);*/
+
   return (
     <UserProvider>
       <PopupProvider>

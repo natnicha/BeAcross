@@ -422,3 +422,23 @@ def mask_user_name(name="", mask="*"):
         return name[0:2]+mask_string+name[-1]
     else:
         return name
+
+# @module.get("/{module_id}", response_model=ModuleResponseModel)
+# async def get_module(module_id: str, db: MongoClient = Depends(get_database)):
+#     # Convert the string ID to ObjectId
+#     try:
+#         module_id_obj = ObjectId(module_id)
+#     except Exception as e:
+#         raise HTTPException(
+#             detail={"message": str(e)},
+#             status_code=status.HTTP_400_BAD_REQUEST
+#         )
+#     # Fetch the module from the database
+#     module_data = MODULES.find_one(db, module_id_obj)
+#     if not module_data:
+#         raise HTTPException(
+#             detail={"message": "Module not found"},
+#             status_code=status.HTTP_404_NOT_FOUND
+#         )
+#     module_data['id'] = str(module_data.pop("_id"))
+#     return module_data
