@@ -26,7 +26,6 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     // Hook all popup control to PopupContext
     const { openModuleDetailPopup, isModuleDetailPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-    const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -37,6 +36,13 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         setSelectedItem(item);
         openModuleDetailPopup(item.module_id || "default_module_id");
     };
+
+    const closePopup = () => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.delete('module');
+        navigate({ pathname: '/search', search: searchParams.toString() });
+        closeAllPopups();
+      };
     
     return (
         <>
@@ -101,7 +107,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     <ModuleDetailPopup 
                         content="" 
                         selectedItem={selectedItem} 
-                        onClose={closeAllPopups} 
+                        onClose={closePopup} 
                     />
                     )}  
                 </div>
