@@ -51,6 +51,7 @@ To get user profile according to a provided authentication token in API headers
       "first_name": "example",
       "last_name": "z",
       "registration_number": null,
+      "university": "Technische Universitat Chemnitz",
       "course_of_study": null,
       "semester": 1,
       "user_role": "student",

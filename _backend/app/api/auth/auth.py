@@ -8,10 +8,11 @@ from app.crud.users import UsersModel
 import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
 import app.crud.user_logs as USER_LOGS
+import app.crud.universities as UNIVERSITIES
 from app.email_service.email_sender import *
 
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
@@ -67,14 +68,15 @@ def check_email_format(email):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-def check_across_partner(db: MongoClient, email: string):
-    # extract domain from a request
+def get_universities(db: MongoClient, email: string):
     request_domain = extract_domain_from_email(email)
-    # get across university domains
     email_domains = EMAIL_DOMAINS.get_email_domain(db, request_domain)
-    
+    return list(email_domains)
+
+def check_across_partner(db: MongoClient, email: string):
+    email_domains = get_universities(db, email)
     # if no - not match with any uni, return error
-    if len(list(email_domains)) == 0:
+    if len(email_domains) == 0:
         raise HTTPException( 
             detail={"message": "The email's domain isn't under Across, please input another email which is under Across"},
             status_code=status.HTTP_400_BAD_REQUEST
@@ -124,7 +126,7 @@ async def login(
     insert_user_logs(db, user["_id"], 
                      host=request.headers.get('host'), 
                      user_agent=request.headers.get('user-agent'))
-    user_data_response = get_user_data(user)
+    user_data_response = get_user_data(db, user)
     LoginResponseData = LoginResponseDataModel(
         jwt=jwt,
         user=user_data_response
@@ -148,16 +150,19 @@ def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: st
         )
     return 
 
-def get_user_data(user: UsersModel) -> dict:
-    return {
-        "email": user["email"],
-        "password": user["password"],
-        "first_name": user["first_name"],
-        "last_name": user["last_name"],
-        "registration_number": user["registration_number"],
-        "course_of_study": user["course_of_study"],
-        "semester": user["semester"],
-        "user_role": get_user_role(user_roles_id=user["user_roles_id"]),
-        "created_at": user["created_at"],
-        "updated_at": user["updated_at"],
-    }
+def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseModel:
+    university_id = get_universities(db, user["email"])[0]["university_id"]
+    return LoginUserDataResponseModel(
+        id = str(user["_id"]),
+        email = user["email"],
+        password = user["password"],
+        first_name = user["first_name"],
+        last_name = user["last_name"],
+        university = UNIVERSITIES.find_one(db, university_id)["name"],
+        registration_number = user["registration_number"],
+        course_of_study = user["course_of_study"],
+        semester = user["semester"],
+        user_role = get_user_role(user_roles_id=user["user_roles_id"]),
+        created_at = user["created_at"],
+        updated_at = user["updated_at"],
+    )
