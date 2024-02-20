@@ -113,7 +113,7 @@ def convert_advanced_conditions_to_query(conditions: list):
                 if previous_operator != "not":
                     query = { "$"+previous_operator: [query, create_like_term_dictionary(condition[COLUMN_NAME], condition[VALUE])] }
                 else:
-                    query = { "$and": [query, create_like_term_dictionary(condition[COLUMN_NAME],  create_like_term_dictionary("$ne",condition[VALUE]), False)] }
+                    query = { "$and": [query, {condition[COLUMN_NAME]:  {"$not": re.compile('.*'+condition[VALUE]+'.*', re.IGNORECASE)}      }] }
             else:
                 return query
         
@@ -122,7 +122,7 @@ def convert_advanced_conditions_to_query(conditions: list):
         previous_operator = condition[OPERATOR].lower()
     return query
 
-def create_like_term_dictionary(key: str, value: str, convert_to_like_term: str = True):
+def create_like_term_dictionary(key: str, value: str, convert_to_like_term: bool = True):
     if convert_to_like_term:
         return {key: convert_str_to_like(value)}
     return {key: value}
