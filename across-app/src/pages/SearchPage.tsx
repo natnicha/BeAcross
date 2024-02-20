@@ -7,7 +7,7 @@ import Pagination from '../components/Pagination';
 
 
 interface SearchPageProps {
-  location: Location;  // Define other props as needed
+  location: Location;
   navigate: (to: string | { pathname: string; search: string }, options?: { replace?: boolean; state?: any }) => void;
 }
 
@@ -32,15 +32,6 @@ interface SearchPageState {
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
    
   private rangeSliderRef = React.createRef<HTMLInputElement>();
-
-  /*handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 10);
-    if (value === 0) {
-      this.setState({ sliderValue: null });
-    } else {
-      this.setState({ sliderValue: value });
-    }
-  };*/
 
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -78,21 +69,9 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   handleSearchBarSearch = (): void => {
     this.setState({ currentPage: 1 }, () => {
-      this.performSearch(true); // Add the true flag if your performSearch method accepts it for new searches
+      this.performSearch(true);
     });
   };
-
-  /*async componentDidMount() {
-    this.handleSearchBarSearch();
-    this.calculateTotalPages();
-  }
-
-  async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
-    // Recalculate total pages if total results change
-    if (prevState.searchResult.total_results !== this.state.searchResult.total_results) {
-      this.calculateTotalPages();
-    }
-  }*/
 
   async componentDidMount() {
     this.parseUrlParams();
@@ -114,12 +93,11 @@ parseUrlParams = () => {
   const currentSortOrder = searchParams.get('orderby') || 'asc';
   
   // Parsing filter parameters
-  // Assuming that for multi-value filters like degree_level, module_type, and university, the URL could have multiple values (e.g., &degree_level=bachelor&degree_level=master)
   const degree_level = searchParams.getAll('degree_level');
   const module_type = searchParams.getAll('module_type');
   const university = searchParams.getAll('university');
   
-  // For ects, assuming it's a single value filter in the URL
+  // For ects
   const ects = searchParams.get('ects');
   
   // Parsing pagination
@@ -137,7 +115,7 @@ parseUrlParams = () => {
       },
       currentPage,
   }, () => {
-      this.performSearch(true); // Optionally, re-fetch data with updated state
+      this.performSearch(true);
   });
 }
 
@@ -208,7 +186,6 @@ handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   let newSelection: string[] | number;
 
   if (type === 'checkbox') {
-    // TypeScript needs assurance that the name is a valid key of filters
     const filterName = name as keyof typeof this.state.filters;
 
     // Ensure that the filter is an array before spreading it
@@ -241,19 +218,6 @@ onApplyFilters = () => {
   this.handleSearchBarSearch();
 };
 
-// Function to update Sort state
-/*handleSortClick = (sortField: string) => {
-  this.setState(prevState => {
-    // Toggle sort order if the same field is clicked again, else set to 'desc'
-    const newOrder = prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc';
-
-    return {
-      currentSortField: sortField,
-      currentSortOrder: newOrder
-    };
-  }, this.performSearch);
-};*/
-
 updateUrlParams = () => {
   const { filters, currentSortField, currentSortOrder, currentPage, query } = this.state;
   const searchParams = new URLSearchParams();
@@ -279,17 +243,6 @@ updateUrlParams = () => {
   // Use navigate to update the URL without reloading the page
   this.props.navigate(`?${searchParams.toString()}`, { replace: true });
 };
-
-/*handleSortClick = (sortField) => {
-  this.setState(prevState => ({
-      // Toggle sort order if the same field is clicked again, else set to 'desc'
-      currentSortField: sortField,
-      currentSortOrder: prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc'
-  }), () => {
-      this.updateUrlParams();
-      this.performSearch();
-  });
-};*/
 
 handleSortClick = (sortField: string) => {
   this.setState(prevState => ({
@@ -449,7 +402,7 @@ handleSortClick = (sortField: string) => {
                           max="20" 
                           step="1" 
                           name="ects"
-                          value={this.state.filters.ects ?? 0} // Reflecting filters.ects
+                          value={this.state.filters.ects ?? 0}
                           onChange={this.handleSliderChange} 
                       />
                       <span> {this.state.filters.ects !== null ? this.state.filters.ects : "All"} </span>
@@ -529,13 +482,6 @@ function useRouteInfo() {
   // Add other hooks or logic if needed
   return { location };
 }
-
-/*const SearchPageWrapper = () => {
-  const { location } = useRouteInfo();
-
-  // Pass location and any other necessary props to SearchPage
-  return <SearchPage location={location} />;
-};*/
 
 const SearchPageWrapper = () => {
   const navigate = useNavigate();
