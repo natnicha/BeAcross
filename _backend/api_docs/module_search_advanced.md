@@ -36,7 +36,7 @@ To advnaced search modules regarding given conditions
 | term      | string    | true         |                 | a search term to acquire modules with conditions are stored in brackets and are connected to each others by operand word eg., `({cond-1}) Opr ({cond-2}) Opr ...`. The operand words (Opr) can only be `AND`, `OR` and `NOT`. The condition (Cond) must be in a format of `{metadata}:{search-terms}`. Metadata can only be `all_metadata`, `module_name`, `degree_program`, `degree_level`, `content`, `ects`, `university`,  and `module_type`. Note: Don't forget to replace special character with ACII in hex |
 | limit     | int       | false        | 20              | a limitation number of results response                     |
 | offset    | int       | false        | 0               | a starting position in the dataset of a particular record   |
-| sortby    | string    | false        | no_of_recommend | an entity referring how rows will be sorted in the response supports only `module_name`, `degree_program`, `no_of_recommend`, `no_of_suggested_modules`, `degree_level`, `ects`, `university`,  and `module_type` |
+| sortby    | string    | false        | module_name     | an entity referring how rows will be sorted in the response supports only `module_name`, `degree_program`, `no_of_recommend`, `no_of_suggested_modules`, `degree_level`, `ects`, `university`,  and `module_type` |
 | orderby   | string    | false        | asc             | a sorting direction supports two values, either `asc` for ascending order, or `desc` for the reverse  |
 
 ## Body Parameters
