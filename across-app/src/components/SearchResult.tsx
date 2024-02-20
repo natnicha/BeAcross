@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -29,6 +29,23 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const module_id = searchParams.get('module');
+    
+        // Ensure props.searchResult.items is defined and populated
+        if (module_id && props.searchResult.items) {
+            const moduleItem = props.searchResult.items.find(item => item.module_id === module_id);
+            if (moduleItem) {
+                setSelectedItem(moduleItem);
+                openModuleDetailPopup(module_id);
+            } else {
+                // Handle case where no matching module is found
+                console.log(`No module found with ID: ${module_id}`);
+            }
+        }
+    }, [location.search, props.searchResult.items]); // Add props.searchResult.items to the dependency array to re-run when items are populated
+
     const handleRowClick = (item: Item) => {
         const searchParams = new URLSearchParams(location.search);
         searchParams.set('module', item.module_id!);
@@ -42,8 +59,8 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         searchParams.delete('module');
         navigate({ pathname: '/search', search: searchParams.toString() });
         closeAllPopups();
-      };
-    
+    };
+     
     return (
         <>
         {/*Search list*/}

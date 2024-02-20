@@ -42,6 +42,7 @@ interface ModuleComment {
 
 const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
    
+    const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
     const navigate = useNavigate();
@@ -57,7 +58,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await getComment(selectedItem.module_id, jwtToken);
+                const response = await getComment(moduleId, jwtToken);
                 // Map the response to match the ModuleComment type
                 const mappedComments = response.items.map(item => ({
                     user: item.user,
@@ -70,7 +71,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
             }
         };
         fetchComments();
-    }, [selectedItem.module_id, jwtToken]);
+    }, [moduleId, jwtToken]);
     
     const handleUniLogo = (university: string) => {
         switch (university) {
@@ -90,7 +91,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         if (!commentText.trim()) return;
     
         try {
-            const response = await postComment(selectedItem.module_id, jwtToken, commentText);
+            const response = await postComment(moduleId, jwtToken, commentText);
             alert(response.message); // Show success or error message
             // Optionally refresh comments here or update UI to show the new comment
             setCommentText(''); // Clear the comment box after submission
