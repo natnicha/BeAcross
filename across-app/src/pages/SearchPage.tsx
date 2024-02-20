@@ -8,6 +8,7 @@ import Pagination from '../components/Pagination';
 
 interface SearchPageProps {
   location: Location;  // Define other props as needed
+  navigate: (to: string | { pathname: string; search: string }, options?: { replace?: boolean; state?: any }) => void;
 }
 
 interface SearchPageState {
@@ -31,6 +32,7 @@ interface SearchPageState {
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
    
   private rangeSliderRef = React.createRef<HTMLInputElement>();
+
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
     if (value === 0) {
@@ -69,7 +71,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     });
   };
 
-  async componentDidMount() {
+  /*async componentDidMount() {
     this.handleSearchBarSearch();
     this.calculateTotalPages();
   }
@@ -79,7 +81,42 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     if (prevState.searchResult.total_results !== this.state.searchResult.total_results) {
       this.calculateTotalPages();
     }
-  }
+  }*/
+
+  async componentDidMount() {
+    this.parseUrlParams();
+    this.performSearch(true); // Assuming true initializes the search with current state
+}
+
+async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
+    // Check if URL changed
+    if (this.props.location.search !== prevProps.location.search) {
+        this.parseUrlParams();
+    }
+}
+
+parseUrlParams = () => {
+    const searchParams = new URLSearchParams(this.props.location.search);
+    
+    // Example for parsing sorting parameters
+    const currentSortField = searchParams.get('sortby') || 'module_name';
+    const currentSortOrder = searchParams.get('orderby') || 'asc';
+    
+    // Example for parsing a single filter (extend this to include all your filters)
+    const degree_level = searchParams.getAll('degree_level');
+    
+    // Example for parsing pagination
+    const currentPage = parseInt(searchParams.get('page') || '1', 10);
+    
+    this.setState({
+        currentSortField,
+        currentSortOrder,
+        filters: { ...this.state.filters, degree_level },
+        currentPage,
+    }, () => {
+        this.performSearch(true); // Re-fetch data with updated state
+    });
+}
 
   calculateTotalPages = () => {
     const itemsPerPage = 20;
@@ -130,7 +167,8 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   handlePageChange = (newPage: number) => {
     this.setState({ currentPage: newPage }, () => {
-        this.performSearch(); // Call performSearch after setting the new page
+      this.updateUrlParams();  
+      this.performSearch(); // Call performSearch after setting the new page
     });
 };
 
@@ -171,11 +209,12 @@ handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 // Function to be called when 'Apply' is clicked
 onApplyFilters = () => {
+  this.updateUrlParams();
   this.handleSearchBarSearch();
 };
 
 // Function to update Sort state
-handleSortClick = (sortField: string) => {
+/*handleSortClick = (sortField: string) => {
   this.setState(prevState => {
     // Toggle sort order if the same field is clicked again, else set to 'desc'
     const newOrder = prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc';
@@ -185,6 +224,51 @@ handleSortClick = (sortField: string) => {
       currentSortOrder: newOrder
     };
   }, this.performSearch);
+};*/
+
+updateUrlParams = () => {
+  const { filters, currentSortField, currentSortOrder, currentPage, query } = this.state;
+  const searchParams = new URLSearchParams();
+
+  // Add query
+  if(query) searchParams.set('query', query);
+
+  // Add filters to the URL parameters
+  filters.degree_level.forEach(level => searchParams.append('degree_level', level));
+  filters.module_type.forEach(type => searchParams.append('module_type', type));
+  filters.university.forEach(uni => searchParams.append('university', uni));
+  if(filters.ects) searchParams.set('ects', filters.ects);
+
+  // Add sorting to the URL parameters
+  if(currentSortField) searchParams.set('sortby', currentSortField);
+  if(currentSortOrder) searchParams.set('orderby', currentSortOrder);
+
+  // Add pagination to the URL parameters
+  searchParams.set('page', currentPage.toString());
+
+  // Use navigate to update the URL without reloading the page
+  this.props.navigate(`?${searchParams.toString()}`, { replace: true });
+};
+
+/*handleSortClick = (sortField) => {
+  this.setState(prevState => ({
+      // Toggle sort order if the same field is clicked again, else set to 'desc'
+      currentSortField: sortField,
+      currentSortOrder: prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc'
+  }), () => {
+      this.updateUrlParams();
+      this.performSearch();
+  });
+};*/
+
+handleSortClick = (sortField: string) => {
+  this.setState(prevState => ({
+    currentSortField: sortField,
+    currentSortOrder: prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc'
+  }), () => {
+    this.updateUrlParams(); // Update URL with new sorting parameters
+    this.performSearch();
+  });
 };
 
   render() {
@@ -408,11 +492,19 @@ function useRouteInfo() {
   return { location };
 }
 
-const SearchPageWrapper = () => {
+/*const SearchPageWrapper = () => {
   const { location } = useRouteInfo();
 
   // Pass location and any other necessary props to SearchPage
   return <SearchPage location={location} />;
+};*/
+
+const SearchPageWrapper = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return <SearchPage navigate={navigate} location={location} />;
 };
 
 export default SearchPageWrapper;
+
