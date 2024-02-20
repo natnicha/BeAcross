@@ -14,10 +14,7 @@ import app.crud.users as USERS
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
-
-from app.api.module.model import ModuleResponseModel
-
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
 
 module = APIRouter()
 
@@ -369,3 +366,23 @@ def mask_user_name(name="", mask="*"):
         return name[0:2]+mask_string+name[-1]
     else:
         return name
+
+@module.get("/{module_id}", response_model=ModuleResponseModel)
+async def get_module(module_id: str, db: MongoClient = Depends(get_database)):
+    # Convert the string ID to ObjectId
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    # Fetch the module from the database
+    module_data = MODULES.find_one(db, module_id_obj)
+    if not module_data:
+        raise HTTPException(
+            detail={"message": "Module not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    module_data['id'] = str(module_data.pop("_id"))
+    return module_data
