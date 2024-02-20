@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.api.auth.auth import auth
 from app.api.module.module import module
+from app.api.user.user import user
 from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
 from app.db.settings_utils import load_settings
 from app.config.config_utils import load_env
@@ -12,6 +14,7 @@ app = FastAPI()
 
 app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
 app.include_router(module, prefix='/api/v1/module', tags=['module'])
+app.include_router(user, prefix='/api/v1/user', tags=['user'])
 
 frontend_origins = ['http://localhost:3000']
 
@@ -30,6 +33,14 @@ app.add_event_handler("shutdown", close_mongo_connection)
 
 @app.middleware("http")
 async def middleware_checking(request: Request, call_next):
+    if request.method == "OPTIONS":
+        headers = {
+            "Access-Control-Allow-Origin": frontend_origins[0],
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true",
+        }
+        return JSONResponse(content="", status_code=status.HTTP_200_OK, headers=headers)
     return await security_checking(request, call_next)
 
 @app.get("/")

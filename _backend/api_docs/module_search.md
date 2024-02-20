@@ -1,6 +1,6 @@
 # ** [GET] Search Module **
 
-To search modules regarding a given term, filter, limit, and offset
+Anyone (guest, student, uni-admin, and sys-admin) can search modules regarding a given term, filter, limit, and offset
 
 ## Request
 
@@ -13,6 +13,7 @@ To search modules regarding a given term, filter, limit, and offset
 
 | Method          | Allow Acess                                                                                                         |
 | ----------------| ------------------------------------------------------------------------------------------------------------------- |
+| guest           | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
 | student         | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
 | uni-admin       | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
 | sys-admin       | `/api/v1/module/search?{term}&{degree_level}&{ects}&{university}&{module_type}&{limit}&{offset}&{sortby}&{orderby}` |
@@ -21,7 +22,7 @@ To search modules regarding a given term, filter, limit, and offset
 
 | Key                 | Type       | Required  | Description                                         |
 | ------------------- | :--------: | :-------: | --------------------------------------------------- |
-| Authorization       | string     | true      | Authorization JWT token in format of `Bearer <JWT>` |
+|                     |            |           |                                                     |
 
 ## Path Parameters
 
@@ -93,11 +94,11 @@ To search modules regarding a given term, filter, limit, and offset
 Note: some fields in items may disappear depending on raw data.
 
 
-## Error Response 404 - Not Found (case: no module not found for a given term)
+## Error Response 404 - Not Found (case: No module not found for a given term)
 ```json
 {
   "detail" : {
-    "message": "no module found"
+    "message": "No module found"
   }
 }
 ```

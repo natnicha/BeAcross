@@ -9,9 +9,11 @@ from pymongo.cursor import Cursor
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
+import app.crud.module_comment as MODULE_COMMENT
 from app.crud.module_recommend import ModuleRecommendModel
+from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, RecommendRequestModel
+from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 
 
 module = APIRouter()
@@ -58,7 +60,7 @@ def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
         )
 
 @module.get("/{module_id}/recommend", response_model=CountRecommendResponseModel)
-async def no_of_recommend(
+async def get_no_of_recommend(
         module_id: str = None,
         db: MongoClient = Depends(get_database),
     ):
@@ -129,6 +131,80 @@ def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
+@module.post("/comment", response_model=ModuleCommentResponseModel, status_code=status.HTTP_201_CREATED)
+async def comment(
+        request: Request,
+        items: ModuleCommentRequestModel,
+        db: MongoClient = Depends(get_database),
+    ):
+    try:
+        module_comment = ModuleCommentModel(
+            module_id=ObjectId(items.module_id),
+            message=items.message,
+            user_id=ObjectId(request.state.user_id)
+        )
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    inserted = insert_module_comment(db, module_comment)
+    data = ModuleCommentDataModel(
+        id=inserted.inserted_id,
+        module_id=module_comment.module_id,
+        message=module_comment.message,
+        user_id=module_comment.user_id)
+    return ModuleCommentResponseModel(
+        message = "successful commented",
+        data = data
+    )
+
+def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
+    try:
+        return MODULE_COMMENT.insert_one(db, module_comment)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@module.delete("/comment/{module_comment_id}", status_code=status.HTTP_200_OK)
+async def delete_comment(
+        request: Request,
+        module_comment_id: str = None,
+        db: MongoClient = Depends(get_database),
+    ):
+    try:
+        module_comment_id_obj = ObjectId(module_comment_id)
+        user_id_obj = ObjectId(request.state.user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    check_exist_module_comment(db, module_comment_id_obj, user_id_obj)
+    delete_module_comment(db, module_comment_id_obj, user_id_obj)
+    return 
+
+def check_exist_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
+    rows = MODULE_COMMENT.find(db, module_comment_id, user_id)
+    if len(list(rows)) == 0:
+        raise HTTPException(
+            detail={"message": "the comment by this user is not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+
+def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
+    try:
+        MODULE_COMMENT.delete_one(db, module_comment_id, user_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": e},
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def search(
         term: str = Query(min_length=1),
@@ -144,7 +220,7 @@ async def search(
     ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
-        raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail={"message": "No module found"}, status_code=status.HTTP_404_NOT_FOUND)
     
     sortby_column = 'module_name'
     if not is_manual_calculated_sortby(sortby=sortby):

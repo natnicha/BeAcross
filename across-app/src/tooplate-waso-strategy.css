@@ -42,7 +42,7 @@ Free Bootstrap 5 HTML Template
 body {
     background: var(--white-color);
     font-family: var(--body-font-family); 
-}
+    }
 
 
 /*---------------------------------------
@@ -261,7 +261,10 @@ strong {
   color: var(--dark-color);
 }
 
-
+.SearchPage .custom-btn {
+  margin-left: 30px;
+  margin-bottom: 10px;
+}
 
 
 /*---------------------------------------
@@ -375,9 +378,9 @@ strong {
 .flex-row {
   display: flex;
   flex-direction: row; /* Aligns children horizontally */
-  justify-content: space-around; /* Adjusts spacing between items */
   align-items: center; /* Aligns items vertically */
   padding-bottom: 10%;
+  padding-left: 10%;
 }
 
 
@@ -385,9 +388,9 @@ strong {
   SITE HEADER              
 -----------------------------------------*/
 .site-header {
-  background: var(--primary-color);
+    background: var(--primary-color);
   padding-top: 10px;
-  padding-bottom: 10px;
+padding-bottom: 10px;
 }
 
 .site-header-icon {
@@ -407,8 +410,34 @@ strong {
   width: 100%;
 }
 
+.SearchPage .searchbar {
+  position: relative;
+  height: 100px;
+  margin-left: -345px;
+  width: 155%;
+}
+
+.SearchPage .searchbarContent {
+  width: 76%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(68, 68, 68, 0.253);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.SearchPage p {
+ font-size: large;
+ margin-left: auto;
+}
+
+.SearchPage .row {
+  width: 118%;
+ }
+
 .searchbarContent {
   display: flex;
+  flex-direction: column; /* Stack children vertically */
   position: absolute;
   width: 65%;
   top: 35%;
@@ -417,7 +446,17 @@ strong {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 10px;
   border-radius: 5px;
-  align-items: center; 
+}
+
+.searchbarRow, .advancedSearchRow {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  width: 100%; /* Take full width of parent */
+}
+
+.advancedSearchRow {
+  justify-content: left; /* Center the link horizontally */
+  margin-top: 10px; /* Add some space above the link */
 }
 
 .bi-search {
@@ -426,10 +465,6 @@ strong {
 
 .searchInput{
   width: 100%;
-}
-
-.bi-lightbulb-fill:hover{
-  color: var(--secondary-color);
 }
 
 .tooltipButton {
@@ -446,8 +481,14 @@ strong {
   align-items: center;
 }
 
+.tooltipIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .tooltipText {
-  visibility: visible;
+  visibility: hidden; /* Initially hidden */
   width: 350px;
   background-color: white;
   color: var(--p-color);
@@ -464,9 +505,13 @@ strong {
   transition: opacity 0.3s;
 }
 
-.tooltipButton:hover .tooltipText {
+.tooltipIcon:hover .tooltipText {
   visibility: visible;
   opacity: 1;
+}
+
+.bi-lightbulb-fill:hover {
+  color: var(--secondary-color);
 }
 
 /*---------------------------------------
@@ -566,6 +611,19 @@ strong {
   height: 70px;
 }
 
+/*---------------------------------------
+ MODULE DETAIL             
+-----------------------------------------*/
+.module-detail .popup-content {
+width: 60%;
+}
+
+.uni-logo {
+  border-radius: 20px;
+  height: 162px;
+  margin-left: 27%;
+  margin-top: 5%;
+}
 
 /*---------------------------------------
  PERSONAL INFO             
@@ -646,6 +704,145 @@ td {
 }
 
 /*---------------------------------------
+  SEARCH-TABLE             
+-----------------------------------------*/
+.search-table {
+  width: 100%;
+  border-collapse: collapse;
+  max-height: 500px; /* Set a fixed maximum height */
+  overflow-y: auto;
+}
+
+.search-header {
+  width: 100%; /* Full width */
+  background: #d8d8d8;
+  display: flex;
+  border: 1px solid black;
+  padding: 8px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.search-header .search-column {
+  border: none; /* Removes border */
+  text-align: center;
+}
+
+.search-row {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.search-row .search-column {
+  flex: 1;
+  padding: 10px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.search-row:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.search-column {
+  flex: 1;
+  padding: 10px;
+}
+
+/*---------------------------------------
+  DETAIL-TABLE             
+-----------------------------------------*/
+.detail-table {
+  display: grid;
+  width: 100%;
+  border-collapse: collapse;
+  max-height: 500px; /* Set a fixed maximum height */
+  overflow-y: auto;
+}
+
+.detail-row {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.detail-row .search-column {
+  flex: 1;
+  padding: 10px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.detail-column {
+  padding: 10px;
+}
+
+.detail-table .detail-row .detail-column:first-child {
+  width: 200px;
+}
+
+.detail-table .details{
+  width: 50%;
+}
+
+/*---------------------------------------
+  SEARCH-TABLE BUTTONS          
+-----------------------------------------*/
+
+.search-feature-control-btn {
+  display: flex; /* Use flexbox to layout the buttons */
+  justify-content: flex-end; /* Aligns the buttons to the end (right) of the container */
+  gap: 30px; /* This creates equal spacing between the buttons */
+  width: 100%; /* Takes full width */
+}
+
+.custom-btn-yellow-number {
+  background: var(--secondary-color);
+  border-radius: 10px;
+  color: var(--dark-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 5px 10px 0; /* top | right | bottom | left */
+}
+
+.custom-btn-yellow-number:hover {
+  color: var(--white-color);
+}
+
+.custom-btn-gray-number {
+  background: var(--p-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 0 10px 5px; /* top | right | bottom | left */
+}
+
+.custom-btn-number {
+  background: var(--primary-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 0 10px 0; /* top | right | bottom | left */
+}
+
+.number-count {
+  margin-left: 8px; /* Space between text and count */
+  background-color: white;
+  color: var(--dark-color);
+  border-radius: 10px; /* Roundness of the count background */
+  padding: 2px 6px;
+}
+
+
+/*--------------------------------------- 
  POP UP            
 -----------------------------------------*/
 .popup-backdrop {
@@ -855,6 +1052,11 @@ td {
   display: flex;
 }
 
+.sort-container {
+  display: flex;
+  margin-left: 16%;
+}
+
 .tm-content {
   flex-grow: 1;
   margin-top: 5%;
@@ -904,15 +1106,63 @@ td {
   width: 100px;
 }
 
+/*---------------------------------------
+  PAGINATION               
+-----------------------------------------*/
+.pagination {
+  display: flex;
+  padding-left: 200px;
+  list-style: none;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.page-link {
+  border-color: var(--border-color);
+  border-radius: var(--border-radius-large);
+  color: var(--p-color);
+  font-size: var(--copyright-font-size);
+  padding: 0;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.page-item.active .page-link,
+.page-link:hover {
+  background: var(--primary-color);
+  border-color: transparent;
+  color: var(--white-color);
+}
+
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+  border: 0;
+  border-radius: var(--border-radius-large);
+}
+
+.page-item:not(:first-child) .page-link {
+  margin-left: 5px;
+}
+
+.page-link.disabled {
+  color: #ccc; /* Grayed out */
+  cursor: not-allowed; /* Show a 'not-allowed' cursor */
+  pointer-events: none; /* Prevents click events */
+}
+
 
 /*---------------------------------------
   SITE FOOTER              
 -----------------------------------------*/
 .site-footer {
-  background: var(--primary-color);
+    background: var(--primary-color);
   padding-top: 20px;
   padding-bottom: 10px;
-}
+  }
 
 .site-footer .copyright-text {
   color: var(--white-color);
@@ -1201,3 +1451,93 @@ ul {
   }
 }
 
+/*---------------------------------------
+  FILTER SECTION             
+-----------------------------------------*/
+.checkbox{
+width: 300px;
+margin-left: 10px;
+}
+
+.filter {
+  margin-left: 15px;
+  width: 262px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter .filter-item {
+  border-bottom: 1px solid var(--p-color);
+  padding-bottom: 10px;
+  padding-top: 5px;
+}
+
+/* Style for the dropdown button */
+.dropbtn {
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* Container for the dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 300px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Items in the dropdown */
+.dropdown-content label {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content label:hover {
+  background-color: #f1f1f1;
+}
+
+.pointer-checkbox {
+  cursor: pointer;
+}
+
+#range-slider {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#slider-knob {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: blue;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

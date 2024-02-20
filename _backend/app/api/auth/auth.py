@@ -8,6 +8,7 @@ from app.crud.users import UsersModel
 import app.crud.email_domains as EMAIL_DOMAINS
 import app.crud.users as USERS
 import app.crud.user_logs as USER_LOGS
+from app.email_service.email_sender import *
 
 from .auth_utils import *
 from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, RegisterRequestModel, RegisterResponseModel
@@ -41,15 +42,20 @@ async def register(
     # encrypt password using salted hashing
     encrypted_password = hash_text(password)
     
-    # TODO: send email
-    
+    # send email
+    try:
+        await send_registration_email(user_email=item.email, password=password, user_name=full_name[0])
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE
+        )
     # if sent success, insert into db & return 200 - OK 
     new_user = prepare_and_insert_user(db, full_name, item.email, encrypted_password, settings.user_roles["student"])
     return RegisterResponseModel(
         message = "Successful registered",
         data = new_user
     )
-
 
 
 def check_email_format(email):
@@ -107,24 +113,23 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: str, passwo
     return new_user
 
 
-
 @auth.post("/login", response_model=LoginResponseModel, status_code=status.HTTP_200_OK)
-async def register(
+async def login(
         request: Request,
         item: LoginRequestModel = None,
         db: MongoClient = Depends(get_database),
     ):
     user = authenicate(db, item)
     jwt = generate_jwt(user["_id"], get_user_role(user_roles_id=user["user_roles_id"]))
-    host = request.headers.get('host')
-    user_agent = request.headers.get('user-agent')
-    insert_user_logs(db, user["_id"], host, user_agent)
+    insert_user_logs(db, user["_id"], 
+                     host=request.headers.get('host'), 
+                     user_agent=request.headers.get('user-agent'))
+    user_data_response = get_user_data(user)
     LoginResponseData = LoginResponseDataModel(
         jwt=jwt,
-        user=user
+        user=user_data_response
     )
     return LoginResponseModel(data=LoginResponseData)
-
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
     user_log = USER_LOGS.UserLogsModel(
@@ -142,3 +147,17 @@ def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: st
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     return 
+
+def get_user_data(user: UsersModel) -> dict:
+    return {
+        "email": user["email"],
+        "password": user["password"],
+        "first_name": user["first_name"],
+        "last_name": user["last_name"],
+        "registration_number": user["registration_number"],
+        "course_of_study": user["course_of_study"],
+        "semester": user["semester"],
+        "user_role": get_user_role(user_roles_id=user["user_roles_id"]),
+        "created_at": user["created_at"],
+        "updated_at": user["updated_at"],
+    }

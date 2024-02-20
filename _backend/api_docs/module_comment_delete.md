@@ -1,21 +1,21 @@
-# ** [DELETE] Recommend Module **
+# ** [DELETE] Comment in a Module **
 
-After a student performed 'recommend a module', (s)he can **undo or revert the recommend** by making a request with delete method to a system. This action shows that this course is canceled to recommend from the student anymore. But it **doesn't means that this course is contested**.
+A student can delete own comments once they have done using module-comment-id
 
 ## Request
 
-| ** Method **     | DELETE                                                |
-| ---------------- | ----------------------------------------------------- |
-| ** Structure **  | `/api/v1/module/{module_id}/recommend`                |
-| ** Example **    | `/api/v1/module/65a81c0502ed558ac053a095/recommend`   |
+| ** Method **     | DELETE                                            |
+| ---------------- | ------------------------------------------------- |
+| ** Structure **  | `/api/v1/module/comment/{module-comment-id}`      |
+| ** Example **    | `/api/v1/module/comment/65aaafcf55de1fe16e64fdd3` |
 
 ## Permissions
 
-| Method          | Allow Acess                                |
-| ----------------| ------------------------------------------ |
-| student         | `/api/v1/module/{module_id}/recommend`     |
-| uni-admin       | -                                          |
-| sys-admin       | -                                          |
+| Method          | Allow Acess                       |
+| ----------------| ----------------------------------|
+| student         | `/api/v1/module/comment`          |
+| uni-admin       | -                                 |
+| sys-admin       | -                                 |
 
 ## Header Parameters
 
@@ -25,9 +25,9 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 
 ## Path Parameters
 
-| Key       | Type      | Required     | Permissions  | Description                                    |
-| --------- | :-------: | :----------: | :----------: | ---------------------------------------------- |
-| module_id | string    | true         |              | a module ID which would like to undo recommend |
+| Key               | Type      | Required     | Permissions  | Description                                    |
+| ----------------- | :-------: | :----------: | :----------: | ---------------------------------------------- |
+| module_comment_id | string    | true         |              | a module comment ID which would like to delete |
 
 ## Query Parameters
 
@@ -45,11 +45,11 @@ After a student performed 'recommend a module', (s)he can **undo or revert the r
 ## Success Response 200 - OK
   [no request body]
 
-## Error Response 404 - Not Found (case: not found a module recommended by authenticated user)
+## Error Response 404 - Not Found (case: no comment found by this user is not found)
 ```json
 {
     "detail": {
-        "message": "the module recommended by this user is not found"
+        "message": "the comment by this user is not found"
     }
 }
 ```

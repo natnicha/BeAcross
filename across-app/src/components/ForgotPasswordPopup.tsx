@@ -1,22 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { forgotPassword } from '../services/authenticationServices';
+import { usePopups } from '../PopupContext';
 
 type PopupProps = {
     content: string;
     onClose: () => void;
   };
 
-  const ForgotPasswordPopup: React.FC<PopupProps> = ({ content, onClose }) => {
+  const ForgotPasswordPopup: React.FC<PopupProps> = () => {
 
+  // Hook all popup control to PopupContext
+  const { closeAllPopups } = usePopups();
   const [emailToForgotPassword, setEmailToForgotPassword] = useState(''); // State for storing the email address
   const [responseMessage, setResponseMessage] = useState(''); // State for storing response
   const [isSubmitted, setIsSubmitted] = useState(false); // enable/disable button and input
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
+  const popupRef = useRef<HTMLDivElement>(null);
 
   // Handle email input changes
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmailToForgotPassword(event.target.value);
   };
+
+  // Close the popup if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [closeAllPopups]);
   
 // Combined submit handler
 const handleSubmit = async () => {
@@ -42,14 +60,14 @@ const handleSubmit = async () => {
 
     return (
       <div className="popup-backdrop">
-        <div className="popup-content">
+        <div ref={popupRef} className="popup-content">
             <div className="title-popup mb-4">
             <h5 style={{ color: "white"}}>Forgot your password?</h5>
             </div>
             <h6>Enter University Email associated with your account</h6>
             &nbsp; 
             <button 
-            onClick={onClose} 
+            onClick={closeAllPopups} 
             style={{ 
                 position: 'absolute', 
                 top: '10px', 

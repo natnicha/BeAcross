@@ -21,8 +21,18 @@ def validate_email(email):
     else:
         return False
 
-def extract_domain_from_email(email):
-    return email.split("@",1)[1]
+def extract_domain_from_email(email) -> str:
+    domain = str(email.split("@",1)[1])
+    # end with main domain ex. @tu-chemnitz.de
+    if domain.find(".") == 1:
+        return domain
+    # have sub domain ex. @ss.tu-chemnitz.de, @ss.yy.tu-chemnitz.de or,  @ss.yy.zz.tu-chemnitz.de 
+    else:
+        position = find_second_last(domain, ".")
+        return domain[position+1:]
+
+def find_second_last(text, pattern):
+    return text.rfind(pattern, 0, text.rfind(pattern))
 
 def extractFullNameFromEmail(email, delimiter):
     full_name = email.split("@",1)[0]
@@ -34,11 +44,21 @@ def generate_password():
     alphabet = string.ascii_letters + string.digits + special_character
     while True:
         password = ''.join(secrets.choice(alphabet) for i in range(password_length))
-        if (sum(c.islower() for c in password) >=1
-                and sum(c.isupper() for c in password) >=1
-                and sum(c.isdigit() for c in password) >=1):
+        if is_aligned_by_defined_conditions(password):
             break
     return password
+
+# password must contain at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_]
+def is_aligned_by_defined_conditions(password: str):
+    special_character = r"""[!%&-.@^_]"""
+    matches = re.search(special_character, password)
+    if matches is None:
+        return False
+    if (sum(c.islower() for c in password) >=1
+        and sum(c.isupper() for c in password) >=1
+        and sum(c.isdigit() for c in password) >=1):
+        return True
+    return False
 
 # Basic hashing function for a text using random unique salt.
 def hash_text(text):
@@ -51,7 +71,13 @@ def match_hashed_text(hashedText, providedText):
     return _hashedText == hashlib.sha256(salt.encode() + providedText.encode()).hexdigest()
 
 def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
-    users = USERS.get_user(db, login_request_model.email)
+    users = list(USERS.get_user(db, login_request_model.email))
+    if len(users) == 0:
+        raise HTTPException(
+            detail={"message": "Incorrect email or password"},
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
+    
     password = bytes.decode(users[0]["password"], 'utf-8')
     isMatch = match_hashed_text(password, login_request_model.password)
     if not isMatch:
@@ -79,6 +105,12 @@ def get_user_role(user_roles_id: ObjectId):
         if user_roles_id == id:
             return role
     return ''
+
+def get_user_role_id(user_role: str) -> ObjectId:
+    for role, id in settings.user_roles.items():
+        if user_role == role:
+            return ObjectId(id)
+    return None
 
 def validate_jwt_token(token: str):
     try:
@@ -110,7 +142,24 @@ def is_valid_jwt_token(request: Request):
 
 def has_permission(request: Request):
     api = request.url.path
+    method = request.method
     if api.__contains__("/recommend"):
         if request.state.role != "student":
             return False
+    if api.__contains__("/module/comment"):
+        if request.state.role != "student":
+            return False
+    if api.__contains__("/user/profile/list"):
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+            return False
+    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "DELETE": #/api/v1/user/{user-id}
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+            return False
+    if api.endswith("/user/") and method == "DELETE": #/api/v1/user/
+        return True
+    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "PUT": #/api/v1/user/{user-id}
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+            return False
+    if api.endswith("/user/") and method == "PUT": #/api/v1/user/
+        return True
     return True
