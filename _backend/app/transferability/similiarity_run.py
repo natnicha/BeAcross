@@ -151,12 +151,13 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
     for modu in data:
         # A to B
         if check_similarity_class(inserted_mod, modu):
-            if str(modu["_id"]) not in similarity_results[inserted_mod.module_id]:
+            if inserted_mod.module_id in similarity_results.keys() and str(modu["_id"]) not in similarity_results[inserted_mod.module_id]:
                 print("true")
                 similarity_results[inserted_mod.module_id].append(str(modu["_id"]))
+
         # B to A
         if check_similarity_class(modu, inserted_mod):
-            if inserted_mod.module_id not in similarity_results[str(modu["_id"])]:
+            if str(modu["_id"]) in similarity_results.keys() and inserted_mod.module_id not in similarity_results[str(modu["_id"])]:
                 print("true")
                 similarity_results[str(modu["_id"])].append(inserted_mod.module_id)
 
@@ -239,6 +240,21 @@ def remove_similarity(module_to_remove_from: str, module_to_remove: str):
         write_back(data)
         add_modules_to_owl()
 
+
+def remove_similarity_on_delete(module_to_remove):
+    data = read_similarity_file()
+
+    index = -1
+
+    if module_to_remove in data.keys():
+        del data[module_to_remove]
+
+    for key,values in data.items():
+        if module_to_remove in data[key]:
+            data[key].remove(module_to_remove)
+
+    write_back(data)
+    add_modules_to_owl()
 
 # takes 2 module id numbers and add the similarity to the first
 def add_similarity(module_to_add_to: str, module_to_add: str):

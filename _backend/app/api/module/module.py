@@ -1,7 +1,7 @@
 import json
 from typing import Annotated, Union
 from bson import json_util
-from bson import ObjectId
+from bson.objectid import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
@@ -332,6 +332,10 @@ async def create_module(
 
     for mod in item_response_list:
         start_similarity_for_one(mod)
+
+    add_modules_to_owl()
+    
+    for mod in item_response_list:
         similar_module_id_list = find_suggested_modules(mod.module_id)
 
         similar_module_detail_list = []
@@ -339,7 +343,6 @@ async def create_module(
             similar_module_detail_list.append(MODULES.find_one(db, ObjectId(similar_module_id)))
         mod.similar_modules = similar_module_detail_list
 
-    add_modules_to_owl()
 
     return {
         "data": {

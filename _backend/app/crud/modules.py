@@ -1,11 +1,16 @@
 import datetime
 import re
 from typing import Optional
-from bson import ObjectId
+
+import pydantic
+from bson.objectid import ObjectId
 from pymongo import MongoClient
 from pydantic import BaseModel, Field
-from bson.objectid import ObjectId
+from bson import ObjectId
 from app.config.config_utils import env_config
+
+
+# Define a custom encoder function
 
 class BaseModel(BaseModel):
     class Config:
@@ -38,7 +43,7 @@ def find(conn: MongoClient, term: str,
     }).skip(offset).limit(limit)
 
 def find_one(conn: MongoClient, module_id: ObjectId):
-    return conn[env_config.DB_NAME].get_collection("modules").find_one({"module_id": module_id})
+    return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id}, {"_id": 0})
 
 def count(conn: MongoClient, term: str,
           level: list[str], ects: list[int], university: list[str], type: list[str]):
