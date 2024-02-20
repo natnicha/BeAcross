@@ -33,14 +33,25 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
    
   private rangeSliderRef = React.createRef<HTMLInputElement>();
 
-  handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  /*handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
     if (value === 0) {
       this.setState({ sliderValue: null });
     } else {
       this.setState({ sliderValue: value });
     }
-  };
+  };*/
+
+  handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    this.setState(prevState => ({
+        filters: {
+            ...prevState.filters,
+            ects: value !== "0" ? value : null, // Adjusting to store as string; use null for "0"
+        }
+    }), () => {
+    });
+};
   
   constructor(props: SearchPageProps) {
     super(props);
@@ -96,26 +107,38 @@ async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState)
 }
 
 parseUrlParams = () => {
-    const searchParams = new URLSearchParams(this.props.location.search);
-    
-    // Example for parsing sorting parameters
-    const currentSortField = searchParams.get('sortby') || 'module_name';
-    const currentSortOrder = searchParams.get('orderby') || 'asc';
-    
-    // Example for parsing a single filter (extend this to include all your filters)
-    const degree_level = searchParams.getAll('degree_level');
-    
-    // Example for parsing pagination
-    const currentPage = parseInt(searchParams.get('page') || '1', 10);
-    
-    this.setState({
-        currentSortField,
-        currentSortOrder,
-        filters: { ...this.state.filters, degree_level },
-        currentPage,
-    }, () => {
-        this.performSearch(true); // Re-fetch data with updated state
-    });
+  const searchParams = new URLSearchParams(this.props.location.search);
+  
+  // Parsing sorting parameters
+  const currentSortField = searchParams.get('sortby') || 'module_name';
+  const currentSortOrder = searchParams.get('orderby') || 'asc';
+  
+  // Parsing filter parameters
+  // Assuming that for multi-value filters like degree_level, module_type, and university, the URL could have multiple values (e.g., &degree_level=bachelor&degree_level=master)
+  const degree_level = searchParams.getAll('degree_level');
+  const module_type = searchParams.getAll('module_type');
+  const university = searchParams.getAll('university');
+  
+  // For ects, assuming it's a single value filter in the URL
+  const ects = searchParams.get('ects');
+  
+  // Parsing pagination
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  
+  // Setting the state with parsed values
+  this.setState({
+      currentSortField,
+      currentSortOrder,
+      filters: {
+          degree_level: degree_level,
+          module_type: module_type,
+          university: university,
+          ects: ects || null,
+      },
+      currentPage,
+  }, () => {
+      this.performSearch(true); // Optionally, re-fetch data with updated state
+  });
 }
 
   calculateTotalPages = () => {
@@ -141,6 +164,11 @@ parseUrlParams = () => {
         university: this.state.filters.university,
         ects: this.state.sliderValue?.toString() ?? ""
       };
+
+      // Conditionally add 'ects' if it's not null
+      if (this.state.filters.ects) {
+        filters.ects = this.state.filters.ects;
+    }
 
       // Constructing the sorting object from the state
       const sorting = {
@@ -244,6 +272,8 @@ updateUrlParams = () => {
   if(currentSortOrder) searchParams.set('orderby', currentSortOrder);
 
   // Add pagination to the URL parameters
+  searchParams.set('sortby', currentSortField);
+  searchParams.set('orderby', currentSortOrder);
   searchParams.set('page', currentPage.toString());
 
   // Use navigate to update the URL without reloading the page
@@ -334,6 +364,7 @@ handleSortClick = (sortField: string) => {
                                 className="pointer-checkbox" 
                                 name="degree_level" 
                                 value="bachelor" 
+                                checked={this.state.filters.degree_level.includes('bachelor')}
                                 onChange={this.handleFilterChange}
                               /> 
                                &nbsp;Bachelor
@@ -346,6 +377,7 @@ handleSortClick = (sortField: string) => {
                                 className="pointer-checkbox" 
                                 name="degree_level" 
                                 value="master" 
+                                checked={this.state.filters.degree_level.includes('master')}
                                 onChange={this.handleFilterChange}
                               />
                                &nbsp;Master
@@ -358,6 +390,7 @@ handleSortClick = (sortField: string) => {
                                 className="pointer-checkbox" 
                                 name="degree_level" 
                                 value="doctoral" 
+                                checked={this.state.filters.degree_level.includes('doctoral')}
                                 onChange={this.handleFilterChange}
                               />
                                &nbsp;Doctoral
@@ -374,6 +407,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="module_type" 
                                   value="erasmus" 
+                                  checked={this.state.filters.module_type.includes('erasmus')}
                                   onChange={this.handleFilterChange}
                               /> 
                                &nbsp;Erasmus
@@ -386,6 +420,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="module_type" 
                                   value="obiligitory" 
+                                  checked={this.state.filters.module_type.includes('obiligitory')}
                                   onChange={this.handleFilterChange}
                               />  
                                &nbsp;Obiligitory
@@ -398,6 +433,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="module_type" 
                                   value="elective" 
+                                  checked={this.state.filters.module_type.includes('elective')}
                                   onChange={this.handleFilterChange}
                               /> 
                                &nbsp;Elective
@@ -413,11 +449,10 @@ handleSortClick = (sortField: string) => {
                           max="20" 
                           step="1" 
                           name="ects"
-                          value={this.state.sliderValue ?? 0}  
+                          value={this.state.filters.ects ?? 0} // Reflecting filters.ects
                           onChange={this.handleSliderChange} 
-                          ref={this.rangeSliderRef} 
-                        />
-                        <span> {this.state.sliderValue !== null && this.state.sliderValue !== 0 ? this.state.sliderValue : ""} </span>
+                      />
+                      <span> {this.state.filters.ects !== null ? this.state.filters.ects : "All"} </span>
                       </div>
                       
                       <div className ="filter-item">
@@ -431,8 +466,9 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="university" 
                                   value="Bialystok University Of Technology" 
+                                  checked={this.state.filters.university.includes('Bialystok University Of Technology')}
                                   onChange={this.handleFilterChange}
-                                /> 
+                              /> 
                                 &nbsp;Bialystok University Of Technology
                                 </label>
                               <label>
@@ -441,6 +477,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="university" 
                                   value="Technische Universitat Chemnitz" 
+                                  checked={this.state.filters.university.includes('Technische Universitat Chemnitz')}
                                   onChange={this.handleFilterChange}
                                 />
                                 &nbsp;Technische Universitat Chemnitz
@@ -451,6 +488,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="university" 
                                   value="University of Nova Gorica" 
+                                  checked={this.state.filters.university.includes('University of Nova Gorica')}
                                   onChange={this.handleFilterChange}
                                 /> 
                                 &nbsp;University of Nova Gorica
