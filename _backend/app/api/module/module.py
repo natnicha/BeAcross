@@ -16,7 +16,7 @@ import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel
 import app.crud.users as USERS
 
 from app.transferability.similiarity_run import start_similarity_for_one, add_module_to_res

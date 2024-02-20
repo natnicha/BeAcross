@@ -9,6 +9,8 @@ from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
 from app.db.settings_utils import load_settings
 from app.config.config_utils import load_env
 from app.middleware.middleware import security_checking
+from app.transferability.similiarity_run import fix_res_file
+from app.owl.modules import add_modules_to_owl
 
 app = FastAPI()
 
@@ -45,4 +47,6 @@ async def middleware_checking(request: Request, call_next):
 
 @app.get("/")
 async def root():
+    fix_res_file()
+    add_modules_to_owl()
     return {"message": "Hello World"}
