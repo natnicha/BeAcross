@@ -67,7 +67,7 @@ export default function Profile() {
               disabled
             />
           </div>
-          {sessionStorage.getItem("userrole") !== "uni-admin" ? (
+          {sessionStorage.getItem("user_role") !== "uni-admin" ? (
             <>
               <div className="personal-info-section">
                 <p>Registration Number:</p>
