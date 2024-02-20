@@ -30,65 +30,6 @@ interface SearchPageState {
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
    
-  updateSearchParams = (filters: { [key: string]: string }, sort: string, page: number) => {
-    const searchParams = new URLSearchParams();
-    const navigate = useNavigate();
-    
-    // Add filters to searchParams
-    Object.entries(filters).forEach(([key, value]) => {
-        if (value) searchParams.set(key, value);
-    });
-
-    // Add sort and pagination to searchParams
-    if (sort) searchParams.set('sort', sort);
-    if (page) searchParams.set('page', page.toString());
-
-    navigate({ search: searchParams.toString() });
-};
-
-  componentDidMount() {
-    this.parseUrlParams();
-  }
-
-  componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
-    if (this.props.location.search !== prevProps.location.search) {
-      this.parseUrlParams();
-    }
-  }
-
-  fetchData = () => {
-    const { filters, currentSortField, currentSortOrder, currentPage } = this.state;
-  };
-
-  parseUrlParams = () => {
-    const searchParams = new URLSearchParams(this.props.location.search);
-    const degree_level = searchParams.getAll('degree_level');
-    const module_type = searchParams.getAll('module_type');
-    const university = searchParams.getAll('university');
-    // Assuming 'ects' is a singular value in your URL, not an array
-    const ects = searchParams.get('ects');
-
-    const filters = {
-        degree_level: degree_level || [],
-        module_type: module_type || [],
-        university: university || [],
-        ects: ects,
-    };
-
-    const sort = searchParams.get('sort');
-    const page = parseInt(searchParams.get('page') || '1', 10);
-
-    this.setState({
-        filters: filters,
-        currentSortField: sort || '', // Assuming sort maps to currentSortField
-        currentPage: page,
-    });
-
-    // Optionally, fetch or sort data based on these parameters
-};
-  
-  
-  
   private rangeSliderRef = React.createRef<HTMLInputElement>();
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value, 10);
@@ -127,6 +68,18 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       this.performSearch(true); // Add the true flag if your performSearch method accepts it for new searches
     });
   };
+
+  async componentDidMount() {
+    this.handleSearchBarSearch();
+    this.calculateTotalPages();
+  }
+
+  async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
+    // Recalculate total pages if total results change
+    if (prevState.searchResult.total_results !== this.state.searchResult.total_results) {
+      this.calculateTotalPages();
+    }
+  }
 
   calculateTotalPages = () => {
     const itemsPerPage = 20;
