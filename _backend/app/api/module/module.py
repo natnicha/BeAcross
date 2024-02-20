@@ -16,7 +16,8 @@ from app.api.module.model import CountRecommendResponseModel, RecommendRequestMo
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type"}
+sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "content":"content"}
+all_sortby_database_col = ["name", "degree_program", "degree_level", "ects", "university", "type", "content"]
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
 async def recommend(
@@ -188,13 +189,58 @@ def parse_json(data):
 
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
-        term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":(\w+)\)(AND|OR|NOT)*)+''' ),
+        term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*)+''' ),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
-        sortby: str = Query('no_of_recommend', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
+        sortby: str = Query('module_name', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
         orderby: str = Query('asc', pattern='^asc$|^desc$'),
         db: MongoClient = Depends(get_database),
     ):
-    pattern = r'''\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":(\w+)\)(AND|OR|NOT)*''' 
-    matches = re.findall(pattern, term)
-    return 
+    pattern = r'''\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*''' 
+    conditions = re.findall(pattern, term, re.IGNORECASE)
+
+    extracted_columns = []
+    for condition in conditions:
+        if condition[0] != "all_metadata":
+            extracted_columns.append(convert_term_to_db_column(condition))
+        else:
+            extracted_columns.extend(convert_term_to_db_column(condition))
+
+    count = MODULES.advanced_count(db, extracted_columns)
+    if count == 0:
+        raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
+    
+    sortby_column = 'module_name'
+    if not is_manual_calculated_sortby(sortby=sortby):
+        sortby_column = sortby_database_col_mapping[sortby] 
+
+    items = MODULES.advanced_find(db, extracted_columns, limit, offset, sortby_column, orderby)
+    data = prepare_item(db, items)
+
+    if is_manual_calculated_sortby(sortby=sortby):
+        data = sort(data, sortby, orderby)
+
+    return {
+        "data": {
+            "total_results": count,
+            "total_items": len(data),
+            "items": data,
+        }}
+
+def convert_term_to_db_column(condition: tuple):
+    COLUMN_NAME = 0
+    VALUE = 1
+    OPERATOR = 2
+
+    if condition[COLUMN_NAME] != "all_metadata":
+        condition_list = list(condition)
+        condition_list[COLUMN_NAME] = sortby_database_col_mapping[condition[COLUMN_NAME]]
+        return tuple(condition_list)
+    else:
+        conditions = []
+        for indx, col in enumerate(all_sortby_database_col):
+            if indx != len(all_sortby_database_col)-1:
+                conditions.append((col, condition[VALUE], "or"))
+            else:
+                conditions.append((col, condition[VALUE], condition[OPERATOR]))
+        return conditions
