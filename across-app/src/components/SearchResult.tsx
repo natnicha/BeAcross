@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Define the Item type based on your data structure
 interface Item {
@@ -12,6 +13,7 @@ interface Item {
     degree_level?: string;
     module_name?: string;
     type?: string;
+    module_id?: string;
 }
 
 interface SearchResultProps {
@@ -22,8 +24,13 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleRowClick = (item: Item) => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('module', item.module_id!);
+        navigate({ pathname: '/search', search: searchParams.toString() });
         setSelectedItem(item);
         openDetailPopup();
     };
