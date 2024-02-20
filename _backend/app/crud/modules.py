@@ -96,9 +96,49 @@ def convert_conditions_to_query(term: str, level: list[str], ects: list[int], un
     
     return condition
 
+def advanced_find(conn: MongoClient, conditions: list, limit: int, offset: int, sortby: str, orderby: str):
+    is_asc = 1
+    if orderby.lower() == 'desc':
+        is_asc = -1
+    condition = convert_advanced_conditions_to_query(conditions)
+    return conn[env_config.DB_NAME].get_collection("modules").find(condition).sort({
+        sortby : int(is_asc)
+    }).skip(offset).limit(limit)
+
+def advanced_count(conn: MongoClient, conditions: list):
+    condition = convert_advanced_conditions_to_query(conditions)
+    return conn[env_config.DB_NAME].get_collection("modules").count_documents(condition)
+
+def convert_advanced_conditions_to_query(conditions: list):
+    COLUMN_NAME = 0
+    VALUE = 1
+    OPERATOR = 2
+
+    query = None
+    previous_operator = ""
+    for condition in conditions:
+        if query is not None: # from the 2nd condition onwards
+            if previous_operator != "":
+                if previous_operator != "not":
+                    query = { "$"+previous_operator: [query, create_like_term_dictionary(condition[COLUMN_NAME], condition[VALUE])] }
+                else:
+                    query = { "$and": [query, {condition[COLUMN_NAME]:  create_like_term_dictionary("$not", condition[VALUE])}] }
+            else:
+                return query
+        
+        if query is None:  # only for the 1st condition
+            query = create_like_term_dictionary(condition[COLUMN_NAME], condition[VALUE])
+        previous_operator = condition[OPERATOR].lower()
+    return query
+
+def create_like_term_dictionary(key: str, value: str, convert_to_like_term: bool = True):
+    if convert_to_like_term:
+        return {key: convert_str_to_like(value)}
+    return {key: value}
+
+def find_one(conn: MongoClient, module_id: ObjectId):
+    collection = conn[env_config.DB_NAME].get_collection("modules")
+    return collection.find_one({'_id': module_id})
+
 def insert_many(conn: MongoClient, modules_model: ModulesModel):
     return conn[env_config.DB_NAME].get_collection("modules").insert_many([i.dict() for i in modules_model])
-
-# def find_one(conn: MongoClient, module_id: ObjectId):
-#     collection = conn[env_config.DB_NAME].get_collection("modules")
-#     return collection.find_one({'_id': module_id})
