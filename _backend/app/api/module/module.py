@@ -414,7 +414,11 @@ def calculate_similarity_for_one_parallel_process(items: list):
         similarity_changes = []
         def worker(item):
             logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
-            similarity_changes.append(start_similarity_for_one(item))
+            try:
+                similarity_changes.append(start_similarity_for_one(item))
+            except Exception as e:
+                logging.error(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
+                raise e
             logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
             
 
@@ -433,6 +437,7 @@ def calculate_similarity_for_one_parallel_process(items: list):
         logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
     except Exception as e:
         logging.error(__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
+        raise e
 
 
 def get_data_from_xml(text: bytes) -> (list, list): # type: ignore
