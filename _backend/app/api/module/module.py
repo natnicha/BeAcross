@@ -26,7 +26,7 @@ from app.owl.modules import find_suggested_modules, delete_file
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "content":"content"}
+sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "module_code": "module_code", "content":"content"}
 all_sortby_database_col = ["name", "degree_program", "degree_level", "ects", "university", "type", "content"]
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
