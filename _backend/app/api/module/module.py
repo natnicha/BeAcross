@@ -409,28 +409,31 @@ def add_module_to_res_parallel_process(items: list):
         
 
 def calculate_similarity_for_one_parallel_process(items: list):
-    pool_size = multiprocessing.cpu_count-4
-    similarity_changes = []
-    def worker(item):
-        logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
-        a = start_similarity_for_one(item)
-        similarity_changes.append(a)
-        logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
-        
+    try:
+        pool_size = multiprocessing.cpu_count()-4
+        similarity_changes = []
+        def worker(item):
+            logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
+            a = start_similarity_for_one(item)
+            similarity_changes.append(a)
+            logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
+            
 
-    pool = Pool(pool_size)
+        pool = Pool(pool_size)
 
-    for item in items:
-        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: call -> "+str(item.module_id))
-        pool.apply_async(worker, (item,))
+        for item in items:
+            logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: call -> "+str(item.module_id))
+            pool.apply_async(worker, (item,))
 
-    pool.close()
-    pool.join()
-    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: all processes joined")
+        pool.close()
+        pool.join()
+        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: all processes joined")
 
-    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: writing a result json file")
-    combine_similarity_results_and_write_back(similarity_changes)
-    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
+        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: writing a result json file")
+        combine_similarity_results_and_write_back(similarity_changes)
+        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
+    except Exception as e:
+        logging.error(__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
 
 
 def get_data_from_xml(text: bytes) -> (list, list): # type: ignore
