@@ -23,6 +23,7 @@ scikit-learn = "*"
 unidecode = "*"
 stopwords = "*"
 aiosmtplib = "*"
+filelock = "*"
 
 [dev-packages]
 
