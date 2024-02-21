@@ -412,7 +412,7 @@ async def create_module(
     }
 
 
-def get_data_from_xml(text: bytes) -> (list, list):
+def get_data_from_xml(text: bytes) -> (list, list): # type: ignore
     tree = ET.ElementTree(ET.fromstring(text))
     modules_graph = tree.getroot()
     uploaded_modules_list = []
