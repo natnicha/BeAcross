@@ -153,25 +153,42 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newUrl)}`;
         openInNewWindow(facebookUrl);
     };
-    
-    // Function to generate LinkedIn share URL
-    const shareOnLinkedIn = (url: string, title: string, summary: string, source: string) => {
-        const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}&source=${encodeURIComponent(source)}`;
-        openInNewWindow(linkedInUrl);
-    };
-    
+      
     // Function to generate Twitter share URL
     const shareOnTwitter = (url: string, text: string) => {
-        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        if (!config) {
+            console.error('Configuration has not been loaded yet.');
+            return;
+        }
+         // Replace 'localhost:3000' or any local IP Address
+        const baseUrl = new URL(config.apiBaseUrl);
+        const originalUrl = new URL(url);
+
+        // Construct the new URL using the base URL from config and the original URL's pathname and search
+        const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
+
+        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(newUrl)}&text=${encodeURIComponent(text)}`;
         openInNewWindow(twitterUrl);
     };
     
     // Function to copy current URL to clipboard
-    const copyToClipboard = (text: string) => {
-        navigator.clipboard.writeText(text).then(() => {
-        alert('Link copied to clipboard');
+    const copyToClipboard = (url: string) => {
+        if (!config) {
+            console.error('Configuration has not been loaded yet.');
+            return;
+        }
+    
+        // Assuming you want to replace 'localhost' or any local IP Address
+        const baseUrl = new URL(config.apiBaseUrl);
+        const originalUrl = new URL(url);
+    
+        // Construct the new URL using the base URL from config and the original URL's pathname and search
+        const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
+    
+        navigator.clipboard.writeText(newUrl).then(() => {
+            alert('Link copied to clipboard');
         }).catch(err => {
-        console.error('Failed to copy: ', err);
+            console.error('Failed to copy: ', err);
         });
     };
     
@@ -184,8 +201,6 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                         <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                         <ul className="social-icon">
                             <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
-                            </a>
-                            <a href="#" className="social-icon-link bi-linkedin" onClick={(e) => { e.preventDefault(); shareOnLinkedIn(window.location.href, 'Module Title', 'Module Summary', window.location.hostname); }} aria-label="Share on LinkedIn">
                             </a>
                             <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
                             </a>
