@@ -1,16 +1,11 @@
 import datetime
 import re
 from typing import Optional
-
-import pydantic
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 from pydantic import BaseModel, Field
 from bson import ObjectId
 from app.config.config_utils import env_config
-
-
-# Define a custom encoder function
 
 class BaseModel(BaseModel):
     class Config:

@@ -326,6 +326,7 @@ async def advanced_search(
             "items": data,
         }}
 
+
 def convert_term_to_db_column(condition: tuple):
     COLUMN_NAME = 0
     VALUE = 1
