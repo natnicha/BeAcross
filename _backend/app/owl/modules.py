@@ -37,7 +37,7 @@ def delete_file():
     owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
 
     if os.path.isfile(owl_path):
-        print("File exists")
+        # print("File exists")
         os.remove(owl_path)
 
 def add_modules_to_owl():
@@ -50,10 +50,10 @@ def add_modules_to_owl():
     # Navigate to the 'owl' directory and access 'results.json'
     owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
 
-    print(owl_path)
+    # print(owl_path)
 
     if os.path.isfile(owl_path):
-        print("File exists")
+        # print("File exists")
         os.remove(owl_path)
 
     fp = open(owl_path, 'w')
@@ -81,7 +81,7 @@ def add_modules_to_owl():
     # define Modules
     for key, item in sim_result.items():
         instance = Module()
-        print(key)
+        # print(key)
         instance.name = key
 
     # define relations

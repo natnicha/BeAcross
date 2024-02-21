@@ -1,15 +1,13 @@
 import os.path
+import json
+from pymongo import MongoClient
 
-from app import config
-from app.config import config_utils
 from app.transferability.similiarity_logic import check_level, check_ects
 from app.transferability.similiarity_logic import check_content
 from app.transferability.similiarity_logic import compare_titles
-from pymongo import MongoClient
-from app.config.config_utils import env_config, load_env
-from app.owl.modules import add_modules_to_owl, delete_file
+from app.config.config_utils import env_config
+from app.owl.modules import add_modules_to_owl
 from app.api.module.model import UploadModulesResponseItemModel
-import json
 
 
 # TODO check if id already exists in similarity file
@@ -19,7 +17,7 @@ import json
 def get_all_module_data(uni):
     # get all data and prepare for run
     conn = MongoClient(env_config.DB_CONNECTION_STRING)
-    print(conn)
+    # print(conn)
     db = conn[env_config.DB_NAME]
     data = db.get_collection("modules").find({"university": uni})
     return list(data)
@@ -29,7 +27,7 @@ def get_all_module_data(uni):
 def get_all_module_id():
     # get all data and prepare for run
     conn = MongoClient(env_config.DB_CONNECTION_STRING)
-    print(conn)
+    # print(conn)
     db = conn[env_config.DB_NAME]
     data = db.get_collection("modules").find({}, {"_id": 1})
     res = []
@@ -43,7 +41,7 @@ def fix_res_file():
     data = read_similarity_file()
     ids = get_all_module_id()
     to_remove_key = []
-    print(data)
+    # print(data)
     for key, item in data.items():
         to_remove_item = []
         if key not in ids:
@@ -69,7 +67,7 @@ def fix_res_file():
 def get_specific_module_data(uni):
     # get all data and prepare for run
     conn = MongoClient(env_config.DB_CONNECTION_STRING)
-    print(conn)
+    # print(conn)
     db = conn[env_config.DB_NAME]
     data = db.get_collection("modules").find({"university": {"$ne": uni}})
     return list(data)
@@ -89,47 +87,47 @@ def start_similarity_all():
     similarity_results = dict()
 
     status = 1
-    comparisons_count = (len(BUT) * len(TUC)) + (len(BUT) * len(UNG))
+    # comparisons_count = (len(BUT) * len(TUC)) + (len(BUT) * len(UNG))
     for mod in BUT:
         similarity_results[str(mod.get("_id"))] = []
         for comp_mod in TUC:
-            print(str(status), "/", str(comparisons_count))
+            # print(str(status), "/", str(comparisons_count))
             if check_similarity_db(mod, comp_mod):
                 similarity_results[str(mod.get("_id"))].append(str(comp_mod.get("_id")))
             status = status + 1
         for comp_mod1 in UNG:
-            print(str(status), "/", str(comparisons_count))
+            # print(str(status), "/", str(comparisons_count))
             if check_similarity_db(mod, comp_mod1):
                 similarity_results[str(mod.get("_id"))].append(str(comp_mod1.get("_id")))
             status = status + 1
 
     status = 1
-    comparisons_count = (len(TUC) * len(BUT)) + (len(TUC) * len(UNG))
+    # comparisons_count = (len(TUC) * len(BUT)) + (len(TUC) * len(UNG))
     for mod in TUC:
         similarity_results[str(mod.get("_id"))] = []
         for comp_mod in BUT:
-            print(str(status), "/", str(comparisons_count))
+            # print(str(status), "/", str(comparisons_count))
             if check_similarity_db(mod, comp_mod):
                 similarity_results[str(mod.get("_id"))].append(str(comp_mod.get("_id")))
             i = i + 1
 
         for comp_mod1 in UNG:
-            print(str(status), "/", str(comparisons_count))
+            # print(str(status), "/", str(comparisons_count))
             if check_similarity_db(mod, comp_mod1):
                 similarity_results[str(mod.get("_id"))].append(str(comp_mod1.get("_id")))
             i = i + 1
 
     status = 1
-    comparisons_count = (len(BUT) * len(TUC)) + (len(BUT) * len(UNG))
+    # comparisons_count = (len(BUT) * len(TUC)) + (len(BUT) * len(UNG))
     for mod in BUT:
         similarity_results[str(mod.get("_id"))] = []
         for comp_mod in TUC:
-            print(str(i), "/", str(comparisons_count))
+            # print(str(i), "/", str(comparisons_count))
             if check_similarity_db(mod, comp_mod):
                 similarity_results[str(mod.get("_id"))].append(str(comp_mod.get("_id")))
             i = i + 1
         for comp_mod1 in UNG:
-            print(str(i), "/", str(comparisons_count))
+            # print(str(i), "/", str(comparisons_count))
             if check_similarity_db(mod, comp_mod1):
                 similarity_results[str(mod.get("_id"))].append(str(comp_mod1.get("_id")))
             i = i + 1
@@ -152,13 +150,13 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
         # A to B
         if check_similarity_class(inserted_mod, modu):
             if inserted_mod.module_id in similarity_results.keys() and str(modu["_id"]) not in similarity_results[inserted_mod.module_id]:
-                print("true")
+                # print("true")
                 similarity_results[inserted_mod.module_id].append(str(modu["_id"]))
 
         # B to A
         if check_similarity_class(modu, inserted_mod):
             if str(modu["_id"]) in similarity_results.keys() and inserted_mod.module_id not in similarity_results[str(modu["_id"])]:
-                print("true")
+                # print("true")
                 similarity_results[str(modu["_id"])].append(inserted_mod.module_id)
 
     write_back(similarity_results)
