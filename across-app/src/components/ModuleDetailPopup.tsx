@@ -120,14 +120,56 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [closePopup]);
+
+    //socia media sharing
+    const openInNewWindow = (url: string) => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+    
+    // Function to generate Facebook share URL
+    const shareOnFacebook = (url: string) => {
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        openInNewWindow(facebookUrl);
+    };
+    
+    // Function to generate LinkedIn share URL
+    const shareOnLinkedIn = (url: string, title: string, summary: string, source: string) => {
+        const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(summary)}&source=${encodeURIComponent(source)}`;
+        openInNewWindow(linkedInUrl);
+    };
+    
+    // Function to generate Twitter share URL
+    const shareOnTwitter = (url: string, text: string) => {
+        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+        openInNewWindow(twitterUrl);
+    };
+    
+    // Function to copy current URL to clipboard
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+        alert('Link copied to clipboard');
+        }).catch(err => {
+        console.error('Failed to copy: ', err);
+        });
+    };
     
     
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
                 <div ref={popupRef} className="popup-content">
-                    <div className="title-popup mb-2">
-                    <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
+                    <div className="title-popup mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
+                        <ul className="social-icon">
+                            <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
+                            </a>
+                            <a href="#" className="social-icon-link bi-linkedin" onClick={(e) => { e.preventDefault(); shareOnLinkedIn(window.location.href, 'Module Title', 'Module Summary', window.location.hostname); }} aria-label="Share on LinkedIn">
+                            </a>
+                            <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
+                            </a>
+                            <a href="#" className="social-icon-link bi bi-link-45deg" onClick={(e) => { e.preventDefault(); copyToClipboard(window.location.href); }} aria-label="Copy Link">
+                            </a>
+                        </ul>
                     </div>
                     <button 
                         onClick={closePopup} 
