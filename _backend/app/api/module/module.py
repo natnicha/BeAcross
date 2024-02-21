@@ -398,7 +398,9 @@ async def create_module(
 
         similar_module_detail_list = []
         for similar_module_id in similar_module_id_list:
-            similar_module_detail_list.append(MODULES.find_one(db, ObjectId(similar_module_id)))
+            module = MODULES.find_one(db, ObjectId(similar_module_id))
+            module['module_id'] = str(module.pop("_id"))
+            similar_module_detail_list.append(module)
         mod.similar_modules = similar_module_detail_list
 
 
