@@ -390,16 +390,6 @@ async def create_module(
     background_tasks.add_task(calculate_similarity_for_one_parallel_process, items=item_response_list)
     background_tasks.add_task(add_modules_to_owl)
     # background_tasks.add_task(add_modules_to_owl()) //send email
-    
-    # for mod in item_response_list:
-    #     similar_module_id_list = find_suggested_modules(mod.module_id)
-
-    #     similar_module_detail_list = []
-    #     for similar_module_id in similar_module_id_list:
-    #         module = MODULES.find_one(db, ObjectId(similar_module_id))
-    #         module['module_id'] = str(module.pop("_id"))
-    #         similar_module_detail_list.append(module)
-    #     mod.similar_modules = similar_module_detail_list
 
     return {
         "data": {
