@@ -414,8 +414,7 @@ def calculate_similarity_for_one_parallel_process(items: list):
         similarity_changes = []
         def worker(item):
             logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
-            a = start_similarity_for_one(item)
-            similarity_changes.append(a)
+            similarity_changes.append(start_similarity_for_one(item))
             logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
             
 
