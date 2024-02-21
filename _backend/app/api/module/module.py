@@ -402,35 +402,35 @@ async def create_module(
 
 
 def add_module_to_res_parallel_process(items: list):
-    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: started")
+    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
     for item in items:
         add_module_to_res(item.module_id)
-    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: finished")
+    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
         
 
 def calculate_similarity_for_one_parallel_process(items: list):
-    pool_size = 8
+    pool_size = multiprocessing.cpu_count-4
     similarity_changes = []
     def worker(item):
-        logging.debug(str(multiprocessing.Process())+' | module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: started")
+        logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
         a = start_similarity_for_one(item)
         similarity_changes.append(a)
-        logging.debug(str(multiprocessing.Process())+' | module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: finished")
+        logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
         
 
     pool = Pool(pool_size)
 
     for item in items:
-        logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: call -> "+str(item.module_id))
+        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: call -> "+str(item.module_id))
         pool.apply_async(worker, (item,))
 
     pool.close()
     pool.join()
-    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: all processes joined")
+    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: all processes joined")
 
-    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: writing a result json file")
+    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: writing a result json file")
     combine_similarity_results_and_write_back(similarity_changes)
-    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
+    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
 
 
 def get_data_from_xml(text: bytes) -> (list, list): # type: ignore
@@ -467,7 +467,7 @@ async def send_email_after_calculation(db: MongoClient, user_id: ObjectId):
             detail={"message": str(e)},
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE
         )
-    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: email sent")
+    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: email sent")
 
 
 @module.get("/{module_id}/comment", response_model=GetModuleCommentResponseModel, status_code=status.HTTP_200_OK)
