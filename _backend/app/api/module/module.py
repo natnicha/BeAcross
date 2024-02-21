@@ -1,5 +1,5 @@
 import inspect
-import os
+import logging
 import json
 import re
 from typing import Annotated, Union
@@ -11,6 +11,7 @@ from pymongo.cursor import Cursor
 from owlready2 import *
 from app.owl.modules import add_modules_to_owl
 import xml.etree.ElementTree as ET
+from multiprocessing.pool import ThreadPool as Pool
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
@@ -21,10 +22,7 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
-
-from app.transferability.similiarity_run import start_similarity_for_one, add_module_to_res
-
-from app.owl.modules import find_suggested_modules, delete_file
+from app.transferability.similiarity_run import combine_similarity_results_and_write_back, start_similarity_for_one, add_module_to_res
 
 module = APIRouter()
 
@@ -237,8 +235,7 @@ async def search(
         sortby: str = Query('module_name',
                             pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
         orderby: str = Query('asc', pattern='^asc$|^desc$'),
-        db: MongoClient = Depends(get_database),
-        background_tasks: BackgroundTasks = None
+        db: MongoClient = Depends(get_database)
 ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
@@ -254,79 +251,12 @@ async def search(
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
 
-    background_tasks.add_task(test, items=["Poppy Patel", "Traci Harper", "Mohammed Davis", "Erin Grant"])
     return {
         "data": {
             "total_results": count,
             "total_items": len(data),
             "items": data
         }}
-
-#### Approach 2
-def test(items):
-    from multiprocessing.pool import ThreadPool as Pool
-    pool_size = 8  # your "parallelness"
-    print('parent process:', os.getpid())
-    def worker(item):
-        print('process ID:', os.getpid(), "|", multiprocessing.Process(), '| module name:', __name__,  "| function:", inspect.stack()[0][3])
-        print(item)
-
-    pool = Pool(pool_size)
-
-    for item in items:
-        print("called:", item)
-        pool.apply_async(worker, (item,))
-
-    pool.close()
-    pool.join()
-
-
-#### Approach 1
-# def background(f):
-#     def wrapped(*args, **kwargs):
-#         return asyncio.get_event_loop().run_in_executor(None, f, *args, **kwargs)
-
-#     return wrapped
-
-
-# @background
-# def test_fork_process(items: list):
-#     print('parent process:', os.getppid())
-#     # pool = Pool()
-#     # result1 = pool.apply_async(do_function, item)    # evaluate "solve1(A)" asynchronously
-#     # result2 = pool.apply_async(solve2, [B])    # evaluate "solve2(B)" asynchronously
-#     # answer1 = result1.get(timeout=10)
-#     # answer2 = result2.get(timeout=10)
-
-#     # for item in items:
-#     #     p = Process(target=do_function, args=(item,))
-#     #     p.start()
-#     # p.join()
-#     loop = asyncio.new_event_loop()
-#     asyncio.set_event_loop(loop) 
-
-#     task = [asyncio.ensure_future(do_function(item)) for item in items]
-#     looper = asyncio.gather(*task)         # Run the loop
-#     results = loop.run_until_complete(looper) 
-#     print(results)
-#     # for item in items:
-#     #     do_function(item)
-
-
-# # async def loop_items(items: list[str]):
-# #     tasks = [] # dictionary of start times for each url
-# #     for item in items:
-# #         task = asyncio.ensure_future(do_function(item))
-# #         tasks.append(task) # create list of tasks
-# #     _ = await asyncio.gather(*tasks) # gather task responses
-
-# async def do_function(item: str):
-#     # random_sleep_sec = randint(0,10)
-#     # await asyncio.sleep(random_sleep_sec)
-#     print('process ID:', os.getpid(), '| module name:', __name__,  "| function:", inspect.stack()[0][3])
-    
-#     print(item)
-#     return item
 
 
 def prepare_item(db: MongoClient, items: Cursor):
@@ -418,7 +348,8 @@ def convert_term_to_db_column(condition: tuple):
 async def create_module(
         request: Request,
         content_type: str = Header(...),
-        db: MongoClient = Depends(get_database)):
+        db: MongoClient = Depends(get_database),
+        background_tasks: BackgroundTasks = None):
     if content_type != "application/xml":
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
@@ -455,34 +386,59 @@ async def create_module(
         )
         item_response_list.append(item)
 
-    for mod in item_response_list:
-        add_module_to_res(mod.module_id)
-
-    for mod in item_response_list:
-        start_similarity_for_one(mod)
-
-    add_modules_to_owl()
-    
-    for mod in item_response_list:
-        similar_module_id_list = find_suggested_modules(mod.module_id)
-
-        similar_module_detail_list = []
-        for similar_module_id in similar_module_id_list:
-            module = MODULES.find_one(db, ObjectId(similar_module_id))
-            module['module_id'] = str(module.pop("_id"))
-            similar_module_detail_list.append(module)
-        mod.similar_modules = similar_module_detail_list
-
-
-    # BackgroundTasks.add_task(calculate_similarity_scores(item_response_list))
-    # background_tasks.add_task(add_modules_to_owl())
+    background_tasks.add_task(add_module_to_res_parallel_process, items=item_response_list)
+    background_tasks.add_task(calculate_similarity_for_one_parallel_process, items=item_response_list)
+    background_tasks.add_task(add_modules_to_owl)
     # background_tasks.add_task(add_modules_to_owl()) //send email
+    
+    # for mod in item_response_list:
+    #     similar_module_id_list = find_suggested_modules(mod.module_id)
+
+    #     similar_module_detail_list = []
+    #     for similar_module_id in similar_module_id_list:
+    #         module = MODULES.find_one(db, ObjectId(similar_module_id))
+    #         module['module_id'] = str(module.pop("_id"))
+    #         similar_module_detail_list.append(module)
+    #     mod.similar_modules = similar_module_detail_list
+
     return {
         "data": {
             "total_items": len(item_response_list),
             "items": item_response_list,
         }
     }
+
+
+def add_module_to_res_parallel_process(items: list):
+    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: started")
+    for item in items:
+        add_module_to_res(item.module_id)
+    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: finished")
+        
+
+def calculate_similarity_for_one_parallel_process(items: list):
+    pool_size = 8
+    similarity_changes = []
+    def worker(item):
+        logging.debug(str(multiprocessing.Process())+' | module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: started")
+        a = start_similarity_for_one(item)
+        similarity_changes.append(a)
+        logging.debug(str(multiprocessing.Process())+' | module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: finished")
+        
+
+    pool = Pool(pool_size)
+
+    for item in items:
+        logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: call -> "+str(item.module_id))
+        pool.apply_async(worker, (item,))
+
+    pool.close()
+    pool.join()
+    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: all processes joined")
+
+    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: writing a result json file")
+    combine_similarity_results_and_write_back(similarity_changes)
+    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
 
 
 def get_data_from_xml(text: bytes) -> (list, list): # type: ignore

@@ -1,5 +1,6 @@
 import os.path
 import json
+from filelock import FileLock
 from pymongo import MongoClient
 
 from app.transferability.similiarity_logic import check_level, check_ects
@@ -145,6 +146,7 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
     data = get_specific_module_data(inserted_mod.university)
 
     similarity_results = read_similarity_file()
+    similarity_changes = {}
 
     for modu in data:
         # A to B
@@ -152,14 +154,38 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
             if inserted_mod.module_id in similarity_results.keys() and str(modu["_id"]) not in similarity_results[inserted_mod.module_id]:
                 # print("true")
                 similarity_results[inserted_mod.module_id].append(str(modu["_id"]))
+                if not (inserted_mod.module_id in similarity_changes):
+                    similarity_changes[inserted_mod.module_id] = []
+                similarity_changes[inserted_mod.module_id].append(str(modu["_id"]))
 
         # B to A
         if check_similarity_class(modu, inserted_mod):
             if str(modu["_id"]) in similarity_results.keys() and inserted_mod.module_id not in similarity_results[str(modu["_id"])]:
                 # print("true")
                 similarity_results[str(modu["_id"])].append(inserted_mod.module_id)
+                if not (str(modu["_id"]) in similarity_changes):
+                    similarity_changes[str(modu["_id"])] = []
+                similarity_changes[str(modu["_id"])].append(inserted_mod.module_id)
 
-    write_back(similarity_results)
+    return similarity_changes
+
+def combine_similarity_results_and_write_back(similarity_changes: list):
+    # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+
+    # Navigate to the 'owl' directory and access 'results.json'
+    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
+
+    lock = FileLock(results_path + ".lock")
+    with lock:
+        similarity_source = read_similarity_file()
+        for similarity_change in similarity_changes:
+            for key, value in similarity_change.items():
+                similarity_source[key].extend(value)
+        write_back(similarity_source)
 
 # run a similarity check from the database
 def check_similarity_db(module_a, module_b):

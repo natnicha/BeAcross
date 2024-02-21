@@ -48,7 +48,7 @@ class UploadModulesResponseItemModel(BaseModel):
     content: str = None   
     ects: int = None
     type: str = None
-    similar_modules: list = None
+
 class GetModuleCommentItemResponseModel(BaseModel):
     id: str
     message: str
