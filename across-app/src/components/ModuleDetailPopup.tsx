@@ -178,18 +178,34 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
             return;
         }
     
-        // Assuming you want to replace 'localhost' or any local IP Address
         const baseUrl = new URL(config.apiBaseUrl);
         const originalUrl = new URL(url);
-    
-        // Construct the new URL using the base URL from config and the original URL's pathname and search
         const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
     
-        navigator.clipboard.writeText(newUrl).then(() => {
-            alert('Link copied to clipboard');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-        });
+        // Try using the Clipboard API first
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(newUrl).then(() => {
+                alert('Link copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        } else {
+            // Fallback: Copy the text using a temporary textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = newUrl;
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Fallback: Copying text command was ' + msg);
+                alert('Link copied to clipboard');
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(textarea);
+        }
     };
     
     
