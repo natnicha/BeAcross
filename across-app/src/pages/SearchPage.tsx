@@ -1,12 +1,14 @@
 import React from 'react';
 import SearchResult from '../components/SearchResult';
 import SearchBar from "../components/SearchBar";
-import { Location, useLocation } from "react-router-dom";
+import { Location, useLocation, useNavigate } from "react-router-dom";
 import { SearchResponse, searchServices } from "../services/searchServices";
 import Pagination from '../components/Pagination';
 
+
 interface SearchPageProps {
-  location: Location;  // Define other props as needed
+  location: Location;
+  navigate: (to: string | { pathname: string; search: string }, options?: { replace?: boolean; state?: any }) => void;
 }
 
 interface SearchPageState {
@@ -28,17 +30,19 @@ interface SearchPageState {
 
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
-    
+   
   private rangeSliderRef = React.createRef<HTMLInputElement>();
 
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value, 10);
-    if (value === 0) {
-      this.setState({ sliderValue: null });
-    } else {
-      this.setState({ sliderValue: value });
-    }
-  };
+    const value = event.target.value;
+    this.setState(prevState => ({
+        filters: {
+            ...prevState.filters,
+            ects: value !== "0" ? value : null, // Adjusting to store as string; use null for "0"
+        }
+    }), () => {
+    });
+};
   
   constructor(props: SearchPageProps) {
     super(props);
@@ -65,21 +69,55 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   handleSearchBarSearch = (): void => {
     this.setState({ currentPage: 1 }, () => {
-      this.performSearch(true); // Add the true flag if your performSearch method accepts it for new searches
+      this.performSearch(true);
     });
   };
 
   async componentDidMount() {
-    this.handleSearchBarSearch();
-    this.calculateTotalPages();
-  }
+    this.parseUrlParams();
+    this.performSearch(true); // Assuming true initializes the search with current state
+}
 
-  async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
-    // Recalculate total pages if total results change
-    if (prevState.searchResult.total_results !== this.state.searchResult.total_results) {
-      this.calculateTotalPages();
+async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
+    // Check if URL changed
+    if (this.props.location.search !== prevProps.location.search) {
+        this.parseUrlParams();
     }
-  }
+}
+
+parseUrlParams = () => {
+  const searchParams = new URLSearchParams(this.props.location.search);
+  
+  // Parsing sorting parameters
+  const currentSortField = searchParams.get('sortby') || 'module_name';
+  const currentSortOrder = searchParams.get('orderby') || 'asc';
+  
+  // Parsing filter parameters
+  const degree_level = searchParams.getAll('degree_level');
+  const module_type = searchParams.getAll('module_type');
+  const university = searchParams.getAll('university');
+  
+  // For ects
+  const ects = searchParams.get('ects');
+  
+  // Parsing pagination
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  
+  // Setting the state with parsed values
+  this.setState({
+      currentSortField,
+      currentSortOrder,
+      filters: {
+          degree_level: degree_level,
+          module_type: module_type,
+          university: university,
+          ects: ects || null,
+      },
+      currentPage,
+  }, () => {
+      this.performSearch(true);
+  });
+}
 
   calculateTotalPages = () => {
     const itemsPerPage = 20;
@@ -104,6 +142,11 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
         university: this.state.filters.university,
         ects: this.state.sliderValue?.toString() ?? ""
       };
+
+      // Conditionally add 'ects' if it's not null
+      if (this.state.filters.ects) {
+        filters.ects = this.state.filters.ects;
+    }
 
       // Constructing the sorting object from the state
       const sorting = {
@@ -130,7 +173,8 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   handlePageChange = (newPage: number) => {
     this.setState({ currentPage: newPage }, () => {
-        this.performSearch(); // Call performSearch after setting the new page
+      this.updateUrlParams();  
+      this.performSearch(); // Call performSearch after setting the new page
     });
 };
 
@@ -142,7 +186,6 @@ handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   let newSelection: string[] | number;
 
   if (type === 'checkbox') {
-    // TypeScript needs assurance that the name is a valid key of filters
     const filterName = name as keyof typeof this.state.filters;
 
     // Ensure that the filter is an array before spreading it
@@ -171,20 +214,44 @@ handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
 // Function to be called when 'Apply' is clicked
 onApplyFilters = () => {
+  this.updateUrlParams();
   this.handleSearchBarSearch();
 };
 
-// Function to update Sort state
-handleSortClick = (sortField: string) => {
-  this.setState(prevState => {
-    // Toggle sort order if the same field is clicked again, else set to 'desc'
-    const newOrder = prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc';
+updateUrlParams = () => {
+  const { filters, currentSortField, currentSortOrder, currentPage, query } = this.state;
+  const searchParams = new URLSearchParams();
 
-    return {
-      currentSortField: sortField,
-      currentSortOrder: newOrder
-    };
-  }, this.performSearch);
+  // Add query
+  if(query) searchParams.set('query', query);
+
+  // Add filters to the URL parameters
+  filters.degree_level.forEach(level => searchParams.append('degree_level', level));
+  filters.module_type.forEach(type => searchParams.append('module_type', type));
+  filters.university.forEach(uni => searchParams.append('university', uni));
+  if(filters.ects) searchParams.set('ects', filters.ects);
+
+  // Add sorting to the URL parameters
+  if(currentSortField) searchParams.set('sortby', currentSortField);
+  if(currentSortOrder) searchParams.set('orderby', currentSortOrder);
+
+  // Add pagination to the URL parameters
+  searchParams.set('sortby', currentSortField);
+  searchParams.set('orderby', currentSortOrder);
+  searchParams.set('page', currentPage.toString());
+
+  // Use navigate to update the URL without reloading the page
+  this.props.navigate(`?${searchParams.toString()}`, { replace: true });
+};
+
+handleSortClick = (sortField: string) => {
+  this.setState(prevState => ({
+    currentSortField: sortField,
+    currentSortOrder: prevState.currentSortField === sortField && prevState.currentSortOrder === 'asc' ? 'desc' : 'asc'
+  }), () => {
+    this.updateUrlParams(); // Update URL with new sorting parameters
+    this.performSearch();
+  });
 };
 
   render() {
@@ -250,6 +317,7 @@ handleSortClick = (sortField: string) => {
                                 className="pointer-checkbox" 
                                 name="degree_level" 
                                 value="bachelor" 
+                                checked={this.state.filters.degree_level.includes('bachelor')}
                                 onChange={this.handleFilterChange}
                               /> 
                                &nbsp;Bachelor
@@ -262,6 +330,7 @@ handleSortClick = (sortField: string) => {
                                 className="pointer-checkbox" 
                                 name="degree_level" 
                                 value="master" 
+                                checked={this.state.filters.degree_level.includes('master')}
                                 onChange={this.handleFilterChange}
                               />
                                &nbsp;Master
@@ -274,6 +343,7 @@ handleSortClick = (sortField: string) => {
                                 className="pointer-checkbox" 
                                 name="degree_level" 
                                 value="doctoral" 
+                                checked={this.state.filters.degree_level.includes('doctoral')}
                                 onChange={this.handleFilterChange}
                               />
                                &nbsp;Doctoral
@@ -290,6 +360,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="module_type" 
                                   value="erasmus" 
+                                  checked={this.state.filters.module_type.includes('erasmus')}
                                   onChange={this.handleFilterChange}
                               /> 
                                &nbsp;Erasmus
@@ -301,10 +372,11 @@ handleSortClick = (sortField: string) => {
                                   type="checkbox" 
                                   className="pointer-checkbox" 
                                   name="module_type" 
-                                  value="obiligitory" 
+                                  value="obligatory" 
+                                  checked={this.state.filters.module_type.includes('obligatory')}
                                   onChange={this.handleFilterChange}
                               />  
-                               &nbsp;Obiligitory
+                               &nbsp;Obligatory
                             </label>
                         </div>
                         <div className="checkbox">
@@ -314,6 +386,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="module_type" 
                                   value="elective" 
+                                  checked={this.state.filters.module_type.includes('elective')}
                                   onChange={this.handleFilterChange}
                               /> 
                                &nbsp;Elective
@@ -329,11 +402,10 @@ handleSortClick = (sortField: string) => {
                           max="20" 
                           step="1" 
                           name="ects"
-                          value={this.state.sliderValue ?? 0}  
+                          value={this.state.filters.ects ?? 0}
                           onChange={this.handleSliderChange} 
-                          ref={this.rangeSliderRef} 
-                        />
-                        <span> {this.state.sliderValue !== null && this.state.sliderValue !== 0 ? this.state.sliderValue : ""} </span>
+                      />
+                      <span> {this.state.filters.ects !== null ? this.state.filters.ects : "All"} </span>
                       </div>
                       
                       <div className ="filter-item">
@@ -347,8 +419,9 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="university" 
                                   value="Bialystok University Of Technology" 
+                                  checked={this.state.filters.university.includes('Bialystok University Of Technology')}
                                   onChange={this.handleFilterChange}
-                                /> 
+                              /> 
                                 &nbsp;Bialystok University Of Technology
                                 </label>
                               <label>
@@ -357,6 +430,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="university" 
                                   value="Technische Universitat Chemnitz" 
+                                  checked={this.state.filters.university.includes('Technische Universitat Chemnitz')}
                                   onChange={this.handleFilterChange}
                                 />
                                 &nbsp;Technische Universitat Chemnitz
@@ -367,6 +441,7 @@ handleSortClick = (sortField: string) => {
                                   className="pointer-checkbox" 
                                   name="university" 
                                   value="University of Nova Gorica" 
+                                  checked={this.state.filters.university.includes('University of Nova Gorica')}
                                   onChange={this.handleFilterChange}
                                 /> 
                                 &nbsp;University of Nova Gorica
@@ -409,10 +484,11 @@ function useRouteInfo() {
 }
 
 const SearchPageWrapper = () => {
-  const { location } = useRouteInfo();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Pass location and any other necessary props to SearchPage
-  return <SearchPage location={location} />;
+  return <SearchPage navigate={navigate} location={location} />;
 };
 
 export default SearchPageWrapper;
+

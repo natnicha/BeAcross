@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
 import { getComment } from '../services/commentServices';
 import { postComment } from '../services/commentServices';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -41,8 +42,11 @@ interface ModuleComment {
 
 const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
    
+    const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
@@ -54,7 +58,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await getComment(selectedItem.module_id, jwtToken);
+                const response = await getComment(moduleId, jwtToken);
                 // Map the response to match the ModuleComment type
                 const mappedComments = response.items.map(item => ({
                     user: item.user,
@@ -67,7 +71,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
             }
         };
         fetchComments();
-    }, [selectedItem.module_id, jwtToken]);
+    }, [moduleId, jwtToken]);
     
     const handleUniLogo = (university: string) => {
         switch (university) {
@@ -87,7 +91,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         if (!commentText.trim()) return;
     
         try {
-            const response = await postComment(selectedItem.module_id, jwtToken, commentText);
+            const response = await postComment(moduleId, jwtToken, commentText);
             alert(response.message); // Show success or error message
             // Optionally refresh comments here or update UI to show the new comment
             setCommentText(''); // Clear the comment box after submission
@@ -96,11 +100,18 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         }
     };
 
+    const closePopup = () => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.delete('module');
+        navigate({ pathname: '/search', search: searchParams.toString() });
+        closeAllPopups();
+      };
+
     // Close the popup if clicking outside of it
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
         if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-            closeAllPopups();
+            closePopup();
         }
         };
 
@@ -108,7 +119,8 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         return () => {
         document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [closeAllPopups]);
+    }, [closePopup]);
+    
     
     return (
         <div className="module-detail">
@@ -118,7 +130,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                     <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                     </div>
                     <button 
-                        onClick={closeAllPopups} 
+                        onClick={closePopup} 
                         style={{ 
                             position: 'absolute', 
                             top: '10px', 
