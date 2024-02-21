@@ -1,9 +1,11 @@
+import inspect
+import os
 import json
 import re
 from typing import Annotated, Union
 from bson import json_util
 from bson.objectid import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Header, Query, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
 from owlready2 import *
@@ -236,6 +238,7 @@ async def search(
                             pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
         orderby: str = Query('asc', pattern='^asc$|^desc$'),
         db: MongoClient = Depends(get_database),
+        background_tasks: BackgroundTasks = None
 ):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
@@ -251,12 +254,79 @@ async def search(
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
 
+    background_tasks.add_task(test, items=["Poppy Patel", "Traci Harper", "Mohammed Davis", "Erin Grant"])
     return {
         "data": {
             "total_results": count,
             "total_items": len(data),
             "items": data
         }}
+
+#### Approach 2
+def test(items):
+    from multiprocessing.pool import ThreadPool as Pool
+    pool_size = 8  # your "parallelness"
+    print('parent process:', os.getpid())
+    def worker(item):
+        print('process ID:', os.getpid(), "|", multiprocessing.Process(), '| module name:', __name__,  "| function:", inspect.stack()[0][3])
+        print(item)
+
+    pool = Pool(pool_size)
+
+    for item in items:
+        print("called:", item)
+        pool.apply_async(worker, (item,))
+
+    pool.close()
+    pool.join()
+
+
+#### Approach 1
+# def background(f):
+#     def wrapped(*args, **kwargs):
+#         return asyncio.get_event_loop().run_in_executor(None, f, *args, **kwargs)
+
+#     return wrapped
+
+
+# @background
+# def test_fork_process(items: list):
+#     print('parent process:', os.getppid())
+#     # pool = Pool()
+#     # result1 = pool.apply_async(do_function, item)    # evaluate "solve1(A)" asynchronously
+#     # result2 = pool.apply_async(solve2, [B])    # evaluate "solve2(B)" asynchronously
+#     # answer1 = result1.get(timeout=10)
+#     # answer2 = result2.get(timeout=10)
+
+#     # for item in items:
+#     #     p = Process(target=do_function, args=(item,))
+#     #     p.start()
+#     # p.join()
+#     loop = asyncio.new_event_loop()
+#     asyncio.set_event_loop(loop) 
+
+#     task = [asyncio.ensure_future(do_function(item)) for item in items]
+#     looper = asyncio.gather(*task)         # Run the loop
+#     results = loop.run_until_complete(looper) 
+#     print(results)
+#     # for item in items:
+#     #     do_function(item)
+
+
+# # async def loop_items(items: list[str]):
+# #     tasks = [] # dictionary of start times for each url
+# #     for item in items:
+# #         task = asyncio.ensure_future(do_function(item))
+# #         tasks.append(task) # create list of tasks
+# #     _ = await asyncio.gather(*tasks) # gather task responses
+
+# async def do_function(item: str):
+#     # random_sleep_sec = randint(0,10)
+#     # await asyncio.sleep(random_sleep_sec)
+#     print('process ID:', os.getpid(), '| module name:', __name__,  "| function:", inspect.stack()[0][3])
+    
+#     print(item)
+#     return item
 
 
 def prepare_item(db: MongoClient, items: Cursor):
@@ -404,6 +474,9 @@ async def create_module(
         mod.similar_modules = similar_module_detail_list
 
 
+    # BackgroundTasks.add_task(calculate_similarity_scores(item_response_list))
+    # background_tasks.add_task(add_modules_to_owl())
+    # background_tasks.add_task(add_modules_to_owl()) //send email
     return {
         "data": {
             "total_items": len(item_response_list),
