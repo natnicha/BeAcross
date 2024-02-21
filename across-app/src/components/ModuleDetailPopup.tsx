@@ -3,6 +3,7 @@ import { usePopups } from '../PopupContext';
 import { getComment } from '../services/commentServices';
 import { postComment } from '../services/commentServices';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { loadAppConfig } from '../services/configUtils';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -47,6 +48,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
     const navigate = useNavigate();
     const location = useLocation();
+    const [config, setConfig] = useState<{ apiBaseUrl: string } | null>(null);
 
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
@@ -54,7 +56,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
-    
+       
     useEffect(() => {
         const fetchComments = async () => {
             try {
@@ -93,7 +95,6 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         try {
             const response = await postComment(moduleId, jwtToken, commentText);
             alert(response.message); // Show success or error message
-            // Optionally refresh comments here or update UI to show the new comment
             setCommentText(''); // Clear the comment box after submission
         } catch (error) {
             console.error("Failed to submit comment:", error);
@@ -122,13 +123,34 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     }, [closePopup]);
 
     //socia media sharing
+    useEffect(() => {
+        loadAppConfig()
+          .then((loadedConfig) => {
+            setConfig(loadedConfig);
+          })
+          .catch((error) => {
+            console.error('Error loading the configuration:', error);
+          });
+      }, []);
+
     const openInNewWindow = (url: string) => {
         window.open(url, '_blank', 'noopener,noreferrer');
     };
     
     // Function to generate Facebook share URL
     const shareOnFacebook = (url: string) => {
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+        if (!config) {
+            console.error('Configuration has not been loaded yet.');
+            return;
+        }
+         // Replace 'localhost:3000' or any local IP Address
+        const baseUrl = new URL(config.apiBaseUrl);
+        const originalUrl = new URL(url);
+
+        // Construct the new URL using the base URL from config and the original URL's pathname and search
+        const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
+
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newUrl)}`;
         openInNewWindow(facebookUrl);
     };
     

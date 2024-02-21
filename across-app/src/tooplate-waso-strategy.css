@@ -1215,6 +1215,7 @@ td {
 
 .social-icon-link:hover {
   color: var(--secondary-color);
+  cursor: pointer;
 }
 
 /*---------------------------------------
