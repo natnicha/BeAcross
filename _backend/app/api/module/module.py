@@ -9,6 +9,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Header, 
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
 from owlready2 import *
+from app.email_service.email_sender import send_success_calculated_similarity_email
 from app.owl.modules import add_modules_to_owl
 import xml.etree.ElementTree as ET
 from multiprocessing.pool import ThreadPool as Pool
@@ -389,7 +390,7 @@ async def create_module(
     background_tasks.add_task(add_module_to_res_parallel_process, items=item_response_list)
     background_tasks.add_task(calculate_similarity_for_one_parallel_process, items=item_response_list)
     background_tasks.add_task(add_modules_to_owl)
-    # background_tasks.add_task(add_modules_to_owl()) //send email
+    background_tasks.add_task(send_email_after_calculation, db=db, user_id=ObjectId(request.state.user_id))
 
     return {
         "data": {
@@ -454,6 +455,18 @@ def get_data_from_xml(text: bytes) -> (list, list): # type: ignore
         uploaded_modules_list.append(uploading_model)
         db_modules_list.append(db_model)
     return uploaded_modules_list, db_modules_list
+
+
+async def send_email_after_calculation(db: MongoClient, user_id: ObjectId):
+    user = USERS.get_user_by_id(db, user_id)
+    try:
+        await send_success_calculated_similarity_email(user_email=user["email"], user_name=user["first_name"])
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE
+        )
+    logging.debug('module name: '+__name__+ " | function: "+str(inspect.stack()[0][3])+" | message: email sent")
 
 
 @module.get("/{module_id}/comment", response_model=GetModuleCommentResponseModel, status_code=status.HTTP_200_OK)
