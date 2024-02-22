@@ -409,7 +409,7 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
             detail={"message": f"Invalid ObjectId format: {str(e)}"},
             status_code=status.HTTP_400_BAD_REQUEST
         )
-    
+
     update_result = update_one(db, module_id_obj, module_update.model_dump())
     if update_result.matched_count == 0:
         raise HTTPException(
