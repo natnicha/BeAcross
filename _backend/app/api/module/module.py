@@ -14,6 +14,7 @@ from app.owl.modules import add_modules_to_owl
 import xml.etree.ElementTree as ET
 from multiprocessing.pool import ThreadPool as Pool
 from nltk.corpus import wordnet
+import threading
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
@@ -403,48 +404,55 @@ async def create_module(
 
 
 def add_module_to_res_parallel_process(items: list):
-    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
+    logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: started")
     for item in items:
         add_module_to_res(item.module_id)
-    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
+    logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: finished")
         
 
 def calculate_similarity_for_one_parallel_process(items: list):
     try:
-        pool_size = multiprocessing.cpu_count()-4
+        logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: started")
+        cpu_count = multiprocessing.cpu_count()
+        pool_size = int(cpu_count*0.7) + (cpu_count%0.7 > 0)
         similarity_changes = []
         def worker(item):
-            max_retry = 3
+            MAX_RETRY = 3
             round = 0
             is_success = False
-            logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
-            while(not is_success and round <= max_retry):
+            try:
+                logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: started")
+            except Exception as e:
+                logging.error(f"| {__name__}.{inspect.stack()[0][3]} | message: {e}")
+            
+            while(not is_success and round <= MAX_RETRY):
                 try:
                     similarity_changes.append(start_similarity_for_one(item))
                     is_success = True
+                    logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: finished")
                 except Exception as e:
-                    logging.error(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
+                    logging.error(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: {e}")
                     wordnet.ensure_loaded()
                     round += 1
-                    logging.error(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: retry ("+str(round)+") a failed process")
-            logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
+                    logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: retry ({round}) a failed process")
             
 
         pool = Pool(pool_size)
+        logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: {pool_size} pool size with {len(items)} modules start processing...")
 
         for item in items:
-            logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: call -> "+str(item.module_id))
+            logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: call -> {item.module_id}")
             pool.apply_async(worker, (item,))
 
         pool.close()
         pool.join()
-        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: all processes joined")
+        logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: all parallel processes joined")
 
-        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: writing a result json file")
+        logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: writing a result json file")
         combine_similarity_results_and_write_back(similarity_changes)
-        logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: successfully write a result json file")
+        logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: {len(items)} modules successfully proceeded")
     except Exception as e:
-        logging.error(__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
+        logging.error(f"{__name__}.{inspect.stack()[0][3]} | message: {e}")
         raise e
 
 
@@ -482,7 +490,7 @@ async def send_email_after_calculation(db: MongoClient, user_id: ObjectId):
             detail={"message": str(e)},
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE
         )
-    logging.debug(__name__+'.'+str(inspect.stack()[0][3])+" | message: email sent")
+    logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: email sent")
 
 
 @module.get("/{module_id}/comment", response_model=GetModuleCommentResponseModel, status_code=status.HTTP_200_OK)
