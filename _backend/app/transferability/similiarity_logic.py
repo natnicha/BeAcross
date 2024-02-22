@@ -1,6 +1,5 @@
 import os
 import nltk
-from nltk.corpus import wordnet
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -81,7 +80,6 @@ def pre_process(text):
     text = unidecode(text)
     current_directory = os.path.dirname(os.path.abspath(__file__))
     nltk.data.path.append(current_directory+"\\nltk_data")
-    wordnet.ensure_loaded()
     stopset = set(stopwords.words('english'))
     words = word_tokenize(text)
     words = [word.lower() for word in words if word.isalnum() and word.lower() not in stopset]
@@ -90,7 +88,6 @@ def pre_process(text):
 
 # Lemmatization of Text
 def lemma(text):
-    wordnet.ensure_loaded()
     lemmatizer = WordNetLemmatizer()
     words = word_tokenize(text)
     lemmatized_string = ' '.join([lemmatizer.lemmatize(words) for words in words])
