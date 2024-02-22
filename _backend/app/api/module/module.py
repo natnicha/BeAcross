@@ -13,6 +13,7 @@ from app.email_service.email_sender import send_success_calculated_similarity_em
 from app.owl.modules import add_modules_to_owl
 import xml.etree.ElementTree as ET
 from multiprocessing.pool import ThreadPool as Pool
+from nltk.corpus import wordnet
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
@@ -413,12 +414,19 @@ def calculate_similarity_for_one_parallel_process(items: list):
         pool_size = multiprocessing.cpu_count()-4
         similarity_changes = []
         def worker(item):
+            max_retry = 3
+            round = 0
+            is_success = False
             logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: started")
-            try:
-                similarity_changes.append(start_similarity_for_one(item))
-            except Exception as e:
-                logging.error(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
-                raise e
+            while(not is_success and round <= max_retry):
+                try:
+                    similarity_changes.append(start_similarity_for_one(item))
+                    is_success = True
+                except Exception as e:
+                    logging.error(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: "+str(e))
+                    wordnet.ensure_loaded()
+                    round += 1
+                    logging.error(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: retry ("+str(round)+") a failed process")
             logging.debug(str(multiprocessing.Process())+' | '+__name__+'.'+str(inspect.stack()[0][3])+" | message: finished")
             
 
