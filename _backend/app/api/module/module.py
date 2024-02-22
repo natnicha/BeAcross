@@ -16,6 +16,7 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
 
+from app.api.auth.auth import get_payload_from_auth
 from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
 
