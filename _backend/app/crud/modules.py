@@ -130,3 +130,8 @@ def create_like_term_dictionary(key: str, value: str, convert_to_like_term: bool
 def find_one(conn: MongoClient, module_id: ObjectId):
     collection = conn[env_config.DB_NAME].get_collection("modules")
     return collection.find_one({'_id': module_id})
+
+def update_one(conn: MongoClient, module_id: ObjectId, update_data: dict):
+    collection = conn[env_config.DB_NAME].get_collection("modules")
+    result = collection.update_one({'_id': module_id}, {'$set': update_data})
+    return result

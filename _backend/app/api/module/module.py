@@ -16,6 +16,9 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
 
+from app.api.module.model import ModuleUpdateModel
+from app.crud.modules import update_one
+
 module = APIRouter()
 
 sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "content":"content"}
@@ -386,3 +389,32 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
         )
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@module.put("/{module_id}", response_model=ModuleResponseModel)
+async def update_module(module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):
+    payload = get_payload_from_auth(token)
+    if payload['role'] != 'sys-admin': 
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to perform this action",
+        )
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    update_result = update_one(db, module_id_obj, module_update.dict())
+    if update_result.matched_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module = MODULES.find_one(db, module_id_obj)
+    updated_module['id'] = str(updated_module.pop("_id"))
+    return updated_module
