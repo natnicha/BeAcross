@@ -87,6 +87,8 @@ def convert_conditions_to_query(term: str, level: list[str], ects: list[int], un
     
     return condition
 
+
+# delCRUD
 def delete_one(conn: MongoClient, module_id: ObjectId):
     collection = conn[env_config.DB_NAME].get_collection("modules")
     return collection.delete_one({'_id': module_id})

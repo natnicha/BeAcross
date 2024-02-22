@@ -15,6 +15,7 @@ from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
 from app.crud.modules import delete_one
 
+# delCRUD
 from app.api.auth.auth_utils import is_valid_jwt_token, get_payload_from_auth
 from fastapi.security import OAuth2PasswordBearer
 
@@ -264,6 +265,7 @@ def is_manual_calculated_sortby(sortby: str):
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
+# delCRUD
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
