@@ -16,9 +16,10 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
 
-from app.api.auth.auth import get_payload_from_auth
+from app.api.auth.auth import get_payload_from_auth #should be deleted before merging to 'main' (it is already in main)
 from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
+from fastapi.security import OAuth2PasswordBearer #should be deleted before merging to 'main' (it is already in main)
 
 module = APIRouter()
 
@@ -391,7 +392,7 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") #should be deleted before merging to 'main' (it is already in main)
 
 @module.put("/{module_id}", response_model=ModuleResponseModel)
 async def update_module(module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):
