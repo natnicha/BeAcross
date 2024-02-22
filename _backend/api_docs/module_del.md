@@ -49,11 +49,11 @@ An admin can update a module and its fields using the module id.
 }
 ```
 
-## Error Response 404 - Not Found (case: no module found by this id)
+## Error Response 400 - Bad Request (case: the id format is incorrect)
 ```json
 {
     "detail": {
-        "message": "Module not found"
+        "message": "Invalid ObjectId format: '65d1f4545a933936a166abbd1234' is not a valid ObjectId, it must be a 12-byte input or a 24-character hex string"
     }
 }
 ```
@@ -64,6 +64,50 @@ An admin can update a module and its fields using the module id.
   "detail" : {
     "message": "invalid authorization token or token expired"
   }
+}
+```
+
+## Error Response 403 - Forbidden (case: the user-role doesn't have enough permission to do this request)
+```json
+{
+    "detail": {
+        "message": "Not authorized to perform this action"
+    }
+}
+```
+
+## Error Response 404 - Not Found (case: the module with the requested id was not found to be updated)
+```json
+{
+    "detail": {
+        "message": "Module not found"
+    }
+}
+```
+
+## Error Response 404 - Not Found (case: the module that was just updated, cannot be fetched anymore )
+```json
+{
+    "detail": {
+        "message": "Module not found after update"
+    }
+}
+```
+
+## Error Response 422 - Unprocessable Entity (case: the body request is empty or incorrect)
+```json
+{
+    "detail": [
+        {
+            "type": "missing",
+            "loc": [
+                "body"
+            ],
+            "msg": "Field required",
+            "input": null,
+            "url": "https://errors.pydantic.dev/2.5/v/missing"
+        }
+    ]
 }
 ```
 

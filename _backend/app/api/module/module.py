@@ -19,6 +19,7 @@ from app.api.module.model import CountRecommendResponseModel, GetModuleCommentIt
 from app.api.auth.auth import get_payload_from_auth #should be deleted before merging to 'main' (it is already in main)
 from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
+from app.crud.modules import find_one
 from fastapi.security import OAuth2PasswordBearer #should be deleted before merging to 'main' (it is already in main)
 
 module = APIRouter()
@@ -409,14 +410,23 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
             detail={"message": f"Invalid ObjectId format: {str(e)}"},
             status_code=status.HTTP_400_BAD_REQUEST
         )
+    
+    # Convert Pydantic model to dictionary and filter out None values (for partial update)
+    update_data = {k: v for k, v in module_update.model_dump(exclude_unset=True).items() if v is not None}
 
-    update_result = update_one(db, module_id_obj, module_update.model_dump())
+    update_result = update_one(db, module_id_obj, update_data)
     if update_result.matched_count == 0:
         raise HTTPException(
             detail="Module not found",
             status_code=status.HTTP_404_NOT_FOUND
         )
     
-    updated_module = MODULES.find_one(db, module_id_obj)
+    updated_module = find_one(db, module_id_obj)
+    if not updated_module:
+        raise HTTPException(
+            detail="Module not found after update",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
     updated_module['id'] = str(updated_module.pop("_id"))
     return updated_module
