@@ -420,10 +420,7 @@ def calculate_similarity_for_one_parallel_process(items: list):
             MAX_RETRY = 3
             round = 0
             is_success = False
-            try:
-                logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: {item.module_id} started")
-            except Exception as e:
-                logging.error(f"| {__name__}.{inspect.stack()[0][3]} | message: {e}")
+            logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: {item.module_id} started")
             
             while(not is_success and round <= MAX_RETRY):
                 try:
