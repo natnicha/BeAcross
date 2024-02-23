@@ -15,8 +15,8 @@ Only student have a personal plan and therefore can get the plan regarding a giv
 | ----------------| --------------------------------- |
 | guest           | -                                 |
 | student         | `/api/v1/personal-plan?{filter}`  |
-| uni-admin       | `/api/v1/personal-plan?{filter}`  |
-| sys-admin       | `/api/v1/personal-plan?{filter}`  |
+| uni-admin       | -                                 |
+| sys-admin       | -                                 |
 
 ## Header Parameters
 
@@ -44,8 +44,102 @@ Only student have a personal plan and therefore can get the plan regarding a giv
 |              |              |              |                                           |
 
 
-## Success Response 200 - OK
+## Success Response 200 - OK (case no filter, modules in a response will only show modules that were added for at least one semester in the personal plan.)
 ```json
+{
+  "data":{
+    "total_items": 6,
+    "items": [
+      {
+        "module_id": "65ac1847d2815b505f3e393d",
+        "personal_plan": [
+          {
+            "semester_id": "65d7a7a22b35547c027a9d5b",
+            "semester_name": "summer 2023",
+            "is_added": true
+          },
+          {
+            "semester_id": "65d7a7bc2b35547c027a9d5c",
+            "semester_name": "winter 2023/24",
+            "is_added": false
+          },
+          {
+            "semester_id": "65d7a7c42b35547c027a9d5d",
+            "semester_name": "summer 2024",
+            "is_added": true
+          },
+          {
+            "semester_id": "65d7a7cc2b35547c027a9d5e",
+            "semester_name": "winter 2024/25",
+            "is_added": true
+          }
+        ]
+      },
+      {
+        "module_id": "65ac1847d2815b505f3e393e",
+        "personal_plan": [
+          {
+            "semester_id": "65d7a7a22b35547c027a9d5b",
+            "semester_name": "summer 2023",
+            "is_added": false
+          },
+          {
+            "semester_id": "65d7a7bc2b35547c027a9d5c",
+            "semester_name": "winter 2023/24",
+            "is_added": false
+          },
+          {
+            "semester_id": "65d7a7c42b35547c027a9d5d",
+            "semester_name": "summer 2024",
+            "is_added": true
+          },
+          {
+            "semester_id": "65d7a7cc2b35547c027a9d5e",
+            "semester_name": "winter 2024/25",
+            "is_added": false
+          }
+        ]
+      }
+      // ... more entries ...
+    ]
+  }
+}
+```
+
+## Success Response 200 - OK (case filter=65ac1847d2815b505f3e393d)
+```json
+{
+  "data":{
+    "total_items": 1,
+    "items": [
+      {
+        "module_id": "65ac1847d2815b505f3e393d",
+        "personal_plan": [
+          {
+            "semester_id": "65d7a7a22b35547c027a9d5b",
+            "semester_name": "summer 2023",
+            "is_added": true
+          },
+          {
+            "semester_id": "65d7a7bc2b35547c027a9d5c",
+            "semester_name": "winter 2023/24",
+            "is_added": false
+          },
+          {
+            "semester_id": "65d7a7c42b35547c027a9d5d",
+            "semester_name": "summer 2024",
+            "is_added": true
+          },
+          {
+            "semester_id": "65d7a7cc2b35547c027a9d5e",
+            "semester_name": "winter 2024/25",
+            "is_added": true
+          }
+        ]
+      }
+    ]
+  }
+}
 ```
 
 ## Error Response 401 - Unauthorized (case: no authorization in a request header)
