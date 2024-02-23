@@ -1,22 +1,22 @@
 # ** [GET] Personal Plan **
 
-Only student have a personal plan and therefore can get the plan regarding with or without a given filter
+Only student have a personal plan and therefore can get the plan regarding a given filter
 
 ## Request
 
 | ** Method **     | GET                                                         |
 | ---------------- | ----------------------------------------------------------- |
-| ** Structure **  | `/api/v1/personal-plan?{module_id}`                         |
-| ** Example **    | `/api/v1/personal-plan?module_id=65aaafcf55de1fe16e64fdd3`  |
+| ** Structure **  | `/api/v1/personal-plan?{filter}`                            |
+| ** Example **    | `/api/v1/personal-plan?module_id=65aaafcf55de1fe16e64fdd3&` |
 
 ## Permissions
 
-| Method          | Allow Acess                          |
-| ----------------| ------------------------------------ |
-| guest           | -                                    |
-| student         | `/api/v1/personal-plan?{module_id}`  |
-| uni-admin       | -                                    |
-| sys-admin       | -                                    |
+| Method          | Allow Acess                       |
+| ----------------| --------------------------------- |
+| guest           | -                                 |
+| student         | `/api/v1/personal-plan?{filter}`  |
+| uni-admin       | `/api/v1/personal-plan?{filter}`  |
+| sys-admin       | `/api/v1/personal-plan?{filter}`  |
 
 ## Header Parameters
 
