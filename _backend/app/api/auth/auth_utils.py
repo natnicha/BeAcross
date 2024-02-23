@@ -162,4 +162,7 @@ def has_permission(request: Request):
             return False
     if api.endswith("/user/") and method == "PUT": #/api/v1/user/
         return True
+    if api.__contains__("/personal-plan"):
+        if not (request.state.role == "student"):
+            return False
     return True
