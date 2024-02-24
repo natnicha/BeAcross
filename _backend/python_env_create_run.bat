@@ -29,6 +29,7 @@ python -m pip install owlready2
 python -m pip install Cython
 python -m pip install rdflib
 python -m pip install aiosmtplib
+python -m pip install filelock
 
 
 python -m uvicorn main:app --reload
