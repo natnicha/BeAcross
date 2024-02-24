@@ -33,6 +33,7 @@ export default function StudList() {
     openDetailPopup();
   };
 
+  //Delete selected student
   const handleDeleteStud = (id: string) => {
     fetch(`http://localhost:8000/api/v1/user/${id}`, {
       method: "DELETE",
@@ -58,6 +59,7 @@ export default function StudList() {
       });
   };
 
+  //Get student list
   useEffect(() => {
     fetch("http://localhost:8000/api/v1/user/profile/list", {
       method: "GET",
@@ -104,7 +106,7 @@ export default function StudList() {
               <div className="search-column" id="registrationNr">
                 {studInfo.registration_number}
               </div>
-              <div className="search-column" id="sourse">
+              <div className="search-column" id="course">
                 {studInfo.course_of_study}
               </div>
               <div className="search-column" id="semester">
