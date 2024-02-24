@@ -156,7 +156,8 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
                 similarity_results[inserted_mod.module_id].append(str(modu["_id"]))
                 if not (inserted_mod.module_id in similarity_changes):
                     similarity_changes[inserted_mod.module_id] = []
-                similarity_changes[inserted_mod.module_id].append(str(modu["_id"]))
+                if str(modu["_id"]) not in similarity_changes[inserted_mod.module_id]:
+                    similarity_changes[inserted_mod.module_id].append(str(modu["_id"]))
 
         # B to A
         if check_similarity_class(modu, inserted_mod):
@@ -165,7 +166,8 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
                 similarity_results[str(modu["_id"])].append(inserted_mod.module_id)
                 if not (str(modu["_id"]) in similarity_changes):
                     similarity_changes[str(modu["_id"])] = []
-                similarity_changes[str(modu["_id"])].append(inserted_mod.module_id)
+                if inserted_mod.module_id not in similarity_changes[str(modu["_id"])]:
+                    similarity_changes[str(modu["_id"])].append(inserted_mod.module_id)
 
     return similarity_changes
 
@@ -182,9 +184,11 @@ def combine_similarity_results_and_write_back(similarity_changes: list):
     lock = FileLock(results_path + ".lock")
     with lock:
         similarity_source = read_similarity_file()
-        for similarity_change in similarity_changes:
-            for key, value in similarity_change.items():
-                similarity_source[key].extend(value)
+        print(similarity_changes)
+        print("lala")
+        res = fix_similarity_changes(similarity_changes)
+        for key, value in res.items():
+            similarity_source[key].extend(value)
         write_back(similarity_source)
 
 # run a similarity check from the database
@@ -338,3 +342,16 @@ def write_back(data):
 
     with open(results_path, 'w') as file:
         json.dump(data, file, indent=2)
+
+def fix_similarity_changes(data):
+    merged_dict = {}
+    for d in data:
+        for key, value in d.items():
+            if key in merged_dict:
+                merged_dict[key].extend(value)
+            else:
+                merged_dict[key] = value
+
+    # Removing duplicates
+    result = {key: list(set(value)) for key, value in merged_dict.items()}
+    return result
