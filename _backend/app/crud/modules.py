@@ -87,13 +87,6 @@ def convert_conditions_to_query(term: str, level: list[str], ects: list[int], un
     
     return condition
 
-<<<<<<< HEAD
-
-# delCRUD
-def delete_one(conn: MongoClient, module_id: ObjectId):
-    collection = conn[env_config.DB_NAME].get_collection("modules")
-    return collection.delete_one({'_id': module_id})
-=======
 def advanced_find(conn: MongoClient, conditions: list, limit: int, offset: int, sortby: str, orderby: str):
     is_asc = 1
     if orderby.lower() == 'desc':
@@ -137,4 +130,8 @@ def create_like_term_dictionary(key: str, value: str, convert_to_like_term: bool
 def find_one(conn: MongoClient, module_id: ObjectId):
     collection = conn[env_config.DB_NAME].get_collection("modules")
     return collection.find_one({'_id': module_id})
->>>>>>> 365f1a05beb083db398f72e79c0e27928dce28cb
+
+# delCRUD
+def delete_one(conn: MongoClient, module_id: ObjectId):
+    collection = conn[env_config.DB_NAME].get_collection("modules")
+    return collection.delete_one({'_id': module_id})

@@ -14,16 +14,12 @@ import app.crud.users as USERS
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-<<<<<<< HEAD
-from app.api.module.model import CountRecommendResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel
-from app.crud.modules import delete_one
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
 
-# delCRUD
+#del CRUD
+from app.crud.modules import delete_one
 from app.api.auth.auth_utils import is_valid_jwt_token, get_payload_from_auth
 from fastapi.security import OAuth2PasswordBearer
-=======
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
->>>>>>> 365f1a05beb083db398f72e79c0e27928dce28cb
 
 module = APIRouter()
 
@@ -272,19 +268,6 @@ def is_manual_calculated_sortby(sortby: str):
 def parse_json(data):
     return json.loads(json_util.dumps(data))
 
-<<<<<<< HEAD
-# delCRUD
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-@module.delete("/{module_id}", status_code=status.HTTP_200_OK)
-async def delete_module(module_id: str, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):    
-    payload = get_payload_from_auth(token)
-    if payload['role'] != 'sys-admin': 
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to perform this action",
-        )
-=======
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
         term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*)+''' ),
@@ -349,23 +332,10 @@ async def get_module_comment(
         module_id: str = None,
         db: MongoClient = Depends(get_database),
     ):
->>>>>>> 365f1a05beb083db398f72e79c0e27928dce28cb
     try:
         module_id_obj = ObjectId(module_id)
     except Exception as e:
         raise HTTPException(
-<<<<<<< HEAD
-            detail={"message": f"Invalid ObjectId format: {str(e)}"},
-            status_code=status.HTTP_400_BAD_REQUEST
-        )
-    deletion_result = delete_one(db, module_id_obj)
-    if deletion_result.deleted_count == 0:
-        raise HTTPException(
-            detail="Module not found",
-            status_code=status.HTTP_404_NOT_FOUND
-        )
-    return {"message": "Module is successfully deleted"}
-=======
             detail={"message": str(e)},
             status_code=status.HTTP_400_BAD_REQUEST
         )
@@ -421,4 +391,29 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
         )
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
->>>>>>> 365f1a05beb083db398f72e79c0e27928dce28cb
+
+#delCRUD
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@module.delete("/{module_id}", status_code=status.HTTP_200_OK)
+async def delete_module(module_id: str, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):    
+    payload = get_payload_from_auth(token)
+    if payload['role'] != 'sys-admin': 
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to perform this action",
+        )
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    deletion_result = delete_one(db, module_id_obj)
+    if deletion_result.deleted_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    return {"message": "Module is successfully deleted"}
