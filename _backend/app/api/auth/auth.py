@@ -122,15 +122,16 @@ async def login(
         db: MongoClient = Depends(get_database),
     ):
     user = authenicate(db, item)
-    jwt = generate_jwt(user["_id"], get_user_role(user_roles_id=user["user_roles_id"]))
     insert_user_logs(db, user["_id"], 
                      host=request.headers.get('host'), 
                      user_agent=request.headers.get('user-agent'))
     user_data_response = get_user_data(db, user)
+    jwt = generate_jwt(user["_id"], get_user_role(user_roles_id=user["user_roles_id"]),user_data_response.university)
     LoginResponseData = LoginResponseDataModel(
         jwt=jwt,
         user=user_data_response
     )
+    print(get_payload_from_auth(jwt))
     return LoginResponseModel(data=LoginResponseData)
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
