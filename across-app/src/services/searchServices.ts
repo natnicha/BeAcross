@@ -10,6 +10,7 @@ interface SearchItem {
     type?: string;
     no_of_recommend?: number;
     no_of_suggested_modules?: number;
+    module_id: string;
 } 
 
 export interface SearchResponse {
