@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
+import { useNavigate, useLocation } from 'react-router-dom';
+import { usePopups } from '../PopupContext';
 
 // Define the Item type based on your data structure
 interface Item {
@@ -12,6 +14,7 @@ interface Item {
     degree_level?: string;
     module_name?: string;
     type?: string;
+    module_id: string;
 }
 
 interface SearchResultProps {
@@ -19,20 +22,45 @@ interface SearchResultProps {
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
-    
+
+    // Hook all popup control to PopupContext
+    const { openModuleDetailPopup, isModuleDetailPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-    const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const module_id = searchParams.get('module');
+    
+        // Ensure props.searchResult.items is defined and populated
+        if (module_id && props.searchResult.items) {
+            const moduleItem = props.searchResult.items.find(item => item.module_id === module_id);
+            if (moduleItem) {
+                setSelectedItem(moduleItem);
+                openModuleDetailPopup(module_id);
+            } else {
+                // Handle case where no matching module is found
+                console.log(`No module found with ID: ${module_id}`);
+            }
+        }
+    }, [location.search, props.searchResult.items]); // Add props.searchResult.items to the dependency array to re-run when items are populated
 
     const handleRowClick = (item: Item) => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('module', item.module_id!);
+        navigate({ pathname: '/search', search: searchParams.toString() });
         setSelectedItem(item);
-        openDetailPopup();
+        openModuleDetailPopup(item.module_id || "default_module_id");
     };
 
-    
-    // Functions to open/close the register popup
-    const openDetailPopup = () => setIsDetailPopupOpen(true);
-    const closeDetailPopup = () => setIsDetailPopupOpen(false);
-    
+    const closePopup = () => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.delete('module');
+        navigate({ pathname: '/search', search: searchParams.toString() });
+        closeAllPopups();
+    };
+     
     return (
         <>
         {/*Search list*/}
@@ -56,7 +84,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     {/*Display Items*/}
                     {props.searchResult.items && props.searchResult.items.map((item, index) => (
                         <div className="search-table" key={index}>
-                            <div className="search-row" onClick={() => handleRowClick(item)}>
+                            <div className="search-row" onClick={() => handleRowClick(item as Item)}>
                                 <div className="search-column" id="moduleCode">
                                     {item.module_code}
                                 </div>
@@ -92,11 +120,11 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     ))}
                     
                     {/* Conditionally render ModuleDetailPopup */}
-                    {selectedItem && isDetailPopupOpen && (
+                    {selectedItem && isModuleDetailPopupOpen && (
                     <ModuleDetailPopup 
                         content="" 
                         selectedItem={selectedItem} 
-                        onClose={closeDetailPopup} 
+                        onClose={closePopup} 
                     />
                     )}  
                 </div>

@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { usePopups } from '../PopupContext';
+import { getComment } from '../services/commentServices';
+import { postComment } from '../services/commentServices';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -10,9 +14,12 @@ interface Item {
     content?: string;
     university?: string;
     degree_program?: string;
+    degree_level?: string;
+    module_type?: string;
     module_code?: number;
     ects?: string;
     module_name?: string;
+    module_id: string;
 }
 
 interface ModuleDetailPopupProps {
@@ -21,7 +28,50 @@ interface ModuleDetailPopupProps {
     onClose: () => void;
 }
 
-const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, content, onClose }) => {
+interface Comment {
+    id: number;
+    text: string;
+}
+
+interface ModuleComment {
+    user: string;
+    message: string;
+    created_at: string;
+}
+
+
+const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
+   
+    const moduleId = selectedItem.module_id || "defaultId";
+    const jwtToken = sessionStorage.getItem("jwtToken") || '';
+    const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Hook all popup control to PopupContext
+    const { closeAllPopups } = usePopups();
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [commentText, setCommentText] = useState('');
+    const popupRef = useRef<HTMLDivElement>(null);
+    const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+    
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const response = await getComment(moduleId, jwtToken);
+                // Map the response to match the ModuleComment type
+                const mappedComments = response.items.map(item => ({
+                    user: item.user,
+                    message: item.message,
+                    created_at: item.created_at.split('T')[0],
+                }));
+                setModuleComments(mappedComments);
+            } catch (error) {
+                console.error('Failed to fetch comments:', error);
+            }
+        };
+        fetchComments();
+    }, [moduleId, jwtToken]);
     
     const handleUniLogo = (university: string) => {
         switch (university) {
@@ -35,16 +85,52 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, con
                 return ""; // Default image or handling
         }
     };
+
+    const handleCommentSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!commentText.trim()) return;
+    
+        try {
+            const response = await postComment(moduleId, jwtToken, commentText);
+            alert(response.message); // Show success or error message
+            // Optionally refresh comments here or update UI to show the new comment
+            setCommentText(''); // Clear the comment box after submission
+        } catch (error) {
+            console.error("Failed to submit comment:", error);
+        }
+    };
+
+    const closePopup = () => {
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.delete('module');
+        navigate({ pathname: '/search', search: searchParams.toString() });
+        closeAllPopups();
+      };
+
+    // Close the popup if clicking outside of it
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+        if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+            closePopup();
+        }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [closePopup]);
+    
     
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
-                <div className="popup-content">
+                <div ref={popupRef} className="popup-content">
                     <div className="title-popup mb-2">
                     <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                     </div>
                     <button 
-                        onClick={onClose} 
+                        onClick={closePopup} 
                         style={{ 
                             position: 'absolute', 
                             top: '10px', 
@@ -56,6 +142,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, con
                         >
                         X
                     </button>
+                    {/*Module Details Section*/}
                     <div className="detail-table">
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <div className="details">
@@ -70,6 +157,20 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, con
                                     <div className="detail-column"><strong>Degree Program:</strong></div>
                                     <div className="detail-column" id="degreeProgram">
                                         {selectedItem.degree_program}
+                                    </div>
+                                </div>
+
+                                <div className="detail-row">
+                                    <div className="detail-column"><strong>Degree Level:</strong></div>
+                                    <div className="detail-column" id="degreeLevel">
+                                        {selectedItem.degree_level}
+                                    </div>
+                                </div>
+
+                                <div className="detail-row">
+                                    <div className="detail-column"><strong>Module Type:</strong></div>
+                                    <div className="detail-column" id="moduleTypr">
+                                        {selectedItem.module_type}
                                     </div>
                                 </div>
 
@@ -95,6 +196,63 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, con
                                 </div>
                             </div>
                     </div>
+                    
+                    {/*Comment Section*/}
+                    <div className="feedback-section">
+                        <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
+                        <div className="detail-table" style={{ height: '40%' }}>
+                            {moduleComments.length > 0 ? (
+                                moduleComments.map((comment, index) => (
+                                    <div key={index} className="comments">
+                                        <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%' }}>
+                                            <div className="detail-column-date" id="user">
+                                                <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>{comment.user}</strong>
+                                            </div>
+                                            <div className="detail-column-date" id="date">
+                                                <span style={{ fontSize: '12px', fontStyle: 'italic', marginLeft: '0%' }}>Date: {comment.created_at}</span>
+                                            </div>
+                                            <div className="comment-control">
+                                                {comment.message}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <h6 style={{ color: '#717275', marginTop: '5px' }}>There is no feedback for this module yet.</h6>
+                            )}
+                        </div>
+                    </div>
+                    
+                    {/*Comment Box Section*/}
+                    {
+                        user_role === 'student' && (
+                            <div className="comment-box">
+                            <h6>You can share your feedback here..</h6>
+                            <p>The comment will post as an anonymous</p>
+                            <form onSubmit={handleCommentSubmit} className="comment-form">
+                                <textarea
+                                className="comment-input"
+                                value={commentText}
+                                onChange={(e) => setCommentText(e.target.value)}
+                                placeholder="Write a comment..."
+                                />
+                                <button 
+                                    type="submit" 
+                                    className="custom-btn-green btn custom-link" 
+                                    disabled={!commentText.trim()}>
+                                Submit
+                                </button>
+                            </form>
+                            <ul className="comments-list">
+                                {comments.map((comment) => (
+                                <li key={comment.id} className="comment">
+                                    {comment.text}
+                                </li>
+                                ))}
+                            </ul>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         </div>

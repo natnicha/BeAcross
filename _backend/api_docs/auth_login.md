@@ -40,7 +40,7 @@ To login to a system after registration
 | Key          | Type         | Required     | Description                                                                                                                  |
 | ------------ | :----------: | :----------: | ---------------------------------------------------------------------------------------------------------------------------- |
 | email        | string(128)  | true         | a user email identifing one's university and is conformed email structure e.g., example@tu-chemnitz.de                       |
-| password     | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case alphabet, 1 lower case alphabet, and 1 special character |
+| password     | string(64)   | true         | a password consisting of 8-64 characters with at least 1 upper case letter[a-z], 1 lower case letter[A-Z], 1 numeric character [0-9], and 1 special character [!%&-.@^_] |
 
 
 ## Sample Body Parameter Json Request
@@ -57,10 +57,12 @@ To login to a system after registration
   "data": {
       "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
       "user": {
+         "id": "65b038be6fe605cc9ce36df6",
          "email": "example.z@tu-chemnitz.de",
          "password": "09679f97a72df416ae47eca4b1d828c02163d045559d0e36e617494c3919a2a4:2b3f0c6c65ad49a4815cd9ad1e67ff52",
          "first_name": "example",
          "last_name": "z",
+         "university": "Technische Universitat Chemnitz",
          "registration_number": null,
          "course_of_study": null,
          "semester": 1,
