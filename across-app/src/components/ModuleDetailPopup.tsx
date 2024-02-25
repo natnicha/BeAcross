@@ -3,6 +3,7 @@ import { usePopups } from '../PopupContext';
 import { getComment } from '../services/commentServices';
 import { postComment } from '../services/commentServices';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { loadAppConfig } from '../services/configUtils';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -47,6 +48,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
     const navigate = useNavigate();
     const location = useLocation();
+    const [config, setConfig] = useState<{ apiBaseUrl: string } | null>(null);
 
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
@@ -54,7 +56,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
-    
+       
     useEffect(() => {
         const fetchComments = async () => {
             try {
@@ -93,7 +95,6 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         try {
             const response = await postComment(moduleId, jwtToken, commentText);
             alert(response.message); // Show success or error message
-            // Optionally refresh comments here or update UI to show the new comment
             setCommentText(''); // Clear the comment box after submission
         } catch (error) {
             console.error("Failed to submit comment:", error);
@@ -120,14 +121,108 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
         document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [closePopup]);
+
+    //socia media sharing
+    useEffect(() => {
+        loadAppConfig()
+          .then((loadedConfig) => {
+            setConfig(loadedConfig);
+          })
+          .catch((error) => {
+            console.error('Error loading the configuration:', error);
+          });
+      }, []);
+
+    const openInNewWindow = (url: string) => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+    
+    // Function to generate Facebook share URL
+    const shareOnFacebook = (url: string) => {
+        if (!config) {
+            console.error('Configuration has not been loaded yet.');
+            return;
+        }
+         // Replace 'localhost:3000' or any local IP Address
+        const baseUrl = new URL(config.apiBaseUrl);
+        const originalUrl = new URL(url);
+
+        // Construct the new URL using the base URL from config and the original URL's pathname and search
+        const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
+
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(newUrl)}`;
+        openInNewWindow(facebookUrl);
+    };
+      
+    // Function to generate Twitter share URL
+    const shareOnTwitter = (url: string, text: string) => {
+        if (!config) {
+            console.error('Configuration has not been loaded yet.');
+            return;
+        }
+         // Replace 'localhost:3000' or any local IP Address
+        const baseUrl = new URL(config.apiBaseUrl);
+        const originalUrl = new URL(url);
+
+        // Construct the new URL using the base URL from config and the original URL's pathname and search
+        const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
+
+        const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(newUrl)}&text=${encodeURIComponent(text)}`;
+        openInNewWindow(twitterUrl);
+    };
+    
+    // Function to copy current URL to clipboard
+    const copyToClipboard = (url: string) => {
+        if (!config) {
+            console.error('Configuration has not been loaded yet.');
+            return;
+        }
+    
+        const baseUrl = new URL(config.apiBaseUrl);
+        const originalUrl = new URL(url);
+        const newUrl = `${baseUrl.protocol}//${baseUrl.host}${originalUrl.pathname}${originalUrl.search}`;
+    
+        // Try using the Clipboard API first
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(newUrl).then(() => {
+                alert('Link copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        } else {
+            // Fallback: Copy the text using a temporary textarea
+            const textarea = document.createElement('textarea');
+            textarea.value = newUrl;
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Fallback: Copying text command was ' + msg);
+                alert('Link copied to clipboard');
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(textarea);
+        }
+    };
     
     
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
                 <div ref={popupRef} className="popup-content">
-                    <div className="title-popup mb-2">
-                    <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
+                    <div className="title-popup mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
+                        <ul className="social-icon">
+                            <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
+                            </a>
+                            <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
+                            </a>
+                            <a href="#" className="social-icon-link bi bi-link-45deg" onClick={(e) => { e.preventDefault(); copyToClipboard(window.location.href); }} aria-label="Copy Link">
+                            </a>
+                        </ul>
                     </div>
                     <button 
                         onClick={closePopup} 

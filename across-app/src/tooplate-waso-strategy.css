@@ -1189,8 +1189,8 @@ td {
   SOCIAL ICON               
 -----------------------------------------*/
 .social-icon {
-  margin: 0;
-  padding: 0;
+  margin-right: 4%;
+  padding-bottom: 5px;
 }
 
 .social-icon li {
@@ -1206,7 +1206,7 @@ td {
   color: var(--dark-color);
   display: inline-block;
   vertical-align: top;
-  margin: 2px;
+  margin: 5px;
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -1214,7 +1214,8 @@ td {
 }
 
 .social-icon-link:hover {
-  color: var(--primary-color);
+  color: var(--secondary-color);
+  cursor: pointer;
 }
 
 /*---------------------------------------
