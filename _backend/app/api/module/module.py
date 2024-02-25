@@ -412,7 +412,7 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
         )
     
     module_data = MODULES.find_one(db, module_id_obj)
-    print("Uni Data:", payload)
+    print("PayLoad:", payload)
     if payload['role'] == 'uni-admin' and payload.get('university') != module_data.get('university'):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
