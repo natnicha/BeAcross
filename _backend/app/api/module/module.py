@@ -398,10 +398,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") #should be deleted before
 @module.put("/{module_id}", response_model=ModuleResponseModel)
 async def update_module(module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):
     payload = get_payload_from_auth(token)
-    if payload['role'] != 'sys-admin': 
+    if payload['role'] not in ['sys-admin', 'uni-admin']: 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to perform this action",
+            detail="Not authorized to perform this action"
         )
     try:
         module_id_obj = ObjectId(module_id)
@@ -411,6 +411,14 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
             status_code=status.HTTP_400_BAD_REQUEST
         )
     
+    module_data = MODULES.find_one(db, module_id_obj)
+    print("Uni Data:", payload)
+    if payload['role'] == 'uni-admin' and payload.get('university') != module_data.get('university'):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Not authorized to delete module from another university"
+            )
+
     # Convert Pydantic model to dictionary and filter out None values (for partial update)
     update_data = {k: v for k, v in module_update.model_dump(exclude_unset=True).items() if v is not None}
 
