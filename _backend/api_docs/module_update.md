@@ -67,11 +67,20 @@ An admin can update a module and its fields using the module id.
 }
 ```
 
-## Error Response 403 - Forbidden (case: the user-role doesn't have enough permission to do this request)
+## Error Response 403 - Forbidden (case: the user-role doesn't have permission to do this request)
 ```json
 {
     "detail": {
         "message": "Not authorized to perform this action"
+    }
+}
+```
+
+## Error Response 403 - Forbidden (case: the user-role doesn't have permission to access this specific module)
+```json
+{
+    "detail": {
+        "message": "Not authorized to delete module from another university"
     }
 }
 ```
