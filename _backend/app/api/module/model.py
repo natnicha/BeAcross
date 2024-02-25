@@ -52,3 +52,15 @@ class ModuleResponseModel(BaseModel):
     degree_level: str
     url: Optional[str] = None
     type: Optional[str] = None
+
+class ModuleUpdateModel(BaseModel):
+    name: Optional[str] = None
+    content: Optional[str] = None
+    program: Optional[str] = None
+    university: Optional[str] = None
+    degree_program: Optional[str] = None
+    module_code: Optional[str] = None
+    ects: Optional[int] = None
+    degree_level: Optional[str] = None
+    url: Optional[str] = None
+    type: Optional[str] = None

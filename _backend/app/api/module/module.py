@@ -20,6 +20,9 @@ from app.api.module.model import CountRecommendResponseModel, GetModuleCommentIt
 from app.crud.modules import delete_one
 from app.api.auth.auth_utils import is_valid_jwt_token, get_payload_from_auth
 from fastapi.security import OAuth2PasswordBearer
+from app.api.module.model import ModuleUpdateModel
+from app.crud.modules import update_one
+from app.crud.modules import find_one
 
 module = APIRouter()
 
@@ -430,3 +433,47 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database),
             status_code=status.HTTP_404_NOT_FOUND
         )
     return {"message": "Module is successfully deleted"}
+
+
+@module.put("/{module_id}", response_model=ModuleResponseModel)
+async def update_module(module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):
+    payload = get_payload_from_auth(token)
+    if payload['role'] not in ['sys-admin', 'uni-admin']: 
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to perform this action"
+        )
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    module_data = MODULES.find_one(db, module_id_obj)
+    if payload['role'] == 'uni-admin' and payload.get('university') != module_data.get('university'):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Not authorized to delete module from another university"
+            )
+
+    # Convert Pydantic model to dictionary and filter out None values (for partial update)
+    update_data = {k: v for k, v in module_update.model_dump(exclude_unset=True).items() if v is not None}
+
+    update_result = update_one(db, module_id_obj, update_data)
+    if update_result.matched_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module = find_one(db, module_id_obj)
+    if not updated_module:
+        raise HTTPException(
+            detail="Module not found after update",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module['id'] = str(updated_module.pop("_id"))
+    return updated_module
