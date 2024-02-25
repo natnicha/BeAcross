@@ -1,10 +1,10 @@
 import datetime
 import re
 from typing import Optional
-from bson import ObjectId
-from mongomock import MongoClient
-from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
+from pymongo import MongoClient
+from pydantic import BaseModel, Field
+from bson import ObjectId
 from app.config.config_utils import env_config
 
 class BaseModel(BaseModel):
@@ -16,12 +16,13 @@ class BaseModel(BaseModel):
 class ModulesModel(BaseModel):
     name: str = Field(...)
     degree_program: str = Field(...)
-    level: str = Field(...)
-    code: str = Field(...)
-    university: str = Field(...)
-    ect_credits: int = Field(...)
-    year_of_study: str = Field(...)
+    degree_level: str = Field(...)
     content: str = Field(...)   
+    university: str = Field(...)
+    module_code: str = Field(...)
+    ects: int = Field(...)
+    year: str = Field(...)
+    type: str = Field(...)
     created_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
     updated_at: Optional[datetime.datetime] = Field(default=datetime.datetime.utcnow())
 
@@ -35,6 +36,9 @@ def find(conn: MongoClient, term: str,
     return conn[env_config.DB_NAME].get_collection("modules").find(condition).sort({
         sortby : int(is_asc)
     }).skip(offset).limit(limit)
+
+def find_one(conn: MongoClient, module_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id}, {"_id": 0})
 
 def count(conn: MongoClient, term: str,
           level: list[str], ects: list[int], university: list[str], type: list[str]):
@@ -141,3 +145,7 @@ def update_one(conn: MongoClient, module_id: ObjectId, update_data: dict):
     collection = conn[env_config.DB_NAME].get_collection("modules")
     result = collection.update_one({'_id': module_id}, {'$set': update_data})
     return result
+
+
+def insert_many(conn: MongoClient, modules_model: ModulesModel):
+    return conn[env_config.DB_NAME].get_collection("modules").insert_many([i.dict() for i in modules_model])

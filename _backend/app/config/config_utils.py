@@ -1,3 +1,4 @@
+import logging
 import os
 from dotenv import load_dotenv
 
@@ -24,3 +25,6 @@ def load_env():
 
     env_config.EMAIL_SENDER = os.getenv('EMAIL_SENDER')
     env_config.EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
+def setup_logging():
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
