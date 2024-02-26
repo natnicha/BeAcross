@@ -130,7 +130,7 @@ async def delete_personal_plan(
     semester_count = PERSONAL_PLANS.count_by_id_user_id(db, id=personal_plan_id_obj, user_id=ObjectId(request.state.user_id))
     if semester_count == 0:
         raise HTTPException(
-            detail={"message": "the module added into this user's personal plan for this user is not found"},
+            detail={"message": "no personal plan for this user found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
     
