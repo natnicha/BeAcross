@@ -81,7 +81,7 @@ Only students who added a module for a specific semster into a personal plan can
 ```json
 {
     "detail": {
-        "message": "the module added into this user's personal plan is not found"
+        "message": "the module added into this user's personal plan for the specific semester is not found"
     }
 }
 ```
