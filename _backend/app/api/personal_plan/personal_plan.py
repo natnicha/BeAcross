@@ -117,4 +117,12 @@ async def delete_personal_plan(
         personal_plan_id: str,
         db: MongoClient = Depends(get_database)
     ):
+    try:
+        personal_plan_id_obj = ObjectId(personal_plan_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
     return
