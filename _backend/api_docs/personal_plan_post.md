@@ -83,6 +83,26 @@ Only students can add a module into their personal plan
 ```
 
 
+## Error Response 404 - Not Found (case: not found module ID)
+```json
+{
+    "detail": {
+        "message": "the module ID is not found"
+    }
+}
+```
+
+
+## Error Response 404 - Not Found (case: not found semester ID)
+```json
+{
+    "detail": {
+        "message": "the semester ID is not found"
+    }
+}
+```
+
+
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
