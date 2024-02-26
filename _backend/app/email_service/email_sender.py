@@ -3,7 +3,7 @@ from email.utils import formataddr
 import aiosmtplib
 from fastapi import HTTPException  
 
-from .email_templates import password_reset_template, registration_template
+from .email_templates import password_reset_template, registration_template, success_calculated_similarity_template
 from app.config.config_utils import env_config
 
 async def send_email(receiver_email: str, subject: str, body: str, sender_email: str, sender_password: str):
@@ -46,6 +46,20 @@ async def send_registration_email(user_email: str, password: str, user_name: str
         await send_email(
             receiver_email=user_email,
             subject="Welcome to Across",
+            body=email_body,
+            sender_email=env_config.EMAIL_SENDER, 
+            sender_password=env_config.EMAIL_PASSWORD  # Gmail app password
+        )
+        return True
+    except Exception as e:
+        raise e
+
+async def send_success_calculated_similarity_email(user_email: str, user_name: str):
+    email_body = success_calculated_similarity_template.format(user=user_name)
+    try:
+        await send_email(
+            receiver_email=user_email,
+            subject="Your uploaded modules are ready",
             body=email_body,
             sender_email=env_config.EMAIL_SENDER, 
             sender_password=env_config.EMAIL_PASSWORD  # Gmail app password

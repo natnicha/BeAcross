@@ -14,7 +14,16 @@ mongomock = "*"
 pytest-env = "*"
 pytest-mock = "*"
 pyjwt = "*"
+cython = "*"
+wheel = "*"
+owlready2 = "*"
+rdflib = "*"
+nltk = "*"
+scikit-learn = "*"
+unidecode = "*"
+stopwords = "*"
 aiosmtplib = "*"
+filelock = "*"
 
 [dev-packages]
 

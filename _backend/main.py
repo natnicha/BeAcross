@@ -7,7 +7,7 @@ from app.api.module.module import module
 from app.api.user.user import user
 from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
 from app.db.settings_utils import load_settings
-from app.config.config_utils import load_env
+from app.config.config_utils import load_env, setup_logging
 from app.middleware.middleware import security_checking
 
 app = FastAPI()
@@ -28,6 +28,7 @@ app.add_middleware(
 )
 
 app.add_event_handler("startup", load_env)
+app.add_event_handler("startup", setup_logging)
 app.add_event_handler("startup", connect_to_mongo)
 app.add_event_handler("startup", load_settings)
 app.add_event_handler("shutdown", close_mongo_connection)

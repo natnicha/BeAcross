@@ -27,3 +27,4 @@ _backend/.DS_Store
 .vscode
 .env
 *__pycache__
+.idea
