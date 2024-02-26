@@ -44,14 +44,6 @@ Only students who added a module for a specific semster into a personal plan can
 |                   |              |              |                                     |
 
 
-## Sample Body Parameter Json Request
-```json
-{
-  "personal_plan_id": "65a54de25eb0e12eb0a93e3a"
-}
-```
-
-
 ## Success Response 204 - No content
   [no request body]
 
