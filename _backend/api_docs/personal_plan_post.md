@@ -54,7 +54,7 @@ Only students can add a module into their personal plan
 ```
 
 
-## Success Response 200 - OK
+## Success Response 201 - CREATED
 ```json
 {
   "personal_plan_id": "65a54de25eb0e12eb0a93e3a",
