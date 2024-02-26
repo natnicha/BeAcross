@@ -103,6 +103,16 @@ Only students can add a module into their personal plan
 ```
 
 
+## Error Response 409 - Conflict (case: duplication adding a module within a specific semester for a user)
+```json
+{
+  "detail" : {
+    "message": "duplication adding a module within a specific semester for this user"
+  }
+}
+```
+
+
 ## Error Response 500 - Internal Server Error (case: server down)
 ```json
 {
