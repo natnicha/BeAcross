@@ -54,21 +54,25 @@ Only student have a personal plan and therefore can get the plan regarding a giv
         "module_id": "65ac1847d2815b505f3e393d",
         "personal_plan": [
           {
+            "personal_plan_id": "65d7adc92b35547c027a9d69",
             "semester_id": "65d7a7a22b35547c027a9d5b",
             "semester_name": "summer 2023",
             "is_added": true
           },
           {
+            "personal_plan_id": null,
             "semester_id": "65d7a7bc2b35547c027a9d5c",
             "semester_name": "winter 2023/24",
             "is_added": false
           },
           {
+            "personal_plan_id": "65d7ad2d2b35547c027a9d62",
             "semester_id": "65d7a7c42b35547c027a9d5d",
             "semester_name": "summer 2024",
             "is_added": true
           },
           {
+            "personal_plan_id": "65dcb1e3b2983743c20462e7",
             "semester_id": "65d7a7cc2b35547c027a9d5e",
             "semester_name": "winter 2024/25",
             "is_added": true
@@ -79,21 +83,25 @@ Only student have a personal plan and therefore can get the plan regarding a giv
         "module_id": "65ac1847d2815b505f3e393e",
         "personal_plan": [
           {
+            "personal_plan_id": null,
             "semester_id": "65d7a7a22b35547c027a9d5b",
             "semester_name": "summer 2023",
             "is_added": false
           },
           {
+            "personal_plan_id": null,
             "semester_id": "65d7a7bc2b35547c027a9d5c",
             "semester_name": "winter 2023/24",
             "is_added": false
           },
           {
+            "personal_plan_id": "65d7adaf2b35547c027a9d66",
             "semester_id": "65d7a7c42b35547c027a9d5d",
             "semester_name": "summer 2024",
             "is_added": true
           },
           {
+            "personal_plan_id": null,
             "semester_id": "65d7a7cc2b35547c027a9d5e",
             "semester_name": "winter 2024/25",
             "is_added": false
@@ -116,21 +124,25 @@ Only student have a personal plan and therefore can get the plan regarding a giv
         "module_id": "65ac1847d2815b505f3e393d",
         "personal_plan": [
           {
+            "personal_plan_id": "65d7adc92b35547c027a9d69",
             "semester_id": "65d7a7a22b35547c027a9d5b",
             "semester_name": "summer 2023",
             "is_added": true
           },
           {
+            "personal_plan_id": null,
             "semester_id": "65d7a7bc2b35547c027a9d5c",
             "semester_name": "winter 2023/24",
             "is_added": false
           },
           {
+            "personal_plan_id": "65d7ad2d2b35547c027a9d62",
             "semester_id": "65d7a7c42b35547c027a9d5d",
             "semester_name": "summer 2024",
             "is_added": true
           },
           {
+            "personal_plan_id": "65dcb1e3b2983743c20462e7",
             "semester_id": "65d7a7cc2b35547c027a9d5e",
             "semester_name": "winter 2024/25",
             "is_added": true
