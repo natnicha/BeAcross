@@ -133,4 +133,5 @@ async def delete_personal_plan(
             status_code=status.HTTP_404_NOT_FOUND
         )
     
+    PERSONAL_PLANS.delete_one_by_id(db, personal_plan_id_obj)
     return
