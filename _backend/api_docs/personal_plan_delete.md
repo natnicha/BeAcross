@@ -11,12 +11,12 @@ Only students who added a module for a specific semster into a personal plan can
 
 ## Permissions
 
-| Method          | Allow Acess                       |
-| ----------------| --------------------------------- |
-| guest           | -                                 |
-| student         | `/api/v1/personal-plan`           |
-| uni-admin       | -                                 |
-| sys-admin       | -                                 |
+| Method          | Allow Acess                                 |
+| ----------------| ------------------------------------------- |
+| guest           | -                                           |
+| student         | `/api/v1/personal-plan/{personal_plan_id}`  |
+| uni-admin       | -                                           |
+| sys-admin       | -                                           |
 
 ## Header Parameters
 
