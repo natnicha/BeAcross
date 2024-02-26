@@ -90,6 +90,13 @@ async def create_personal_plan(
             status_code=status.HTTP_404_NOT_FOUND
         )
     
+    semester_count = PERSONAL_PLANS.count_by_module_id_semester_id_user_id(db, user_id=ObjectId(request.state.user_id), semester_id=semester_id_obj, module_id=module_id_obj)
+    if semester_count > 0:
+        raise HTTPException(
+            detail={"message": "duplication adding a module within a specific semester for this user"},
+            status_code=status.HTTP_409_CONFLICT
+        )
+    
     personal_plan = PERSONAL_PLANS.PersonalPlanModel(
         user_id=ObjectId(request.state.user_id),
         semester_id=semester_id_obj,

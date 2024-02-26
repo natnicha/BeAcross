@@ -24,5 +24,12 @@ def get_by_user_id_and_module_id(conn: MongoClient, user_id: ObjectId, module_id
         condition["module_id"] = module_id
     return conn[env_config.DB_NAME].get_collection("personal_plans").find(condition).sort({"module_id": 1, "semester_id": 1})
 
+def count_by_module_id_semester_id_user_id(conn: MongoClient, user_id: ObjectId, semester_id: ObjectId, module_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("personal_plans").count_documents({
+        "user_id": user_id, 
+        "module_id": module_id,
+        "semester_id": semester_id
+        })
+    
 def insert_one(conn: MongoClient, persoanl_plan: PersonalPlanModel):
     return conn[env_config.DB_NAME].get_collection("personal_plans").insert_one(persoanl_plan.dict())
