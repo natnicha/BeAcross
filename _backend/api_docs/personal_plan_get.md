@@ -106,7 +106,7 @@ Only student have a personal plan and therefore can get the plan regarding a giv
 }
 ```
 
-## Success Response 200 - OK (case filter=65ac1847d2815b505f3e393d)
+## Success Response 200 - OK (case module_id=65ac1847d2815b505f3e393d)
 ```json
 {
   "data":{
@@ -138,6 +138,16 @@ Only student have a personal plan and therefore can get the plan regarding a giv
         ]
       }
     ]
+  }
+}
+```
+
+## Success Response 200 - OK (case no personal plan found)
+```json
+{
+  "data":{
+    "total_items": 0,
+    "items": []
   }
 }
 ```
