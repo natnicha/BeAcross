@@ -52,3 +52,9 @@ async def get_personal_plan(
         current_module_id = str(plan["module_id"])
     data.total_items = len(data.items)
     return {"data": data}
+
+
+@personal_plan.post("/", status_code=status.HTTP_200_OK)
+async def get_personal_plan(
+    ):
+    return
