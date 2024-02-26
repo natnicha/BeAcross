@@ -55,6 +55,6 @@ async def get_personal_plan(
 
 
 @personal_plan.post("/", status_code=status.HTTP_200_OK)
-async def get_personal_plan(
+async def create_personal_plan(
     ):
     return
