@@ -8,6 +8,7 @@ class BaseModel(BaseModel):
         json_encoders = {ObjectId: str}
         
 class GetPersonalPlanResponsePersonalPlan(BaseModel):
+    personal_plan_id: str = None
     semester_id: str
     semester_name: str
     is_added: bool = False

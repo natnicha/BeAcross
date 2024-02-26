@@ -47,6 +47,7 @@ async def get_personal_plan(
             data.items.append(GetPersonalPlanResponseItem(module_id=str(plan["module_id"]), personal_plan=model))
         for pp in data.items[-1].personal_plan:
             if pp.semester_id == str(plan["semester_id"]):
+                pp.personal_plan_id = str(plan["_id"])
                 pp.is_added = True
                 break
         current_module_id = str(plan["module_id"])
