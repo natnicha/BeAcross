@@ -97,12 +97,12 @@ async def create_personal_plan(
             status_code=status.HTTP_409_CONFLICT
         )
     
-    personal_plan = PERSONAL_PLANS.PersonalPlanModel(
-        user_id=ObjectId(request.state.user_id),
-        semester_id=semester_id_obj,
-        module_id=module_id_obj
-    )
-    inserted_personal_plan = PERSONAL_PLANS.insert_one(db, personal_plan)
+    inserted_personal_plan = PERSONAL_PLANS.insert_one(db, 
+        persoanl_plan=PERSONAL_PLANS.PersonalPlanModel(
+            user_id=ObjectId(request.state.user_id),
+            semester_id=semester_id_obj,
+            module_id=module_id_obj
+    ))
     
     return PostPersonalPlanResponse(
         personal_plan_id=ObjectId(inserted_personal_plan.inserted_id),
