@@ -25,7 +25,7 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
-from app.transferability.similiarity_run import combine_similarity_results_and_write_back, start_similarity_for_one, add_module_to_res
+from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res
 
 #del CRUD
 from app.crud.modules import delete_one
@@ -600,6 +600,8 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database),
             detail="Module not found",
             status_code=status.HTTP_404_NOT_FOUND
         )
+    
+    remove_similarity_on_delete(module_id)
     return {"message": "Module is successfully deleted"}
 
 
