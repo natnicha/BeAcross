@@ -114,6 +114,7 @@ async def create_personal_plan(
 
 @personal_plan.delete("/{personal_plan_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_personal_plan(
+        request: Request,
         personal_plan_id: str,
         db: MongoClient = Depends(get_database)
     ):
@@ -123,6 +124,13 @@ async def delete_personal_plan(
         raise HTTPException(
             detail={"message": str(e)},
             status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    semester_count = PERSONAL_PLANS.count_by_id_user_id(db, id=personal_plan_id_obj, user_id=ObjectId(request.state.user_id))
+    if semester_count == 0:
+        raise HTTPException(
+            detail={"message": "the module added into this user's personal plan for the specific semester is not found"},
+            status_code=status.HTTP_404_NOT_FOUND
         )
     
     return

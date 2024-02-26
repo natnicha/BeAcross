@@ -30,6 +30,9 @@ def count_by_module_id_semester_id_user_id(conn: MongoClient, user_id: ObjectId,
         "module_id": module_id,
         "semester_id": semester_id
         })
-    
+
+def count_by_id_user_id(conn: MongoClient, id: ObjectId, user_id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("personal_plans").count_documents({"_id": id, "user_id": user_id})
+
 def insert_one(conn: MongoClient, persoanl_plan: PersonalPlanModel):
     return conn[env_config.DB_NAME].get_collection("personal_plans").insert_one(persoanl_plan.dict())
