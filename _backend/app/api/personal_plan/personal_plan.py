@@ -110,3 +110,11 @@ async def create_personal_plan(
         semester_id=semester_id_obj,
         module_id=module_id_obj
     )
+
+
+@personal_plan.delete("/{personal_plan_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_personal_plan(
+        personal_plan_id: str,
+        db: MongoClient = Depends(get_database)
+    ):
+    return
