@@ -87,12 +87,13 @@ def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
         )
     return users[0]
 
-def generate_jwt(user_id: str, user_roles_id: str):
+def generate_jwt(user_id: str, user_roles_id: str, university: str):
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
             "user_id":  str(user_id),
             "role": user_roles_id,
+            "university": university,
             "iat": now,
             "exp": exp
         }, 

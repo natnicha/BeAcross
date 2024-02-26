@@ -16,7 +16,8 @@ app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
 app.include_router(module, prefix='/api/v1/module', tags=['module'])
 app.include_router(user, prefix='/api/v1/user', tags=['user'])
 
-frontend_origins = ['http://localhost:3000']
+#frontend_origins = ['http://localhost:3000']
+frontend_origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
