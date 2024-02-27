@@ -45,6 +45,9 @@ def count(conn: MongoClient, term: str,
     condition = convert_conditions_to_query(term, level, ects, university, type)
     return conn[env_config.DB_NAME].get_collection("modules").count_documents(condition)
 
+def count_by_id(conn: MongoClient, id: ObjectId):
+    return conn[env_config.DB_NAME].get_collection("modules").count_documents({"_id":id})
+
 def convert_str_to_like(term: str):
     return re.compile('.*'+term+'.*', re.IGNORECASE)
 

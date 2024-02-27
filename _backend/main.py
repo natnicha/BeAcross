@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.auth.auth import auth
 from app.api.module.module import module
+from app.api.personal_plan.personal_plan import personal_plan
 from app.api.user.user import user
 from app.db.mongodb_utils import connect_to_mongo, close_mongo_connection
 from app.db.settings_utils import load_settings
@@ -14,6 +15,7 @@ app = FastAPI()
 
 app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
 app.include_router(module, prefix='/api/v1/module', tags=['module'])
+app.include_router(personal_plan, prefix='/api/v1/personal-plan', tags=['personal-plan'])
 app.include_router(user, prefix='/api/v1/user', tags=['user'])
 
 #frontend_origins = ['http://localhost:3000']
