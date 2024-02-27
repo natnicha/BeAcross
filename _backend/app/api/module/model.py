@@ -21,8 +21,13 @@ class ModuleCommentRequestModel(BaseModel):
     module_id: str
     message: str
 
-class ModuleCommentDataModel(ModuleCommentModel):
-    id: ObjectId = None
+class ModuleCommentDataModel(BaseModel):
+    id: str = None
+    module_id: str
+    message: str
+    user_id: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
     
 class ModuleCommentResponseModel(BaseModel):
     message: str
