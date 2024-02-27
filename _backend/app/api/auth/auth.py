@@ -12,7 +12,7 @@ import app.crud.universities as UNIVERSITIES
 from app.email_service.email_sender import *
 
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel
 
 auth = APIRouter()
 
@@ -105,14 +105,23 @@ def prepare_and_insert_user(db: MongoClient, full_name: list, email: str, passwo
     )
 
     try:
-        USERS.insert_one(db, new_user)
+        inserted_user = USERS.insert_one(db, new_user)
     except Exception as e:
         raise HTTPException(
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     
-    return new_user
+    return RegisterDataResponse (
+        id = str(inserted_user.inserted_id),
+        email = email,
+        password = password,
+        first_name = full_name[0],
+        last_name = last_name,
+        user_roles_id = str(user_roles_id),
+        created_at = new_user.created_at,
+        updated_at = new_user.updated_at,
+    )
 
 
 @auth.post("/login", response_model=LoginResponseModel, status_code=status.HTTP_200_OK)
@@ -131,7 +140,6 @@ async def login(
         jwt=jwt,
         user=user_data_response
     )
-    print(get_payload_from_auth(jwt))
     return LoginResponseModel(data=LoginResponseData)
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):

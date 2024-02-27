@@ -168,10 +168,12 @@ async def comment(
         )
     inserted = insert_module_comment(db, module_comment)
     data = ModuleCommentDataModel(
-        id=inserted.inserted_id,
-        module_id=module_comment.module_id,
+        id=str(inserted.inserted_id),
+        module_id=str(module_comment.module_id),
         message=module_comment.message,
-        user_id=module_comment.user_id)
+        user_id=str(module_comment.user_id),
+        created_at=module_comment.created_at,
+        updated_at=module_comment.updated_at)
     return ModuleCommentResponseModel(
         message="successful commented",
         data=data
