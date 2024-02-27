@@ -140,7 +140,6 @@ async def login(
         jwt=jwt,
         user=user_data_response
     )
-    print(get_payload_from_auth(jwt))
     return LoginResponseModel(data=LoginResponseData)
 
 def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: str):
