@@ -11,7 +11,7 @@ interface PopupContextType {
   isModuleDetailPopupOpen: boolean;
   openModuleDetailPopup: (module_id: string) => void;
   isCompareModuleDetailPopupOpen: boolean;
-  openCompareModuleDetailPopup: (module_id: string) => void;
+  openCompareModuleDetailPopup: (module_ids: string[]) => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -36,6 +36,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isCompareModuleDetailPopupOpen, setIsCompareModuleDetailPopupOpen] = useState(false);
 
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
+  const [currentModuleIds, setCurrentModuleIds] = useState<string[]>([]);
 
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
@@ -71,8 +72,8 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     document.body.classList.remove('no-scroll');
   };
 
-  const openCompareModuleDetailPopup = (module_id: string) => {
-    setCurrentModuleId(module_id); // Store the current module_id
+  const openCompareModuleDetailPopup = (module_ids: string[]) => {
+    setCurrentModuleIds(module_ids); // Store the current module IDs
     setIsCompareModuleDetailPopupOpen(true);
     document.body.classList.add('no-scroll');
   };
