@@ -51,6 +51,19 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         }
     }, [location.search, props.searchResult.items]); // Add props.searchResult.items to the dependency array to re-run when items are populated
 
+    useEffect(() => {
+        if (showConfirmPopup) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    
+        // Cleanup function to ensure the class is removed when the component unmounts
+        return () => {
+            document.body.classList.remove('no-scroll');
+        };
+    }, [showConfirmPopup]);
+
     const handleRowClick = (item: Item) => {
         const searchParams = new URLSearchParams(location.search);
         searchParams.set('module', item.module_id!);
@@ -74,6 +87,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         let newSelection = [...selectedCompareItems, item];
         if (newSelection.length <= 2) {
             setSelectedCompareItems(newSelection);
+            setImmediateVisualSelected(prev => [...prev, item]); // Ensure clicked items are visually marked
             setTempCompareItems(newSelection); // Temporarily store the selected items for comparison
     
             if (newSelection.length === 2) {
@@ -90,12 +104,14 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         if (tempCompareItems.length === 2) {
             openCompareModuleDetailPopup(tempCompareItems.map(item => item.module_id));
             setSelectedCompareItems([]); // Reset for new comparisons
+            setImmediateVisualSelected([]); 
         }
     };
     
     const cancelComparison = () => {
         setShowConfirmPopup(false); // Close the popup
         setSelectedCompareItems([]); // Clear selections
+        setImmediateVisualSelected([]); 
     };
 
      
@@ -151,7 +167,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                     </button>
                                     <button className={`btn custom-link ${immediateVisualSelected.includes(item) ? 'custom-btn-green-number' : 'custom-btn-grey-number'}`}
                                         onClick={(event) => handleCompareClick(event, item)}
-                                        disabled={isCompareDisabled(item)}>                                      
+                                        disabled={isCompareDisabled(item)}>
                                         Compare
                                     </button>
                                 </div>
