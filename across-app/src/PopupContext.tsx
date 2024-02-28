@@ -10,6 +10,8 @@ interface PopupContextType {
   closeAllPopups: () => void;
   isModuleDetailPopupOpen: boolean;
   openModuleDetailPopup: (module_id: string) => void;
+  isCompareModuleDetailPopupOpen: boolean;
+  openCompareModuleDetailPopup: (module_id: string) => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
   const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false);
   const [isModuleDetailPopupOpen, setIsModuleDetailPopupOpen] = useState(false);
+  const [isCompareModuleDetailPopupOpen, setIsCompareModuleDetailPopupOpen] = useState(false);
 
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
 
@@ -68,16 +71,24 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     document.body.classList.remove('no-scroll');
   };
 
+  const openCompareModuleDetailPopup = (module_id: string) => {
+    setCurrentModuleId(module_id); // Store the current module_id
+    setIsCompareModuleDetailPopupOpen(true);
+    document.body.classList.add('no-scroll');
+  };
+
   return (
     <PopupContext.Provider value={{
       isLoginPopupOpen,
       isRegisterPopupOpen,
       isForgotPasswordPopupOpen,
       isModuleDetailPopupOpen,
+      isCompareModuleDetailPopupOpen,
       openLoginPopup,
       openRegisterPopup,
       openForgotPasswordPopup,
       openModuleDetailPopup,
+      openCompareModuleDetailPopup,
       closeAllPopups,
     }}>
       {children}

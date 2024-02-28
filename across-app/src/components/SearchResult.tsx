@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
+import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
@@ -24,7 +25,7 @@ interface SearchResultProps {
 const SearchResult: React.FC<SearchResultProps> = (props) => {
 
     // Hook all popup control to PopupContext
-    const { openModuleDetailPopup, isModuleDetailPopupOpen, closeAllPopups } = usePopups();
+    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const [selectedCompareItems, setSelectedCompareItems] = useState<Item[]>([]);
     const navigate = useNavigate();
@@ -59,6 +60,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         const searchParams = new URLSearchParams(location.search);
         searchParams.delete('module');
         navigate({ pathname: '/search', search: searchParams.toString() });
+        setSelectedCompareItems([]);
         closeAllPopups();
     };
 
@@ -70,16 +72,12 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         
         if (newSelection.length === 2) {
             // Open the popup
-            setShowPopup(true);
+            openCompareModuleDetailPopup(item.module_id || "default_module_id");
         }
     };
 
-    const isCompareDisabled = (item: Item) => selectedItems.length >= 2 && !selectedItems.includes(item);
+    const isCompareDisabled = (item: Item) => selectedCompareItems.length >= 2 && !selectedCompareItems.includes(item);
 
-    const closePopup = () => {
-        setShowPopup(false);
-        setSelectedItems([]); // Reset selection on popup close
-    };
      
     return (
         <>
@@ -131,7 +129,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
-                                    <button className="custom-btn-gray-number btn custom-link" style={{ cursor: "default"}}>                                       
+                                    <button className="custom-btn-gray-number btn custom-link" style={{ cursor: "default"}}
+                                        onClick={() => handleCompareClick(item)}
+                                        disabled={isCompareDisabled(item)}>                                      
                                         Compare
                                     </button>
                                 </div>
