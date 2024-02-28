@@ -69,6 +69,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     setIsRegisterPopupOpen(false);
     setIsForgotPasswordPopupOpen(false);
     setIsModuleDetailPopupOpen(false);
+    setIsCompareModuleDetailPopupOpen(false);
     document.body.classList.remove('no-scroll');
   };
 
