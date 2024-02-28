@@ -129,7 +129,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
-                                    <button className="custom-btn-gray-number btn custom-link" style={{ cursor: "default"}}
+                                    <button className="custom-btn-green-number btn custom-link" style={{ cursor: "default"}}
                                         onClick={() => handleCompareClick(item)}
                                         disabled={isCompareDisabled(item)}>                                      
                                         Compare

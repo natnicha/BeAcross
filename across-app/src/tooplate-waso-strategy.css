@@ -817,8 +817,8 @@ td {
   color: var(--white-color);
 }
 
-.custom-btn-gray-number {
-  background: var(--p-color);
+.custom-btn-green-number {
+  background: var(--green-color);
   border-radius: 10px;
   color: var(--white-color);
   font-size: var(--copyright-text-font-size);
