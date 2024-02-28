@@ -171,7 +171,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     {isCompareModuleDetailPopupOpen && (
                         <CompareModuleDetailPopup 
                             content="" 
-                            selectedItems={selectedCompareItems} // Corrected prop name and passed the correct array
+                            selectedItems={tempCompareItems} // Corrected prop name and passed the correct array
                             onClose={closePopup} 
                         />
                     )}
@@ -179,7 +179,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     {showConfirmPopup && (
                         <div className="confirmation-popup">
                             <p>Do you want to compare these selected Modules?</p>
-                            <button className="custom-btn-green btn custom-link" onClick={confirmComparison}>Yes</button>
+                            <button className="custom-btn-green btn custom-link" onClick={confirmComparison}>Yes</button>&nbsp;&nbsp;
                             <button className="custom-btn-red btn custom-link"onClick={cancelComparison}>No</button>
                         </div>
                     )}

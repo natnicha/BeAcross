@@ -199,8 +199,7 @@ const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedIt
             document.body.removeChild(textarea);
         }
     };
-    
-    
+        
     return (
         <div className="module-detail">
             <div className="popup-content">
