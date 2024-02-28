@@ -1,3 +1,4 @@
+import logging
 from bson import ObjectId
 from fastapi import APIRouter, Depends, status, HTTPException, Request
 from pymongo import MongoClient
@@ -37,8 +38,8 @@ async def register(
     
     # generate password
     password = generate_password()
-    print("Only temporary show password, will be deleted when email server is ready.")
-    print("Generated password is"+password)
+    logging.info("Only temporary show password, will be deleted when email server is ready.")
+    logging.info(f"Generated password {password}")
 
     # encrypt password using salted hashing
     encrypted_password = hash_text(password)
