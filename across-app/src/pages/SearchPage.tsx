@@ -31,8 +31,6 @@ interface SearchPageState {
 
 class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
    
-  private rangeSliderRef = React.createRef<HTMLInputElement>();
-
   handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     this.setState(prevState => ({

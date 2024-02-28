@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
+import { postRecommended } from "../services/recommendedServices";
+import { deleteRecommended } from "../services/recommendedServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
 
@@ -16,6 +18,7 @@ interface Item {
     module_name?: string;
     type?: string;
     module_id: string;
+    is_recommended: boolean;
 }
 
 interface SearchResultProps {
@@ -23,6 +26,11 @@ interface SearchResultProps {
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
+
+    const recommended = false; // Mock
+    
+    const jwtToken = sessionStorage.getItem("jwtToken") || '';
+    const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
 
     // Hook all popup control to PopupContext
     const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, closeAllPopups } = usePopups();
@@ -114,6 +122,20 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         setImmediateVisualSelected([]); 
     };
 
+    const handleRecommendedClick = async (item: Item) => {       
+        try {
+          if (recommended) {
+            await deleteRecommended(item.module_id, jwtToken);
+          } else {
+            await postRecommended(item.module_id, jwtToken);
+          }
+          // You might want to update your UI based on the success of these operations
+          // For example, toggling `is_recommended` or updating `no_of_recommend`
+        } catch (error) {
+          console.error("Error handling recommendation:", error);
+        }
+      };
+
      
     return (
         <>
@@ -159,9 +181,18 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 
                                 <div className="search-feature-control-btn">
-                                    <button className="custom-btn-yellow-number btn custom-link">                                       
+                                { user_role === 'student' ? (
+                                    <button 
+                                        className={`btn custom-link ${recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
+                                        onClick={() => handleRecommendedClick(item)}
+                                        disabled={!recommended}>
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                     </button>
+                                ) : (
+                                    <button className="custom-btn-yellow-number btn custom-link" disabled>
+                                        <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
+                                    </button>
+                                )}
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>

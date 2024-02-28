@@ -11,6 +11,7 @@ interface SearchItem {
     no_of_recommend?: number;
     no_of_suggested_modules?: number;
     module_id: string;
+    is_recommended: boolean;
 } 
 
 export interface SearchResponse {
