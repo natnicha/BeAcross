@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
+import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
 import { SearchResponse } from "../services/searchServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
@@ -24,10 +25,14 @@ interface SearchResultProps {
 const SearchResult: React.FC<SearchResultProps> = (props) => {
 
     // Hook all popup control to PopupContext
-    const { openModuleDetailPopup, isModuleDetailPopupOpen, closeAllPopups } = usePopups();
+    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const [selectedCompareItems, setSelectedCompareItems] = useState<Item[]>([]);
+    const [immediateVisualSelected, setImmediateVisualSelected] = useState<Item[]>([]);
     const navigate = useNavigate();
     const location = useLocation();
+    const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+    const [tempCompareItems, setTempCompareItems] = useState<Item[]>([]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -46,6 +51,19 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         }
     }, [location.search, props.searchResult.items]); // Add props.searchResult.items to the dependency array to re-run when items are populated
 
+    useEffect(() => {
+        if (showConfirmPopup) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    
+        // Cleanup function to ensure the class is removed when the component unmounts
+        return () => {
+            document.body.classList.remove('no-scroll');
+        };
+    }, [showConfirmPopup]);
+
     const handleRowClick = (item: Item) => {
         const searchParams = new URLSearchParams(location.search);
         searchParams.set('module', item.module_id!);
@@ -58,8 +76,44 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         const searchParams = new URLSearchParams(location.search);
         searchParams.delete('module');
         navigate({ pathname: '/search', search: searchParams.toString() });
+        setSelectedCompareItems([]);
         closeAllPopups();
     };
+
+    const handleCompareClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, item: Item) => {
+        event.preventDefault();
+        event.stopPropagation(); // Prevent click from bubbling up
+    
+        let newSelection = [...selectedCompareItems, item];
+        if (newSelection.length <= 2) {
+            setSelectedCompareItems(newSelection);
+            setImmediateVisualSelected(prev => [...prev, item]); // Ensure clicked items are visually marked
+            setTempCompareItems(newSelection); // Temporarily store the selected items for comparison
+    
+            if (newSelection.length === 2) {
+                // Show confirmation popup only when two items are selected
+                setShowConfirmPopup(true);
+            }
+        }
+    };
+
+    const isCompareDisabled = (item: Item) => selectedCompareItems.length >= 2 && !selectedCompareItems.includes(item);
+
+    const confirmComparison = () => {
+        setShowConfirmPopup(false); // Close the confirmation popup
+        if (tempCompareItems.length === 2) {
+            openCompareModuleDetailPopup(tempCompareItems.map(item => item.module_id));
+            setSelectedCompareItems([]); // Reset for new comparisons
+            setImmediateVisualSelected([]); 
+        }
+    };
+    
+    const cancelComparison = () => {
+        setShowConfirmPopup(false); // Close the popup
+        setSelectedCompareItems([]); // Clear selections
+        setImmediateVisualSelected([]); 
+    };
+
      
     return (
         <>
@@ -111,7 +165,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
-                                    <button className="custom-btn-gray-number btn custom-link" style={{ cursor: "default"}} disabled={true}>                                       
+                                    <button className={`btn custom-link ${immediateVisualSelected.includes(item) ? 'custom-btn-green-number' : 'custom-btn-grey-number'}`}
+                                        onClick={(event) => handleCompareClick(event, item)}
+                                        disabled={isCompareDisabled(item)}>
                                         Compare
                                     </button>
                                 </div>
@@ -126,7 +182,23 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         selectedItem={selectedItem} 
                         onClose={closePopup} 
                     />
-                    )}  
+                    )} 
+
+                    {isCompareModuleDetailPopupOpen && (
+                        <CompareModuleDetailPopup 
+                            content="" 
+                            selectedItems={tempCompareItems} // Corrected prop name and passed the correct array
+                            onClose={closePopup} 
+                        />
+                    )}
+
+                    {showConfirmPopup && (
+                        <div className="confirmation-popup">
+                            <p>Do you want to compare these selected Modules?</p>
+                            <button className="custom-btn-green btn custom-link" onClick={confirmComparison}>Yes</button>&nbsp;&nbsp;
+                            <button className="custom-btn-red btn custom-link"onClick={cancelComparison}>No</button>
+                        </div>
+                    )}
                 </div>
             </div>
         </section>
