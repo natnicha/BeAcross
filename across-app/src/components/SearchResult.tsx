@@ -26,6 +26,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     // Hook all popup control to PopupContext
     const { openModuleDetailPopup, isModuleDetailPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const [selectedCompareItems, setSelectedCompareItems] = useState<Item[]>([]);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -59,6 +60,25 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         searchParams.delete('module');
         navigate({ pathname: '/search', search: searchParams.toString() });
         closeAllPopups();
+    };
+
+    const handleCompareClick = (item: Item) => {
+        const newSelection = [...selectedCompareItems, item];
+        if (newSelection.length <= 2) {
+            setSelectedCompareItems(newSelection);
+        }
+        
+        if (newSelection.length === 2) {
+            // Open the popup
+            setShowPopup(true);
+        }
+    };
+
+    const isCompareDisabled = (item: Item) => selectedItems.length >= 2 && !selectedItems.includes(item);
+
+    const closePopup = () => {
+        setShowPopup(false);
+        setSelectedItems([]); // Reset selection on popup close
     };
      
     return (
@@ -111,7 +131,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
-                                    <button className="custom-btn-gray-number btn custom-link" style={{ cursor: "default"}} disabled={true}>                                       
+                                    <button className="custom-btn-gray-number btn custom-link" style={{ cursor: "default"}}>                                       
                                         Compare
                                     </button>
                                 </div>
