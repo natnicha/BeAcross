@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+          integrity="sha256-wLz3iY/cO4e6vKZ4zRmo4+9XDpMcgKOvv/zEU3OMlRo=" crossorigin="anonymous">
+    <title>Safety Check Report</title>
+</head>
+<body>
+<div class="container">
+
+    
+
+    <h1 class="text-center mb-3 mt-5">Safety Check Report</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card my-2">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Scan Summary</h4>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="card bg-secondary bg-opacity-25 text-black">
+                                <div class="card-body">
+                                    <p class="card-text">Packages Found (<a href="#scanned-packages">details &#8595;</a>)</p>
+                                    <h5 class="card-title fs-3">88</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-success  bg-opacity-25 text-black">
+                                <div class="card-body">
+                                    <p class="card-text">Vulnerabilities Reported (<a href="#vulnerabilities-found">details &#8595;</a>)</p>
+                                    <h5 class="card-title fs-3">0</h5>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="mt-3 card bg-secondary bg-opacity-10">
+                        <div class="card-body fs-sm">
+                            <h5 class="mb-2">Meta-data</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="my-1"><span class="fw-bold">Time</span>: 2024-02-28 21:22:32</p>
+                                    <p class="my-1"><span class="fw-bold">Safety version</span>: 3.0.1</p>
+                                    <p class="my-1">
+                                        <span class="fw-bold"></span>
+                                        
+                                            &nbsp; <a href="#use-api-key">Use an API key</a>
+                                        
+                                    </p>
+                                    <p class="my-1">
+                                        <span class="fw-bold">Configuration file: </span>
+                                        
+                                            None
+                                        
+                                    </p>
+                                    
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="my-1"><span class="fw-bold">Scan target</span>: environment</p>
+                                    <p class="my-1"><span class="fw-bold">Scan paths</span>: <br/>['c:\\users\\natni\\.virtualenvs\\_backend-_s83yzyq\\lib\\site-packages', 'C:\\Users\\natni\\.virtualenvs\\_backend-_s83yzYQ', 'C:\\Users\\natni\\.virtualenvs\\_backend-_s83yzYQ\\lib\\site-packages', 'C:\\Users\\natni\\.virtualenvs\\_backend-_s83yzYQ\\Scripts\\python39.zip', 'C:\\ProgramData\\Anaconda3\\lib', 'C:\\Users\\natni\\source\\repos\\victory-pie-solutions\\victory-pie-solutions\\_backend', 'C:\\ProgramData\\Anaconda3', 'C:\\ProgramData\\Anaconda3\\DLLs']</p>
+                                    
+                                        
+                                            <p class="my-1"><span class="fw-bold">Scan git context</span></p>
+                                            <p class="my-1"><span class="fw-bold"> &nbsp; origin: </span> ssh://git@gitlab.hrz.tu-chemnitz.de/vsr/edu/planspiel/WS2324/victory-pie-solutions.git</p>
+                                            <p class="my-1"><span class="fw-bold"> &nbsp; branch: </span> fix/backend-unit-test</p>
+                                        
+                                         
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12" id="scanned-packages">
+                    <h4 class="mt-2 mb-3 px-2">Scanned Packages [ <a href="#scanned-packages">#</a> ]</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Package name</th>
+                                <th>Found requirements</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            
+                            <tr>
+                                <td>authlib</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>authlib==1.3.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>cython</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>cython==3.0.8</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>jinja2</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>jinja2==3.1.3</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>markupsafe</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>markupsafe==2.1.5</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pyjwt</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pyjwt==2.8.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pynacl</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pynacl==1.5.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pyyaml</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pyyaml==6.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>unidecode</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>unidecode==1.3.8</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>aiosmtplib</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>aiosmtplib==3.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>annotated-types</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>annotated-types==0.6.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>anyio</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>anyio==4.3.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>bcrypt</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>bcrypt==4.1.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>certifi</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>certifi==2024.2.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>cffi</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>cffi==1.16.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>charset-normalizer</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>charset-normalizer==3.3.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>click</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>click==8.1.7</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>colorama</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>colorama==0.4.6</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>cryptography</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>cryptography==42.0.5</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>dnspython</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>dnspython==2.6.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>dparse</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>dparse==0.6.4b0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>exceptiongroup</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>exceptiongroup==1.2.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>fastapi</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>fastapi==0.109.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>filelock</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>filelock==3.13.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>greenlet</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>greenlet==3.0.3</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>h11</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>h11==0.14.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>httpcore</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>httpcore==1.0.4</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>httpx</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>httpx==0.27.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>idna</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>idna==3.6</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>importlib-metadata</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>importlib-metadata==7.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>iniconfig</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>iniconfig==2.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>isodate</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>isodate==0.6.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>joblib</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>joblib==1.3.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>loguru</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>loguru==0.7.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>markdown-it-py</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>markdown-it-py==3.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>marshmallow</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>marshmallow==3.21.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>mdurl</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>mdurl==0.1.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>mongomock</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>mongomock==4.1.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>nltk</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>nltk==3.8.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>numpy</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>numpy==1.26.4</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>owlready2</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>owlready2==0.45</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>packaging</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>packaging==23.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>paramiko</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>paramiko==3.4.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pbr</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pbr==6.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pip</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pip==23.3.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pluggy</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pluggy==1.4.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>py-cpuinfo</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>py-cpuinfo==9.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pycparser</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pycparser==2.21</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pydantic</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pydantic==2.6.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pydantic-core</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pydantic-core==2.16.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pygal</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pygal==3.0.4</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pygments</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pygments==2.17.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pymongo</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pymongo==4.6.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pyparsing</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pyparsing==3.1.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pyperclip</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pyperclip==1.8.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pytest</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pytest==8.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pytest-benchmark</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pytest-benchmark==4.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pytest-env</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pytest-env==1.1.3</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pytest-html</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pytest-html==4.1.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pytest-metadata</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pytest-metadata==3.1.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>pytest-mock</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>pytest-mock==3.12.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>python-dotenv</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>python-dotenv==1.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>rdflib</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>rdflib==7.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>regex</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>regex==2023.12.25</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>requests</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>requests==2.31.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>rich</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>rich==13.7.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>ruamel.yaml</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>ruamel.yaml==0.18.6</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>ruamel.yaml.clib</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>ruamel.yaml.clib==0.2.8</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>safety</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>safety==3.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>safety-schemas</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>safety-schemas==0.0.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>scikit-learn</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>scikit-learn==1.4.1.post1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>scipy</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>scipy==1.12.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>sentinels</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>sentinels==1.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>setuptools</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>setuptools==69.1.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>six</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>six==1.16.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>sniffio</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>sniffio==1.3.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>starlette</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>starlette==0.36.3</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>stevedore</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>stevedore==5.2.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>stopwords</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>stopwords==1.0.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>threadpoolctl</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>threadpoolctl==3.3.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>tomli</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>tomli==2.0.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>tqdm</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>tqdm==4.66.2</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>typer</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>typer==0.9.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>typing-extensions</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>typing-extensions==4.9.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>urllib3</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>urllib3==2.2.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>uvicorn</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>uvicorn==0.27.1</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>wheel</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>wheel==0.42.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>win32-setctime</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>win32-setctime==1.1.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>zipp</td>
+                                <td>
+                                    <ul>
+                                        
+                                        <li>zipp==3.17.0</li>
+                                        
+                                    </ul>
+                                </td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-12" id="vulnerabilities-found">
+                    <h4 class="mt-2 mb-3 px-2">Vulnerabilities Reported [ <a href="#vulnerabilities-found">#</a> ]</h4>
+                    
+                    <p class="mx-2">
+                        No known security vulnerabilities were found.
+                        
+                            Vulnerabilities may be missing. For comprehensive vulnerability scanning, <a href="#use-api-key">use an API key</a>
+                        
+                    </p>
+                    
+                </div>
+            </div>
+
+            
+
+            
+
+        </div>
+    </div>
+
+    
+
+    
+    <div class="card my-5">
+        <div class="card-body"> 
+            <div class="my-2" id="use-api-key">
+                <p class="mx-3"><span class="fw-bold">Use API Key</span>: Running Safety using an API Key uses a more comprehensive commercial vulnerability database and adds other features such as remediation suggestions and enhanced vulnerability and package information. <a href="https://safetycli.com">Learn more and get a free API Key</a></p>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="my-5 text-center text-secondary fst-italic">
+        <p>Safety Scanner and vulnerability data proudly maintained by <a href="https://safetycli.com" target="_blank">Safety Cybersecurity</a></p>
+    </div>
+
+    <div style="height:400px;">
+        &nbsp;
+    </div>
+
+</div>
+</body>
+</html>
