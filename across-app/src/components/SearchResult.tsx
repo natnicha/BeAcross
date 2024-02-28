@@ -122,19 +122,21 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         setImmediateVisualSelected([]); 
     };
 
-    const handleRecommendedClick = async (item: Item) => {       
+    const handleRecommendedClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+        event.preventDefault();
+        event.stopPropagation();
+        
         try {
-          if (recommended) {
+          if (item.is_recommended) {
             await deleteRecommended(item.module_id, jwtToken);
           } else {
             await postRecommended(item.module_id, jwtToken);
           }
-          // You might want to update your UI based on the success of these operations
-          // For example, toggling `is_recommended` or updating `no_of_recommend`
+          // Proceed to update your UI based on the success of these operations
         } catch (error) {
           console.error("Error handling recommendation:", error);
         }
-      };
+    };
 
      
     return (
@@ -181,18 +183,18 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 
                                 <div className="search-feature-control-btn">
-                                { user_role === 'student' ? (
+                                {user_role === 'student' ? (
                                     <button 
                                         className={`btn custom-link ${recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
-                                        onClick={() => handleRecommendedClick(item)}
-                                        disabled={!recommended}>
+                                        onClick={(event) => handleRecommendedClick(event, item)}
+                                    >
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                     </button>
-                                ) : (
-                                    <button className="custom-btn-yellow-number btn custom-link" disabled>
+                                    ) : (
+                                    <button className="custom-btn-grey-number btn custom-link" disabled>
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                     </button>
-                                )}
+                                 )}
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
