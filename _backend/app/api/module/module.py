@@ -578,6 +578,7 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
 
 @module.get("/{module_id}/suggested", status_code=status.HTTP_200_OK)
 async def get_suggested_modules(
+        request: Request,
         module_id: str = None, 
         db: MongoClient = Depends(get_database)
     ):
@@ -596,7 +597,16 @@ async def get_suggested_modules(
         )
     suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
     suggested_modules_info = MODULES.find_many_by_id_list(db, [ObjectId(id) for id in suggested_module_ids])
-    data = prepare_item(db, suggested_modules_info)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, suggested_modules_info, user_recommend)
     return {
         "data": ModuleSuggestedResponseModel(
             requested_module_id = module_id,
