@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
-import { SearchResponse } from "../services/searchServices";
+import { SearchItem, SearchResponse } from "../services/searchServices";
 import { postRecommended } from "../services/recommendedServices";
 import { deleteRecommended } from "../services/recommendedServices";
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -42,7 +42,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const location = useLocation();
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [tempCompareItems, setTempCompareItems] = useState<Item[]>([]);
-    const [items, setItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<SearchItem[] | undefined>(props.searchResult.items);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -73,6 +73,10 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
             document.body.classList.remove('no-scroll');
         };
     }, [showConfirmPopup]);
+
+    useEffect(() => {
+        setItems(props.searchResult.items);
+    }, [props.searchResult.items]);
 
     const handleRowClick = (item: Item) => {
         const searchParams = new URLSearchParams(location.search);
@@ -129,7 +133,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         event.stopPropagation();
     
         // Optimistically update the UI
-        const updatedItems = items.map((i) => {
+        const updatedItems = items?.map((i) => {
             if (i.module_id === item.module_id) {
                 // Toggle the recommendation status and update the count
                 return {
@@ -158,16 +162,6 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         }
     };
 
-    const updateItem = (updatedItem: Item) => {
-        const index = items.findIndex(item => item.module_id === updatedItem.module_id);
-        if (index !== -1) {
-            const newItems = [...items];
-            newItems[index] = updatedItem;
-            setItems(newItems);
-            console.log(`Item updated:`, newItems[index]);
-        }
-    };
-
      
     return (
         <>
@@ -190,7 +184,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     }
 
                     {/*Display Items*/}
-                    {props.searchResult.items && props.searchResult.items.map((item, index) => (
+                    {items && items.map((item, index) => (
                         <div className="search-table" key={index}>
                             <div className="search-row" onClick={() => handleRowClick(item as Item)}>
                                 <div className="search-column" id="moduleCode">

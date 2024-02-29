@@ -1,5 +1,5 @@
 // Define the interface for the request payload
-interface SearchItem {
+export interface SearchItem {
     content?: string;
     university?: string;
     degree_program?: string;
