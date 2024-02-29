@@ -78,3 +78,7 @@ class ModuleResponseModel(BaseModel):
     degree_level: str
     url: Optional[str] = None
     type: Optional[str] = None
+
+class UpdateTransferabilityModel(BaseModel):
+    module_a: str
+    module_b: str
