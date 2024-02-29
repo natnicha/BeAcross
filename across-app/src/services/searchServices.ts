@@ -34,9 +34,11 @@ interface SortParams {
   }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams, token: string): Promise<SearchResponse> {
+export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
     
-    // Base URL including the term
+  const token = sessionStorage.getItem("jwtToken") || '';  //get jwt token
+  
+  // Base URL including the term
     let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
 
     // Function to append multiple filter values

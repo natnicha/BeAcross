@@ -127,49 +127,35 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const handleRecommendedClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
         event.preventDefault();
         event.stopPropagation();
-        
-        /*try {
-            const isRecommendedInitially = item.is_recommended;
-            
-            if (isRecommendedInitially) {
-                await deleteRecommended(item.module_id, jwtToken);
-            } else {
-                await postRecommended(item.module_id, jwtToken);
+    
+        // Optimistically update the UI
+        const updatedItems = items.map((i) => {
+            if (i.module_id === item.module_id) {
+                // Toggle the recommendation status and update the count
+                return {
+                    ...i,
+                    is_recommended: !i.is_recommended,
+                    no_of_recommend: i.is_recommended ? i.no_of_recommend - 1 : i.no_of_recommend + 1,
+                };
             }
-            console.log("Before update:", item.no_of_recommend, isRecommendedInitially );
-            updateItem({
-                ...item,
-                is_recommended: !isRecommendedInitially,
-                no_of_recommend: isRecommendedInitially ? item.no_of_recommend - 1 : item.no_of_recommend + 1,
-            });
-            console.log("After update:", item.no_of_recommend, isRecommendedInitially );
-        } catch (error) {
-            console.error("Error handling recommendation:", error);
-        }*/
+            return i;
+        });
+    
+        // Update the state with the new items array
+        setItems(updatedItems);
+    
         try {
-            const isRecommendedInitially = item.is_recommended;
-            
-            if (isRecommendedInitially) {
-                console.log(`Attempting to un-recommend module: ${item.module_id}`);
+            // Then make the API call based on the new `is_recommended` status
+            if (item.is_recommended) {
                 await deleteRecommended(item.module_id, jwtToken);
             } else {
-                console.log(`Attempting to recommend module: ${item.module_id}`);
                 await postRecommended(item.module_id, jwtToken);
             }
-        
-            const updatedNoOfRecommend = isRecommendedInitially ? item.no_of_recommend - 1 : item.no_of_recommend + 1;
-            console.log(`Updated no_of_recommend: ${updatedNoOfRecommend}`);
-        
-            updateItem({
-                ...item,
-                is_recommended: !isRecommendedInitially,
-                no_of_recommend: updatedNoOfRecommend,
-            });
-            console.log("After update:", item.no_of_recommend, item.is_recommended );
+            // No need to update the UI here since we've already done it optimistically
         } catch (error) {
             console.error("Error handling recommendation:", error);
+            // Optionally, revert the UI changes here if the API call fails
         }
-        
     };
 
     const updateItem = (updatedItem: Item) => {

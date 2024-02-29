@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SearchResult from '../components/SearchResult';
 import SearchBar from "../components/SearchBar";
 import { Location, useLocation, useNavigate } from "react-router-dom";
