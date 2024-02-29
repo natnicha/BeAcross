@@ -592,7 +592,7 @@ async def get_suggested_modules(
     module_count = MODULES.count_by_id(db, module_id_obj)
     if module_count == 0:
         raise HTTPException(
-            detail={"message": "No suggested module found"},
+            detail={"message": "Module not found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
     suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
