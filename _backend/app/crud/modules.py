@@ -40,6 +40,9 @@ def find(conn: MongoClient, term: str,
 def find_one(conn: MongoClient, module_id: ObjectId):
     return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id}, {"_id": 0})
 
+def find_many_by_id_list(conn: MongoClient, ids: list):
+    return conn[env_config.DB_NAME].get_collection("modules").find({"_id": {"$in":ids}})
+
 def count(conn: MongoClient, term: str,
           level: list[str], ects: list[int], university: list[str], type: list[str]):
     condition = convert_conditions_to_query(term, level, ects, university, type)

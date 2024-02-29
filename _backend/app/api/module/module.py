@@ -23,7 +23,7 @@ import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, ModuleSuggestedResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
 from app.transferability.similiarity_run import combine_similarity_results_and_write_back, start_similarity_for_one, add_module_to_res
 
@@ -563,4 +563,26 @@ async def get_suggested_modules(
         module_id: str = None, 
         db: MongoClient = Depends(get_database)
     ):
-    pass
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_count = MODULES.count_by_id(db, module_id_obj)
+    if module_count == 0:
+        raise HTTPException(
+            detail={"message": "Module not found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
+    suggested_modules_info = MODULES.find_many_by_id_list(db, [ObjectId(id) for id in suggested_module_ids])
+    data = prepare_item(db, suggested_modules_info)
+    return {
+        "data": ModuleSuggestedResponseModel(
+            requested_module_id = module_id,
+            total_suggested_module_items = len(data),
+            suggested_module_items = data,
+    )}
+
