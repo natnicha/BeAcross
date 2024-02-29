@@ -556,3 +556,11 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
         )
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
+
+
+@module.get("/{module_id}/suggested", status_code=status.HTTP_200_OK)
+async def get_suggested_modules(
+        module_id: str = None, 
+        db: MongoClient = Depends(get_database)
+    ):
+    pass
