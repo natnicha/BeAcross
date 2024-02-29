@@ -1,11 +1,3 @@
-
-// Define the interface for the request payload
-interface submitCommentRequest {
-  id: string;
-  token: string;
-  message: string;
-}
-
 interface submitCommentResponse {
   status: number;
   message: string;
@@ -26,8 +18,8 @@ export interface getCommentResponse {
 }
 
 // Function to send a GET request to the getComment API
-export async function getComment(moduleID: string, token: string): Promise<getCommentResponse> {
-  const url: string = `http://localhost:8000/api/v1/module/${moduleID}/comment`;
+export async function getComment(module_id: string, token: string): Promise<getCommentResponse> {
+  const url: string = `http://localhost:8000/api/v1/module/${module_id}/comment`;
 
   try {
     const response = await fetch(url, {

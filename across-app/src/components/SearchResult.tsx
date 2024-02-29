@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
-import { SearchResponse } from "../services/searchServices";
+import { SearchItem, SearchResponse } from "../services/searchServices";
+import { postRecommended } from "../services/recommendedServices";
+import { deleteRecommended } from "../services/recommendedServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
 
@@ -16,6 +18,8 @@ interface Item {
     module_name?: string;
     type?: string;
     module_id: string;
+    is_recommended: boolean;
+    no_of_recommend: number;
 }
 
 interface SearchResultProps {
@@ -23,6 +27,11 @@ interface SearchResultProps {
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
+    
+    //const isRecommendedInitially = true;
+    
+    const jwtToken = sessionStorage.getItem("jwtToken") || '';
+    const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
 
     // Hook all popup control to PopupContext
     const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, closeAllPopups } = usePopups();
@@ -33,6 +42,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const location = useLocation();
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [tempCompareItems, setTempCompareItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<SearchItem[] | undefined>(props.searchResult.items);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -63,6 +73,10 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
             document.body.classList.remove('no-scroll');
         };
     }, [showConfirmPopup]);
+
+    useEffect(() => {
+        setItems(props.searchResult.items);
+    }, [props.searchResult.items]);
 
     const handleRowClick = (item: Item) => {
         const searchParams = new URLSearchParams(location.search);
@@ -114,6 +128,40 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         setImmediateVisualSelected([]); 
     };
 
+    const handleRecommendedClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+        event.preventDefault();
+        event.stopPropagation();
+    
+        // Optimistically update the UI
+        const updatedItems = items?.map((i) => {
+            if (i.module_id === item.module_id) {
+                // Toggle the recommendation status and update the count
+                return {
+                    ...i,
+                    is_recommended: !i.is_recommended,
+                    no_of_recommend: i.is_recommended ? i.no_of_recommend - 1 : i.no_of_recommend + 1,
+                };
+            }
+            return i;
+        });
+    
+        // Update the state with the new items array
+        setItems(updatedItems);
+    
+        try {
+            // Then make the API call based on the new `is_recommended` status
+            if (item.is_recommended) {
+                await deleteRecommended(item.module_id, jwtToken);
+            } else {
+                await postRecommended(item.module_id, jwtToken);
+            }
+            // No need to update the UI here since we've already done it optimistically
+        } catch (error) {
+            console.error("Error handling recommendation:", error);
+            // Optionally, revert the UI changes here if the API call fails
+        }
+    };
+
      
     return (
         <>
@@ -136,7 +184,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     }
 
                     {/*Display Items*/}
-                    {props.searchResult.items && props.searchResult.items.map((item, index) => (
+                    {items && items.map((item, index) => (
                         <div className="search-table" key={index}>
                             <div className="search-row" onClick={() => handleRowClick(item as Item)}>
                                 <div className="search-column" id="moduleCode">
@@ -159,9 +207,18 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 
                                 <div className="search-feature-control-btn">
-                                    <button className="custom-btn-yellow-number btn custom-link">                                       
+                                {user_role === 'student' ? (
+                                    <button 
+                                        className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
+                                        onClick={(event) => handleRecommendedClick(event, item)}
+                                    >
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                     </button>
+                                    ) : (
+                                    <button className="custom-btn-grey-number btn custom-link" disabled>
+                                        <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
+                                    </button>
+                                 )}
                                     <button className="custom-btn-number btn custom-link">                                       
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
