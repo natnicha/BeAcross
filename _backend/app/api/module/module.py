@@ -307,6 +307,7 @@ def parse_json(data):
 
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
+        request: Request,
         term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*)+''' ),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
@@ -333,7 +334,15 @@ async def advanced_search(
         sortby_column = sortby_database_col_mapping[sortby] 
 
     items = MODULES.advanced_find(db, extracted_columns, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
