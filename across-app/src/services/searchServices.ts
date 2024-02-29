@@ -34,7 +34,7 @@ interface SortParams {
   }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
+export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams, token: string): Promise<SearchResponse> {
     
     // Base URL including the term
     let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
@@ -62,9 +62,6 @@ export async function searchServices(term: string, offset: string, filter: Filte
     if (filter.university.length > 0) {
         url = appendFilterParams(url, 'university', filter.university);
     }
-    /*if (filter.university.length > 0) {
-       url = appendFilterParams(url, 'ects', filter.ects);
-    }*/
     if (filter.ects) {
       url += `&ects=${filter.ects}`;
   }
@@ -81,7 +78,8 @@ export async function searchServices(term: string, offset: string, filter: Filte
         const response = await fetch(url, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           }
         });
     

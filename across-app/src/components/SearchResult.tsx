@@ -28,6 +28,8 @@ interface SearchResultProps {
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
     
+    //const isRecommendedInitially = true;
+    
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
 
@@ -126,7 +128,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         event.preventDefault();
         event.stopPropagation();
         
-        try {
+        /*try {
             const isRecommendedInitially = item.is_recommended;
             
             if (isRecommendedInitially) {
@@ -134,23 +136,50 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
             } else {
                 await postRecommended(item.module_id, jwtToken);
             }
-    
+            console.log("Before update:", item.no_of_recommend, isRecommendedInitially );
             updateItem({
                 ...item,
                 is_recommended: !isRecommendedInitially,
                 no_of_recommend: isRecommendedInitially ? item.no_of_recommend - 1 : item.no_of_recommend + 1,
             });
+            console.log("After update:", item.no_of_recommend, isRecommendedInitially );
+        } catch (error) {
+            console.error("Error handling recommendation:", error);
+        }*/
+        try {
+            const isRecommendedInitially = item.is_recommended;
+            
+            if (isRecommendedInitially) {
+                console.log(`Attempting to un-recommend module: ${item.module_id}`);
+                await deleteRecommended(item.module_id, jwtToken);
+            } else {
+                console.log(`Attempting to recommend module: ${item.module_id}`);
+                await postRecommended(item.module_id, jwtToken);
+            }
+        
+            const updatedNoOfRecommend = isRecommendedInitially ? item.no_of_recommend - 1 : item.no_of_recommend + 1;
+            console.log(`Updated no_of_recommend: ${updatedNoOfRecommend}`);
+        
+            updateItem({
+                ...item,
+                is_recommended: !isRecommendedInitially,
+                no_of_recommend: updatedNoOfRecommend,
+            });
+            console.log("After update:", item.no_of_recommend, item.is_recommended );
         } catch (error) {
             console.error("Error handling recommendation:", error);
         }
+        
     };
 
     const updateItem = (updatedItem: Item) => {
-        setItems(currentItems => 
-            currentItems.map(item => 
-                item.module_id === updatedItem.module_id ? updatedItem : item
-            )
-        );
+        const index = items.findIndex(item => item.module_id === updatedItem.module_id);
+        if (index !== -1) {
+            const newItems = [...items];
+            newItems[index] = updatedItem;
+            setItems(newItems);
+            console.log(`Item updated:`, newItems[index]);
+        }
     };
 
      
