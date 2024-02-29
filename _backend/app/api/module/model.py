@@ -78,3 +78,8 @@ class ModuleResponseModel(BaseModel):
     degree_level: str
     url: Optional[str] = None
     type: Optional[str] = None
+
+class ModuleSuggestedResponseModel(BaseModel):
+    requested_module_id: str
+    total_suggested_module_items: int
+    suggested_module_items: list = []
