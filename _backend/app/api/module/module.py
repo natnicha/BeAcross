@@ -276,7 +276,6 @@ async def search(
 
 def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
     data = parse_json(items)
-    print(user_recommends)
     for entry in data:
         entry["module_id"] = entry["_id"]['$oid']
         entry["module_name"] = entry["name"]

@@ -184,8 +184,7 @@ def combine_similarity_results_and_write_back(similarity_changes: list):
     lock = FileLock(results_path + ".lock")
     with lock:
         similarity_source = read_similarity_file()
-        print(similarity_changes)
-        print("lala")
+        # print(similarity_changes)
         res = fix_similarity_changes(similarity_changes)
         for key, value in res.items():
             similarity_source[key].extend(value)
