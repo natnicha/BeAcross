@@ -2,10 +2,11 @@
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
-from app.api.auth.auth_utils import has_permission, is_valid_jwt_token
+from app.api.auth.auth_utils import has_permission, is_valid_jwt_token, set_user_info_from_jwt
 from .middleware_utils import is_public_path, is_include_request_body_if_post
 
 async def security_checking(request: Request, call_next):
+    set_user_info_from_jwt(request)
     if not is_public_path(request.url.path):
         if not is_valid_jwt_token(request):
             return JSONResponse(

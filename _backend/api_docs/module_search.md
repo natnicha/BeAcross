@@ -69,7 +69,8 @@ Anyone (guest, student, uni-admin, and sys-admin) can search modules regarding a
       "degree_level": " \nMaster",
       "module_name": "Data mining",
       "no_of_recommend": 89,
-      "no_of_suggested_modules": 10
+      "no_of_suggested_modules": 10,
+      "is_recommended": true
     },
     {
       "module_id": "65ac17dfd2815b505f3e37e9",
@@ -82,7 +83,8 @@ Anyone (guest, student, uni-admin, and sys-admin) can search modules regarding a
       "degree_level": " Bachelor",
       "module_name": "Data security and cryptography",
       "no_of_recommend": 108,
-      "no_of_suggested_modules": 6
+      "no_of_suggested_modules": 6,
+      "is_recommended": true
     },
     // ... more entries ...
     ]

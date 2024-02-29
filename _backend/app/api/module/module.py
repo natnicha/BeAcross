@@ -230,6 +230,7 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def search(
+        request: Request,
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
@@ -251,7 +252,16 @@ async def search(
         sortby_column = sortby_database_col_mapping[sortby]
 
     items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
@@ -264,13 +274,18 @@ async def search(
         }}
 
 
-def prepare_item(db: MongoClient, items: Cursor):
+def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
     data = list(items)
     for entry in data:
         entry["module_id"] = str(entry.pop("_id"))
         entry["module_name"] = entry.pop('name')
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
         entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
+        entry['is_recommended'] = False
+        if len(user_recommends) > 0:
+            for user_recommend in user_recommends:
+                if str(user_recommend["module_id"]) == str(entry["module_id"]):
+                    entry['is_recommended'] = True
     return data
 
 
@@ -286,6 +301,7 @@ def is_manual_calculated_sortby(sortby: str):
 
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
+        request: Request,
         term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*)+''' ),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
@@ -312,7 +328,15 @@ async def advanced_search(
         sortby_column = sortby_database_col_mapping[sortby] 
 
     items = MODULES.advanced_find(db, extracted_columns, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
