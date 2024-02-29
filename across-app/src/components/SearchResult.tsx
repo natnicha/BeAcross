@@ -19,6 +19,7 @@ interface Item {
     type?: string;
     module_id: string;
     is_recommended: boolean;
+    no_of_recommend: number;
 }
 
 interface SearchResultProps {
@@ -26,8 +27,6 @@ interface SearchResultProps {
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
-
-    const recommended = false; // Mock
     
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
@@ -41,6 +40,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const location = useLocation();
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [tempCompareItems, setTempCompareItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -127,15 +127,30 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         event.stopPropagation();
         
         try {
-          if (item.is_recommended) {
-            await deleteRecommended(item.module_id, jwtToken);
-          } else {
-            await postRecommended(item.module_id, jwtToken);
-          }
-          // Proceed to update your UI based on the success of these operations
+            const isRecommendedInitially = item.is_recommended;
+            
+            if (isRecommendedInitially) {
+                await deleteRecommended(item.module_id, jwtToken);
+            } else {
+                await postRecommended(item.module_id, jwtToken);
+            }
+    
+            updateItem({
+                ...item,
+                is_recommended: !isRecommendedInitially,
+                no_of_recommend: isRecommendedInitially ? item.no_of_recommend - 1 : item.no_of_recommend + 1,
+            });
         } catch (error) {
-          console.error("Error handling recommendation:", error);
+            console.error("Error handling recommendation:", error);
         }
+    };
+
+    const updateItem = (updatedItem: Item) => {
+        setItems(currentItems => 
+            currentItems.map(item => 
+                item.module_id === updatedItem.module_id ? updatedItem : item
+            )
+        );
     };
 
      
@@ -185,7 +200,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 <div className="search-feature-control-btn">
                                 {user_role === 'student' ? (
                                     <button 
-                                        className={`btn custom-link ${recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
+                                        className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
                                         onClick={(event) => handleRecommendedClick(event, item)}
                                     >
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
