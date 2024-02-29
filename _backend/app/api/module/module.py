@@ -265,12 +265,10 @@ async def search(
 
 
 def prepare_item(db: MongoClient, items: Cursor):
-    data = parse_json(items)
+    data = list(items)
     for entry in data:
-        entry["module_id"] = entry["_id"]['$oid']
-        entry["module_name"] = entry["name"]
-        del entry['name']
-        del entry["_id"]
+        entry["module_id"] = str(entry.pop("_id"))
+        entry["module_name"] = entry.pop('name')
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
         entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
     return data
@@ -285,10 +283,6 @@ def sort(data: list, sortby: str, orderby: str):
 
 def is_manual_calculated_sortby(sortby: str):
     return (sortby == 'no_of_recommend' or sortby == 'no_of_suggested_modules')
-
-
-def parse_json(data):
-    return json.loads(json_util.dumps(data))
 
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
