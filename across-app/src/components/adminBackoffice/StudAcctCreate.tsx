@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { registerUser } from "../services/authenticationServices";
+import { registerUser } from "../../services/authenticationServices";
 
 export default function StudAcctCreate() {
   const handleSubmit = async () => {

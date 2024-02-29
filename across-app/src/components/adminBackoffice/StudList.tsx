@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import StudInfoDetailPopup from "./StudInfoDetailPopup";
+import StudInfoDetailPopup from "../StudInfoDetailPopup";
 
 interface StudInfo {
   id: string;
