@@ -72,6 +72,15 @@ Anyone can get suggested modules by a given module ID
 }
 ```
 
+## Error Response 404 - Not Found (case: no module found by provided id)
+```json
+{
+    "detail": {
+        "message": "No module found"
+    }
+}
+```
+
 ## Error Response 404 - Not Found (case: no suggested module found by provided id)
 ```json
 {
