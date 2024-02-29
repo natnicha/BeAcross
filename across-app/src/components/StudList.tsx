@@ -35,28 +35,32 @@ export default function StudList() {
 
   //Delete selected student
   const handleDeleteStud = (id: string) => {
-    fetch(`http://localhost:8000/api/v1/user/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to delete module");
-        }
-        // Remove the deleted module from state
-        setStudInfoDatas((prevModuleData) => {
-          if (!prevModuleData) return null;
-          const updatedItems = prevModuleData.items.filter(
-            (item) => item.id !== id
-          );
-          return { ...prevModuleData, items: updatedItems };
-        });
+    if (window.confirm("Do you want to delete the student?")) {
+      fetch(`http://localhost:8000/api/v1/user/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
       })
-      .catch((error) => {
-        console.error("Error deleting module:", error);
-      });
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to delete sutudent");
+          }
+
+          // Remove the deleted module from state
+          setStudInfoDatas((prevModuleData) => {
+            if (!prevModuleData) return null;
+            const updatedItems = prevModuleData.items.filter(
+              (item) => item.id !== id
+            );
+            return { ...prevModuleData, items: updatedItems };
+          });
+        })
+        .catch((error) => {
+          console.error("Error deleting sutudent:", error);
+        });
+    } else {
+    }
   };
 
   //Get student list
