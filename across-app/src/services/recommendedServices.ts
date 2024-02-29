@@ -34,7 +34,7 @@ export async function postRecommended(module_id: string, token: string): Promise
 
 // Function to send a DELETE request to the submit Recommended API
 export async function deleteRecommended(module_id: string, token: string): Promise<RecommendedResponse> {
-  const url: string = `http://localhost:8000/api/v1/module/unrecommend`;
+  const url: string = `http://localhost:8000/api/v1/module/${module_id}/recommend`;
   const payload = { module_id };
 
   try {
