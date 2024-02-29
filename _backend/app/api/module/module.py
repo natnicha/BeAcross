@@ -592,10 +592,16 @@ async def get_suggested_modules(
     module_count = MODULES.count_by_id(db, module_id_obj)
     if module_count == 0:
         raise HTTPException(
-            detail={"message": "Module not found"},
+            detail={"message": "No module found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
     suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
+    if len(suggested_module_ids) == 0:
+        raise HTTPException(
+            detail={"message": "No suggested module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
     suggested_modules_info = MODULES.find_many_by_id_list(db, [ObjectId(id) for id in suggested_module_ids])
     try:
         user_recommend = []
