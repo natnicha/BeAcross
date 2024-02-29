@@ -38,7 +38,7 @@ def find(conn: MongoClient, term: str,
     }).skip(offset).limit(limit)
 
 def find_one(conn: MongoClient, module_id: ObjectId):
-    return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id}, {"_id": 0})
+    return conn[env_config.DB_NAME].get_collection("modules").find_one({"_id": module_id})
 
 def find_many_by_id_list(conn: MongoClient, ids: list):
     return conn[env_config.DB_NAME].get_collection("modules").find({"_id": {"$in":ids}})
@@ -136,10 +136,6 @@ def create_like_term_dictionary(key: str, value: str, convert_to_like_term: bool
     if convert_to_like_term:
         return {key: convert_str_to_like(value)}
     return {key: value}
-
-def find_one(conn: MongoClient, module_id: ObjectId):
-    collection = conn[env_config.DB_NAME].get_collection("modules")
-    return collection.find_one({'_id': module_id})
 
 def insert_many(conn: MongoClient, modules_model: ModulesModel):
     return conn[env_config.DB_NAME].get_collection("modules").insert_many([i.dict() for i in modules_model])
