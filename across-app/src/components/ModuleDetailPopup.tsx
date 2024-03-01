@@ -26,7 +26,7 @@ interface Item {
 interface ModuleDetailPopupProps {
     selectedItem: Item;
     content: string;
-    onClose: () => void;
+    onClose?: () => void;
     shouldShowShareButtons: boolean;
 }
 
@@ -42,7 +42,7 @@ interface ModuleComment {
 }
 
 
-const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, shouldShowShareButtons }) => {
+const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, shouldShowShareButtons, onClose }) => {
    
     const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
@@ -103,10 +103,18 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     };
 
     const closePopup = () => {
-        const searchParams = new URLSearchParams(location.search);
-        searchParams.delete('module');
-        navigate({ pathname: '/search', search: searchParams.toString() });
-        closeAllPopups();
+        
+        if (onClose)
+        {
+            onClose();
+        } 
+        else
+        {
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.delete('module');
+            navigate({ pathname: '/search', search: searchParams.toString() });
+            closeAllPopups();
+        }
       };
 
     // Close the popup if clicking outside of it

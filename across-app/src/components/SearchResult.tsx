@@ -259,7 +259,6 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         <ModuleDetailPopup 
                             content="" 
                             selectedItem={selectedItem} 
-                            onClose={closePopup} 
                             shouldShowShareButtons={true}
                         />
                     )} 
@@ -268,7 +267,6 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         <CompareModuleDetailPopup 
                             content="" 
                             selectedItems={tempCompareItems} // Corrected prop name and passed the correct array
-                            onClose={closePopup} 
                         />
                     )}
 

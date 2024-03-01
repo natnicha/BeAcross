@@ -15,6 +15,11 @@ interface PopupContextType {
   openCompareModuleDetailPopup: (module_ids: string[]) => void;
   isSuggestionPopupOpen: boolean;
   openSuggestionPopup: (suggestionItems: SuggestionItem[]) => void;
+  isModuleDetailFromSuggestionPopup: boolean;
+  openModuleDetailFromSuggestionPopup: () => void;
+  isCompareDetailFromSuggestionPopup: boolean;
+  openCompareDetailFromSuggestionPopup: () => void;
+  closeEverythingThatOpenFromSuggestionPopup: () => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -41,6 +46,8 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
   const [currentModuleIds, setCurrentModuleIds] = useState<string[]>([]);
   const [suggestionItems, setSuggestionItems] = useState<SuggestionItem[]>([]);
+  const [isModuleDetailFromSuggestionPopup, setIsModuleDetailFromSuggestionPopup] = useState(false);
+  const [isCompareDetailFromSuggestionPopup, setIsCompareDetailFromSuggestionPopup] = useState(false);
 
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
@@ -75,6 +82,8 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     setIsModuleDetailPopupOpen(false);
     setIsCompareModuleDetailPopupOpen(false);
     setIsSuggestionPopupOpen(false);
+    setIsModuleDetailFromSuggestionPopup(false);
+    setIsCompareDetailFromSuggestionPopup(false);
     document.body.classList.remove('no-scroll');
   };
 
@@ -88,6 +97,19 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     setCurrentModuleIds(module_ids); // Store the current module IDs
     setIsCompareModuleDetailPopupOpen(true);
     document.body.classList.add('no-scroll');
+  };
+
+  const openModuleDetailFromSuggestionPopup = () => {
+    setIsModuleDetailFromSuggestionPopup(true);
+  };
+
+  const openCompareDetailFromSuggestionPopup = () => {
+    setIsCompareDetailFromSuggestionPopup(true);
+  };
+
+  const closeEverythingThatOpenFromSuggestionPopup = () => {
+    setIsModuleDetailFromSuggestionPopup(false);
+    setIsCompareDetailFromSuggestionPopup(false);
   };
 
   return (
@@ -105,6 +127,11 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
       openCompareModuleDetailPopup,
       openSuggestionPopup,
       closeAllPopups,
+      closeEverythingThatOpenFromSuggestionPopup,
+      openModuleDetailFromSuggestionPopup,
+      isModuleDetailFromSuggestionPopup,
+      openCompareDetailFromSuggestionPopup,
+      isCompareDetailFromSuggestionPopup,
     }}>
       {children}
     </PopupContext.Provider>

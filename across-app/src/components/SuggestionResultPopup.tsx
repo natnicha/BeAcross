@@ -41,10 +41,14 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const [immediateVisualSelected, setImmediateVisualSelected] = useState<SuggestionItem[]>([]); // use in compare feature
 
     // Hook all popup control to PopupContext
-    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
+    const { openModuleDetailFromSuggestionPopup, isModuleDetailFromSuggestionPopup, openCompareDetailFromSuggestionPopup, isCompareDetailFromSuggestionPopup, closeAllPopups, closeEverythingThatOpenFromSuggestionPopup } = usePopups();
     const popupRef = useRef<HTMLDivElement>(null);
 
-    const closePopup = () => {
+    const closeCurrentContextPopup = () => {
+        closeEverythingThatOpenFromSuggestionPopup();
+    };
+
+    const closeAllPopup = () => {
         const searchParams = new URLSearchParams(location.search);
         searchParams.delete('module');
         navigate({ pathname: '/search', search: searchParams.toString() });
@@ -53,7 +57,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
 
     const handleRowClick = (item: SuggestionItem) => {
         setSuggestedItem(item);
-        openModuleDetailPopup(item.module_id || "default_module_id");
+        openModuleDetailFromSuggestionPopup();
     };
 
     const handleRecommendedClick = async (event: React.MouseEvent<HTMLButtonElement>, item: SuggestionItem) => {  
@@ -100,7 +104,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
 
         // part of logic in confirmComparison() in SearchResult.tsx
         if (newSelection.length === 2) {
-            openCompareModuleDetailPopup(newSelection.map(item => item.module_id));
+            openCompareDetailFromSuggestionPopup();
             setSelectedCompareItems([props.selectedResultItem]); // Reset for new comparisons
             setImmediateVisualSelected([]); 
         }
@@ -109,16 +113,14 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     // Close the popup if clicking outside of it
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-        if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-            closePopup();
-        }
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                closeAllPopup();
+            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [closePopup]);
+        return () => { document.removeEventListener('mousedown', handleClickOutside); };
+    }, [closeAllPopup]);
 
     return (
         <div className="module-detail">
@@ -127,7 +129,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                     <div className="title-popup mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     </div>
                     <button 
-                        onClick={closePopup} 
+                        onClick={closeAllPopup} 
                         style={{ 
                             position: 'absolute', 
                             top: '10px', 
@@ -185,20 +187,20 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                         </div>))}
 
                         {/* Conditionally render ModuleDetailPopup */}
-                        {selectedSuggestedItem && isModuleDetailPopupOpen && (
+                        {selectedSuggestedItem && isModuleDetailFromSuggestionPopup && (
                             <ModuleDetailPopup 
                                 shouldShowShareButtons={false}
                                 content="" 
                                 selectedItem={selectedSuggestedItem} 
-                                onClose={closePopup} 
+                                onClose={closeCurrentContextPopup} 
                             />
                         )}
 
-                        {isCompareModuleDetailPopupOpen && (
+                        {isCompareDetailFromSuggestionPopup && (
                             <CompareModuleDetailPopup 
                                 content="" 
                                 selectedItems={tempCompareItems} // Corrected prop name and passed the correct array
-                                onClose={closePopup} 
+                                onClose={closeCurrentContextPopup} 
                             />
                         )}
                 </div>
