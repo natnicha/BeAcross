@@ -56,7 +56,7 @@ interface SearchResponse {
     // possibly other properties...
 }
 
-const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResult }) => {
+const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResult, suggestionItems }) => {
    
     const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
