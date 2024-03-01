@@ -256,12 +256,18 @@ def remove_similarity(module_to_remove_from: str, module_to_remove: str):
 
     index = -1
 
+    if module_to_remove_from not in data.keys() or module_to_remove not in data.keys():
+        raise
+
     i = 0
     while i < len(data[module_to_remove_from]):
         if (data[module_to_remove_from][i] == module_to_remove):
             index = i
         i += 1
-
+    
+    if index == -1:
+        raise
+    
     if index != -1:
         del data[module_to_remove_from][index]
         write_back(data)

@@ -25,7 +25,8 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
-from app.transferability.similiarity_run import combine_similarity_results_and_write_back, start_similarity_for_one, add_module_to_res
+from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity, start_similarity_for_one, add_module_to_res
+from app.api.module.model import UpdateTransferabilityModel
 
 module = APIRouter()
 
@@ -580,3 +581,17 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
         )
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
+
+# create modules 
+@module.delete("/transferability", status_code=status.HTTP_200_OK)
+async def edit_transferability(
+        item: UpdateTransferabilityModel
+        ):
+        try:
+            remove_similarity(item.module_a, item.module_b)
+        except:
+            raise HTTPException(
+                detail={"message": "Module not found"},
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+        return
