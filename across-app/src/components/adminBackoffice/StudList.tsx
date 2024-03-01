@@ -78,7 +78,7 @@ export default function StudList() {
       .catch((error) => {
         console.error("Error fetching studunt list data:", error);
       });
-  }, []);
+  }, [jwtToken]);
 
   return (
     <div className="about-thumb bg-white shadow-lg">

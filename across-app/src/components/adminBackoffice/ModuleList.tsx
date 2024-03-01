@@ -22,16 +22,11 @@ interface ModuleData {
 export default function ModuleList() {
   const [moduleData, setModuleDatas] = useState<ModuleData | null>(null);
 
-  const jwtToken = sessionStorage.getItem("jwtToken");
-
   useEffect(() => {
     fetch(
       `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
       }
     )
       .then((response) => response.json())

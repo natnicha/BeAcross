@@ -15,7 +15,7 @@ const FileUploader = () => {
   };
 
   const handleUpload = async () => {
-    if (file?.type == "application/json") {
+    if (file?.type === "application/json") {
       setStatus("uploading");
 
       const formData = new FormData();
