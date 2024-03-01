@@ -21,12 +21,38 @@ class ModuleCommentRequestModel(BaseModel):
     module_id: str
     message: str
 
-class ModuleCommentDataModel(ModuleCommentModel):
-    id: ObjectId = None
+class ModuleCommentDataModel(BaseModel):
+    id: str = None
+    module_id: str
+    message: str
+    user_id: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
     
 class ModuleCommentResponseModel(BaseModel):
     message: str
     data: ModuleCommentDataModel
+
+class UploadModulesModel(BaseModel):
+    name: str = None
+    degree_program: str = None
+    degree_level: str = None
+    university: str = None
+    module_code: str = None
+    content: str = None   
+    ects: int = None
+    type: str = None
+
+class UploadModulesResponseItemModel(BaseModel):
+    module_id: str = None
+    module_name: str = None
+    degree_program: str = None
+    degree_level: str = None
+    university: str = None
+    module_code: str = None
+    content: str = None   
+    ects: int = None
+    type: str = None
 
 class GetModuleCommentItemResponseModel(BaseModel):
     id: str
@@ -52,3 +78,8 @@ class ModuleResponseModel(BaseModel):
     degree_level: str
     url: Optional[str] = None
     type: Optional[str] = None
+
+class ModuleSuggestedResponseModel(BaseModel):
+    requested_module_id: str
+    total_suggested_module_items: int
+    suggested_module_items: list = []

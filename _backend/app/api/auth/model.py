@@ -16,10 +16,22 @@ class BaseModel(BaseModel):
 class RegisterRequestModel(BaseModel):
     email: str
 
+class RegisterDataResponse(BaseModel):
+    id: str
+    email: str
+    password: bytes
+    first_name: str
+    last_name: str
+    registration_number: int = None
+    course_of_study: int = None
+    semester: int = None
+    user_roles_id: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+
 class RegisterResponseModel(BaseModel):
     message: str
-    data: UsersModel
-
+    data: RegisterDataResponse
 
 class LoginRequestModel(BaseModel):
     email: str

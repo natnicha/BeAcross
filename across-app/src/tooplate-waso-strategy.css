@@ -836,8 +836,18 @@ td {
   color: var(--white-color);
 }
 
-.custom-btn-gray-number {
+.custom-btn-grey-number {
   background: var(--p-color);
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 0 10px 5px; /* top | right | bottom | left */
+}
+
+.custom-btn-green-number {
+  background: var(--green-color);
   border-radius: 10px;
   color: var(--white-color);
   font-size: var(--copyright-text-font-size);
@@ -1201,8 +1211,8 @@ td {
   SOCIAL ICON               
 -----------------------------------------*/
 .social-icon {
-  margin: 0;
-  padding: 0;
+  margin-right: 4%;
+  padding-bottom: 5px;
 }
 
 .social-icon li {
@@ -1218,7 +1228,7 @@ td {
   color: var(--dark-color);
   display: inline-block;
   vertical-align: top;
-  margin: 2px;
+  margin: 5px;
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -1226,7 +1236,8 @@ td {
 }
 
 .social-icon-link:hover {
-  color: var(--primary-color);
+  color: var(--secondary-color);
+  cursor: pointer;
 }
 
 /*---------------------------------------
@@ -1649,4 +1660,20 @@ ul {
   justify-content: flex-start;
   width: 100%;
   margin-left: 10px;
+}
+
+
+.confirmation-popup {
+  position: fixed; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: auto;
+  max-width: 80%;
 }

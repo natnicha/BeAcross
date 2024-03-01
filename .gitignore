@@ -15,6 +15,7 @@ across-app/.env.local
 across-app/.env.development.local
 across-app/.env.test.local
 across-app/.env.production.local
+across-app/public/config.json
 
 across-app/npm-debug.log*
 across-app/yarn-debug.log*
@@ -26,3 +27,4 @@ _backend/.DS_Store
 .vscode
 .env
 *__pycache__
+.idea

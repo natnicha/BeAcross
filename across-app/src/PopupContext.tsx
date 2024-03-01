@@ -10,6 +10,8 @@ interface PopupContextType {
   closeAllPopups: () => void;
   isModuleDetailPopupOpen: boolean;
   openModuleDetailPopup: (module_id: string) => void;
+  isCompareModuleDetailPopupOpen: boolean;
+  openCompareModuleDetailPopup: (module_ids: string[]) => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -31,8 +33,10 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isRegisterPopupOpen, setIsRegisterPopupOpen] = useState(false);
   const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false);
   const [isModuleDetailPopupOpen, setIsModuleDetailPopupOpen] = useState(false);
+  const [isCompareModuleDetailPopupOpen, setIsCompareModuleDetailPopupOpen] = useState(false);
 
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
+  const [currentModuleIds, setCurrentModuleIds] = useState<string[]>([]);
 
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
@@ -65,7 +69,14 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     setIsRegisterPopupOpen(false);
     setIsForgotPasswordPopupOpen(false);
     setIsModuleDetailPopupOpen(false);
+    setIsCompareModuleDetailPopupOpen(false);
     document.body.classList.remove('no-scroll');
+  };
+
+  const openCompareModuleDetailPopup = (module_ids: string[]) => {
+    setCurrentModuleIds(module_ids); // Store the current module IDs
+    setIsCompareModuleDetailPopupOpen(true);
+    document.body.classList.add('no-scroll');
   };
 
   return (
@@ -74,10 +85,12 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
       isRegisterPopupOpen,
       isForgotPasswordPopupOpen,
       isModuleDetailPopupOpen,
+      isCompareModuleDetailPopupOpen,
       openLoginPopup,
       openRegisterPopup,
       openForgotPasswordPopup,
       openModuleDetailPopup,
+      openCompareModuleDetailPopup,
       closeAllPopups,
     }}>
       {children}

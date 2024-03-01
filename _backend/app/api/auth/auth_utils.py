@@ -87,12 +87,13 @@ def authenicate(db: MongoClient, login_request_model: LoginRequestModel):
         )
     return users[0]
 
-def generate_jwt(user_id: str, user_roles_id: str):
+def generate_jwt(user_id: str, user_roles_id: str, university: str):
     now = datetime.datetime.utcnow()
     exp = now + datetime.timedelta(minutes=int(env_config.JWT_DURATION_MINUTE))
     return jwt.encode({
             "user_id":  str(user_id),
             "role": user_roles_id,
+            "university": university,
             "iat": now,
             "exp": exp
         }, 
@@ -132,14 +133,28 @@ def is_valid_jwt_token(request: Request):
     
     try:
         validate_jwt_token(splited_auth[1])
-        encoded = get_payload_from_auth(splited_auth[1])
-        request.state.role = encoded["role"]
-        request.state.user_id = encoded["user_id"]
     except:
         return False
     
     return True
 
+def set_user_info_from_jwt(request: Request):
+    auth = request.headers.get('Authorization')
+    if auth == None or auth == "":
+        return
+    splited_auth = (auth or ' ').split("Bearer ")
+    if len(splited_auth)!=2:
+        return
+    try:
+        validate_jwt_token(splited_auth[1])
+        encoded = get_payload_from_auth(splited_auth[1])
+        request.state.role = encoded["role"]
+        request.state.user_id = encoded["user_id"]
+        return
+    except:
+        return
+    
+    
 def has_permission(request: Request):
     api = request.url.path
     method = request.method
@@ -148,6 +163,9 @@ def has_permission(request: Request):
             return False
     if api.__contains__("/module/comment"):
         if request.state.role != "student":
+            return False
+    if api == ("/api/v1/module"):
+        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
             return False
     if api.__contains__("/user/profile/list"):
         if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
@@ -162,4 +180,7 @@ def has_permission(request: Request):
             return False
     if api.endswith("/user/") and method == "PUT": #/api/v1/user/
         return True
+    if api.__contains__("/personal-plan"):
+        if not (request.state.role == "student"):
+            return False
     return True

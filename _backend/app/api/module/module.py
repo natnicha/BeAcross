@@ -1,24 +1,35 @@
+import inspect
+import logging
 import json
 import re
 from typing import Annotated, Union
 from bson import json_util
-from bson import ObjectId
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from bson.objectid import ObjectId
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
 from pymongo.cursor import Cursor
+from owlready2 import *
+from app.email_service.email_sender import send_success_calculated_similarity_email
+from app.owl.modules import add_modules_to_owl
+import xml.etree.ElementTree as ET
+from multiprocessing.pool import ThreadPool as Pool
+from nltk.corpus import wordnet
+import threading
 
 import app.crud.module_recommend as MODULE_RECOMMEND
 import app.crud.modules as MODULES
 import app.crud.module_comment as MODULE_COMMENT
-import app.crud.users as USERS
+import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, ModuleResponseModel
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, ModuleSuggestedResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
+import app.crud.users as USERS
+from app.transferability.similiarity_run import combine_similarity_results_and_write_back, start_similarity_for_one, add_module_to_res
 
 module = APIRouter()
 
-sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "content":"content"}
+sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "module_code": "module_code", "content":"content"}
 all_sortby_database_col = ["name", "degree_program", "degree_level", "ects", "university", "type", "content"]
 
 @module.post("/recommend", status_code=status.HTTP_201_CREATED)
@@ -26,7 +37,7 @@ async def recommend(
         request: Request,
         item: RecommendRequestModel = None,
         db: MongoClient = Depends(get_database),
-    ):
+):
     try:
         module_recommend = ModuleRecommendModel(
             module_id=ObjectId(item.module_id),
@@ -40,7 +51,8 @@ async def recommend(
 
     check_conflict(db, module_recommend)
     insert_module_recommend(db, module_recommend)
-    return 
+    return
+
 
 def check_conflict(db: MongoClient, module_recommend: ModuleRecommendModel):
     rows = MODULE_RECOMMEND.get_module_recommend(db, module_recommend)
@@ -49,6 +61,7 @@ def check_conflict(db: MongoClient, module_recommend: ModuleRecommendModel):
             detail={"message": "this action is performed"},
             status_code=status.HTTP_409_CONFLICT
         )
+
 
 def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendModel):
     try:
@@ -59,11 +72,12 @@ def insert_module_recommend(db: MongoClient, module_recommend: ModuleRecommendMo
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
 @module.get("/{module_id}/recommend", response_model=CountRecommendResponseModel)
 async def get_no_of_recommend(
         module_id: str = None,
         db: MongoClient = Depends(get_database),
-    ):
+):
     module_id_obj = None
     try:
         module_id_obj = ObjectId(module_id)
@@ -80,6 +94,7 @@ async def get_no_of_recommend(
             "no_of_recommend": str(count)
         }
     )
+
 
 def get_no_of_recommend_module(db: MongoClient, module_id: ObjectId):
     count = 0
@@ -98,7 +113,7 @@ async def delete_recommend(
         request: Request,
         module_id: str = None,
         db: MongoClient = Depends(get_database),
-    ):
+):
     try:
         module_recommend = ModuleRecommendModel(
             module_id=ObjectId(module_id),
@@ -112,7 +127,8 @@ async def delete_recommend(
 
     check_exist_module_recommend(db, module_recommend)
     delete_module_recommend(db, module_recommend)
-    return 
+    return
+
 
 def check_exist_module_recommend(db: MongoClient, module_recommend: ModuleRecommendModel):
     rows = MODULE_RECOMMEND.get_module_recommend(db, module_recommend)
@@ -121,6 +137,7 @@ def check_exist_module_recommend(db: MongoClient, module_recommend: ModuleRecomm
             detail={"message": "the module recommended by this user is not found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
+
 
 def delete_module_recommend(db: MongoClient, module_recommend: ModuleRecommendModel):
     try:
@@ -137,7 +154,7 @@ async def comment(
         request: Request,
         items: ModuleCommentRequestModel,
         db: MongoClient = Depends(get_database),
-    ):
+):
     try:
         module_comment = ModuleCommentModel(
             module_id=ObjectId(items.module_id),
@@ -151,14 +168,17 @@ async def comment(
         )
     inserted = insert_module_comment(db, module_comment)
     data = ModuleCommentDataModel(
-        id=inserted.inserted_id,
-        module_id=module_comment.module_id,
+        id=str(inserted.inserted_id),
+        module_id=str(module_comment.module_id),
         message=module_comment.message,
-        user_id=module_comment.user_id)
+        user_id=str(module_comment.user_id),
+        created_at=module_comment.created_at,
+        updated_at=module_comment.updated_at)
     return ModuleCommentResponseModel(
-        message = "successful commented",
-        data = data
+        message="successful commented",
+        data=data
     )
+
 
 def insert_module_comment(db: MongoClient, module_comment: ModuleCommentModel):
     try:
@@ -175,7 +195,7 @@ async def delete_comment(
         request: Request,
         module_comment_id: str = None,
         db: MongoClient = Depends(get_database),
-    ):
+):
     try:
         module_comment_id_obj = ObjectId(module_comment_id)
         user_id_obj = ObjectId(request.state.user_id)
@@ -186,7 +206,8 @@ async def delete_comment(
         )
     check_exist_module_comment(db, module_comment_id_obj, user_id_obj)
     delete_module_comment(db, module_comment_id_obj, user_id_obj)
-    return 
+    return
+
 
 def check_exist_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
     rows = MODULE_COMMENT.find(db, module_comment_id, user_id)
@@ -196,6 +217,7 @@ def check_exist_module_comment(db: MongoClient, module_comment_id: ObjectId, use
             status_code=status.HTTP_404_NOT_FOUND
         )
 
+
 def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id: ObjectId):
     try:
         MODULE_COMMENT.delete_one(db, module_comment_id, user_id)
@@ -204,9 +226,11 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
             detail={"message": e},
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-    
+
+
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def search(
+        request: Request,
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
@@ -214,42 +238,56 @@ async def search(
         module_type: Annotated[Union[list[str], None], Query()] = None,
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
-        sortby: str = Query('module_name', pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
+        sortby: str = Query('module_name',
+                            pattern='^module_name$|^degree_program$|^no_of_recommend$|^no_of_suggested_modules$|^degree_level$|^ects$|^university$|^module_type$'),
         orderby: str = Query('asc', pattern='^asc$|^desc$'),
-        db: MongoClient = Depends(get_database),
-    ):
+        db: MongoClient = Depends(get_database)
+):
     count = MODULES.count(db, term, degree_level, ects, university, module_type)
     if count == 0:
         raise HTTPException(detail={"message": "No module found"}, status_code=status.HTTP_404_NOT_FOUND)
-    
+
     sortby_column = 'module_name'
     if not is_manual_calculated_sortby(sortby=sortby):
-        sortby_column = sortby_database_col_mapping[sortby] 
-    
+        sortby_column = sortby_database_col_mapping[sortby]
+
     items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
 
     return {
-        "data":{
+        "data": {
             "total_results": count,
             "total_items": len(data),
             "items": data
-    }}
+        }}
 
-def prepare_item(db: MongoClient, items: Cursor):
-    data = parse_json(items)
+
+def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
+    data = list(items)
     for entry in data:
-        entry["module_id"] = entry["_id"]['$oid']
-        entry["module_name"] = entry["name"]
-        del entry['name']
-        del entry["_id"]
+        entry["module_id"] = str(entry.pop("_id"))
+        entry["module_name"] = entry.pop('name')
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
-        # TODO: call OWL service for number of sugggested modules
-        entry['no_of_suggested_modules'] = 0
+        entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
+        entry['is_recommended'] = False
+        if len(user_recommends) > 0:
+            for user_recommend in user_recommends:
+                if str(user_recommend["module_id"]) == str(entry["module_id"]):
+                    entry['is_recommended'] = True
     return data
+
 
 def sort(data: list, sortby: str, orderby: str):
     is_reverse = False
@@ -257,14 +295,13 @@ def sort(data: list, sortby: str, orderby: str):
         is_reverse = True
     return sorted(data, reverse=is_reverse, key=lambda d: d[sortby])
 
+
 def is_manual_calculated_sortby(sortby: str):
     return (sortby == 'no_of_recommend' or sortby == 'no_of_suggested_modules')
 
-def parse_json(data):
-    return json.loads(json_util.dumps(data))
-
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
+        request: Request,
         term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*)+''' ),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
@@ -291,7 +328,15 @@ async def advanced_search(
         sortby_column = sortby_database_col_mapping[sortby] 
 
     items = MODULES.advanced_find(db, extracted_columns, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
@@ -302,6 +347,7 @@ async def advanced_search(
             "total_items": len(data),
             "items": data,
         }}
+
 
 def convert_term_to_db_column(condition: tuple):
     COLUMN_NAME = 0
@@ -320,6 +366,148 @@ def convert_term_to_db_column(condition: tuple):
             else:
                 conditions.append((col, condition[VALUE], condition[OPERATOR]))
         return conditions
+
+
+@module.post("/", status_code=status.HTTP_201_CREATED)
+async def create_module(
+        request: Request,
+        content_type: str = Header(...),
+        db: MongoClient = Depends(get_database),
+        background_tasks: BackgroundTasks = None):
+    if content_type != "application/xml":
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail={
+                "message": f"Unsupported media type: {content_type}."
+                           " It must be application/xml"
+            }
+        )
+
+    try:
+        body = await request.body()
+        uploaded_modules_list, db_modules_list = get_data_from_xml(body)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail={"message": "Expected tag not found or unexpected tag found. Please check you XML file tags",
+                    "hint": str(e)},
+        )
+
+    inserted_modules = MODULES.insert_many(db, db_modules_list)
+    item_response_list = []
+    for index, element in enumerate(uploaded_modules_list):
+        module_id = str(inserted_modules.inserted_ids[index])
+        item = UploadModulesResponseItemModel(
+            module_id=module_id,
+            module_name=element.name,
+            degree_program=element.degree_program,
+            degree_level=element.degree_level,
+            university=element.university,
+            module_code=element.module_code,
+            content=element.content,
+            ects=int(element.ects or 0),
+            type=element.type
+        )
+        item_response_list.append(item)
+
+    background_tasks.add_task(add_module_to_res_parallel_process, items=item_response_list)
+    background_tasks.add_task(calculate_similarity_for_one_parallel_process, items=item_response_list)
+    background_tasks.add_task(add_modules_to_owl)
+    background_tasks.add_task(send_email_after_calculation, db=db, user_id=ObjectId(request.state.user_id))
+
+    return {
+        "data": {
+            "total_items": len(item_response_list),
+            "items": item_response_list,
+        }
+    }
+
+
+def add_module_to_res_parallel_process(items: list):
+    logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: started")
+    for item in items:
+        add_module_to_res(item.module_id)
+    logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: finished")
+        
+
+def calculate_similarity_for_one_parallel_process(items: list):
+    try:
+        logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: started")
+        cpu_count = multiprocessing.cpu_count()
+        pool_size = int(cpu_count*0.7) + (cpu_count%0.7 > 0)
+        similarity_changes = []
+        def worker(item):
+            MAX_RETRY = 3
+            round = 0
+            is_success = False
+            logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: {item.module_id} started")
+            
+            while(not is_success and round <= MAX_RETRY):
+                try:
+                    similarity_changes.append(start_similarity_for_one(item))
+                    is_success = True
+                    logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: finished")
+                except Exception as e:
+                    logging.error(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: {e}")
+                    wordnet.ensure_loaded()
+                    round += 1
+                    logging.debug(f"thread ID {threading.current_thread().ident} | {__name__}.{inspect.stack()[0][3]} | message: retry ({round}) a failed process")
+            
+
+        pool = Pool(pool_size)
+        logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: {pool_size} pool size with {len(items)} modules start processing...")
+
+        for item in items:
+            logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: call -> {item.module_id}")
+            pool.apply_async(worker, (item,))
+
+        pool.close()
+        pool.join()
+        logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: all parallel processes joined")
+
+        logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: writing a result json file")
+        combine_similarity_results_and_write_back(similarity_changes)
+        logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: {len(items)} modules successfully proceeded")
+    except Exception as e:
+        logging.error(f"{__name__}.{inspect.stack()[0][3]} | message: {e}")
+        raise e
+
+
+def get_data_from_xml(text: bytes) -> (list, list): # type: ignore
+    tree = ET.ElementTree(ET.fromstring(text))
+    modules_graph = tree.getroot()
+    uploaded_modules_list = []
+    db_modules_list = []
+    for module in modules_graph:
+        uploading_model = UploadModulesModel()
+        for entity in module:
+            setattr(uploading_model, sortby_database_col_mapping[entity.tag], entity.text)
+        db_model = MODULES.ModulesModel(
+            name=uploading_model.name,
+            degree_program=uploading_model.degree_program,
+            degree_level=uploading_model.degree_level,
+            university=uploading_model.university,
+            module_code=uploading_model.module_code,
+            content=uploading_model.content,
+            ects=int(uploading_model.ects or 0),
+            year="",
+            type=uploading_model.type,
+        )
+        uploaded_modules_list.append(uploading_model)
+        db_modules_list.append(db_model)
+    return uploaded_modules_list, db_modules_list
+
+
+async def send_email_after_calculation(db: MongoClient, user_id: ObjectId):
+    user = USERS.get_user_by_id(db, user_id)
+    try:
+        await send_success_calculated_similarity_email(user_email=user["email"], user_name=user["first_name"])
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE
+        )
+    logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: email sent")
 
 
 @module.get("/{module_id}/comment", response_model=GetModuleCommentResponseModel, status_code=status.HTTP_200_OK)
@@ -386,3 +574,49 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
         )
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
+
+
+@module.get("/{module_id}/suggested", status_code=status.HTTP_200_OK)
+async def get_suggested_modules(
+        request: Request,
+        module_id: str = None, 
+        db: MongoClient = Depends(get_database)
+    ):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_count = MODULES.count_by_id(db, module_id_obj)
+    if module_count == 0:
+        raise HTTPException(
+            detail={"message": "No module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
+    if len(suggested_module_ids) == 0:
+        raise HTTPException(
+            detail={"message": "No suggested module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    suggested_modules_info = MODULES.find_many_by_id_list(db, [ObjectId(id) for id in suggested_module_ids])
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, suggested_modules_info, user_recommend)
+    return {
+        "data": ModuleSuggestedResponseModel(
+            requested_module_id = module_id,
+            total_suggested_module_items = len(data),
+            suggested_module_items = data,
+    )}
+
