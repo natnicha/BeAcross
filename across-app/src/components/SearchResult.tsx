@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
+import SuggestionPopup from '../components/SuggestionResultPopup';
 import { SearchItem, SearchResponse } from "../services/searchServices";
 import { postRecommended } from "../services/recommendedServices";
 import { deleteRecommended } from "../services/recommendedServices";
@@ -272,6 +273,15 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                             <button className="custom-btn-red btn custom-link"onClick={cancelComparison}>No</button>
                         </div>
                     )}
+
+{isSuggestionPopupOpen && selectedItem && (
+    <SuggestionPopup 
+        content="" 
+        selectedItem={selectedItem}
+        onClose={closePopup}
+        searchResult={[]} // Providing an empty array as a default
+    />
+)}
                 </div>
             </div>
         </section>

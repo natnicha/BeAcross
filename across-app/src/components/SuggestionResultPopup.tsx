@@ -45,10 +45,11 @@ export interface SuggestionItem {
 } 
 
 interface PopupProps {
-    selectedItem: Item;
+    selectedItem: Item | null;
     onClose: () => void;
     searchResult: SearchResultType[];
     suggestionItems?: SuggestionItem[]; // New property to hold suggestion items
+    content?: string;
 }
 
 interface SearchResponse {
@@ -58,7 +59,7 @@ interface SearchResponse {
 
 const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResult, suggestionItems }) => {
    
-    const moduleId = selectedItem.module_id || "defaultId";
+    //const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
     const navigate = useNavigate();
@@ -101,7 +102,6 @@ const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResul
             <div className="popup-backdrop">
                 <div ref={popupRef} className="popup-content">
                     <div className="title-popup mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                     </div>
                     <button 
                         onClick={closePopup} 
