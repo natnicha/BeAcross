@@ -3,6 +3,7 @@ import { usePopups } from '../PopupContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { deleteRecommended, postRecommended } from '../services/recommendedServices';
 import ModuleDetailPopup from './ModuleDetailPopup';
+import CompareModuleDetailPopup from './CompareModuleDetailPopup';
 
 export interface SuggestionItem {
     content?: string;
@@ -34,10 +35,10 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const [suggestedList, setSuggestedList] = useState<SuggestionItem[]>(props.suggestionItems);
     const [selectedSuggestedItem, setSuggestedItem] = useState<SuggestionItem>(props.selectedResultItem); // item from suggestion result
-    const [selectedCompareItems, setSelectedCompareItems] = useState<SuggestionItem[]>([props.selectedResultItem]);
-
-    const [immediateVisualSelected, setImmediateVisualSelected] = useState<SuggestionItem[]>([]); // use in compare feature
+    
+    const [selectedCompareItems, setSelectedCompareItems] = useState<SuggestionItem[]>([props.selectedResultItem]); // use in compare feature
     const [tempCompareItems, setTempCompareItems] = useState<SuggestionItem[]>([]); // use in compare feature
+    const [immediateVisualSelected, setImmediateVisualSelected] = useState<SuggestionItem[]>([]); // use in compare feature
 
     // Hook all popup control to PopupContext
     const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
@@ -96,8 +97,15 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
             setImmediateVisualSelected(prev => [...prev, item]); // Ensure clicked items are visually marked
             setTempCompareItems(newSelection); // Temporarily store the selected items for comparison
         }
-    };
 
+        // part of logic in confirmComparison() in SearchResult.tsx
+        if (newSelection.length === 2) {
+            openCompareModuleDetailPopup(newSelection.map(item => item.module_id));
+            setSelectedCompareItems([props.selectedResultItem]); // Reset for new comparisons
+            setImmediateVisualSelected([]); 
+        }
+    };
+    
     // Close the popup if clicking outside of it
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -184,7 +192,15 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                 selectedItem={selectedSuggestedItem} 
                                 onClose={closePopup} 
                             />
-                        )} 
+                        )}
+
+                        {isCompareModuleDetailPopupOpen && (
+                            <CompareModuleDetailPopup 
+                                content="" 
+                                selectedItems={tempCompareItems} // Corrected prop name and passed the correct array
+                                onClose={closePopup} 
+                            />
+                        )}
                 </div>
             </div>
         </div>
