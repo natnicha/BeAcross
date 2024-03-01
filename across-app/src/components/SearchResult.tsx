@@ -240,8 +240,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                     </button>
                                  )}
                                     <button 
-                                        className="custom-btn-number btn custom-link"
-                                        onClick={(event) => handleSuggestionClick(event, item)}>
+                                        className={`custom-btn-number btn custom-link ${item.no_of_suggested_modules === 0 ? 'disabled' : ''}`}
+                                        onClick={(event) => handleSuggestionClick(event, item)}
+                                        disabled={item.no_of_suggested_modules === 0}>
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
                                     <button className={`btn custom-link ${immediateVisualSelected.includes(item) ? 'custom-btn-green-number' : 'custom-btn-grey-number'}`}
