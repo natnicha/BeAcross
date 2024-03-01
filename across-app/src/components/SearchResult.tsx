@@ -256,11 +256,11 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     
                     {/* Conditionally render ModuleDetailPopup */}
                     {selectedItem && isModuleDetailPopupOpen && (
-                    <ModuleDetailPopup 
-                        content="" 
-                        selectedItem={selectedItem} 
-                        onClose={closePopup} 
-                    />
+                        <ModuleDetailPopup 
+                            content="" 
+                            selectedItem={selectedItem} 
+                            onClose={closePopup} 
+                        />
                     )} 
 
                     {isCompareModuleDetailPopupOpen && (
@@ -279,10 +279,10 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         </div>
                     )}
 
-                    {isSuggestionPopupOpen && (
+                    {isSuggestionPopupOpen && selectedItem && suggestedItem && (
                         <SuggestionPopup 
                             content="" 
-                            selectedItem={selectedItem}
+                            selectedResultItem={selectedItem}
                             onClose={closePopup}
                             suggestionItems={suggestedItem} // Providing an empty array as a default
                         />
