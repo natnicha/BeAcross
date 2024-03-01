@@ -4,11 +4,12 @@ import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
 import { SearchItem, SearchResponse } from "../services/searchServices";
 import { postRecommended } from "../services/recommendedServices";
 import { deleteRecommended } from "../services/recommendedServices";
+import { getSuggestion } from "../services/suggestionServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
 
 // Define the Item type based on your data structure
-interface Item {
+export interface Item {
     content?: string;
     university?: string;
     degree_program?: string;
@@ -149,20 +150,27 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         setItems(updatedItems);
     
         try {
-            // Then make the API call based on the new `is_recommended` status
             if (item.is_recommended) {
                 await deleteRecommended(item.module_id, jwtToken);
             } else {
                 await postRecommended(item.module_id, jwtToken);
             }
-            // No need to update the UI here since we've already done it optimistically
         } catch (error) {
             console.error("Error handling recommendation:", error);
-            // Optionally, revert the UI changes here if the API call fails
         }
     };
 
-     
+    const handleSuggestionClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+        event.preventDefault();
+        event.stopPropagation();
+    
+        try {
+            await getSuggestion(item.module_id);
+        } catch (error) {
+            console.error("Error handling recommendation:", error);
+        }
+    };
+   
     return (
         <>
         {/*Search list*/}
@@ -219,7 +227,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                     </button>
                                  )}
-                                    <button className="custom-btn-number btn custom-link">                                       
+                                    <button 
+                                        className="custom-btn-number btn custom-link"
+                                        onClick={(event) => handleSuggestionClick(event, item)}>
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
                                     <button className={`btn custom-link ${immediateVisualSelected.includes(item) ? 'custom-btn-green-number' : 'custom-btn-grey-number'}`}
