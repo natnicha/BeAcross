@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { deleteRecommended, postRecommended } from '../services/recommendedServices';
+import ModuleDetailPopup from './ModuleDetailPopup';
 
 export interface SuggestionItem {
     content?: string;
@@ -186,8 +187,16 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        </div>))}
+
+                        {/* Conditionally render ModuleDetailPopup */}
+                        {selectedSuggestedItem && isModuleDetailPopupOpen && (
+                            <ModuleDetailPopup 
+                                content="" 
+                                selectedItem={selectedSuggestedItem} 
+                                onClose={closePopup} 
+                            />
+                        )} 
                 </div>
             </div>
         </div>
