@@ -35,7 +35,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
 
     // Hook all popup control to PopupContext
-    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, closeAllPopups } = usePopups();
+    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const [selectedCompareItems, setSelectedCompareItems] = useState<Item[]>([]);
     const [immediateVisualSelected, setImmediateVisualSelected] = useState<Item[]>([]);
@@ -165,7 +165,13 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         event.stopPropagation();
     
         try {
-            await getSuggestion(item.module_id);
+            const response = await getSuggestion(item.module_id);
+            if (response.suggested_module_items) {
+                openSuggestionPopup(response.suggested_module_items);
+            } else {
+                // Handle case where no suggested_module_items are present
+                console.error("No suggestion items found.");
+            }
         } catch (error) {
             console.error("Error handling recommendation:", error);
         }

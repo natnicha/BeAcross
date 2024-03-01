@@ -29,11 +29,26 @@ interface Item {
     module_id: string;
 }
 
+export interface SuggestionItem {
+    content?: string;
+    university?: string;
+    degree_program?: string;
+    module_code?: number;
+    ects?: string;
+    degree_level?: string;
+    module_name?: string;
+    type?: string;
+    no_of_recommend: number;
+    no_of_suggested_modules?: number;
+    module_id: string;
+    is_recommended: boolean;
+} 
+
 interface PopupProps {
     selectedItem: Item;
-    content: string;
     onClose: () => void;
     searchResult: SearchResultType[];
+    suggestionItems?: SuggestionItem[]; // New property to hold suggestion items
 }
 
 interface SearchResponse {
@@ -103,7 +118,18 @@ const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResul
                     </button>
                     
                     {/*Search Result*/}
-                    <SearchResult searchResult={formattedSearchResult}/>  
+                    {suggestionItems && suggestionItems.length > 0 && (
+                    <div>
+                        <h5>Suggested Modules</h5>
+                        <ul>
+                            {suggestionItems.map((item, index) => (
+                                <li key={index}>
+                                    {item.module_name} - {item.university}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 </div>
             </div>
         </div>

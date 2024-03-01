@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { SuggestionItem } from './services/suggestionServices';
 
 interface PopupContextType {
   isLoginPopupOpen: boolean;
@@ -13,7 +14,7 @@ interface PopupContextType {
   isCompareModuleDetailPopupOpen: boolean;
   openCompareModuleDetailPopup: (module_ids: string[]) => void;
   isSuggestionPopupOpen: boolean;
-  openSuggestionPopup: (module_ids: string[]) => void;
+  openSuggestionPopup: (suggestionItems: SuggestionItem[]) => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -39,6 +40,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isSuggestionPopupOpen, setIsSuggestionPopupOpen] = useState(false);
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
   const [currentModuleIds, setCurrentModuleIds] = useState<string[]>([]);
+  const [suggestionItems, setSuggestionItems] = useState<SuggestionItem[]>([]);
 
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
@@ -76,8 +78,8 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     document.body.classList.remove('no-scroll');
   };
 
-  const openSuggestionPopup = (module_ids: string[]) => {
-    setCurrentModuleIds(module_ids); // Store the current module IDs
+  const openSuggestionPopup = (items: SuggestionItem[]) => {
+    setSuggestionItems(items); // Store the suggestion items
     setIsSuggestionPopupOpen(true);
     document.body.classList.add('no-scroll');
   };
