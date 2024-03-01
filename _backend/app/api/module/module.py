@@ -23,7 +23,7 @@ import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, ModuleSuggestedResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
 from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res, start_similarity_for_one_after_update
 
@@ -176,10 +176,12 @@ async def comment(
         )
     inserted = insert_module_comment(db, module_comment)
     data = ModuleCommentDataModel(
-        id=inserted.inserted_id,
-        module_id=module_comment.module_id,
+        id=str(inserted.inserted_id),
+        module_id=str(module_comment.module_id),
         message=module_comment.message,
-        user_id=module_comment.user_id)
+        user_id=str(module_comment.user_id),
+        created_at=module_comment.created_at,
+        updated_at=module_comment.updated_at)
     return ModuleCommentResponseModel(
         message="successful commented",
         data=data
@@ -236,6 +238,7 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
 
 @module.get("/search/", status_code=status.HTTP_200_OK)
 async def search(
+        request: Request,
         term: str = Query(min_length=1),
         degree_level: Annotated[Union[list[str], None], Query()] = None,
         ects: Annotated[Union[list[int], None], Query()] = None,
@@ -257,7 +260,16 @@ async def search(
         sortby_column = sortby_database_col_mapping[sortby]
 
     items = MODULES.find(db, term, degree_level, ects, university, module_type, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
@@ -270,15 +282,18 @@ async def search(
         }}
 
 
-def prepare_item(db: MongoClient, items: Cursor):
-    data = parse_json(items)
+def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
+    data = list(items)
     for entry in data:
-        entry["module_id"] = entry["_id"]['$oid']
-        entry["module_name"] = entry["name"]
-        del entry['name']
-        del entry["_id"]
+        entry["module_id"] = str(entry.pop("_id"))
+        entry["module_name"] = entry.pop('name')
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
         entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
+        entry['is_recommended'] = False
+        if len(user_recommends) > 0:
+            for user_recommend in user_recommends:
+                if str(user_recommend["module_id"]) == str(entry["module_id"]):
+                    entry['is_recommended'] = True
     return data
 
 
@@ -292,12 +307,9 @@ def sort(data: list, sortby: str, orderby: str):
 def is_manual_calculated_sortby(sortby: str):
     return (sortby == 'no_of_recommend' or sortby == 'no_of_suggested_modules')
 
-
-def parse_json(data):
-    return json.loads(json_util.dumps(data))
-
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
+        request: Request,
         term: str = Query(min_length=1, pattern=r'''(\("(all_metadata|module_name|degree_program|degree_level|content|ects|university|module_type)":([\w ]+)\)[ ]*(AND|OR|NOT)*[ ]*)+''' ),
         limit: int = Query(20, gt=0),
         offset: int = Query(0, gt=0),
@@ -324,7 +336,15 @@ async def advanced_search(
         sortby_column = sortby_database_col_mapping[sortby] 
 
     items = MODULES.advanced_find(db, extracted_columns, limit, offset, sortby_column, orderby)
-    data = prepare_item(db, items)
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+    data = prepare_item(db, items, user_recommend)
 
     if is_manual_calculated_sortby(sortby=sortby):
         data = sort(data, sortby, orderby)
@@ -653,3 +673,48 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
     changes = [changes]
     combine_similarity_results_and_write_back(changes)
     return updated_module
+
+
+@module.get("/{module_id}/suggested", status_code=status.HTTP_200_OK)
+async def get_suggested_modules(
+        request: Request,
+        module_id: str = None, 
+        db: MongoClient = Depends(get_database)
+    ):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_count = MODULES.count_by_id(db, module_id_obj)
+    if module_count == 0:
+        raise HTTPException(
+            detail={"message": "No module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
+    if len(suggested_module_ids) == 0:
+        raise HTTPException(
+            detail={"message": "No suggested module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    suggested_modules_info = MODULES.find_many_by_id_list(db, [ObjectId(id) for id in suggested_module_ids])
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, suggested_modules_info, user_recommend)
+    return {
+        "data": ModuleSuggestedResponseModel(
+            requested_module_id = module_id,
+            total_suggested_module_items = len(data),
+            suggested_module_items = data,
+    )}

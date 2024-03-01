@@ -21,8 +21,13 @@ class ModuleCommentRequestModel(BaseModel):
     module_id: str
     message: str
 
-class ModuleCommentDataModel(ModuleCommentModel):
-    id: ObjectId = None
+class ModuleCommentDataModel(BaseModel):
+    id: str = None
+    module_id: str
+    message: str
+    user_id: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
     
 class ModuleCommentResponseModel(BaseModel):
     message: str
@@ -85,3 +90,8 @@ class ModuleUpdateModel(BaseModel):
     degree_level: Optional[str] = None
     url: Optional[str] = None
     type: Optional[str] = None
+
+class ModuleSuggestedResponseModel(BaseModel):
+    requested_module_id: str
+    total_suggested_module_items: int
+    suggested_module_items: list = []
