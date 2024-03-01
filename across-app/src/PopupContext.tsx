@@ -12,6 +12,8 @@ interface PopupContextType {
   openModuleDetailPopup: (module_id: string) => void;
   isCompareModuleDetailPopupOpen: boolean;
   openCompareModuleDetailPopup: (module_ids: string[]) => void;
+  isSuggestionPopupOpen: boolean;
+  openSuggestionPopup: (module_ids: string[]) => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -34,7 +36,7 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false);
   const [isModuleDetailPopupOpen, setIsModuleDetailPopupOpen] = useState(false);
   const [isCompareModuleDetailPopupOpen, setIsCompareModuleDetailPopupOpen] = useState(false);
-
+  const [isSuggestionPopupOpen, setIsSuggestionPopupOpen] = useState(false);
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
   const [currentModuleIds, setCurrentModuleIds] = useState<string[]>([]);
 
@@ -70,7 +72,14 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     setIsForgotPasswordPopupOpen(false);
     setIsModuleDetailPopupOpen(false);
     setIsCompareModuleDetailPopupOpen(false);
+    setIsSuggestionPopupOpen(false);
     document.body.classList.remove('no-scroll');
+  };
+
+  const openSuggestionPopup = (module_ids: string[]) => {
+    setCurrentModuleIds(module_ids); // Store the current module IDs
+    setIsSuggestionPopupOpen(true);
+    document.body.classList.add('no-scroll');
   };
 
   const openCompareModuleDetailPopup = (module_ids: string[]) => {
@@ -86,11 +95,13 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
       isForgotPasswordPopupOpen,
       isModuleDetailPopupOpen,
       isCompareModuleDetailPopupOpen,
+      isSuggestionPopupOpen,
       openLoginPopup,
       openRegisterPopup,
       openForgotPasswordPopup,
       openModuleDetailPopup,
       openCompareModuleDetailPopup,
+      openSuggestionPopup,
       closeAllPopups,
     }}>
       {children}
