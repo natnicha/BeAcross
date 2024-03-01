@@ -30,7 +30,7 @@ export default function Profile() {
       .then((response) => response.json())
       .then((data) => setUserProfile(data))
       .catch((error) => console.error("Error fetching profile:", error));
-  }, []);
+  }, [jwtToken]);
 
   return (
     <div className="about-thumb bg-white shadow-lg">
