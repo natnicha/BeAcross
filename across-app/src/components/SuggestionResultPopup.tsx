@@ -32,8 +32,8 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const location = useLocation();
     const user_role = sessionStorage.getItem('user_role');
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
-    const [selectedSuggestedItem, setSuggestedItem] = useState<SuggestionItem>(props.selectedResultItem); // item from suggestion result
     const [suggestedList, setSuggestedList] = useState<SuggestionItem[]>(props.suggestionItems);
+    const [selectedSuggestedItem, setSuggestedItem] = useState<SuggestionItem>(props.selectedResultItem); // item from suggestion result
     const [selectedCompareItems, setSelectedCompareItems] = useState<SuggestionItem[]>([props.selectedResultItem]);
 
     const [immediateVisualSelected, setImmediateVisualSelected] = useState<SuggestionItem[]>([]); // use in compare feature
@@ -132,20 +132,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                         X
                     </button>
                     
-                    {/*Search Result*/}
-                    {/*suggestionItems && suggestionItems.length > 0 && (
-                        <div>
-                            <h5>Suggested Modules</h5>
-                            <ul>
-                                {suggestionItems.map((item, index) => (
-                                    <li key={index}>
-                                        {item.module_name} - {item.university}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )*/}
-                    {props.suggestionItems && props.suggestionItems.map((item, index) => (
+                    {suggestedList && suggestedList.map((item, index) => (
                         <div className="search-table" key={index}>
                             <div className="search-row" onClick={() => handleRowClick(item as SuggestionItem)}>
                                 <div className="search-column" id="moduleCode">
