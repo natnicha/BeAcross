@@ -1,21 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import SearchResult from '../components/SearchResult';
-
-interface SearchResultType {
-    content?: string;
-    university?: string;
-    degree_program?: string;
-    module_code?: number;
-    ects?: string;
-    degree_level?: string;
-    module_name?: string;
-    type?: string;
-    module_id: string;
-    is_recommended: boolean;
-    no_of_recommend: number;
-}
 
 interface Item {
     content?: string;
@@ -47,17 +32,11 @@ export interface SuggestionItem {
 interface PopupProps {
     selectedItem: Item | null;
     onClose: () => void;
-    searchResult: SearchResultType[];
     suggestionItems?: SuggestionItem[]; // New property to hold suggestion items
     content?: string;
 }
 
-interface SearchResponse {
-    results: SearchResultType[];
-    // possibly other properties...
-}
-
-const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResult, suggestionItems }) => {
+const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, suggestionItems }) => {
    
     //const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
@@ -68,12 +47,6 @@ const SuggestionResultPopup: React.FC<PopupProps> = ({ selectedItem, searchResul
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
     const popupRef = useRef<HTMLDivElement>(null);
-
-    const formattedSearchResult: SearchResponse = {
-        results: searchResult, // where searchResult is SearchResultType[]
-        // include other necessary properties as per SearchResponse definition
-    };   
-    
 
     const closePopup = () => {
         const searchParams = new URLSearchParams(location.search);

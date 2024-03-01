@@ -5,7 +5,7 @@ import SuggestionPopup from '../components/SuggestionResultPopup';
 import { SearchItem, SearchResponse } from "../services/searchServices";
 import { postRecommended } from "../services/recommendedServices";
 import { deleteRecommended } from "../services/recommendedServices";
-import { getSuggestion } from "../services/suggestionServices";
+import { SuggestionItem, getSuggestion } from "../services/suggestionServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
 
@@ -45,6 +45,8 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [tempCompareItems, setTempCompareItems] = useState<Item[]>([]);
     const [items, setItems] = useState<SearchItem[] | undefined>(props.searchResult.items);
+
+    const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -168,7 +170,10 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         try {
             const response = await getSuggestion(item.module_id);
             if (response.suggested_module_items) {
+                setSelectedItem(item);
+                setSuggestedItem(response.suggested_module_items);
                 openSuggestionPopup(response.suggested_module_items);
+
             } else {
                 // Handle case where no suggested_module_items are present
                 console.error("No suggestion items found.");
@@ -274,14 +279,14 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                         </div>
                     )}
 
-{isSuggestionPopupOpen && selectedItem && (
-    <SuggestionPopup 
-        content="" 
-        selectedItem={selectedItem}
-        onClose={closePopup}
-        searchResult={[]} // Providing an empty array as a default
-    />
-)}
+                    {isSuggestionPopupOpen && (
+                        <SuggestionPopup 
+                            content="" 
+                            selectedItem={selectedItem}
+                            onClose={closePopup}
+                            suggestionItems={suggestedItem} // Providing an empty array as a default
+                        />
+                    )}
                 </div>
             </div>
         </section>
