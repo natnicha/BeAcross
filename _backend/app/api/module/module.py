@@ -668,7 +668,6 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
     updated_module['id'] = str(updated_module.pop("_id"))
     remove_similarity_on_delete(module_id)
     add_module_to_res(module_id)
-    print(updated_module)
     changes = start_similarity_for_one_after_update(updated_module)
     changes = [changes]
     combine_similarity_results_and_write_back(changes)
