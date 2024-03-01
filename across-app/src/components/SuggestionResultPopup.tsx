@@ -127,6 +127,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
             <div className="popup-backdrop">
                 <div ref={popupRef} className="popup-content">
                     <div className="title-popup mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;Suggestion modules of &nbsp;" {selectedSuggestedItem.module_code} {selectedSuggestedItem.module_name} "</h5>
                     </div>
                     <button 
                         onClick={closeAllPopup} 
@@ -141,50 +142,60 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                         >
                         X
                     </button>
-                    
-                    {suggestedList && suggestedList.map((item, index) => (
-                        <div className="search-table" key={index}>
-                            <div className="search-row" onClick={() => handleRowClick(item as SuggestionItem)}>
-                                <div className="search-column" id="moduleCode">
-                                    {item.module_code}
-                                </div>
-                                <div className="search-column" id="moduleName">
-                                    {item.module_name}
-                                </div>
-                                <div className="search-column" id="ect">
-                                    {item.ects}
-                                </div>
-                                <div className="search-column" id="degree">
-                                    {item.degree_level}
-                                </div>
-                                <div className="search-column" id="type">
-                                    {item.type}
-                                </div>
-                                <div className="search-column" id="university">
-                                    {item.university}
-                                </div>
-                                
-                                <div className="search-feature-control-btn">
-                                    {user_role === 'student' ? (
-                                        <button 
-                                            className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
-                                            onClick={(event) => handleRecommendedClick(event, item)}
-                                        >
-                                            <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
-                                        </button>
-                                        ) : (
-                                        <button className="custom-btn-grey-number btn custom-link" disabled>
-                                            <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
-                                        </button>
-                                    )}
+                    <div className="about-thumb bg-white shadow-lg" style={{ width: '95%' }}>
+                        <div className="search-header">
+                            <div className="search-column"><strong>Module Code</strong></div>
+                            <div className="search-column"><strong>Module Name</strong></div>
+                            <div className="search-column"><strong>ECTS Credits</strong></div>
+                            <div className="search-column"><strong>Degree Level</strong></div>
+                            <div className="search-column"><strong>Module Type</strong></div>
+                            <div className="search-column"><strong>University</strong></div>
+                        </div>
+                        {suggestedList && suggestedList.map((item, index) => (
+                            <div className="search-table" key={index}>
+                                <div className="search-row" onClick={() => handleRowClick(item as SuggestionItem)}>
+                                    <div className="search-column" id="moduleCode">
+                                        {item.module_code}
+                                    </div>
+                                    <div className="search-column" id="moduleName">
+                                        {item.module_name}
+                                    </div>
+                                    <div className="search-column" id="ect">
+                                        {item.ects}
+                                    </div>
+                                    <div className="search-column" id="degree">
+                                        {item.degree_level}
+                                    </div>
+                                    <div className="search-column" id="type">
+                                        {item.type}
+                                    </div>
+                                    <div className="search-column" id="university">
+                                        {item.university}
+                                    </div>
+                                    
+                                    <div className="search-feature-control-btn">
+                                        {user_role === 'student' ? (
+                                            <button 
+                                                className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
+                                                style={{ width: '20%' }}
+                                                onClick={(event) => handleRecommendedClick(event, item)}
+                                            >
+                                                <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
+                                            </button>
+                                            ) : (
+                                            <button className="custom-btn-grey-number btn custom-link" style={{ width: '20%'}} disabled>
+                                                <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
+                                            </button>
+                                        )}
 
-                                    <button className={`btn custom-link ${immediateVisualSelected.includes(item) ? 'custom-btn-green-number' : 'custom-btn-grey-number'}`}
-                                        onClick={(event) => handleCompareClick(event, item)}>
-                                        Compare
-                                    </button>
+                                        <button className="custom-btn-green-number btn custom-link"
+                                            onClick={(event) => handleCompareClick(event, item)}>
+                                            Compare
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>))}
+                            </div>))}
+                         </div>   
 
                         {/* Conditionally render ModuleDetailPopup */}
                         {selectedSuggestedItem && isModuleDetailFromSuggestionPopup && (
