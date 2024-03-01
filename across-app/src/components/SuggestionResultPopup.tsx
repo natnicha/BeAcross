@@ -192,6 +192,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                         {/* Conditionally render ModuleDetailPopup */}
                         {selectedSuggestedItem && isModuleDetailPopupOpen && (
                             <ModuleDetailPopup 
+                                shouldShowShareButtons={false}
                                 content="" 
                                 selectedItem={selectedSuggestedItem} 
                                 onClose={closePopup} 

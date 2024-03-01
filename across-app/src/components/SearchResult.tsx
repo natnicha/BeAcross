@@ -260,6 +260,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                             content="" 
                             selectedItem={selectedItem} 
                             onClose={closePopup} 
+                            shouldShowShareButtons={true}
                         />
                     )} 
 
