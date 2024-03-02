@@ -81,6 +81,10 @@ const StudentProfilepage: React.FC = () => {
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
+
+  //Personal Plan
+
+
   return (
     <>
       <div className="profile-container">
@@ -351,9 +355,26 @@ const StudentProfilepage: React.FC = () => {
                 <h5 className="mb-3" style={{ color: "#1e5af5" }}>
                   My Personal Plan
                 </h5>
+                <label>Choose a Semester:</label>
+                <select id="semester-select">
+                    <option value="">--Please choose an option--</option>
+                    <option value="summer_2025">Summer 2025</option>
+                    <option value="winter_2024_2025">Winter 2024/2025</option>
+                    <option value="summer_2024">Summer 2024</option>
+                    <option value="winter_2023_24">Winter 2023/24</option>
+                    <option value="summer_2023">Summer 2023</option>
+                </select>
+                <div className="search-header">
+                    <div className="search-column"><strong>Module Code</strong></div>
+                    <div className="search-column"><strong>Module Name</strong></div>
+                    <div className="search-column"><strong>ECTS Credits</strong></div>
+                    <div className="search-column"><strong>Degree Level</strong></div>
+                    <div className="search-column"><strong>Module Type</strong></div>
+                    <div className="search-column"><strong>University</strong></div>
+                </div>
               </div>
             </div>
-          </section>
+        </section>
         )}
       </div>
     </>
