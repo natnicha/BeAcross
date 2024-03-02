@@ -39,8 +39,28 @@ An admin can update a module and its fields using the module id.
 
 | Key          | Type         | Required     | Description                               |
 | ------------ | :----------: | :----------: | ----------------------------------------- |
-|              |              |              |                                           |
+| name         | string       | False        | The name of the module, that would be updated             |
+| content      | string       | False        | The content of the module, that would be updated          |
+| program      | string       | False        | The program of the module, that would be updated          |
+| university   | string       | False        | The university of the module, that would be updated       |
+| degree_program | string     | False        | The degree_program of the module, that would be updated   |
+| module_code  | string       | False        | The code of the module, that would be updated             |
+| ects         | integer      | False        | The ects of the module, that would be updated             |
+| degree_level | string       | False        | The degree_level of the module, that would be updated     |
+| url          | string       | False        | The url of the module, that would be updated              |
+| type         | string       | False        | The type of the module, that would be updated             |
 
+## Sample Body Parameter Json Request
+```json
+{
+    "name":"Database",
+    "content":"relational and non-relational database",
+    "program":"Computer-Science",
+    "university":"Technische Universitat Chemnitz",
+    "module_code":"TUCCS-1234",
+    "ects": 5,
+}
+```
 
 ## Success Response 200 - OK
 ```json
