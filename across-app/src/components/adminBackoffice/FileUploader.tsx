@@ -7,6 +7,8 @@ const FileUploader = () => {
     "initial" | "uploading" | "success" | "fail"
   >("initial");
 
+  const jwtToken = sessionStorage.getItem("jwtToken")
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setStatus("initial");
@@ -15,16 +17,26 @@ const FileUploader = () => {
   };
 
   const handleUpload = async () => {
-    if (file?.type === "application/json") {
+    if (file) {
+      const fileNameParts = file.name.split('.');
+      const fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase();
+  
+      if (fileExtension === "xml") {
       setStatus("uploading");
 
       const formData = new FormData();
       formData.append("file", file);
+      console.log(formData)
+
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${jwtToken}`);
+      headers.append("Content-Type", "application/xml");
 
       try {
         const result = await fetch("http://localhost:8000/api/v1/module", {
           method: "POST",
-          body: formData,
+          body: formData.get("file"),
+          headers: headers,
         });
 
         const data = await result.json();
@@ -38,6 +50,7 @@ const FileUploader = () => {
     } else {
       alert("File type not supported. Please upload a JSON file.");
     }
+  }
   };
 
   return (
