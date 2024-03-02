@@ -69,11 +69,11 @@ An admin can delete a module using module_id
 }
 ```
 
-## Error Response 403 - Unauthorized (case: user-role that is performing the request doesn't have the permission)
+## Error Response 403 - Forbidden (case: no right to access this route)
 ```json
 {
   "detail" : {
-    "message": "Not authorized to perform this action"
+    "message": "insufficient permissions"
   }
 }
 ```

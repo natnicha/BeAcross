@@ -592,15 +592,9 @@ async def delete_module(request: Request, module_id: str, db: MongoClient = Depe
             status_code=status.HTTP_400_BAD_REQUEST
         )
     module_data = MODULES.find_one(db, module_id_obj)
-
     if not module_data:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Module not found")
 
-    if request.state.role not in ['sys-admin', 'uni-admin']: 
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to perform this action"
-        )
     if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
@@ -620,11 +614,6 @@ async def delete_module(request: Request, module_id: str, db: MongoClient = Depe
 
 @module.put("/{module_id}", response_model=ModuleResponseModel)
 async def update_module(request: Request, module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database)):
-    if request.state.role not in ['sys-admin', 'uni-admin']: 
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not authorized to perform this action"
-        )
     try:
         module_id_obj = ObjectId(module_id)
     except Exception as e:

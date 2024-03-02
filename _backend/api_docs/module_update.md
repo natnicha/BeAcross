@@ -67,12 +67,12 @@ An admin can update a module and its fields using the module id.
 }
 ```
 
-## Error Response 403 - Forbidden (case: the user-role doesn't have permission to do this request)
+## Error Response 403 - Forbidden (case: no right to access this route)
 ```json
 {
-    "detail": {
-        "message": "Not authorized to perform this action"
-    }
+  "detail" : {
+    "message": "insufficient permissions"
+  }
 }
 ```
 
