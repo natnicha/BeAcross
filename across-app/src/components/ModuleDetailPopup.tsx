@@ -270,8 +270,10 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                         {shouldShowShareButtons && (
                             <ul className="social-icon">
                                 {/*Personal Plan*/}
-                                <a href="#" className="social-icon-link bi bi-calendar-plus-fill" onClick={handlePersonalPlan} aria-label="Add to Personal Plan">
-                                </a>
+                                {user_role === 'student' && (
+                                    <a href="#" className="social-icon-link bi bi-calendar-plus-fill" onClick={handlePersonalPlan} aria-label="Add to Personal Plan">
+                                    </a>
+                                )}
                                 
                                 <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
                                 </a>
@@ -411,7 +413,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                     {showPersonalPlanPopup && (
                         <div className="confirmation-popup">
                             <p style={{ color: '#1e5af5'}}>My Personal Plan</p>
-                            {/* Radio button for Summer 2025 */}
+
                             <div className="checkbox">
                                 <label>
                                     <input 
@@ -425,7 +427,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                     &nbsp;Summer 2025
                                 </label>
                             </div>
-                            {/* Radio button for Winter 2024/2025 */}
+      
                             <div className="checkbox">
                                 <label>
                                     <input 
@@ -439,7 +441,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                     &nbsp;Winter 2024/2025
                                 </label>
                             </div>
-                            {/* Radio button for Summer 2024 */}
+                   
                             <div className="checkbox">
                                 <label>
                                     <input 
@@ -453,7 +455,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                     &nbsp;Summer 2024
                                 </label>
                             </div>
-                            {/* Radio button for Winter 2023/24 */}
+                     
                             <div className="checkbox">
                                 <label>
                                     <input 
@@ -467,7 +469,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                     &nbsp;Winter 2023/24
                                 </label>
                             </div>
-                            {/* Radio button for Summer 2023 */}
+                    
                             <div className="checkbox">
                                 <label>
                                     <input 
