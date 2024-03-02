@@ -57,6 +57,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+    const [showPersonalPlanPopup, setShowPersonalPlanPopup] = useState(false);
        
     useEffect(() => {
         const fetchComments = async () => {
@@ -216,6 +217,20 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
             document.body.removeChild(textarea);
         }
     };
+
+    const handlePersonalPlan = async (e: React.FormEvent) => {
+        setShowPersonalPlanPopup(true);
+    };
+
+    const confirmPersonalPlan = () => {
+        setShowPersonalPlanPopup(false); // Close the popup
+
+    };
+    
+    const cancelPersonalPlan = () => {
+        setShowPersonalPlanPopup(false); // Close the popup
+
+    };
     
     
     return (
@@ -226,6 +241,10 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                         <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                         {shouldShowShareButtons && (
                             <ul className="social-icon">
+                                {/*Personal Plan*/}
+                                <a href="#" className="social-icon-link bi bi-calendar-plus-fill" onClick={handlePersonalPlan} aria-label="Add to Personal Plan">
+                                </a>
+                                
                                 <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
                                 </a>
                                 <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
@@ -359,6 +378,46 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                             </div>
                         )
                     }
+
+                    {showPersonalPlanPopup && (
+                        <div className="confirmation-popup">
+                            <p>My Personal Plan</p>
+                            <div>
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="semester" 
+                                  value="Summer 2025" 
+                                  onChange={handlePersonalPlan}
+                              /> 
+                                &nbsp;Bialystok University Of Technology
+                                </label>
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="semester" 
+                                  value="Winter 2024/25" 
+                                  onChange={handlePersonalPlan}
+                                />
+                                &nbsp;Technische Universitat Chemnitz
+                                </label>
+                              <label>
+                                <input 
+                                  type="checkbox" 
+                                  className="pointer-checkbox" 
+                                  name="semester" 
+                                  value="Summer 2024" 
+                                  onChange={handlePersonalPlan}
+                                /> 
+                                &nbsp;University of Nova Gorica
+                                </label>
+                          </div>
+                          <button className="custom-btn-green btn custom-link" onClick={confirmPersonalPlan}>Yes</button>&nbsp;&nbsp;
+                        <button className="custom-btn-red btn custom-link"onClick={cancelPersonalPlan}>No</button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
