@@ -177,54 +177,32 @@ def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseMod
         updated_at = user["updated_at"],
     )
 
+
 # email sender password reset
 @auth.post("/forgot-password")
 async def forgot_password(
-        request: PasswordResetRequestModel,
-        item: PasswordResetRequestModel = None,
+        emailaddr: PasswordResetRequestModel, # = None,
         db: MongoClient = Depends(get_database)):
 
     # Verify the user exists
-    user_detail = USERS.get_user(db, request.email)
+    user_detail = USERS.get_user(db, emailaddr.email)
     if not user_detail:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    # Generate a new password or allow the user to specify one
+    # Generate a new password and encrypt it
     new_password = generate_password()  
-
-    # Encrypt the new password
     encrypted_password = hash_text(new_password)
+    
+    full_name = extractFullNameFromEmail(emailaddr.email, '.')
 
     if update_result:
-        # Send confirmation email (optional)
+        # Send confirmation email
         try:
-            #await send_password_reset_confirmation_email(user_email=request.email)
-            await send_newpass_email(user_email=request.email, encrypted_password=encrypted_password)
+            await send_newpass_email(user_email=emailaddr.email, new_password=new_password, full_name=full_name)
             # Update the user's record with the new encrypted password
-            update_result = USERS.update_user_password(db, request.email, encrypted_password)
+            update_result = USERS.update_user_password(db, emailaddr.email, encrypted_password)
         except Exception as e:
             # Handle email sending failure
             logging.error(f"Failed to send password reset confirmation: {e}")
     
     return {"message": "If your account with that email was found, we've sent the new password."}
-
-
-
-
-
-
-
-# email sender password reset
-@auth.post("/forgot-password")
-async def reset_password(
-        item: ForgotPasswordRequestModel = None,
-        db: MongoClient = Depends(get_database)):
-    
-    new_password = generate_password()
-    user_detail = USERS.get_user(db, item.email)
-    # if len(user_detail) == 0:
-    #     raise HTTPException(
-    #         detail={"message": "no account found"}
-    #     )
-    await send_newpass_email(item.email, new_password, user_detail[0]["first_name"])
-    return {"password": new_password}
