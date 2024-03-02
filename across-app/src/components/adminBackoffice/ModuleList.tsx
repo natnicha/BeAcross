@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ModuleEditPopup from "./ModuleEditPopup";
 
 interface ModuleItem {
   university?: string;
@@ -21,6 +22,19 @@ interface ModuleData {
 
 export default function ModuleList() {
   const [moduleData, setModuleDatas] = useState<ModuleData | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
+  const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
+
+  const jwtToken = sessionStorage.getItem("jwtToken");
+
+  // Functions to open/close the register popup
+  const openDetailPopup = () => setIsDetailPopupOpen(true);
+  const closeDetailPopup = () => setIsDetailPopupOpen(false);
+
+  const handleRowClick = (item: ModuleItem) => {
+    setSelectedItem(item);
+    openDetailPopup();
+  };
 
   useEffect(() => {
     fetch(
@@ -37,6 +51,40 @@ export default function ModuleList() {
         console.error("Error fetching module list data:", error);
       });
   }, []);
+
+  const handleDeleteStud = (id: number) => {
+    if (window.confirm("Do you want to delete this module?")) {
+      fetch(`http://localhost:8000/api/v1/module/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to delete module");
+          }
+
+          // Remove the deleted module from state
+          setModuleDatas((prevModuleData) => {
+            if (
+              !prevModuleData ||
+              !prevModuleData.data ||
+              !prevModuleData.data.items
+            )
+              return null;
+            const updatedItems = prevModuleData.data.items.filter(
+              (item) => item.module_code !== id
+            );
+            return { ...prevModuleData, items: updatedItems };
+          });
+        })
+        .catch((error) => {
+          console.error("Error deleting sutudent:", error);
+        });
+    } else {
+    }
+  };
 
   return (
     <div className="about-thumb bg-white shadow-lg">
@@ -55,9 +103,6 @@ export default function ModuleList() {
         </div>
         <div className="search-column">
           <strong>Degree Level</strong>
-        </div>
-        <div className="search-column">
-          <strong>Module Type</strong>
         </div>
         <div className="search-column">
           <strong>University</strong>
@@ -81,17 +126,38 @@ export default function ModuleList() {
                 <div className="search-column" id="degree">
                   {item.degree_level}
                 </div>
-                <div className="search-column" id="type">
-                  {item.type}
-                </div>
                 <div className="search-column" id="university">
                   {item.university}
+                </div>
+                <div className="search-feature-control-btn">
+                  <button className="custom-btn-number btn custom-link">
+                    <i className="bi bi-stars"></i> Suggestion Modules
+                  </button>
+                  <button
+                    className="custom-btn-number btn custom-link"
+                    onClick={() => handleRowClick(item)}
+                  >
+                    Edit{" "}
+                  </button>
+                  <button
+                    className="custom-btn-red-number btn custom-link"
+                    onClick={() => handleDeleteStud(item.module_code!)}
+                  >
+                    Delete{" "}
+                  </button>
                 </div>
               </div>
             ))}
         </div>
       ) : (
-        <p>No data</p>
+        <p>Loading...</p>
+      )}
+      {/* Conditionally render ModuleDetailPopup */}
+      {selectedItem && isDetailPopupOpen && (
+        <ModuleEditPopup
+          selectedItem={selectedItem}
+          onClose={closeDetailPopup}
+        />
       )}
     </div>
   );
