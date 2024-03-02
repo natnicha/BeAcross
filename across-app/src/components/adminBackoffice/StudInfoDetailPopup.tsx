@@ -1,7 +1,9 @@
-import React from "react";
+import { on } from "events";
+import React, { useState } from "react";
 
 // Define the Item type based on your data structure
 interface Item {
+  id: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -19,6 +21,46 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
   selectedItem,
   onClose,
 }) => {
+  const [editMode, setEditMode] = useState(false);
+  const [updatedStudInfo, setUpdatedStudInfo] = useState<Item>(selectedItem);
+
+  const jwtToken = sessionStorage.getItem("jwtToken");
+
+  const handleEditToggle = () => {
+    setEditMode(!editMode);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUpdatedStudInfo((prevStudInfo) => ({
+      ...prevStudInfo,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = () => {
+    // Call API to save changes
+    fetch(`http://localhost:8000/api/v1/user/${selectedItem.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify(updatedStudInfo),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle success, maybe close the popup or update UI
+        console.log("Updated data:", data);
+        onClose();
+        window.location.reload();
+        setEditMode(false);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error updating student info:", error);
+      });
+  };
   return (
     <div className="studInfo-detail">
       <div className="popup-backdrop">
@@ -53,7 +95,13 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   type="text"
                   name="first_name"
                   defaultValue={selectedItem.first_name}
-                  disabled
+                  value={
+                    editMode
+                      ? updatedStudInfo.first_name
+                      : selectedItem.first_name
+                  }
+                  onChange={handleInputChange}
+                  disabled={!editMode}
                 />
               </div>
               <div className="col">
@@ -62,7 +110,13 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   type="text"
                   name="last_name"
                   defaultValue={selectedItem.last_name}
-                  disabled
+                  value={
+                    editMode
+                      ? updatedStudInfo.last_name
+                      : selectedItem.last_name
+                  }
+                  onChange={handleInputChange}
+                  disabled={!editMode}
                 />
               </div>
             </div>
@@ -73,7 +127,9 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   type="text"
                   name="email"
                   defaultValue={selectedItem.email}
-                  disabled
+                  value={editMode ? updatedStudInfo.email : selectedItem.email}
+                  onChange={handleInputChange}
+                  disabled={!editMode}
                 />
               </div>
             </div>
@@ -84,7 +140,13 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   type="text"
                   name="registration_number"
                   defaultValue={selectedItem.registration_number}
-                  disabled
+                  value={
+                    editMode
+                      ? updatedStudInfo.registration_number
+                      : selectedItem.registration_number
+                  }
+                  onChange={handleInputChange}
+                  disabled={!editMode}
                 />
               </div>
               <div className="col-sm">
@@ -93,7 +155,13 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   type="text"
                   name="course_of_study"
                   defaultValue={selectedItem.course_of_study}
-                  disabled
+                  value={
+                    editMode
+                      ? updatedStudInfo.course_of_study
+                      : selectedItem.course_of_study
+                  }
+                  onChange={handleInputChange}
+                  disabled={!editMode}
                 />
               </div>
               <div className="col-sm">
@@ -102,10 +170,19 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   type="text"
                   name="semester"
                   defaultValue={selectedItem.semester}
-                  disabled
+                  value={
+                    editMode ? updatedStudInfo.semester : selectedItem.semester
+                  }
+                  onChange={handleInputChange}
+                  disabled={!editMode}
                 />
               </div>
             </div>
+            {editMode ? (
+              <button onClick={handleSave}>Save</button>
+            ) : (
+              <button onClick={handleEditToggle}>Edit</button>
+            )}{" "}
             {/* Grade Information */}
             <p>02. Grade Information</p>
           </div>
