@@ -40,8 +40,6 @@ const FileUploader = () => {
         });
 
         const data = await result.json();
-
-        console.log(data);
         setStatus("success");
       } catch (error) {
         console.error(error);
