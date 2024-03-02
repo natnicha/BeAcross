@@ -150,6 +150,7 @@ def set_user_info_from_jwt(request: Request):
         encoded = get_payload_from_auth(splited_auth[1])
         request.state.role = encoded["role"]
         request.state.user_id = encoded["user_id"]
+        request.state.university = encoded["university"]
         return
     except:
         return

@@ -1,9 +1,7 @@
 import inspect
 import logging
-import json
 import re
 from typing import Annotated, Union
-from bson import json_util
 from bson.objectid import ObjectId
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
@@ -29,8 +27,7 @@ from app.transferability.similiarity_run import combine_similarity_results_and_w
 
 #del CRUD
 from app.crud.modules import delete_one
-from app.api.auth.auth_utils import is_valid_jwt_token, get_payload_from_auth
-from fastapi.security import OAuth2PasswordBearer
+from app.api.auth.auth_utils import get_payload_from_auth
 from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
 from app.crud.modules import find_one
@@ -583,13 +580,9 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
     module_data['id'] = str(module_data.pop("_id"))
     return module_data
 
-#delCRUD
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
-async def delete_module(module_id: str, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):    
-    payload = get_payload_from_auth(token)
-
+async def delete_module(request: Request, module_id: str, db: MongoClient = Depends(get_database)):    
     # fetch the module to check its university field
     try:
         module_id_obj = ObjectId(module_id)
@@ -603,12 +596,12 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database),
     if not module_data:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Module not found")
 
-    if payload['role'] not in ['sys-admin', 'uni-admin']: 
+    if request.state.role not in ['sys-admin', 'uni-admin']: 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform this action"
         )
-    if payload['role'] == 'uni-admin' and payload.get('university') != module_data.get('university'):
+    if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="Not authorized to delete module from another university"
@@ -626,9 +619,8 @@ async def delete_module(module_id: str, db: MongoClient = Depends(get_database),
 
 
 @module.put("/{module_id}", response_model=ModuleResponseModel)
-async def update_module(module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database), token: str = Depends(oauth2_scheme)):
-    payload = get_payload_from_auth(token)
-    if payload['role'] not in ['sys-admin', 'uni-admin']: 
+async def update_module(request: Request, module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database)):
+    if request.state.role not in ['sys-admin', 'uni-admin']: 
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to perform this action"
@@ -642,7 +634,7 @@ async def update_module(module_id: str, module_update: ModuleUpdateModel, db: Mo
         )
     
     module_data = MODULES.find_one(db, module_id_obj)
-    if payload['role'] == 'uni-admin' and payload.get('university') != module_data.get('university'):
+    if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="Not authorized to delete module from another university"
