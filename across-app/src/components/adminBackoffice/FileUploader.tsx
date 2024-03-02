@@ -45,7 +45,7 @@ const FileUploader = () => {
       <div className="about-thumb bg-white shadow-lg">
         <div className="d-flex flex-column">
           <label htmlFor="file" className="sr-only form-label">
-            <strong>Upload University Modules (format *.json only)</strong>
+            <strong>Upload University Modules (format *.xml only)</strong>
           </label>
           <input
             className="form-control"
