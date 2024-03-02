@@ -46,7 +46,7 @@ const FileUploader = () => {
         setStatus("fail");
       }
     } else {
-      alert("File type not supported. Please upload a JSON file.");
+      alert("File type not supported. Please upload a XML file.");
     }
   }
   };
