@@ -1,13 +1,13 @@
-interface PostPersonalPlanResponse {
+export interface PostPersonalPlanResponse {
     status: number;
     message: string;
   }
 
-interface PersonalPlanResponse {
+export interface PersonalPlanResponse {
     data: Data;
 }
 
-interface Data {
+export interface Data {
     total_items: number;
     items: Item[];
 }
@@ -17,7 +17,7 @@ export interface Item {
     personal_plan: PersonalPlan[];
 }
 
-interface PersonalPlan {
+export interface PersonalPlan {
     personal_plan_id: string | null; // null is included because personal_plan_id can be null
     semester_id: string;
     semester_name: string;

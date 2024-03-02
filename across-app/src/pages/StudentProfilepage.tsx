@@ -6,7 +6,7 @@ import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 import Profile from "../components/Profile";
-import { getPersonalPlan, getModuleDetail, ModuleResponse, Item} from "../services/personalplanServices";
+import { getPersonalPlan, getModuleDetail, ModuleResponse, Item, moduleItem} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -16,10 +16,9 @@ const StudentProfilepage: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
 
   //personal plan
-  const [personalPlanItems, setPersonalPlanItems] = useState<Item[]>([]);
-  const [moduleDetails, setModuleDetails] = useState<ModuleResponse | null>(null);
+  const [moduleDetailsArray, setModuleDetailsArray] = useState<moduleItem[]>([]);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
-
+  
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
     setActiveNav(navItem);
@@ -86,43 +85,26 @@ const StudentProfilepage: React.FC = () => {
   //Personal Plan
   const handlePersonalPlanClick = async () => {
     try {
-      // Calling the getPersonalPlan API
-      const response = await getPersonalPlan();
-      // Storing the response data in sessionStorage
-      sessionStorage.setItem('personalPlanData', JSON.stringify(response));
-      
-      // Update your UI states
+      const personalPlanResponse = await getPersonalPlan();
+      sessionStorage.setItem('personalPlanData', JSON.stringify(personalPlanResponse));
+  
+      const moduleDetailsPromises = personalPlanResponse.data.items.map(item =>
+        getModuleDetail(item.module_id)
+      );
+      const moduleDetailsResponses = await Promise.all(moduleDetailsPromises);
+  
+      // Assuming each getModuleDetail response has an 'items' array you want to display
+      // Flatten all module items into a single array and update state
+      const moduleItems = moduleDetailsResponses.flatMap(response => response.items || []);
+      setModuleDetailsArray(moduleItems); // Store fetched module items in state
+  
       setPersonalPlan(true);
       setExamResult(false);
       setShowProfileInformation(false);
     } catch (error) {
-      console.error("Failed to fetch personal plan data:", error);
-      // Handle the error state here, maybe set some error message in the state to show to the user
+      console.error("Failed to fetch module details:", error);
     }
   };
-  
-  useEffect(() => {
-    // Assuming you have a mechanism to trigger this, e.g., button click or component mount
-    const fetchPersonalPlan = async () => {
-      const response = await getPersonalPlan();
-      sessionStorage.setItem('personalPlanData', JSON.stringify(response));
-      setPersonalPlanItems(response.data.items);
-    };
-
-    fetchPersonalPlan();
-  }, []);
-
-  useEffect(() => {
-    // Whenever selectedModuleId changes, fetch the corresponding module details
-    const fetchModuleDetails = async () => {
-      if (selectedModuleId) {
-        const response = await getModuleDetail(selectedModuleId);
-        setModuleDetails(response);
-      }
-    };
-
-    fetchModuleDetails();
-  }, [selectedModuleId]);
 
   const handleRowClick = (item: Item) => {
     // Set the selectedModuleId which triggers fetching module details
@@ -391,7 +373,6 @@ const StudentProfilepage: React.FC = () => {
         )}
 
         {/*Personal Plan*/}
-        {/* Conditional rendering for personal plan section */}
         {showPersonalPlan && (
           <section className="tm-content" id="profileinformation">
             <div className="nav nav-tabs flex-row align-items-baseline">
@@ -399,39 +380,23 @@ const StudentProfilepage: React.FC = () => {
                 <h5 className="mb-3" style={{ color: "#1e5af5" }}>
                   My Personal Plan
                 </h5>
-                <label>Choose a Semester:</label>
-                <select id="semester-select">
-                    <option value="">--Please choose an option--</option>
-                    <option value="summer_2025">Summer 2025</option>
-                    <option value="winter_2024_2025">Winter 2024/2025</option>
-                    <option value="summer_2024">Summer 2024</option>
-                    <option value="winter_2023_24">Winter 2023/24</option>
-                    <option value="summer_2023">Summer 2023</option>
-                </select>
-                <div className="search-header">
-                    <div className="search-column"><strong>Module Code</strong></div>
-                    <div className="search-column"><strong>Module Name</strong></div>
-                    <div className="search-column"><strong>ECTS Credits</strong></div>
-                    <div className="search-column"><strong>Degree Level</strong></div>
-                    <div className="search-column"><strong>Module Type</strong></div>
-                    <div className="search-column"><strong>University</strong></div>
-                </div>
-                
-                {moduleDetails && (
-                  <div>
-                    {moduleDetails.items?.map((moduleItem, index) => (
-                      <div key={index}>
-                        <p>Module Name: {moduleItem.module_name}</p>
-                        <p>ECTS Credits: {moduleItem.ects}</p>
-                        <p>Degree Level: {moduleItem.degree_level}</p>
-                        {/* Add more details as needed */}
-                      </div>
-                    ))}
+                {/* Render module details directly from moduleDetailsArray */}
+                {moduleDetailsArray.map((moduleItem, index) => (
+                  <div className="search-table" key={index}>
+                    <div className="search-row">
+                      <div className="search-column">{moduleItem.module_code}</div>
+                      <div className="search-column">{moduleItem.module_name}</div>
+                      <div className="search-column">{moduleItem.ects}</div>
+                      <div className="search-column">{moduleItem.degree_level}</div>
+                      <div className="search-column">{moduleItem.type}</div>
+                      <div className="search-column">{moduleItem.university}</div>
+                      {/* Add more fields from moduleItem as needed */}
+                    </div>
                   </div>
-                )}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
         )}
       </div>
     </>
