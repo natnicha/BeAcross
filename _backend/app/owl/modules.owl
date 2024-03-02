@@ -4295,10 +4295,6 @@
   <rdf:type rdf:resource="#Module"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e347d">
-  <rdf:type rdf:resource="#Module"/>
-</owl:NamedIndividual>
-
 <owl:NamedIndividual rdf:about="#65ac1847d2815b505f3e3aea">
   <rdf:type rdf:resource="#Module"/>
 </owl:NamedIndividual>
