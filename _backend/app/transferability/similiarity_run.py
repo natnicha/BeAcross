@@ -8,7 +8,7 @@ from app.transferability.similiarity_logic import check_content
 from app.transferability.similiarity_logic import compare_titles
 from app.config.config_utils import env_config
 from app.owl.modules import add_modules_to_owl
-from app.api.module.model import UploadModulesResponseItemModel
+from app.api.module.model import ModuleResponseModel, UploadModulesResponseItemModel
 
 
 # TODO check if id already exists in similarity file
@@ -168,6 +168,36 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
                     similarity_changes[str(modu["_id"])] = []
                 if inserted_mod.module_id not in similarity_changes[str(modu["_id"])]:
                     similarity_changes[str(modu["_id"])].append(inserted_mod.module_id)
+    return similarity_changes
+
+
+def start_similarity_for_one_after_update(updated_mod: ModuleResponseModel):
+    # calculate transferability between modules
+    data = get_specific_module_data(updated_mod['university'])
+
+    similarity_results = read_similarity_file()
+    similarity_changes = {}
+
+    for modu in data:
+        # A to B
+        if check_similarity_class(updated_mod, modu):
+            if updated_mod['id'] in similarity_results.keys() and str(modu["_id"]) not in similarity_results[updated_mod['id']]:
+                # print("true")
+                similarity_results[updated_mod['id']].append(str(modu["_id"]))
+                if not (updated_mod['id'] in similarity_changes):
+                    similarity_changes[updated_mod['id']] = []
+                if str(modu["_id"]) not in similarity_changes[updated_mod['id']]:
+                    similarity_changes[updated_mod['id']].append(str(modu["_id"]))
+
+        # B to A
+        if check_similarity_class(modu, updated_mod):
+            if str(modu["_id"]) in similarity_results.keys() and updated_mod['id'] not in similarity_results[str(modu["_id"])]:
+                # print("true")
+                similarity_results[str(modu["_id"])].append(updated_mod['id'])
+                if not (str(modu["_id"]) in similarity_changes):
+                    similarity_changes[str(modu["_id"])] = []
+                if updated_mod['id'] not in similarity_changes[str(modu["_id"])]:
+                    similarity_changes[str(modu["_id"])].append(updated_mod['id'])
 
     return similarity_changes
 
@@ -184,7 +214,6 @@ def combine_similarity_results_and_write_back(similarity_changes: list):
     lock = FileLock(results_path + ".lock")
     with lock:
         similarity_source = read_similarity_file()
-        # print(similarity_changes)
         res = fix_similarity_changes(similarity_changes)
         for key, value in res.items():
             similarity_source[key].extend(value)
@@ -276,9 +305,13 @@ def remove_similarity_on_delete(module_to_remove):
     if module_to_remove in data.keys():
         del data[module_to_remove]
 
-    for key,values in data.items():
+    for key,value in data.items():
         if module_to_remove in data[key]:
-            data[key].remove(module_to_remove)
+            if len(data[key]) == 1:
+                data[key].remove(module_to_remove)
+                data[key] = []
+            else:
+                data[key].remove(module_to_remove)
 
     write_back(data)
     add_modules_to_owl()

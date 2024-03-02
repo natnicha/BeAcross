@@ -25,7 +25,7 @@ interface Item {
 interface ModuleDetailPopupProps {
     selectedItems: Item[];
     content: string;
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 interface Comment {
@@ -40,7 +40,7 @@ interface ModuleComment {
 }
 
 
-const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItems }) => {
+const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItems, onClose }) => {
    
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const navigate = useNavigate();
@@ -91,11 +91,22 @@ const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedIt
         }
     };
 
+    const closePopup = () => {
+        if (onClose)
+        {
+            onClose();
+        }
+        else
+        {
+            closeAllPopups();
+        }
+    };
+
     // Close the popup if clicking outside of it
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
         if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-            closeAllPopups();
+            closePopup();
         }
         };
 
@@ -103,7 +114,7 @@ const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedIt
         return () => {
         document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [closeAllPopups]);
+    }, [closePopup]);
       
     return (
         <div className="module-detail">
@@ -115,7 +126,7 @@ const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedIt
                                 <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{item.module_code} {item.module_name}</h5>
                             </div>
                             <button 
-                                onClick={closeAllPopups} 
+                                onClick={closePopup} 
                                 style={{ 
                                     position: 'absolute', 
                                     top: '10px', 
