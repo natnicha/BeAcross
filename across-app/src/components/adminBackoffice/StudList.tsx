@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import StudInfoDetailPopup from "../StudInfoDetailPopup";
+import StudInfoDetailPopup from "./StudInfoDetailPopup";
 
 interface StudInfo {
   id: string;
@@ -47,13 +47,13 @@ export default function StudList() {
             throw new Error("Failed to delete sutudent");
           }
 
-          // Remove the deleted module from state
-          setStudInfoDatas((prevModuleData) => {
-            if (!prevModuleData) return null;
-            const updatedItems = prevModuleData.items.filter(
+          // Remove the deleted student from state
+          setStudInfoDatas((prevStudInfoData) => {
+            if (!prevStudInfoData) return null;
+            const updatedItems = prevStudInfoData.items.filter(
               (item) => item.id !== id
             );
-            return { ...prevModuleData, items: updatedItems };
+            return { ...prevStudInfoData, items: updatedItems };
           });
         })
         .catch((error) => {
@@ -138,7 +138,7 @@ export default function StudList() {
           ))}
         </div>
       ) : (
-        <p>No data</p>
+        <p>Loading...</p>
       )}
       {/* Conditionally render ModuleDetailPopup */}
       {selectedItem && isDetailPopupOpen && (
