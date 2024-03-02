@@ -7,6 +7,7 @@ const FileUploader = () => {
     "initial" | "uploading" | "success" | "fail"
   >("initial");
 
+  const jwtToken = sessionStorage.getItem("jwtToken");
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setStatus("initial");
@@ -15,7 +16,7 @@ const FileUploader = () => {
   };
 
   const handleUpload = async () => {
-    if (file?.type === "application/xml") {
+    if (file?.type === "text/xml") {
       setStatus("uploading");
 
       const formData = new FormData();
@@ -24,6 +25,10 @@ const FileUploader = () => {
       try {
         const result = await fetch("http://localhost:8000/api/v1/module", {
           method: "POST",
+          headers: {
+            "Authorization": `Bearer ${jwtToken}`,
+            "Content-Type": "application/xml",
+          },
           body: formData,
         });
 
@@ -45,7 +50,7 @@ const FileUploader = () => {
       <div className="about-thumb bg-white shadow-lg">
         <div className="d-flex flex-column">
           <label htmlFor="file" className="sr-only form-label">
-            <strong>Upload University Modules (format *.json only)</strong>
+            <strong>Upload University Modules (format *.xml only)</strong>
           </label>
           <input
             className="form-control"
