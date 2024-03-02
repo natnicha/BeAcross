@@ -14,7 +14,7 @@ An admin can update a module and its fields using the module id.
 | Method          | Allow Acess                       |
 | ----------------| ----------------------------------|
 | student         | -                                 |
-| uni-admin       | -                                 |
+| uni-admin       | `/api/v1/module`                 |
 | sys-admin       | `/api/v1/module`                  |
 
 ## Header Parameters
