@@ -243,15 +243,24 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     };
     
     const cancelPersonalPlan = () => {
+        setResponseMessage("");
         setShowPersonalPlanPopup(false); // Close the popup
     };
 
     const handleSemesterSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSelectedSemester(value); // Directly set the selected semester
+        localStorage.setItem('selectedSemester', value); // Save to local storage
+        console.log(selectedSemester);
     };
-    
-    
+
+    useEffect(() => {
+        const savedSemester = localStorage.getItem('selectedSemester');
+        if (savedSemester) {
+            setSelectedSemester(savedSemester);
+        }
+    }, []);
+  
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
@@ -411,6 +420,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         name="semester" 
                                         value="65d9aa1e2b35547c027a9de9" 
                                         onChange={handleSemesterSelection}
+                                        checked={"65d9aa1e2b35547c027a9de9" === selectedSemester}
                                     /> 
                                     &nbsp;Summer 2025
                                 </label>
@@ -422,8 +432,9 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         type="radio" 
                                         className="pointer-checkbox" 
                                         name="semester" 
-                                        value="65d7a7bc2b35547c027a9d5c" 
+                                        value="65d7a7cc2b35547c027a9d5e" 
                                         onChange={handleSemesterSelection}
+                                        checked={"65d7a7cc2b35547c027a9d5e" === selectedSemester}
                                     /> 
                                     &nbsp;Winter 2024/2025
                                 </label>
@@ -437,6 +448,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         name="semester" 
                                         value="65d7a7c42b35547c027a9d5d" 
                                         onChange={handleSemesterSelection}
+                                        checked={"65d7a7c42b35547c027a9d5d" === selectedSemester}
                                     /> 
                                     &nbsp;Summer 2024
                                 </label>
@@ -450,6 +462,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         name="semester" 
                                         value="65d7a7bc2b35547c027a9d5c" 
                                         onChange={handleSemesterSelection}
+                                        checked={"65d7a7bc2b35547c027a9d5c" === selectedSemester}
                                     /> 
                                     &nbsp;Winter 2023/24
                                 </label>
@@ -463,6 +476,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         name="semester" 
                                         value="65d7a7a22b35547c027a9d5b" 
                                         onChange={handleSemesterSelection}
+                                        checked={"65d7a7a22b35547c027a9d5b" === selectedSemester}
                                     /> 
                                     &nbsp;Summer 2023
                                 </label>
