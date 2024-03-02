@@ -62,6 +62,8 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     //Personal Plan
     const [showPersonalPlanPopup, setShowPersonalPlanPopup] = useState(false);
     const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
+    const [responseMessage, setResponseMessage] = useState(''); // State for storing response
+    const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
        
     useEffect(() => {
         const fetchComments = async () => {
@@ -226,13 +228,18 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
         setShowPersonalPlanPopup(true);
     };
 
-    const confirmPersonalPlan = () => {
+    const confirmPersonalPlan = async () => {
         // Ensure selectedSemester is not null before calling postPersonalPlan
         if (selectedSemester) {
-            postPersonalPlan(selectedItem.module_id, selectedSemester);
+            const response = await postPersonalPlan(selectedItem.module_id, selectedSemester);
+            if(response.status === 201) {
+                setResponseMessage(response.message);
+                setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
+              } else {  
+                setResponseMessage(response.message);
+                setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+              }
         }
-        setShowPersonalPlanPopup(false); // Close the popup
-        setSelectedSemester(null); // Reset selected semester
     };
     
     const cancelPersonalPlan = () => {
@@ -464,6 +471,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                 <button className="custom-btn-green btn custom-link" onClick={confirmPersonalPlan}>Add</button>&nbsp;&nbsp;
                                 <button className="custom-btn-red btn custom-link" onClick={cancelPersonalPlan}>Close</button>
                             </div>
+                            <p style={responseStyle}>{responseMessage}</p>
                         </div>
                     )}
                 </div>
