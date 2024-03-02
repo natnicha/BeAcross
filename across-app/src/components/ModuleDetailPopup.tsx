@@ -4,7 +4,7 @@ import { getComment } from '../services/commentServices';
 import { postComment } from '../services/commentServices';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loadAppConfig } from '../services/configUtils';
-import { postPersonalPlan } from "../services/PersonalplanServices"
+import { postPersonalPlan } from "../services/personalplanServices";
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -241,13 +241,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
 
     const handleSemesterSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        if (e.target.checked) {
-            // Set the selected semester
-            setSelectedSemester(value);
-        } else {
-            // Clear the selection if the same semester is deselected
-            setSelectedSemester(null);
-        }
+        setSelectedSemester(value); // Directly set the selected semester
     };
     
     
@@ -397,71 +391,79 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                         )
                     }
 
+                    {/*Personal Plan popup*/}
                     {showPersonalPlanPopup && (
                         <div className="confirmation-popup">
-                            <p>My Personal Plan</p>
+                            <p style={{ color: '#1e5af5'}}>My Personal Plan</p>
+                            {/* Radio button for Summer 2025 */}
                             <div className="checkbox">
                                 <label>
-                                <input 
-                                    type="checkbox" 
-                                    className="pointer-checkbox" 
-                                    name="semester" 
-                                    value="65d9aa1e2b35547c027a9de9" 
-                                    onChange={handleSemesterSelection}
-                                /> 
-                                &nbsp;Summer 2025
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d9aa1e2b35547c027a9de9" 
+                                        onChange={handleSemesterSelection}
+                                    /> 
+                                    &nbsp;Summer 2025
                                 </label>
                             </div>
+                            {/* Radio button for Winter 2024/2025 */}
                             <div className="checkbox">
                                 <label>
-                                <input 
-                                    type="checkbox" 
-                                    className="pointer-checkbox" 
-                                    name="semester" 
-                                    value="65d7a7bc2b35547c027a9d5c" 
-                                    onChange={handleSemesterSelection}
-                                /> 
-                                &nbsp;Winter 2024/2025
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7bc2b35547c027a9d5c" 
+                                        onChange={handleSemesterSelection}
+                                    /> 
+                                    &nbsp;Winter 2024/2025
                                 </label>
                             </div>
+                            {/* Radio button for Summer 2024 */}
                             <div className="checkbox">
                                 <label>
-                                <input 
-                                    type="checkbox" 
-                                    className="pointer-checkbox" 
-                                    name="semester" 
-                                    value="65d7a7c42b35547c027a9d5d" 
-                                    onChange={handleSemesterSelection}
-                                /> 
-                                &nbsp;Summer 2024
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7c42b35547c027a9d5d" 
+                                        onChange={handleSemesterSelection}
+                                    /> 
+                                    &nbsp;Summer 2024
                                 </label>
-                            </div>   
+                            </div>
+                            {/* Radio button for Winter 2023/24 */}
                             <div className="checkbox">
                                 <label>
-                                <input 
-                                    type="checkbox" 
-                                    className="pointer-checkbox" 
-                                    name="semester" 
-                                    value="65d7a7bc2b35547c027a9d5c" 
-                                    onChange={handleSemesterSelection}
-                                /> 
-                                &nbsp;Winter 2023/24
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7bc2b35547c027a9d5c" 
+                                        onChange={handleSemesterSelection}
+                                    /> 
+                                    &nbsp;Winter 2023/24
                                 </label>
-                            </div>  
+                            </div>
+                            {/* Radio button for Summer 2023 */}
                             <div className="checkbox">
                                 <label>
-                                <input 
-                                    type="checkbox" 
-                                    className="pointer-checkbox" 
-                                    name="semester" 
-                                    value="65d7a7a22b35547c027a9d5b" 
-                                    onChange={handleSemesterSelection}
-                                /> 
-                                &nbsp;Summer 2023
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7a22b35547c027a9d5b" 
+                                        onChange={handleSemesterSelection}
+                                    /> 
+                                    &nbsp;Summer 2023
                                 </label>
-                            </div>                         
-                          <button className="custom-btn-green btn custom-link" onClick={confirmPersonalPlan}>Yes</button>&nbsp;&nbsp;
-                        <button className="custom-btn-red btn custom-link"onClick={cancelPersonalPlan}>No</button>
+                            </div>
+                            <div style={{ paddingTop: "5%", display: 'flex', justifyContent: 'flex-end'}}>
+                                <button className="custom-btn-green btn custom-link" onClick={confirmPersonalPlan}>Add</button>&nbsp;&nbsp;
+                                <button className="custom-btn-red btn custom-link" onClick={cancelPersonalPlan}>Close</button>
+                            </div>
                         </div>
                     )}
                 </div>

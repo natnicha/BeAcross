@@ -4,10 +4,10 @@ interface PersonalPlanResponse {
   }
 
 // Function to send a POST request to the createPersonal API
-export async function postPersonalPlan(module_id: string, message: string): Promise<PersonalPlanResponse> {
+export async function postPersonalPlan(module_id: string, semester_id: string): Promise<PersonalPlanResponse> {
     const url: string = `http://localhost:8000/api/v1/personal-plan`;
     // Adjust the payload to match the backend expectation
-    const payload = { module_id, message }; // Use module_id as per your successful Postman test
+    const payload = { module_id, semester_id }; // Use module_id as per your successful Postman test
     const token = sessionStorage.getItem("jwtToken") || '';
   
     try {
