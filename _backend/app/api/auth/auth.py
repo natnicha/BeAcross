@@ -13,9 +13,7 @@ import app.crud.universities as UNIVERSITIES
 from app.email_service.email_sender import *
 
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel
-
-from app.api.auth.model import PasswordResetRequestModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel, PasswordResetRequestModel
 
 auth = APIRouter()
 
@@ -179,12 +177,20 @@ def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseMod
         updated_at = user["updated_at"],
     )
 
-#forgot-password
-@auth.post("/forgot-password", status_code=status.HTTP_200_OK)
-async def forgot_password(request: PasswordResetRequestModel, db: MongoClient = Depends(get_database)):
-
+    # email sender password reset
+@auth.post("/forgot-password")
+async def reset_password(
+        item: PasswordResetRequestModel = None,
+        db: MongoClient = Depends(get_database)):
+    
+    new_password = generate_password()
+    user_detail = USERS.get_user(db, item.email)
+    # if len(user_detail) == 0:
+    #     raise HTTPException(
+    #         detail={"message": "no account found"}
+    #     )
     try:
-        await send_newpass_email(user_email=request.email, password="1234")
+        await send_newpass_email(item.email, new_password, user_detail[0]["first_name"])
         return {"message": "The new password has been sent."}
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(e))
