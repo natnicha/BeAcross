@@ -4,6 +4,7 @@ import { getComment } from '../services/commentServices';
 import { postComment } from '../services/commentServices';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loadAppConfig } from '../services/configUtils';
+import { postPersonalPlan } from "../services/PersonalplanServices"
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -57,7 +58,10 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+
+    //Personal Plan
     const [showPersonalPlanPopup, setShowPersonalPlanPopup] = useState(false);
+    const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
        
     useEffect(() => {
         const fetchComments = async () => {
@@ -223,13 +227,27 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     };
 
     const confirmPersonalPlan = () => {
+        // Ensure selectedSemester is not null before calling postPersonalPlan
+        if (selectedSemester) {
+            postPersonalPlan(selectedItem.module_id, selectedSemester);
+        }
         setShowPersonalPlanPopup(false); // Close the popup
-
+        setSelectedSemester(null); // Reset selected semester
     };
     
     const cancelPersonalPlan = () => {
         setShowPersonalPlanPopup(false); // Close the popup
+    };
 
+    const handleSemesterSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (e.target.checked) {
+            // Set the selected semester
+            setSelectedSemester(value);
+        } else {
+            // Clear the selection if the same semester is deselected
+            setSelectedSemester(null);
+        }
     };
     
     
@@ -382,38 +400,66 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                     {showPersonalPlanPopup && (
                         <div className="confirmation-popup">
                             <p>My Personal Plan</p>
-                            <div>
-                              <label>
+                            <div className="checkbox">
+                                <label>
                                 <input 
-                                  type="checkbox" 
-                                  className="pointer-checkbox" 
-                                  name="semester" 
-                                  value="Summer 2025" 
-                                  onChange={handlePersonalPlan}
-                              /> 
-                                &nbsp;Bialystok University Of Technology
-                                </label>
-                              <label>
-                                <input 
-                                  type="checkbox" 
-                                  className="pointer-checkbox" 
-                                  name="semester" 
-                                  value="Winter 2024/25" 
-                                  onChange={handlePersonalPlan}
-                                />
-                                &nbsp;Technische Universitat Chemnitz
-                                </label>
-                              <label>
-                                <input 
-                                  type="checkbox" 
-                                  className="pointer-checkbox" 
-                                  name="semester" 
-                                  value="Summer 2024" 
-                                  onChange={handlePersonalPlan}
+                                    type="checkbox" 
+                                    className="pointer-checkbox" 
+                                    name="semester" 
+                                    value="65d9aa1e2b35547c027a9de9" 
+                                    onChange={handleSemesterSelection}
                                 /> 
-                                &nbsp;University of Nova Gorica
+                                &nbsp;Summer 2025
                                 </label>
-                          </div>
+                            </div>
+                            <div className="checkbox">
+                                <label>
+                                <input 
+                                    type="checkbox" 
+                                    className="pointer-checkbox" 
+                                    name="semester" 
+                                    value="65d7a7bc2b35547c027a9d5c" 
+                                    onChange={handleSemesterSelection}
+                                /> 
+                                &nbsp;Winter 2024/2025
+                                </label>
+                            </div>
+                            <div className="checkbox">
+                                <label>
+                                <input 
+                                    type="checkbox" 
+                                    className="pointer-checkbox" 
+                                    name="semester" 
+                                    value="65d7a7c42b35547c027a9d5d" 
+                                    onChange={handleSemesterSelection}
+                                /> 
+                                &nbsp;Summer 2024
+                                </label>
+                            </div>   
+                            <div className="checkbox">
+                                <label>
+                                <input 
+                                    type="checkbox" 
+                                    className="pointer-checkbox" 
+                                    name="semester" 
+                                    value="65d7a7bc2b35547c027a9d5c" 
+                                    onChange={handleSemesterSelection}
+                                /> 
+                                &nbsp;Winter 2023/24
+                                </label>
+                            </div>  
+                            <div className="checkbox">
+                                <label>
+                                <input 
+                                    type="checkbox" 
+                                    className="pointer-checkbox" 
+                                    name="semester" 
+                                    value="65d7a7a22b35547c027a9d5b" 
+                                    onChange={handleSemesterSelection}
+                                /> 
+                                &nbsp;Summer 2023
+                                </label>
+                            </div>                         
                           <button className="custom-btn-green btn custom-link" onClick={confirmPersonalPlan}>Yes</button>&nbsp;&nbsp;
                         <button className="custom-btn-red btn custom-link"onClick={cancelPersonalPlan}>No</button>
                         </div>
