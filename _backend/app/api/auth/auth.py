@@ -15,6 +15,8 @@ from app.email_service.email_sender import *
 from .auth_utils import *
 from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel
 
+from app.api.auth.model import PasswordResetRequestModel
+
 auth = APIRouter()
 
 @auth.post("/register", response_model=RegisterResponseModel, status_code=status.HTTP_201_CREATED)
@@ -176,3 +178,13 @@ def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseMod
         created_at = user["created_at"],
         updated_at = user["updated_at"],
     )
+
+#forgot-password
+@auth.post("/forgot-password", status_code=status.HTTP_200_OK)
+async def forgot_password(request: PasswordResetRequestModel, db: MongoClient = Depends(get_database)):
+
+    try:
+        await send_newpass_email(user_email=request.email, password="1234")
+        return {"message": "The new password has been sent."}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(e))
