@@ -14,28 +14,35 @@ const FileUploader = () => {
       setFile(e.target.files[0]);
     }
   };
-
+  
   const handleUpload = async () => {
     if (file?.type === "text/xml") {
       setStatus("uploading");
 
-      const formData = new FormData();
-      formData.append("file", file);
-
       try {
-        const result = await fetch("http://localhost:8000/api/v1/module", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${jwtToken}`,
-            "Content-Type": "application/xml",
-          },
-          body: formData,
-        });
-
-        const data = await result.json();
-
-        console.log(data);
-        setStatus("success");
+        file.text().then(async function(data) {
+          let result = null
+          result = await fetch("http://localhost:8000/api/v1/module", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${jwtToken}`,
+              "Content-Type": "application/xml",
+            },
+            body: data,
+          })
+          .then((response) =>  {
+            if (response.status == 201) {
+              setStatus("success")
+              setFile(null);
+            }
+            else {
+              console.error("Error fetching create modules:", response);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching create modules:", error);
+          });;
+        })
       } catch (error) {
         console.error(error);
         setStatus("fail");
@@ -88,6 +95,8 @@ const Result = ({ status }: { status: string }) => {
     return (
       <>
         <p>✅ File uploaded successfully!</p>
+        <p>📧 Your uploaded modules are processing. We will get back to you by email as soon as possible.</p>
+        <p>⏳ This action will take some time depending on your modules, typically 1 min per module.</p>
       </>
     );
   } else if (status === "fail") {
