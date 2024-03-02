@@ -65,7 +65,17 @@ An admin can update a module and its fields using the module id.
 ## Success Response 200 - OK
 ```json
 {
-
+    "id": "65d1f4545a933936a166abbd",
+    "name": "Database",
+    "content": "relational and non-relational database",
+    "program": "Computer-Science",
+    "university": "Technische Universitat Chemnitz",
+    "degree_program": "Informatik",
+    "module_code": "TUCCS-1234",
+    "ects": 5,
+    "degree_level": "Master",
+    "url": "https://www.tu-chemnitz.de/informatik/TUCCS-1234",
+    "type": "TEST-type"
 }
 ```
 
