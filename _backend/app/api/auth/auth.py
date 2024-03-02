@@ -205,3 +205,24 @@ async def forgot_password(
             logging.error(f"Failed to send password reset confirmation: {e}")
     
     return {"message": "If your account with that email was found, we've sent the new password."}
+
+
+
+
+
+
+
+# email sender password reset
+@auth.post("/forgot-password")
+async def reset_password(
+        item: ForgotPasswordRequestModel = None,
+        db: MongoClient = Depends(get_database)):
+    
+    new_password = generate_password()
+    user_detail = USERS.get_user(db, item.email)
+    # if len(user_detail) == 0:
+    #     raise HTTPException(
+    #         detail={"message": "no account found"}
+    #     )
+    await send_newpass_email(item.email, new_password, user_detail[0]["first_name"])
+    return {"password": new_password}
