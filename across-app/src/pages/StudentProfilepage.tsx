@@ -6,6 +6,7 @@ import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 import Profile from "../components/Profile";
+import { getPersonalPlan, getModuleDetail, ModuleResponse, Item} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -13,6 +14,11 @@ const StudentProfilepage: React.FC = () => {
   const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections
   const [showPersonalPlan, setPersonalPlan] = useState(false); // State to manage visibility of the sections
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
+
+  //personal plan
+  const [personalPlanItems, setPersonalPlanItems] = useState<Item[]>([]);
+  const [moduleDetails, setModuleDetails] = useState<ModuleResponse | null>(null);
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
 
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
@@ -51,12 +57,7 @@ const StudentProfilepage: React.FC = () => {
     setShowProfileInformation(false);
     setPersonalPlan(false);
   };
-  const handlePersonalPlanClick = () => {
-    setPersonalPlan(true);
-    setExamResult(false);
-    setShowProfileInformation(false);
-  };
-
+  
   // State for the visibility of rows under module types
   const [showFocusModuleRows, setShowFocusModuleRows] = useState(false);
   const [showAdvanceModuleRows, setShowAdvanceModuleRows] = useState(false);
@@ -83,7 +84,50 @@ const StudentProfilepage: React.FC = () => {
 
 
   //Personal Plan
+  const handlePersonalPlanClick = async () => {
+    try {
+      // Calling the getPersonalPlan API
+      const response = await getPersonalPlan();
+      // Storing the response data in sessionStorage
+      sessionStorage.setItem('personalPlanData', JSON.stringify(response));
+      
+      // Update your UI states
+      setPersonalPlan(true);
+      setExamResult(false);
+      setShowProfileInformation(false);
+    } catch (error) {
+      console.error("Failed to fetch personal plan data:", error);
+      // Handle the error state here, maybe set some error message in the state to show to the user
+    }
+  };
+  
+  useEffect(() => {
+    // Assuming you have a mechanism to trigger this, e.g., button click or component mount
+    const fetchPersonalPlan = async () => {
+      const response = await getPersonalPlan();
+      sessionStorage.setItem('personalPlanData', JSON.stringify(response));
+      setPersonalPlanItems(response.data.items);
+    };
 
+    fetchPersonalPlan();
+  }, []);
+
+  useEffect(() => {
+    // Whenever selectedModuleId changes, fetch the corresponding module details
+    const fetchModuleDetails = async () => {
+      if (selectedModuleId) {
+        const response = await getModuleDetail(selectedModuleId);
+        setModuleDetails(response);
+      }
+    };
+
+    fetchModuleDetails();
+  }, [selectedModuleId]);
+
+  const handleRowClick = (item: Item) => {
+    // Set the selectedModuleId which triggers fetching module details
+    setSelectedModuleId(item.module_id);
+  };
 
   return (
     <>
@@ -372,8 +416,21 @@ const StudentProfilepage: React.FC = () => {
                     <div className="search-column"><strong>Module Type</strong></div>
                     <div className="search-column"><strong>University</strong></div>
                 </div>
-              </div>
+                
+                {moduleDetails && (
+                  <div>
+                    {moduleDetails.items?.map((moduleItem, index) => (
+                      <div key={index}>
+                        <p>Module Name: {moduleItem.module_name}</p>
+                        <p>ECTS Credits: {moduleItem.ects}</p>
+                        <p>Degree Level: {moduleItem.degree_level}</p>
+                        {/* Add more details as needed */}
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
+          </div>
         </section>
         )}
       </div>

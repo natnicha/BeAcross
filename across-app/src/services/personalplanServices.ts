@@ -12,7 +12,7 @@ interface Data {
     items: Item[];
 }
 
-interface Item {
+export interface Item {
     module_id: string;
     personal_plan: PersonalPlan[];
 }
@@ -84,8 +84,8 @@ export async function postPersonalPlan(module_id: string, semester_id: string): 
 }
 
 // Function to send a GET request to the getPersonal API
-export async function getPersonalPlan(module_id: string): Promise<PersonalPlanResponse> {
-    const url: string = `http://localhost:8000/api/v1/module/${module_id}/comment`;
+export async function getPersonalPlan(): Promise<PersonalPlanResponse> {
+    const url: string = `http://localhost:8000/api/v1/personal-plan?`;
   
     const token = sessionStorage.getItem("jwtToken") || '';
 
