@@ -181,6 +181,7 @@ def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseMod
 @auth.post("/forgot-password")
 async def forgot_password(
         request: PasswordResetRequestModel,
+        item: PasswordResetRequestModel = None,
         db: MongoClient = Depends(get_database)):
 
     # Verify the user exists
@@ -189,7 +190,7 @@ async def forgot_password(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     # Generate a new password or allow the user to specify one
-    new_password = generate_password()  # Or get from user input securely
+    new_password = generate_password()  
 
     # Encrypt the new password
     encrypted_password = hash_text(new_password)
@@ -197,7 +198,8 @@ async def forgot_password(
     if update_result:
         # Send confirmation email (optional)
         try:
-            await send_password_reset_confirmation_email(user_email=request.email)
+            #await send_password_reset_confirmation_email(user_email=request.email)
+            await send_newpass_email(user_email=request.email, encrypted_password=encrypted_password)
             # Update the user's record with the new encrypted password
             update_result = USERS.update_user_password(db, request.email, encrypted_password)
         except Exception as e:
