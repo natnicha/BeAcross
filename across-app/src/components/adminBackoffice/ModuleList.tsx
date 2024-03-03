@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ModuleEditPopup from "./ModuleEditPopup";
 
 interface ModuleItem {
+  module_id?: string;
   university?: string;
   degree_program?: string;
   module_code?: number;
@@ -52,7 +53,7 @@ export default function ModuleList() {
       });
   }, []);
 
-  const handleDeleteStud = (id: number) => {
+  const handleDeleteStud = (id: string) => {
     if (window.confirm("Do you want to delete this module?")) {
       fetch(`http://localhost:8000/api/v1/module/${id}`, {
         method: "DELETE",
@@ -74,7 +75,7 @@ export default function ModuleList() {
             )
               return null;
             const updatedItems = prevModuleData.data.items.filter(
-              (item) => item.module_code !== id
+              (item) => item.module_id !== id
             );
             return { ...prevModuleData, items: updatedItems };
           });
@@ -141,7 +142,7 @@ export default function ModuleList() {
                   </button>
                   <button
                     className="custom-btn-red-number btn custom-link"
-                    onClick={() => handleDeleteStud(item.module_code!)}
+                    onClick={() => handleDeleteStud(item.module_id!)}
                   >
                     Delete{" "}
                   </button>

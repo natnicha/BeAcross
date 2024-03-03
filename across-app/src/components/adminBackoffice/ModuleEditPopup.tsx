@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { getPositionOfLineAndCharacter } from "typescript";
 
 // Define the Item type based on your data structure
 interface Item {
+  module_id?: string;
   university?: string;
   degree_program?: string;
   module_code?: number;
@@ -39,7 +41,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
 
   const handleSave = () => {
     // Call API to save changes
-    fetch(`http://localhost:8000/api/v1/module/${selectedItem.module_code}`, {
+    fetch(`http://localhost:8000/api/v1/module/${selectedItem.module_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -64,7 +66,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
   return (
     <div className="studInfo-detail">
       <div className="popup-backdrop">
-        <div className="popup-content">
+        <div className="popup-content" style={{ width: "50%" }}>
           <div className="title-popup mb-2">
             <h5 style={{ color: "white", textAlign: "left" }}>
               &nbsp;&nbsp;&nbsp;Information of "{selectedItem.module_code}-
@@ -85,12 +87,19 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
             X
           </button>
 
-          <div className="container">
+          <div
+            className="container"
+            style={{
+              padding: "10px 20px",
+            }}
+          >
             {/* personal Information */}
-            <p>01. Module Information</p>
-            <div className="row">
+            <h5 className="mb-3" style={{ color: "#1e5af5" }}>
+              01. Module Information
+            </h5>
+            <div className="row mb-3 mt-10">
               <div className="col">
-                <strong>Name</strong>
+                <strong>Name </strong>
                 <input
                   type="text"
                   name="module_name"
@@ -104,7 +113,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                 />
               </div>
               <div className="col">
-                <strong>Module code</strong>
+                <strong>Module Code </strong>
                 <input
                   type="text"
                   name="module_code"
@@ -118,8 +127,8 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                 />
               </div>
             </div>
-            <div className="row">
-              <div className="col-sm">
+            <div className="row mb-3 ">
+              <div className="col">
                 <strong>Degree Program</strong>
                 <input
                   type="text"
@@ -133,9 +142,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                   disabled={!editMode}
                 />
               </div>
-            </div>
-            <div className="row">
-              <div className="col-sm">
+              <div className="col">
                 <strong>ECTS Credits</strong>
                 <input
                   type="text"
@@ -145,7 +152,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                   disabled={!editMode}
                 />
               </div>
-              <div className="col-sm">
+              <div className="col">
                 <strong>Degree Level</strong>
                 <input
                   type="text"
@@ -161,9 +168,21 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
               </div>
             </div>
             {editMode ? (
-              <button onClick={handleSave}>Save</button>
+              <button
+                className="custom-btn-green-number btn custom-link"
+                onClick={handleSave}
+                style={{ position: "absolute", top: "50px", right: "10px" }}
+              >
+                Save
+              </button>
             ) : (
-              <button onClick={handleEditToggle}>Edit</button>
+              <button
+                className="custom-btn-number btn custom-link"
+                onClick={handleEditToggle}
+                style={{ position: "absolute", top: "50px", right: "10px" }}
+              >
+                Edit
+              </button>
             )}{" "}
           </div>
         </div>
