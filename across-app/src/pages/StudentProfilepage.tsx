@@ -6,7 +6,7 @@ import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 import Profile from "../components/Profile";
-import { getPersonalPlan, getModuleDetail, ModuleResponse, Item, moduleItem} from "../services/personalplanServices";
+import { getPersonalPlan, getModuleDetail, Item, ModuleItem, PersonalPlanResponse} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -16,8 +16,10 @@ const StudentProfilepage: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
 
   //personal plan
-  const [moduleDetailsArray, setModuleDetailsArray] = useState<moduleItem[]>([]);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
+  const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]);
+
   
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
@@ -91,13 +93,10 @@ const StudentProfilepage: React.FC = () => {
       const moduleDetailsPromises = personalPlanResponse.data.items.map(item =>
         getModuleDetail(item.module_id)
       );
-      const moduleDetailsResponses = await Promise.all(moduleDetailsPromises);
+      const moduleItems = await Promise.all(moduleDetailsPromises) as ModuleItem[];
   
-      // Assuming each getModuleDetail response has an 'items' array you want to display
-      // Flatten all module items into a single array and update state
-      const moduleItems = moduleDetailsResponses.flatMap(response => response.items || []);
-      setModuleDetailsArray(moduleItems); // Store fetched module items in state
-  
+      setModuleItemDetail(moduleItems);
+      setPersonalPlanResponse(personalPlanResponse); // save for later use
       setPersonalPlan(true);
       setExamResult(false);
       setShowProfileInformation(false);
@@ -374,30 +373,40 @@ const StudentProfilepage: React.FC = () => {
 
         {/*Personal Plan*/}
         {showPersonalPlan && (
-          <section className="tm-content" id="profileinformation">
-            <div className="nav nav-tabs flex-row align-items-baseline">
-              <div className="about-thumb bg-white shadow-lg">
-                <h5 className="mb-3" style={{ color: "#1e5af5" }}>
-                  My Personal Plan
-                </h5>
-                {/* Render module details directly from moduleDetailsArray */}
-                {moduleDetailsArray.map((moduleItem, index) => (
-                  <div className="search-table" key={index}>
-                    <div className="search-row">
-                      <div className="search-column">{moduleItem.module_code}</div>
-                      <div className="search-column">{moduleItem.module_name}</div>
-                      <div className="search-column">{moduleItem.ects}</div>
-                      <div className="search-column">{moduleItem.degree_level}</div>
-                      <div className="search-column">{moduleItem.type}</div>
-                      <div className="search-column">{moduleItem.university}</div>
-                      {/* Add more fields from moduleItem as needed */}
-                    </div>
-                  </div>
-                ))}
-              </div>
+        <section className="tm-content" id="profileinformation">
+          <div className="nav nav-tabs flex-row align-items-baseline">
+            <div className="about-thumb bg-white shadow-lg">
+              <h5 className="mb-3" style={{ color: "#1e5af5" }}>
+                My Personal Plan
+              </h5>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>University</th>
+                    <th>Department</th>
+                    <th>Module Code</th>
+                    <th>ECTS</th>
+                    <th>Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {moduleItemDetail.map((module, index) => (
+                    <tr key={index}>
+                      <td>{module.module_name}</td>
+                      <td>{module.university}</td>
+                      <td>{module.degree_program}</td>
+                      <td>{module.module_code}</td>
+                      <td>{module.ects}</td>
+                      <td>{module.type}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
       </div>
     </>
   );

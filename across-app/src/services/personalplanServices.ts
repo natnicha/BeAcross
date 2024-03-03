@@ -24,7 +24,7 @@ export interface PersonalPlan {
     is_added: boolean;
 }
 
-export interface moduleItem {
+export interface ModuleItem {
     content?: string;
     university?: string;
     degree_program?: string;
@@ -43,7 +43,7 @@ export interface ModuleResponse {
     message?: string;
     total_items?: number;
     total_results?: number;
-    items?: moduleItem[];
+    items?: ModuleItem[];
 }
 
 // Function to send a POST request to the createPersonal API
