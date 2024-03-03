@@ -11,7 +11,10 @@ interface ModuleItem {
   degree_level?: string;
   module_name?: string;
   type?: string;
-  no_of_recommend? : string;
+  no_of_suggested_modules? : number;
+  module_id: string;
+  is_recommended: boolean;
+  no_of_recommend: number;
 }
 
 interface ModuleData {
@@ -28,9 +31,8 @@ export default function ModuleList() {
 
   //Suggestion Module Session
   const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
-  const [selectedItem, setSelectedItem] = useState<null>(null);
+  const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
   const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
-  const no_of_suggested_modules = 0; // Mock
 
   useEffect(() => {
     fetch(
@@ -49,14 +51,14 @@ export default function ModuleList() {
   }, []);
 
   //Suggestion Module Session
-  /*const handleSuggestionClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+  const handleSuggestionClick = async (event: React.MouseEvent<HTMLButtonElement>, item: ModuleItem) => {  
     event.preventDefault();
     event.stopPropagation();
 
     try {
         const response = await getSuggestion(item.module_id);
         if (response.suggested_module_items) {
-            //setSelectedItem(item);
+            setSelectedItem(item);
             setSuggestedItem(response.suggested_module_items);
             openSuggestionPopup(response.suggested_module_items);
 
@@ -67,7 +69,7 @@ export default function ModuleList() {
     } catch (error) {
         console.error("Error handling recommendation:", error);
     }
-  };*/
+  };
 
 
   return (
@@ -112,10 +114,10 @@ export default function ModuleList() {
                 {/* Button Feature */}
                 <div className="search-feature-control-btn">
                   <button 
-                      className={`custom-btn-number btn custom-link ${no_of_suggested_modules === 0 ? 'disabled' : ''}`}
-                      /*</div>onClick={(event) => handleSuggestionClick(event, item)}*/
-                      disabled={no_of_suggested_modules === 0}>
-                      <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{no_of_suggested_modules}</span>
+                      className={"custom-btn-number btn custom-link"}
+                      onClick={(event) => handleSuggestionClick(event, item)}
+                      disabled={item.no_of_suggested_modules === 0}>
+                      <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                   </button>
                 </div>              
               </div>
