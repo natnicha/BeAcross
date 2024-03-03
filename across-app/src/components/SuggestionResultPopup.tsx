@@ -124,20 +124,22 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
         event.preventDefault();
         event.stopPropagation();
     
-        const newCheckedState = !checkedStates[item.module_id]; // Toggle the current state
-        setCheckedStates(prevState => ({ ...prevState, [item.module_id]: newCheckedState }));
-        
-        let isChecked = !responseMessages[item.module_id]; // Toggle based on the presence of a message for this item
+        const isChecked = event.target.checked;
+        // Directly update the checkedStates with the current isChecked value
+        setCheckedStates(prevState => ({ ...prevState, [item.module_id]: isChecked }));
+    
         let response;
     
-        if (newCheckedState) {
-            // Checkbox was not checked before - call postTransferable API
+        // Decide which API to call based on the isChecked value
+        if (isChecked) {
+            // If the checkbox is now checked, call postTransferable API
             response = await postTransferable(props.selectedResultItem.module_id, item.module_id);
         } else {
-            // Checkbox was checked before - call deleteTransferable API
+            // If the checkbox is now unchecked, call deleteTransferable API
             response = await deleteTransferable(props.selectedResultItem.module_id, item.module_id);
         }
     
+        // Prepare to update the response message based on the API response
         let newResponseMessages = { ...responseMessages };
     
         // Update or delete the message for this specific item based on the response
@@ -146,13 +148,15 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                 message: response.message,
                 style: {
                     margin: "15px",
-                    color: isChecked ? "red" : "green"
+                    color: isChecked ? "green" : "red" // Adjusted to directly use isChecked for color determination
                 }
             };
         } else {
-            delete newResponseMessages[item.module_id]; // Remove message if unchecking
+            // If no message from response, consider removing the message for this item
+            delete newResponseMessages[item.module_id];
         }
     
+        // Update the state with the new response messages
         setResponseMessages(newResponseMessages);
     };
 
@@ -163,6 +167,11 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
         }, {} as { [module_id: string]: boolean });
         setCheckedStates(initialCheckedStates);
       }, [props.suggestionItems]);
+
+    const shouldDisableRowClick = () => {
+    const currentUrl = window.location.href;
+    return currentUrl.includes("http://localhost:3000/admin/list");
+    };
 
     return (
         <div className="module-detail">
@@ -195,7 +204,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                         </div>
                         {suggestedList && suggestedList.map((item, index) => (
                             <div className="search-table" key={index}>
-                                <div className="search-row" onClick={() => handleRowClick(item as SuggestionItem)}>
+                                <div className="search-row" onClick={() => !shouldDisableRowClick() && handleRowClick(item as SuggestionItem)}>
                                     <div className="search-column" id="moduleCode">
                                         {item.module_code}
                                     </div>
