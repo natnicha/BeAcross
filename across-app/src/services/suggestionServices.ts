@@ -20,7 +20,7 @@ export interface getSuggestionResponse {
     suggested_module_items?: SuggestionItem[];
   }
 
-export interface uodateSuggestionResponse {
+export interface updateSuggestionResponse {
   status: number;
   message: string;
 }
@@ -61,7 +61,7 @@ const token = sessionStorage.getItem("jwtToken") || '';  //get jwt token
   }
 
 // Function to send a POST request to the approvedSuggestion by admin API
-export async function postTransferable(module_a: string, module_b: string): Promise<uodateSuggestionResponse> {
+export async function postTransferable(module_a: string, module_b: string): Promise<updateSuggestionResponse> {
   const url: string = `http://localhost:8000/api/v1/module/transferability`;
   // Adjust the payload to match the backend expectation
   const payload = { module_a, module_b }; // Use module_id as per your successful Postman test
@@ -93,7 +93,7 @@ export async function postTransferable(module_a: string, module_b: string): Prom
 }
 
 // Function to send a DELETE request to the UnapprovedSuggestion by admin API
-export async function deleteTransferable(module_a: string, module_b: string): Promise<uodateSuggestionResponse> {
+export async function deleteTransferable(module_a: string, module_b: string): Promise<updateSuggestionResponse> {
   const url: string = `http://localhost:8000/api/v1/module/transferability`;
   // Adjust the payload to match the backend expectation
   const payload = { module_a, module_b }; // Use module_id as per your successful Postman test
