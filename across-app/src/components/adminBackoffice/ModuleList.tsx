@@ -37,7 +37,7 @@ export default function ModuleList() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&limit=100`,
+      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&limit=200`,
       {
         method: "GET",
       }
