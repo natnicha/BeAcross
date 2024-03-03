@@ -1,6 +1,6 @@
-import personalplanImage from "../images/projects/personal-plan.png";
-import examResultImage from "../images/projects/exam-result.png";
-import editProfileImage from "../images/projects/edit-profile.png";
+import personalplanImage from "../../images/projects/personal-plan.png";
+import examResultImage from "../../images/projects/exam-result.png";
+import editProfileImage from "../../images/projects/edit-profile.png";
 import { Link } from "react-router-dom";
 
 export default function AdminHome() {

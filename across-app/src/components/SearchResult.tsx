@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import ModuleDetailPopup from '../components/ModuleDetailPopup';
 import CompareModuleDetailPopup from '../components/CompareModuleDetailPopup';
-import { SearchResponse } from "../services/searchServices";
+import SuggestionPopup from '../components/SuggestionResultPopup';
+import { SearchItem, SearchResponse } from "../services/searchServices";
+import { postRecommended } from "../services/recommendedServices";
+import { deleteRecommended } from "../services/recommendedServices";
+import { SuggestionItem, getSuggestion } from "../services/suggestionServices";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { usePopups } from '../PopupContext';
 
 // Define the Item type based on your data structure
-interface Item {
+export interface Item {
     content?: string;
     university?: string;
     degree_program?: string;
@@ -16,6 +20,8 @@ interface Item {
     module_name?: string;
     type?: string;
     module_id: string;
+    is_recommended: boolean;
+    no_of_recommend: number;
 }
 
 interface SearchResultProps {
@@ -23,9 +29,14 @@ interface SearchResultProps {
 }
 
 const SearchResult: React.FC<SearchResultProps> = (props) => {
+    
+    //const isRecommendedInitially = true;
+    
+    const jwtToken = sessionStorage.getItem("jwtToken") || '';
+    const user_role = sessionStorage.getItem('user_role'); // check to show comment section if student
 
     // Hook all popup control to PopupContext
-    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, closeAllPopups } = usePopups();
+    const { openModuleDetailPopup, isModuleDetailPopupOpen, openCompareModuleDetailPopup, isCompareModuleDetailPopupOpen, openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const [selectedCompareItems, setSelectedCompareItems] = useState<Item[]>([]);
     const [immediateVisualSelected, setImmediateVisualSelected] = useState<Item[]>([]);
@@ -33,6 +44,9 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     const location = useLocation();
     const [showConfirmPopup, setShowConfirmPopup] = useState(false);
     const [tempCompareItems, setTempCompareItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<SearchItem[] | undefined>(props.searchResult.items);
+
+    const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
@@ -63,6 +77,10 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
             document.body.classList.remove('no-scroll');
         };
     }, [showConfirmPopup]);
+
+    useEffect(() => {
+        setItems(props.searchResult.items);
+    }, [props.searchResult.items]);
 
     const handleRowClick = (item: Item) => {
         const searchParams = new URLSearchParams(location.search);
@@ -114,7 +132,57 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         setImmediateVisualSelected([]); 
     };
 
-     
+    const handleRecommendedClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+        event.preventDefault();
+        event.stopPropagation();
+    
+        // Optimistically update the UI
+        const updatedItems = items?.map((i) => {
+            if (i.module_id === item.module_id) {
+                // Toggle the recommendation status and update the count
+                return {
+                    ...i,
+                    is_recommended: !i.is_recommended,
+                    no_of_recommend: i.is_recommended ? i.no_of_recommend - 1 : i.no_of_recommend + 1,
+                };
+            }
+            return i;
+        });
+    
+        // Update the state with the new items array
+        setItems(updatedItems);
+    
+        try {
+            if (item.is_recommended) {
+                await deleteRecommended(item.module_id, jwtToken);
+            } else {
+                await postRecommended(item.module_id, jwtToken);
+            }
+        } catch (error) {
+            console.error("Error handling recommendation:", error);
+        }
+    };
+
+    const handleSuggestionClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+        event.preventDefault();
+        event.stopPropagation();
+    
+        try {
+            const response = await getSuggestion(item.module_id);
+            if (response.suggested_module_items) {
+                setSelectedItem(item);
+                setSuggestedItem(response.suggested_module_items);
+                openSuggestionPopup(response.suggested_module_items);
+
+            } else {
+                // Handle case where no suggested_module_items are present
+                console.error("No suggestion items found.");
+            }
+        } catch (error) {
+            console.error("Error handling recommendation:", error);
+        }
+    };
+   
     return (
         <>
         {/*Search list*/}
@@ -136,7 +204,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     }
 
                     {/*Display Items*/}
-                    {props.searchResult.items && props.searchResult.items.map((item, index) => (
+                    {items && items.map((item, index) => (
                         <div className="search-table" key={index}>
                             <div className="search-row" onClick={() => handleRowClick(item as Item)}>
                                 <div className="search-column" id="moduleCode">
@@ -159,10 +227,22 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 
                                 <div className="search-feature-control-btn">
-                                    <button className="custom-btn-yellow-number btn custom-link">                                       
+                                {user_role === 'student' ? (
+                                    <button 
+                                        className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
+                                        onClick={(event) => handleRecommendedClick(event, item)}
+                                    >
                                         <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                     </button>
-                                    <button className="custom-btn-number btn custom-link">                                       
+                                    ) : (
+                                    <button className="custom-btn-grey-number btn custom-link" disabled>
+                                        <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
+                                    </button>
+                                 )}
+                                    <button 
+                                        className={`custom-btn-number btn custom-link ${item.no_of_suggested_modules === 0 ? 'disabled' : ''}`}
+                                        onClick={(event) => handleSuggestionClick(event, item)}
+                                        disabled={item.no_of_suggested_modules === 0}>
                                         <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
                                     </button>
                                     <button className={`btn custom-link ${immediateVisualSelected.includes(item) ? 'custom-btn-green-number' : 'custom-btn-grey-number'}`}
@@ -177,18 +257,17 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                     
                     {/* Conditionally render ModuleDetailPopup */}
                     {selectedItem && isModuleDetailPopupOpen && (
-                    <ModuleDetailPopup 
-                        content="" 
-                        selectedItem={selectedItem} 
-                        onClose={closePopup} 
-                    />
+                        <ModuleDetailPopup 
+                            content="" 
+                            selectedItem={selectedItem} 
+                            shouldShowShareButtons={true}
+                        />
                     )} 
 
                     {isCompareModuleDetailPopupOpen && (
                         <CompareModuleDetailPopup 
                             content="" 
                             selectedItems={tempCompareItems} // Corrected prop name and passed the correct array
-                            onClose={closePopup} 
                         />
                     )}
 
@@ -198,6 +277,15 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                             <button className="custom-btn-green btn custom-link" onClick={confirmComparison}>Yes</button>&nbsp;&nbsp;
                             <button className="custom-btn-red btn custom-link"onClick={cancelComparison}>No</button>
                         </div>
+                    )}
+
+                    {isSuggestionPopupOpen && selectedItem && suggestedItem && (
+                        <SuggestionPopup 
+                            content="" 
+                            selectedResultItem={selectedItem}
+                            onClose={closePopup}
+                            suggestionItems={suggestedItem} // Providing an empty array as a default
+                        />
                     )}
                 </div>
             </div>

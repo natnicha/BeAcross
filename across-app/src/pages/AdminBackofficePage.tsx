@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 
 // Submenu
-import AdminHome from "../components/AdminHome";
-import FileUploader from "../components/FileUploader";
-import ModuleList from "../components/ModuleList";
-import StudAcctCreate from "../components/StudAcctCreate";
-import StudList from "../components/StudList";
+import AdminHome from "../components/adminBackoffice/AdminHome";
+import FileUploader from "../components/adminBackoffice/FileUploader";
+import ModuleList from "../components/adminBackoffice/ModuleList";
+import StudAcctCreate from "../components/adminBackoffice/StudAcctCreate";
+import StudList from "../components/adminBackoffice/StudList";
 import Profile from "../components/Profile";
 
 // Bootstrap

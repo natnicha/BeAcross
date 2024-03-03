@@ -82,3 +82,20 @@ class ModuleResponseModel(BaseModel):
 class UpdateTransferabilityModel(BaseModel):
     module_a: str
     module_b: str
+    
+class ModuleUpdateModel(BaseModel):
+    name: Optional[str] = None
+    content: Optional[str] = None
+    program: Optional[str] = None
+    university: Optional[str] = None
+    degree_program: Optional[str] = None
+    module_code: Optional[str] = None
+    ects: Optional[int] = None
+    degree_level: Optional[str] = None
+    url: Optional[str] = None
+    type: Optional[str] = None
+
+class ModuleSuggestedResponseModel(BaseModel):
+    requested_module_id: str
+    total_suggested_module_items: int
+    suggested_module_items: list = []

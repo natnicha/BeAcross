@@ -1,9 +1,7 @@
 import inspect
 import logging
-import json
 import re
 from typing import Annotated, Union
-from bson import json_util
 from bson.objectid import ObjectId
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
@@ -23,10 +21,17 @@ import app.owl.modules as OWL_MODULES
 from app.crud.module_recommend import ModuleRecommendModel
 from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
-from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
+from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, ModuleSuggestedResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
-from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity, start_similarity_for_one, add_module_to_res
 from app.api.module.model import UpdateTransferabilityModel
+from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res, start_similarity_for_one_after_update, remove_similarity
+
+#del CRUD
+from app.crud.modules import delete_one
+from app.api.auth.auth_utils import get_payload_from_auth
+from app.api.module.model import ModuleUpdateModel
+from app.crud.modules import update_one
+from app.crud.modules import find_one
 
 module = APIRouter()
 
@@ -276,12 +281,10 @@ async def search(
 
 
 def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
-    data = parse_json(items)
+    data = list(items)
     for entry in data:
-        entry["module_id"] = entry["_id"]['$oid']
-        entry["module_name"] = entry["name"]
-        del entry['name']
-        del entry["_id"]
+        entry["module_id"] = str(entry.pop("_id"))
+        entry["module_name"] = entry.pop('name')
         entry['no_of_recommend'] = MODULE_RECOMMEND.count_module_recommend(db, ObjectId(entry["module_id"]))
         entry['no_of_suggested_modules'] = len(OWL_MODULES.find_suggested_modules(entry["module_id"]))
         entry['is_recommended'] = False
@@ -301,10 +304,6 @@ def sort(data: list, sortby: str, orderby: str):
 
 def is_manual_calculated_sortby(sortby: str):
     return (sortby == 'no_of_recommend' or sortby == 'no_of_suggested_modules')
-
-
-def parse_json(data):
-    return json.loads(json_util.dumps(data))
 
 @module.get("/search/advanced/", status_code=status.HTTP_200_OK)
 async def advanced_search(
@@ -595,3 +594,121 @@ async def edit_transferability(
                 status_code=status.HTTP_404_NOT_FOUND
             )
         return
+
+@module.delete("/{module_id}", status_code=status.HTTP_200_OK)
+async def delete_module(request: Request, module_id: str, db: MongoClient = Depends(get_database)):    
+    # fetch the module to check its university field
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_data = MODULES.find_one(db, module_id_obj)
+    if not module_data:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Module not found")
+
+    if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Not authorized to delete module from another university"
+            )
+    
+    deletion_result = delete_one(db, module_id_obj)
+    if deletion_result.deleted_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    remove_similarity_on_delete(module_id)
+    return {"message": "Module is successfully deleted"}
+
+
+@module.put("/{module_id}", response_model=ModuleResponseModel)
+async def update_module(request: Request, module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database)):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    module_data = MODULES.find_one(db, module_id_obj)
+    if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Not authorized to delete module from another university"
+            )
+
+    # Convert Pydantic model to dictionary and filter out None values (for partial update)
+    update_data = {k: v for k, v in module_update.model_dump(exclude_unset=True).items() if v is not None}
+
+    update_result = update_one(db, module_id_obj, update_data)
+    if update_result.matched_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module = find_one(db, module_id_obj)
+    if not updated_module:
+        raise HTTPException(
+            detail="Module not found after update",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module['id'] = str(updated_module.pop("_id"))
+    remove_similarity_on_delete(module_id)
+    add_module_to_res(module_id)
+    changes = start_similarity_for_one_after_update(updated_module)
+    changes = [changes]
+    combine_similarity_results_and_write_back(changes)
+    return updated_module
+
+
+@module.get("/{module_id}/suggested", status_code=status.HTTP_200_OK)
+async def get_suggested_modules(
+        request: Request,
+        module_id: str = None, 
+        db: MongoClient = Depends(get_database)
+    ):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": str(e)},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_count = MODULES.count_by_id(db, module_id_obj)
+    if module_count == 0:
+        raise HTTPException(
+            detail={"message": "No module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
+    if len(suggested_module_ids) == 0:
+        raise HTTPException(
+            detail={"message": "No suggested module found"},
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    suggested_modules_info = MODULES.find_many_by_id_list(db, [ObjectId(id) for id in suggested_module_ids])
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+
+    data = prepare_item(db, suggested_modules_info, user_recommend)
+    return {
+        "data": ModuleSuggestedResponseModel(
+            requested_module_id = module_id,
+            total_suggested_module_items = len(data),
+            suggested_module_items = data,
+    )}

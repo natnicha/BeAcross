@@ -38,6 +38,32 @@ python3 -m uvicorn main:app (for Linux)
 
 ## How to run test
 
+### 1. Unit and functional tests
+#### 1.1 all test cases
+
 ```
-pytest -v -s
+pytest -v -s --html=report.html
+```
+
+#### 1.2 only a specific file
+
+```
+pytest .\test\test_main.py --html=report.html
+```
+
+### 2. Performance Test
+####
+```
+ pytest --benchmark-histogram
+```
+
+### 3. Security tests
+```
+safety check --save-html .
+```
+
+#### 3.2 Development environment tests
+
+```
+safety scan --save-html .
 ```

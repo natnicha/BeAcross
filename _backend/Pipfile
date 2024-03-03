@@ -24,6 +24,10 @@ unidecode = "*"
 stopwords = "*"
 aiosmtplib = "*"
 filelock = "*"
+pytest-html = "*"
+pytest-benchmark = "*"
+safety = "*"
+pygal = "*"
 
 [dev-packages]
 

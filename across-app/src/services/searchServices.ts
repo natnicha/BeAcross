@@ -1,5 +1,5 @@
 // Define the interface for the request payload
-interface SearchItem {
+export interface SearchItem {
     content?: string;
     university?: string;
     degree_program?: string;
@@ -8,9 +8,10 @@ interface SearchItem {
     degree_level?: string;
     module_name?: string;
     type?: string;
-    no_of_recommend?: number;
+    no_of_recommend: number;
     no_of_suggested_modules?: number;
     module_id: string;
+    is_recommended: boolean;
 } 
 
 export interface SearchResponse {
@@ -35,7 +36,9 @@ interface SortParams {
 // Function to send a GET request to the search API
 export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
     
-    // Base URL including the term
+  const token = sessionStorage.getItem("jwtToken") || '';  //get jwt token
+  
+  // Base URL including the term
     let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
 
     // Function to append multiple filter values
@@ -61,9 +64,6 @@ export async function searchServices(term: string, offset: string, filter: Filte
     if (filter.university.length > 0) {
         url = appendFilterParams(url, 'university', filter.university);
     }
-    /*if (filter.university.length > 0) {
-       url = appendFilterParams(url, 'ects', filter.ects);
-    }*/
     if (filter.ects) {
       url += `&ects=${filter.ects}`;
   }
@@ -80,7 +80,8 @@ export async function searchServices(term: string, offset: string, filter: Filte
         const response = await fetch(url, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           }
         });
     
