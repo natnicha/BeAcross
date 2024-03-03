@@ -286,7 +286,7 @@ def remove_similarity(module_to_remove_from: str, module_to_remove: str):
     index = -1
 
     if module_to_remove_from not in data.keys() or module_to_remove not in data.keys():
-        raise
+        raise Exception("Module Not Found!")
 
     i = 0
     while i < len(data[module_to_remove_from]):
@@ -295,7 +295,7 @@ def remove_similarity(module_to_remove_from: str, module_to_remove: str):
         i += 1
     
     if index == -1:
-        raise
+        raise Exception("Similarity does not Exist!")
     
     if index != -1:
         del data[module_to_remove_from][index]
@@ -326,8 +326,8 @@ def remove_similarity_on_delete(module_to_remove):
 def add_similarity(module_to_add_to: str, module_to_add: str):
     data = read_similarity_file()
 
-    if module_to_add_to not in data.keys():
-        data[module_to_add_to] = []
+    if module_to_add_to not in data.keys() or module_to_add not in data.keys():
+        raise Exception("Module Not Found")
 
     index = -1
     i = 0
@@ -340,6 +340,8 @@ def add_similarity(module_to_add_to: str, module_to_add: str):
         data[module_to_add_to].append(module_to_add)
         write_back(data)
         add_modules_to_owl()
+    else:
+        raise Exception("Module Similarity Already Exists")
 
 
 def add_module_to_res(id_to_add):

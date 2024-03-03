@@ -24,7 +24,7 @@ from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, ModuleSuggestedResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
 from app.api.module.model import UpdateTransferabilityModel
-from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res, start_similarity_for_one_after_update, remove_similarity
+from app.transferability.similiarity_run import add_similarity, combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res, start_similarity_for_one_after_update, remove_similarity
 
 #del CRUD
 from app.crud.modules import delete_one
@@ -584,16 +584,37 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
 # create modules 
 @module.delete("/transferability", status_code=status.HTTP_200_OK)
 async def edit_transferability(
-        item: UpdateTransferabilityModel
+        item: UpdateTransferabilityModel,
         ):
         try:
             remove_similarity(item.module_a, item.module_b)
-        except:
+        except Exception as e:
+            status_code = status.HTTP_404_NOT_FOUND
+
             raise HTTPException(
-                detail={"message": "Module not found"},
-                status_code=status.HTTP_404_NOT_FOUND
+                detail={"message": str(e)},
+                status_code=status_code
             )
-        return
+        return {"message": "Similarity is successfully deleted"}
+
+
+@module.post("/transferability", status_code=status.HTTP_200_OK)
+async def edit_transferability(
+        item: UpdateTransferabilityModel,
+        ):
+        try:
+            res = add_similarity(item.module_a, item.module_b)
+        except Exception as e:
+            if "already" in str(e).lower():
+                status_code = status.HTTP_409_CONFLICT
+            else:
+                status_code = status.HTTP_404_NOT_FOUND  # or any appropriate status code for other errors
+
+            raise HTTPException(
+                detail={"message": str(e)},
+                status_code=status_code
+            )
+        return {"message": "Similarity is successfully added"}
 
 @module.delete("/{module_id}", status_code=status.HTTP_200_OK)
 async def delete_module(request: Request, module_id: str, db: MongoClient = Depends(get_database)):    
