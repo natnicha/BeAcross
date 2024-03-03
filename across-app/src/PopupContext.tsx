@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { SuggestionItem } from './services/suggestionServices';
 
 interface PopupContextType {
   isLoginPopupOpen: boolean;
@@ -12,6 +13,13 @@ interface PopupContextType {
   openModuleDetailPopup: (module_id: string) => void;
   isCompareModuleDetailPopupOpen: boolean;
   openCompareModuleDetailPopup: (module_ids: string[]) => void;
+  isSuggestionPopupOpen: boolean;
+  openSuggestionPopup: (suggestionItems: SuggestionItem[]) => void;
+  isModuleDetailFromSuggestionPopup: boolean;
+  openModuleDetailFromSuggestionPopup: () => void;
+  isCompareDetailFromSuggestionPopup: boolean;
+  openCompareDetailFromSuggestionPopup: () => void;
+  closeEverythingThatOpenFromSuggestionPopup: () => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -34,9 +42,12 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
   const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false);
   const [isModuleDetailPopupOpen, setIsModuleDetailPopupOpen] = useState(false);
   const [isCompareModuleDetailPopupOpen, setIsCompareModuleDetailPopupOpen] = useState(false);
-
+  const [isSuggestionPopupOpen, setIsSuggestionPopupOpen] = useState(false);
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
   const [currentModuleIds, setCurrentModuleIds] = useState<string[]>([]);
+  const [suggestionItems, setSuggestionItems] = useState<SuggestionItem[]>([]);
+  const [isModuleDetailFromSuggestionPopup, setIsModuleDetailFromSuggestionPopup] = useState(false);
+  const [isCompareDetailFromSuggestionPopup, setIsCompareDetailFromSuggestionPopup] = useState(false);
 
   const openLoginPopup = () => {
     setIsLoginPopupOpen(true);
@@ -70,13 +81,35 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
     setIsForgotPasswordPopupOpen(false);
     setIsModuleDetailPopupOpen(false);
     setIsCompareModuleDetailPopupOpen(false);
+    setIsSuggestionPopupOpen(false);
+    setIsModuleDetailFromSuggestionPopup(false);
+    setIsCompareDetailFromSuggestionPopup(false);
     document.body.classList.remove('no-scroll');
+  };
+
+  const openSuggestionPopup = (items: SuggestionItem[]) => {
+    setSuggestionItems(items); // Store the suggestion items
+    setIsSuggestionPopupOpen(true);
+    document.body.classList.add('no-scroll');
   };
 
   const openCompareModuleDetailPopup = (module_ids: string[]) => {
     setCurrentModuleIds(module_ids); // Store the current module IDs
     setIsCompareModuleDetailPopupOpen(true);
     document.body.classList.add('no-scroll');
+  };
+
+  const openModuleDetailFromSuggestionPopup = () => {
+    setIsModuleDetailFromSuggestionPopup(true);
+  };
+
+  const openCompareDetailFromSuggestionPopup = () => {
+    setIsCompareDetailFromSuggestionPopup(true);
+  };
+
+  const closeEverythingThatOpenFromSuggestionPopup = () => {
+    setIsModuleDetailFromSuggestionPopup(false);
+    setIsCompareDetailFromSuggestionPopup(false);
   };
 
   return (
@@ -86,12 +119,19 @@ export const PopupProvider: React.FC<PopupProviderProps> = ({ children }) => {
       isForgotPasswordPopupOpen,
       isModuleDetailPopupOpen,
       isCompareModuleDetailPopupOpen,
+      isSuggestionPopupOpen,
       openLoginPopup,
       openRegisterPopup,
       openForgotPasswordPopup,
       openModuleDetailPopup,
       openCompareModuleDetailPopup,
+      openSuggestionPopup,
       closeAllPopups,
+      closeEverythingThatOpenFromSuggestionPopup,
+      openModuleDetailFromSuggestionPopup,
+      isModuleDetailFromSuggestionPopup,
+      openCompareDetailFromSuggestionPopup,
+      isCompareDetailFromSuggestionPopup,
     }}>
       {children}
     </PopupContext.Provider>

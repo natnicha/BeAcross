@@ -26,7 +26,8 @@ interface Item {
 interface ModuleDetailPopupProps {
     selectedItem: Item;
     content: string;
-    onClose: () => void;
+    onClose?: () => void;
+    shouldShowShareButtons: boolean;
 }
 
 interface Comment {
@@ -41,7 +42,7 @@ interface ModuleComment {
 }
 
 
-const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) => {
+const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, shouldShowShareButtons, onClose }) => {
    
     const moduleId = selectedItem.module_id || "defaultId";
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
@@ -102,10 +103,18 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
     };
 
     const closePopup = () => {
-        const searchParams = new URLSearchParams(location.search);
-        searchParams.delete('module');
-        navigate({ pathname: '/search', search: searchParams.toString() });
-        closeAllPopups();
+        
+        if (onClose)
+        {
+            onClose();
+        } 
+        else
+        {
+            const searchParams = new URLSearchParams(location.search);
+            searchParams.delete('module');
+            navigate({ pathname: '/search', search: searchParams.toString() });
+            closeAllPopups();
+        }
       };
 
     // Close the popup if clicking outside of it
@@ -215,14 +224,16 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem }) =
                 <div ref={popupRef} className="popup-content">
                     <div className="title-popup mb-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
-                        <ul className="social-icon">
-                            <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
-                            </a>
-                            <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
-                            </a>
-                            <a href="#" className="social-icon-link bi bi-link-45deg" onClick={(e) => { e.preventDefault(); copyToClipboard(window.location.href); }} aria-label="Copy Link">
-                            </a>
-                        </ul>
+                        {shouldShowShareButtons && (
+                            <ul className="social-icon">
+                                <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
+                                </a>
+                                <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
+                                </a>
+                                <a href="#" className="social-icon-link bi bi-link-45deg" onClick={(e) => { e.preventDefault(); copyToClipboard(window.location.href); }} aria-label="Copy Link">
+                                </a>
+                            </ul>)
+                        }
                     </div>
                     <button 
                         onClick={closePopup} 
