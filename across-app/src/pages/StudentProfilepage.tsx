@@ -6,7 +6,7 @@ import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 import Profile from "../components/Profile";
-import { getPersonalPlan, getModuleDetail, Item, ModuleItem, PersonalPlanResponse} from "../services/personalplanServices";
+import { getPersonalPlan, getModuleDetail, Item, ModuleItem, PersonalPlanResponse, deleteRecommended} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -86,31 +86,35 @@ const StudentProfilepage: React.FC = () => {
   //Personal Plan
   const handlePersonalPlanClick = async () => {
     try {
-      // 1 step) call personal plan api API
+      // Step 1: call personal plan api API
       const personalPlanResponse = await getPersonalPlan();
       sessionStorage.setItem('personalPlanData', JSON.stringify(personalPlanResponse));
   
-      // 2 step) call module detail API
+      // Step 2: call module detail API
       const moduleDetailsPromises = personalPlanResponse.data.items.map(item =>
         getModuleDetail(item.module_id)
       );
       const moduleItems = await Promise.all(moduleDetailsPromises) as ModuleItem[];
   
-      // 3 step) combine both result for later use
-      const enrichedModuleItems = moduleItems.map(moduleItem => {
-        // Find corresponding item in personalPlanResponse based on module_id
-        const correspondingItem = personalPlanResponse.data.items.find(item => item.module_id === moduleItem.id);
-        
-        // Extract semester_ids from corresponding item's PersonalPlan[] and assign to ModuleItem
-        if (correspondingItem) {
-          const semesterIds: string[] = correspondingItem.personal_plan.map(plan => plan.semester_id);
-          moduleItem.semesterIds = semesterIds; // Assign semesterIds to moduleItem
-        }
-        
-        return moduleItem;
-      });
+      // Step 3: Flatten ModuleItems based on PersonalPlan[].semester_id
+      const enrichedModuleItems = personalPlanResponse.data.items.flatMap(item => {
+        // For each PersonalPlan, create a new ModuleItem enriched with that PersonalPlan's semester_id
+        return item.personal_plan.map(plan => {
+          // Find the corresponding ModuleItem for the current PersonalPlan
+          const moduleItem = moduleItems.find(module => module.id === item.module_id);
 
-      // 4 step) set all data to state of this component for later use
+          // Return a new object, copying the ModuleItem and adding the semester_id
+          if (moduleItem && plan.personal_plan_id != null) {
+            return {
+              ...moduleItem,
+              semesterId: plan.semester_id, // Now each ModuleItem will be unique to a semester_id
+              personalPlanId: plan.personal_plan_id // Also include the personal_plan_id for completeness
+            };
+          }
+        }).filter(mi => mi !== undefined); // Filter out any undefined entries, just in case
+      }) as ModuleItem[];
+
+      // Step 4: set all data to state of this component for later use
       setModuleItemDetail(enrichedModuleItems);
       setPersonalPlanResponse(personalPlanResponse); 
       setPersonalPlan(true);
@@ -121,20 +125,17 @@ const StudentProfilepage: React.FC = () => {
     }
   };
 
-  const handleRowClick = (item: Item) => {
-    // Set the selectedModuleId which triggers fetching module details
-    setSelectedModuleId(item.module_id);
+  const handleDeletePlan = async (delteItem: ModuleItem) => {
+    console.log("delete personal plan: " + delteItem.personalPlanId);
+    await deleteRecommended(delteItem.personalPlanId || "");
+
+    // Filter out the ModuleItems that contain the personalPlanId to delete
+    const updatedModuleItems = moduleItemDetail.filter(i => i.personalPlanId != delteItem.personalPlanId);
+    setModuleItemDetail(updatedModuleItems);
+
+    //setShowConfirmPopup(true);
   };
 
-const deletePlan = () => {
-  setShowConfirmPopup(true); // Close the popup
-};
-
-const handleDeletePersonalPlan = () => {
-  
-  getPersonalPlan();
-
-};
 
   return (
     <>
@@ -441,19 +442,13 @@ const handleDeletePersonalPlan = () => {
                           {item.university}
                       </div>
                       
-                      <div className="search-feature-control-btn">          
-                        <button className="custom-btn-red btn custom-link"onClick={deletePlan}>Delete</button>
+                      <div className="search-feature-control-btn"> 
+                        <button className="custom-btn-red btn custom-link" onClick={() => handleDeletePlan(item as ModuleItem)}>Delete</button>
                       </div>
                   </div>
                 </div>
               ))}
 
-              {showConfirmPopup && (
-                <div className="confirmation-popup">
-                    <p>Do you want to compare these selected Modules?</p>
-                    <button className="custom-btn-red btn custom-link"onClick={handleDeletePersonalPlan}>Delete</button>
-                </div>
-              )}
 
             </div>
           </div>

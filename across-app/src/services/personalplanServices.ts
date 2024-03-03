@@ -18,7 +18,7 @@ export interface Item {
 }
 
 export interface PersonalPlan {
-    personal_plan_id: string | null; // null is included because personal_plan_id can be null
+    personal_plan_id: string;
     semester_id: string;
     semester_name: string;
     is_added: boolean;
@@ -39,7 +39,8 @@ export interface ModuleItem {
     is_recommended: boolean;
 
     // enrichment fields (i.e. field that did not orignally populated from backend)
-    semesterIds?: string[];
+    semesterId?: string;
+    personalPlanId?: string;
 } 
 
 export interface ModuleResponse {
