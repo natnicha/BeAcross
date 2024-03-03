@@ -147,7 +147,10 @@ const StudentProfilepage: React.FC = () => {
                 className={`tm-nav-item ${
                   activeNav === "mypersonalplan" ? "active" : ""
                 }`}
-                onClick={() => planNavClick("mypersonalplan")}
+                onClick={() => {
+                  planNavClick("mypersonalplan");
+                  handlePersonalPlanClick();
+                }}
               >
                 <a href="#mypersonalplan" className="tm-nav-link">
                   &nbsp;&nbsp;
