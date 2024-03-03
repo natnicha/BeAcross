@@ -391,33 +391,49 @@ const StudentProfilepage: React.FC = () => {
         <section className="tm-content" id="profileinformation">
           <div className="nav nav-tabs flex-row align-items-baseline">
             <div className="about-thumb bg-white shadow-lg">
+              
               <h5 className="mb-3" style={{ color: "#1e5af5" }}>
                 My Personal Plan
               </h5>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>University</th>
-                    <th>Department</th>
-                    <th>Module Code</th>
-                    <th>ECTS</th>
-                    <th>Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {moduleItemDetail.map((module, index) => (
-                    <tr key={index}>
-                      <td>{module.name}</td>
-                      <td>{module.university}</td>
-                      <td>{module.degree_program}</td>
-                      <td>{module.module_code}</td>
-                      <td>{module.ects}</td>
-                      <td>{module.type}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+
+              <div className="search-header">
+                <div className="search-column"><strong>Module Code</strong></div>
+                <div className="search-column"><strong>Module Name</strong></div>
+                <div className="search-column"><strong>ECTS Credits</strong></div>
+                <div className="search-column"><strong>Degree Level</strong></div>
+                <div className="search-column"><strong>Module Type</strong></div>
+                <div className="search-column"><strong>University</strong></div>
+              </div>
+
+              {moduleItemDetail.map((item, index) => (
+                <div className="search-table" key={index}>
+                  <div className="search-row">
+                      <div className="search-column" id="moduleCode">
+                          {item.module_code}
+                      </div>
+                      <div className="search-column" id="moduleName">
+                          {item.name}
+                      </div>
+                      <div className="search-column" id="ect">
+                          {item.ects}
+                      </div>
+                      <div className="search-column" id="degree">
+                          {item.degree_level}
+                      </div>
+                      <div className="search-column" id="type">
+                          {item.type}
+                      </div>
+                      <div className="search-column" id="university">
+                          {item.university}
+                      </div>
+                      
+                      <div className="search-feature-control-btn">          
+                        <button>DELETE !</button>
+                      </div>
+                  </div>
+                </div>
+              ))}
+
             </div>
           </div>
         </section>
