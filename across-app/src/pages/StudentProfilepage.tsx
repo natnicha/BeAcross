@@ -6,6 +6,7 @@ import personalplanImage from "../images/projects/personal-plan.png";
 import examResultImage from "../images/projects/exam-result.png";
 import editProfileImage from "../images/projects/edit-profile.png";
 import Profile from "../components/Profile";
+import { getPersonalPlan, getModuleDetail, Item, ModuleItem, PersonalPlanResponse, deleteRecommended} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
@@ -13,6 +14,12 @@ const StudentProfilepage: React.FC = () => {
   const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections
   const [showPersonalPlan, setPersonalPlan] = useState(false); // State to manage visibility of the sections
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
+
+  //personal plan
+  const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
+  const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]); // enrichment result (i.e. not original date from backend)
+  const [selectedSemester, setSelectedSemester] = useState('');
+
 
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
@@ -51,12 +58,7 @@ const StudentProfilepage: React.FC = () => {
     setShowProfileInformation(false);
     setPersonalPlan(false);
   };
-  const handlePersonalPlanClick = () => {
-    setPersonalPlan(true);
-    setExamResult(false);
-    setShowProfileInformation(false);
-  };
-
+  
   // State for the visibility of rows under module types
   const [showFocusModuleRows, setShowFocusModuleRows] = useState(false);
   const [showAdvanceModuleRows, setShowAdvanceModuleRows] = useState(false);
@@ -81,6 +83,62 @@ const StudentProfilepage: React.FC = () => {
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
+  //Personal Plan
+  const handlePersonalPlanClick = async () => {
+    try {
+      // Step 1: call personal plan api API
+      const personalPlanResponse = await getPersonalPlan();
+      sessionStorage.setItem('personalPlanData', JSON.stringify(personalPlanResponse));
+  
+      // Step 2: call module detail API
+      const moduleDetailsPromises = personalPlanResponse.data.items.map(item =>
+        getModuleDetail(item.module_id)
+      );
+      const moduleItems = await Promise.all(moduleDetailsPromises) as ModuleItem[];
+  
+      // Step 3: Flatten ModuleItems based on PersonalPlan[].semester_id
+      const enrichedModuleItems = personalPlanResponse.data.items.flatMap(item => {
+        // For each PersonalPlan, create a new ModuleItem enriched with that PersonalPlan's semester_id
+        return item.personal_plan.map(plan => {
+          // Find the corresponding ModuleItem for the current PersonalPlan
+          const moduleItem = moduleItems.find(module => module.id === item.module_id);
+
+          // Return a new object, copying the ModuleItem and adding the semester_id
+          if (moduleItem && plan.personal_plan_id != null) {
+            return {
+              ...moduleItem,
+              semesterId: plan.semester_id, // Now each ModuleItem will be unique to a semester_id
+              personalPlanId: plan.personal_plan_id // Also include the personal_plan_id for completeness
+            };
+          }
+        }).filter(mi => mi !== undefined); // Filter out any undefined entries, just in case
+      }) as ModuleItem[];
+
+      // Step 4: set all data to state of this component for later use
+      setModuleItemDetail(enrichedModuleItems);
+      setPersonalPlanResponse(personalPlanResponse); 
+      setPersonalPlan(true);
+      setExamResult(false);
+      setShowProfileInformation(false);
+    } catch (error) {
+      console.error("Failed to fetch module details:", error);
+    }
+  };
+
+  const handleDeletePlan = async (delteItem: ModuleItem) => {
+    console.log("delete personal plan: " + delteItem.personalPlanId);
+    const response = await deleteRecommended(delteItem.personalPlanId || "");
+    alert(response.message); 
+
+    // Filter out the ModuleItems that contain the personalPlanId to delete
+    const updatedModuleItems = moduleItemDetail.filter(i => i.personalPlanId != delteItem.personalPlanId);
+    setModuleItemDetail(updatedModuleItems);
+  };
+
+  const handleSemesterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSemester(event.target.value);
+  };
+
   return (
     <>
       <div className="profile-container">
@@ -103,7 +161,10 @@ const StudentProfilepage: React.FC = () => {
                 className={`tm-nav-item ${
                   activeNav === "mypersonalplan" ? "active" : ""
                 }`}
-                onClick={() => planNavClick("mypersonalplan")}
+                onClick={() => {
+                  planNavClick("mypersonalplan");
+                  handlePersonalPlanClick();
+                }}
               >
                 <a href="#mypersonalplan" className="tm-nav-link">
                   &nbsp;&nbsp;
@@ -343,18 +404,69 @@ const StudentProfilepage: React.FC = () => {
         )}
 
         {/*Personal Plan*/}
-        {/* Conditional rendering for personal plan section */}
         {showPersonalPlan && (
-          <section className="tm-content" id="profileinformation">
-            <div className="nav nav-tabs flex-row align-items-baseline">
-              <div className="about-thumb bg-white shadow-lg">
-                <h5 className="mb-3" style={{ color: "#1e5af5" }}>
-                  My Personal Plan
-                </h5>
+        <section className="tm-content" id="profileinformation">
+          <div className="nav nav-tabs flex-row align-items-baseline">
+            <div className="about-thumb bg-white shadow-lg">
+              
+              <h5 className="mb-3" style={{ color: "#1e5af5" }}>
+                My Personal Plan
+              </h5>
+
+              <div style={{ marginBottom: "20px"}}>
+                <label>&nbsp;Choose a semester:&nbsp;</label>
+                <select id="semester-dropdown" name="semester" onChange={handleSemesterChange}>
+                  <option value="65d7a7a22b35547c027a9d5b">Summer 2023</option>
+                  <option value="65d7a7bc2b35547c027a9d5c">Winter 2023/24</option>
+                  <option value="65d7a7c42b35547c027a9d5d">Summer 2024</option>
+                  <option value="65d7a7cc2b35547c027a9d5e">Winter 2024/25</option>
+                  <option value="65d9aa1e2b35547c027a9de9">Summer 2025</option>
+                </select>
               </div>
+
+              <div className="search-header">
+                <div className="search-column"><strong>Module Code</strong></div>
+                <div className="search-column"><strong>Module Name</strong></div>
+                <div className="search-column"><strong>ECTS Credits</strong></div>
+                <div className="search-column"><strong>Degree Level</strong></div>
+                <div className="search-column"><strong>Module Type</strong></div>
+                <div className="search-column"><strong>University</strong></div>
+              </div>
+
+              {moduleItemDetail.filter(item => item.semesterId === selectedSemester).map((item, index) => (
+                <div className="search-table" key={index}>
+                  <div className="search-row">
+                      <div className="search-column" id="moduleCode">
+                          {item.module_code}
+                      </div>
+                      <div className="search-column" id="moduleName">
+                          {item.name}
+                      </div>
+                      <div className="search-column" id="ect">
+                          {item.ects}
+                      </div>
+                      <div className="search-column" id="degree">
+                          {item.degree_level}
+                      </div>
+                      <div className="search-column" id="type">
+                          {item.type}
+                      </div>
+                      <div className="search-column" id="university">
+                          {item.university}
+                      </div>
+                      
+                      <div className="search-feature-control-btn"> 
+                        <button className="custom-btn-red btn custom-link" onClick={() => handleDeletePlan(item as ModuleItem)}>Delete</button>
+                      </div>
+                  </div>
+                </div>
+              ))}
+
+
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
       </div>
     </>
   );

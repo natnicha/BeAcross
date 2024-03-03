@@ -4,6 +4,7 @@ import { getComment } from '../services/commentServices';
 import { postComment } from '../services/commentServices';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loadAppConfig } from '../services/configUtils';
+import { postPersonalPlan } from "../services/personalplanServices";
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -57,6 +58,12 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
     const [commentText, setCommentText] = useState('');
     const popupRef = useRef<HTMLDivElement>(null);
     const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+
+    //Personal Plan
+    const [showPersonalPlanPopup, setShowPersonalPlanPopup] = useState(false);
+    const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
+    const [responseMessage, setResponseMessage] = useState(''); // State for storing response
+    const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" }); // response text style
        
     useEffect(() => {
         const fetchComments = async () => {
@@ -216,8 +223,44 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
             document.body.removeChild(textarea);
         }
     };
+
+    const handlePersonalPlan = async (e: React.FormEvent) => {
+        setShowPersonalPlanPopup(true);
+    };
+
+    const confirmPersonalPlan = async () => {
+        // Ensure selectedSemester is not null before calling postPersonalPlan
+        if (selectedSemester) {
+            const response = await postPersonalPlan(selectedItem.module_id, selectedSemester);
+            if(response.status === 201) {
+                setResponseMessage(response.message);
+                setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
+              } else {  
+                setResponseMessage(response.message);
+                setResponseStyle({ margin: "15px", color: "red" }); // Set to red on failure
+              }
+        }
+    };
     
-    
+    const cancelPersonalPlan = () => {
+        setResponseMessage("");
+        setShowPersonalPlanPopup(false); // Close the popup
+    };
+
+    const handleSemesterSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSelectedSemester(value); // Directly set the selected semester
+        localStorage.setItem('selectedSemester', value); // Save to local storage
+        console.log(selectedSemester);
+    };
+
+    useEffect(() => {
+        const savedSemester = localStorage.getItem('selectedSemester');
+        if (savedSemester) {
+            setSelectedSemester(savedSemester);
+        }
+    }, []);
+  
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
@@ -226,6 +269,12 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                         <h5 style={{ color: "white", textAlign: "left"}}>&nbsp;&nbsp;&nbsp;{selectedItem.module_code} {selectedItem.module_name}</h5>
                         {shouldShowShareButtons && (
                             <ul className="social-icon">
+                                {/*Personal Plan*/}
+                                {user_role === 'student' && (
+                                    <a href="#" className="social-icon-link bi bi-calendar-plus-fill" onClick={handlePersonalPlan} aria-label="Add to Personal Plan">
+                                    </a>
+                                )}
+                                
                                 <a href="#" className="social-icon-link bi-facebook" onClick={(e) => { e.preventDefault(); shareOnFacebook(window.location.href); }} aria-label="Share on Facebook">
                                 </a>
                                 <a href="#" className="social-icon-link bi-twitter" onClick={(e) => { e.preventDefault(); shareOnTwitter(window.location.href, 'Check out this module!'); }} aria-label="Share on Twitter">
@@ -359,6 +408,88 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                             </div>
                         )
                     }
+
+                    {/*Personal Plan popup*/}
+                    {showPersonalPlanPopup && (
+                        <div className="confirmation-popup">
+                            <p style={{ color: '#1e5af5'}}>My Personal Plan</p>
+
+                            <div className="checkbox">
+                                <label>
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7a22b35547c027a9d5b" 
+                                        onChange={handleSemesterSelection}
+                                        checked={"65d7a7a22b35547c027a9d5b" === selectedSemester}
+                                    /> 
+                                    &nbsp;Summer 2023
+                                </label>
+                            </div>
+      
+                            <div className="checkbox">
+                                <label>
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7bc2b35547c027a9d5c" 
+                                        onChange={handleSemesterSelection}
+                                        checked={"65d7a7bc2b35547c027a9d5c" === selectedSemester}
+                                    /> 
+                                    &nbsp;Winter 2023/24
+                                </label>
+                            </div>
+                   
+                            <div className="checkbox">
+                                <label>
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7c42b35547c027a9d5d" 
+                                        onChange={handleSemesterSelection}
+                                        checked={"65d7a7c42b35547c027a9d5d" === selectedSemester}
+                                    /> 
+                                    &nbsp;Summer 2024
+                                </label>
+                            </div>
+                     
+                            <div className="checkbox">
+                                <label>
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d7a7cc2b35547c027a9d5e" 
+                                        onChange={handleSemesterSelection}
+                                        checked={"65d7a7cc2b35547c027a9d5e" === selectedSemester}
+                                    /> 
+                                    &nbsp;Winter 2024/25
+                                </label>
+                            </div>
+                    
+                            <div className="checkbox">
+                                <label>
+                                    <input 
+                                        type="radio" 
+                                        className="pointer-checkbox" 
+                                        name="semester" 
+                                        value="65d9aa1e2b35547c027a9de9" 
+                                        onChange={handleSemesterSelection}
+                                        checked={"65d9aa1e2b35547c027a9de9" === selectedSemester}
+                                    /> 
+                                    &nbsp;Summer 2025
+                                </label>
+                            </div>
+                            <div style={{ paddingTop: "5%", display: 'flex', justifyContent: 'flex-end'}}>
+                                <button className="custom-btn-green btn custom-link" onClick={confirmPersonalPlan}>Add</button>&nbsp;&nbsp;
+                                <button className="custom-btn-red btn custom-link" onClick={cancelPersonalPlan}>Close</button>
+                            </div>
+                            <p style={responseStyle}>{responseMessage}</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
