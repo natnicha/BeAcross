@@ -1,6 +1,6 @@
 # ** [POST] Forgot Password **
 
-To get a new password, when forgetting the new one.
+To get a new password, when forgetting the current one.
 
 ## Request
 
@@ -56,20 +56,20 @@ To get a new password, when forgetting the new one.
 }
 ```
 
-## Error Response 404 - NOT_FOUND (case: The email is not registered in the system)
-```json
-{
- "detail": { 
-    "message" : "User not found",
- }
-}
-```
-
 ## Error Response 400 - Bad Request (case: request body is empty)
 ```json
 {
  "detail": { 
     "message": "no request body provided",
+ }
+}
+```
+
+## Error Response 404 - NOT_FOUND (case: The email is not registered in the system)
+```json
+{
+ "detail": { 
+    "message" : "User not found",
  }
 }
 ```
