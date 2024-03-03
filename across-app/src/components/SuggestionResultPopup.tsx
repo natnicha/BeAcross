@@ -29,8 +29,6 @@ interface PopupProps {
 
 const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
    
-    const navigate = useNavigate();
-    const location = useLocation();
     const user_role = sessionStorage.getItem('user_role');
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const [suggestedList, setSuggestedList] = useState<SuggestionItem[]>(props.suggestionItems);
@@ -171,6 +169,18 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     </div>
                                     
                                     <div className="search-feature-control-btn">
+                                        {user_role === 'uni-admin' && (                                               
+                                            <label className="transferibity">
+                                            <input 
+                                                type="checkbox" 
+                                                className="pointer-checkbox" 
+                                                name="transferbility" 
+                                                value="" 
+                                            /> 
+                                            Transferable
+                                            </label>
+                                        )}
+                                        
                                         {user_role === 'student' ? (
                                             <button 
                                                 className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
@@ -183,8 +193,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                             <button className="custom-btn-grey-number btn custom-link" style={{ width: '20%'}} disabled>
                                                 <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                             </button>
-                                        )}
-
+                                        )}    
                                         <button className="custom-btn-green-number btn custom-link"
                                             onClick={(event) => handleCompareClick(event, item)}>
                                             Compare

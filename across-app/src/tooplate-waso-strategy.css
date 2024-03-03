@@ -1677,3 +1677,14 @@ ul {
   width: auto;
   max-width: 80%;
 }
+
+.transferibity {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  cursor: pointer;
+  }
+
+  .pointer-checkbox {
+    margin-right: 10px; /* Add space between the checkbox and the text */
+}
