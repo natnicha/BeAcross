@@ -23,14 +23,14 @@ interface ModuleData {
   };
 }
 
-//Suggestion Module Session
-const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
-const [selectedItem, setSelectedItem] = useState<null>(null);
-const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
-const no_of_suggested_modules = 0; // Mock
-
 export default function ModuleList() {
   const [moduleData, setModuleDatas] = useState<ModuleData | null>(null);
+
+  //Suggestion Module Session
+  const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
+  const [selectedItem, setSelectedItem] = useState<null>(null);
+  const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
+  const no_of_suggested_modules = 0; // Mock
 
   useEffect(() => {
     fetch(
@@ -76,25 +76,14 @@ export default function ModuleList() {
         Module List
       </h5>
       <div className="search-header">
-        <div className="search-column">
-          <strong>Module Code</strong>
-        </div>
-        <div className="search-column">
-          <strong>Module Name</strong>
-        </div>
-        <div className="search-column">
-          <strong>ECTS Credits</strong>
-        </div>
-        <div className="search-column">
-          <strong>Degree Level</strong>
-        </div>
-        <div className="search-column">
-          <strong>Module Type</strong>
-        </div>
-        <div className="search-column">
-          <strong>University</strong>
-        </div>
+        <div className="search-column"><strong>Module Code</strong></div>
+        <div className="search-column"><strong>Module Name</strong></div>
+        <div className="search-column"><strong>ECTS Credits</strong></div>
+        <div className="search-column"><strong>Degree Level</strong></div>
+        <div className="search-column"><strong>Module Type</strong></div>
+        <div className="search-column"><strong>University</strong></div>
       </div>
+
       {/*Display Items*/}
       {moduleData ? (
         <div className="search-table">
@@ -119,21 +108,22 @@ export default function ModuleList() {
                 <div className="search-column" id="university">
                   {item.university}
                 </div>
+              
+                {/* Button Feature */}
+                <div className="search-feature-control-btn">
+                  <button 
+                      className={`custom-btn-number btn custom-link ${no_of_suggested_modules === 0 ? 'disabled' : ''}`}
+                      /*</div>onClick={(event) => handleSuggestionClick(event, item)}*/
+                      disabled={no_of_suggested_modules === 0}>
+                      <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{no_of_suggested_modules}</span>
+                  </button>
+                </div>              
               </div>
             ))}
         </div>
       ) : (
         <p>No data</p>
       )}
-      {/* Button Feature */}
-      <div className="search-feature-control-btn">
-        <button 
-            className={`custom-btn-number btn custom-link ${no_of_suggested_modules === 0 ? 'disabled' : ''}`}
-            /*</div>onClick={(event) => handleSuggestionClick(event, item)}*/
-            disabled={no_of_suggested_modules === 0}>
-            <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{no_of_suggested_modules}</span>
-        </button>
-      </div>
       
       {isSuggestionPopupOpen && selectedItem && suggestedItem && (
         <SuggestionPopup 
