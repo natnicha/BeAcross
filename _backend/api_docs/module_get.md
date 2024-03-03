@@ -56,7 +56,10 @@ An admin can fetch a module with its fields using the module id.
     "degree_level": "Doctoral",
     "url": "https://www.ung.si/en/schools/graduate-school/programmes/3FI/2023/3FIi13n/2023/",
     "type": null,
-    "id": "65ac1847d2815b505f3e393d"
+    "id": "65ac1847d2815b505f3e393d",
+    "no_of_recommend": 89,
+    "no_of_suggested_modules": 10,
+    "is_recommended": true
   }
 }
 ```

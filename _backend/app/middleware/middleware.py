@@ -7,7 +7,7 @@ from .middleware_utils import is_public_path, is_include_request_body_if_post
 
 async def security_checking(request: Request, call_next):
     set_user_info_from_jwt(request)
-    if not is_public_path(request.url.path):
+    if not is_public_path(request.url.path, request.method):
         if not is_valid_jwt_token(request):
             return JSONResponse(
                 {"message": "invalid authorization token or token expired"}, 
