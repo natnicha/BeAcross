@@ -31,12 +31,15 @@ export interface ModuleItem {
     module_code?: number;
     ects?: string;
     degree_level?: string;
-    module_name?: string;
+    name?: string;
     type?: string;
     no_of_recommend: number;
     no_of_suggested_modules?: number;
-    module_id: string;
+    id: string;
     is_recommended: boolean;
+
+    // enrichment fields (i.e. field that did not orignally populated from backend)
+    semesterIds?: string[];
 } 
 
 export interface ModuleResponse {

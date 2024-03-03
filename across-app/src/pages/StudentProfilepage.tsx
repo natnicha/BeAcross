@@ -18,9 +18,8 @@ const StudentProfilepage: React.FC = () => {
   //personal plan
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
-  const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]);
+  const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]); // enrichment result (i.e. not original date from backend)
 
-  
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
     setActiveNav(navItem);
@@ -83,20 +82,36 @@ const StudentProfilepage: React.FC = () => {
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
-
   //Personal Plan
   const handlePersonalPlanClick = async () => {
     try {
+      // 1 step) call personal plan api API
       const personalPlanResponse = await getPersonalPlan();
       sessionStorage.setItem('personalPlanData', JSON.stringify(personalPlanResponse));
   
+      // 2 step) call module detail API
       const moduleDetailsPromises = personalPlanResponse.data.items.map(item =>
         getModuleDetail(item.module_id)
       );
       const moduleItems = await Promise.all(moduleDetailsPromises) as ModuleItem[];
   
-      setModuleItemDetail(moduleItems);
-      setPersonalPlanResponse(personalPlanResponse); // save for later use
+      // 3 step) combine both result for later use
+      const enrichedModuleItems = moduleItems.map(moduleItem => {
+        // Find corresponding item in personalPlanResponse based on module_id
+        const correspondingItem = personalPlanResponse.data.items.find(item => item.module_id === moduleItem.id);
+        
+        // Extract semester_ids from corresponding item's PersonalPlan[] and assign to ModuleItem
+        if (correspondingItem) {
+          const semesterIds: string[] = correspondingItem.personal_plan.map(plan => plan.semester_id);
+          moduleItem.semesterIds = semesterIds; // Assign semesterIds to moduleItem
+        }
+        
+        return moduleItem;
+      });
+
+      // 4 step) set all data to state of this component for later use
+      setModuleItemDetail(enrichedModuleItems);
+      setPersonalPlanResponse(personalPlanResponse); 
       setPersonalPlan(true);
       setExamResult(false);
       setShowProfileInformation(false);
@@ -393,7 +408,7 @@ const StudentProfilepage: React.FC = () => {
                 <tbody>
                   {moduleItemDetail.map((module, index) => (
                     <tr key={index}>
-                      <td>{module.module_name}</td>
+                      <td>{module.name}</td>
                       <td>{module.university}</td>
                       <td>{module.degree_program}</td>
                       <td>{module.module_code}</td>
