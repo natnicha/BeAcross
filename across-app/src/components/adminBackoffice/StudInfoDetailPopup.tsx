@@ -75,7 +75,7 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
   return (
     <div className="studInfo-detail">
       <div className="popup-backdrop">
-        <div className="popup-content" style={{width: "60%"}}>
+        <div className="popup-content" style={{ width: "60%" }}>
           <div className="title-popup mb-2">
             <h5 style={{ color: "white", textAlign: "left" }}>
               &nbsp;&nbsp;&nbsp;Information of "{selectedItem.first_name}{" "}
@@ -144,6 +144,7 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   }
                   onChange={handleInputChange}
                   disabled={!studInfoEditMode}
+                  style={{ width: "30%" }}
                 />
               </div>
             </div>
@@ -235,14 +236,14 @@ const StudInfoDetailPopup: React.FC<StudInfoDetailPopupProps> = ({
                   <td>
                     {gradInfoEditMode ? (
                       <select value={editScore}>
-                        <option value="0,0">0,0</option>
-                        <option value="1,0">1,0</option>
-                        <option value="2,0">2,0</option>
-                        <option value="3,0" selected>
+                        <option value={"0,0"}>0,0</option>
+                        <option value={"1,0"}>1,0</option>
+                        <option value={"2,0"}>2,0</option>
+                        <option value={"3,0"} selected>
                           3,0
                         </option>
-                        <option value="4,0">4,0</option>
-                        <option value="5,0">5,0</option>
+                        <option value={"4,0"}>4,0</option>
+                        <option value={"5,0"}>5,0</option>
                       </select>
                     ) : (
                       "3,0"
