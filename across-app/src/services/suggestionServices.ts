@@ -84,7 +84,7 @@ export async function postTransferable(module_a: string, module_b: string): Prom
       return {
         status: response.status,
         message:
-          "Transferable Modules are updated.",
+          "Similarity is successfully added.",
       };
     } else if (response.status == 409) {
       return { status: response.status, message: responseData.detail.message };
@@ -118,7 +118,7 @@ export async function deleteTransferable(module_a: string, module_b: string): Pr
       return {
         status: response.status,
         message:
-          "Transferable Modules are updated.",
+          "Similarity is successfully deleted.",
       }
     } else {
       throw new Error(`Error: ${response.status}`);
