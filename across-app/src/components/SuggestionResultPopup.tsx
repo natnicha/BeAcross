@@ -127,8 +127,11 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
         if (event.target.checked) {
         // Checkbox is checked - call postTransferable API
         const response = await postTransferable(props.selectedResultItem.module_id,item.module_id);
-        setResponseMessage(response.message);
-        setResponseStyle({ margin: "15px", color: "green"}); // Set to green when add
+        if (response.status == 409 || response.status == 200 )
+        {
+            setResponseMessage(response.message);
+            setResponseStyle({ margin: "15px", color: "green"}); // Set to green when add or no update
+        }
         } else {
         // Checkbox is unchecked - call deleteTransferable API
         const response = await deleteTransferable(props.selectedResultItem.module_id,item.module_id);

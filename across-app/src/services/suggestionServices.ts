@@ -111,14 +111,14 @@ export async function deleteTransferable(module_a: string, module_b: string): Pr
 
     // Parse the JSON response
     const responseData: any = await response.json();
-    
+
     if (response.status == 200) {
       return {
         status: response.status,
         message:
           "Transferable Modules are updated.",
       };
-    } else if (response.status == 400) {
+    } else if (response.status == 409) {
       return { status: response.status, message: responseData.detail.message };
     } else {
       throw new Error(`Error: ${response.status}`);
