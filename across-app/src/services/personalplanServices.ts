@@ -31,11 +31,11 @@ export interface ModuleItem {
     module_code?: number;
     ects?: string;
     degree_level?: string;
-    name?: string;
+    module_name?: string;
     type?: string;
     no_of_recommend: number;
     no_of_suggested_modules?: number;
-    id: string;
+    module_id: string;
     is_recommended: boolean;
 
     // enrichment fields (i.e. field that did not orignally populated from backend)
@@ -122,7 +122,7 @@ export async function getPersonalPlan(): Promise<PersonalPlanResponse> {
   }
 
 // Function to send a GET request to the Module API
-export async function getModuleDetail(module_id: string): Promise<ModuleResponse> {
+export async function getModuleDetail(module_id: string): Promise<ModuleItem> {
     const url: string = `http://localhost:8000/api/v1/module/${module_id}`;
   
     const token = sessionStorage.getItem("jwtToken") || '';
@@ -139,7 +139,7 @@ export async function getModuleDetail(module_id: string): Promise<ModuleResponse
   
       if (response.ok) {
         // Assuming responseData directly matches the structure of getCommentResponse
-        return responseData;
+        return responseData.data[0];
       } else {
         throw new Error(`Error: ${response.status}`);
       }

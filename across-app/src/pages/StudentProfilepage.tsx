@@ -101,7 +101,7 @@ const StudentProfilepage: React.FC = () => {
         // For each PersonalPlan, create a new ModuleItem enriched with that PersonalPlan's semester_id
         return item.personal_plan.map(plan => {
           // Find the corresponding ModuleItem for the current PersonalPlan
-          const moduleItem = moduleItems.find(module => module.id === item.module_id);
+          const moduleItem = moduleItems.find(x => x.module_id === item.module_id);
 
           // Return a new object, copying the ModuleItem and adding the semester_id
           if (moduleItem && plan.personal_plan_id != null) {
@@ -440,7 +440,7 @@ const StudentProfilepage: React.FC = () => {
                           {item.module_code}
                       </div>
                       <div className="search-column" id="moduleName">
-                          {item.name}
+                          {item.module_name}
                       </div>
                       <div className="search-column" id="ect">
                           {item.ects}
