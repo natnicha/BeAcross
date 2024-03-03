@@ -234,7 +234,7 @@ def delete_module_comment(db: MongoClient, module_comment_id: ObjectId, user_id:
         )
 
 
-@module.get("/search/", status_code=status.HTTP_200_OK)
+@module.get("/search", status_code=status.HTTP_200_OK)
 async def search(
         request: Request,
         term: str = Query(min_length=1),
@@ -561,8 +561,8 @@ def mask_user_name(name="", mask="*"):
     else:
         return name
 
-@module.get("/{module_id}/", response_model=ModuleResponseModel, status_code=status.HTTP_200_OK)
-async def get_module(module_id: str = None, db: MongoClient = Depends(get_database)):
+@module.get("/{module_id}", status_code=status.HTTP_200_OK)
+async def get_module(request: Request, module_id: str = None, db: MongoClient = Depends(get_database)):
     # Convert the string ID to ObjectId
     try:
         module_id_obj = ObjectId(module_id)
@@ -572,14 +572,24 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
             status_code=status.HTTP_400_BAD_REQUEST
         )
     # Fetch the module from the database
-    module_data = MODULES.find_one(db, module_id_obj)
-    if not module_data:
+    items = MODULES.find_one(db, module_id_obj)
+    if not items:
         raise HTTPException(
             detail={"message": "Module not found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
-    module_data['id'] = str(module_data.pop("_id"))
-    return module_data
+
+    try:
+        user_recommend = []
+        user_role = request.state.role
+    except:
+        user_role = ""
+    
+    if user_role == "student":
+        user_recommend = list(MODULE_RECOMMEND.get_user_recommend(db, user_id=ObjectId(request.state.user_id)))
+    data = prepare_item(db, [items], user_recommend)
+
+    return {"data": data}
 
 # create modules 
 @module.delete("/transferability", status_code=status.HTTP_200_OK)
