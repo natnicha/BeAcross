@@ -37,13 +37,12 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const [selectedCompareItems, setSelectedCompareItems] = useState<SuggestionItem[]>([props.selectedResultItem]); // use in compare feature
     const [tempCompareItems, setTempCompareItems] = useState<SuggestionItem[]>([]); // use in compare feature
     const [immediateVisualSelected, setImmediateVisualSelected] = useState<SuggestionItem[]>([]); // use in compare feature
-    const [responseMessage, setResponseMessage] = useState('');
-    const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" });
 
     // Hook all popup control to PopupContext
     const { openModuleDetailFromSuggestionPopup, isModuleDetailFromSuggestionPopup, openCompareDetailFromSuggestionPopup, isCompareDetailFromSuggestionPopup, closeAllPopups, closeEverythingThatOpenFromSuggestionPopup } = usePopups();
     const popupRef = useRef<HTMLDivElement>(null);
     const [responseMessages, setResponseMessages] = useState<{ [key: string]: { message: string; style: React.CSSProperties } }>({});
+    const [checkedStates, setCheckedStates] = useState<{ [module_id: string]: boolean }>({});
 
     const closeCurrentContextPopup = () => {
         closeEverythingThatOpenFromSuggestionPopup();
@@ -123,31 +122,47 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     //approved/Unapprved transferibility
     const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>, item: SuggestionItem) => {
         event.preventDefault();
-        event.stopPropagation(); // Prevent click from bubbling up
+        event.stopPropagation();
     
+        const newCheckedState = !checkedStates[item.module_id]; // Toggle the current state
+        setCheckedStates(prevState => ({ ...prevState, [item.module_id]: newCheckedState }));
+        
+        let isChecked = !responseMessages[item.module_id]; // Toggle based on the presence of a message for this item
         let response;
-        let newResponseMessages = { ...responseMessages }; // Create a copy of the current state
     
-        if (event.target.checked) {
-            // Checkbox is checked - call postTransferable API
+        if (newCheckedState) {
+            // Checkbox was not checked before - call postTransferable API
             response = await postTransferable(props.selectedResultItem.module_id, item.module_id);
         } else {
-            // Checkbox is unchecked - call deleteTransferable API
+            // Checkbox was checked before - call deleteTransferable API
             response = await deleteTransferable(props.selectedResultItem.module_id, item.module_id);
         }
     
-        // Update the message for this specific item based on the response
-        newResponseMessages[item.module_id] = {
-            message: response.message,
-            style: {
-                margin: "15px",
-                color: event.target.checked ? "green" : "red" // Green for post, red for delete
-            }
-        };
+        let newResponseMessages = { ...responseMessages };
     
-        // Update the state with the new messages
+        // Update or delete the message for this specific item based on the response
+        if (response && response.message) {
+            newResponseMessages[item.module_id] = {
+                message: response.message,
+                style: {
+                    margin: "15px",
+                    color: isChecked ? "green" : "red"
+                }
+            };
+        } else {
+            delete newResponseMessages[item.module_id]; // Remove message if unchecking
+        }
+    
         setResponseMessages(newResponseMessages);
     };
+
+    useEffect(() => {
+        const initialCheckedStates = props.suggestionItems.reduce((acc, item) => {
+          acc[item.module_id] = true; // Set each item as checked by default
+          return acc;
+        }, {} as { [module_id: string]: boolean });
+        setCheckedStates(initialCheckedStates);
+      }, [props.suggestionItems]);
 
     return (
         <div className="module-detail">
@@ -206,18 +221,18 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     </p>
                                     )}
                                     <div className="search-feature-control-btn">
-                                        {user_role === 'uni-admin' && (                                               
-                                            <label className="transferibity">
+                                        {/* Button-like Checkbox for Transferability */}
+                                        {user_role === 'uni-admin' && (
+                                        <label className="button-like-checkbox" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
                                             <input 
-                                                type="checkbox" 
-                                                className="pointer-checkbox" 
-                                                name="transferbility" 
-                                                value="" 
-                                                defaultChecked 
-                                                onChange={(event) => handleCheckboxChange(event, item)}
-                                            /> 
-                                            Transferable
-                                            </label>
+                                            type="checkbox" 
+                                            className="hidden-checkbox"
+                                            checked={checkedStates[item.module_id]} // Controlled component
+                                            onChange={(event) => handleCheckboxChange(event, item)}
+                                            id={`checkbox-${item.module_id}`}
+                                            />
+                                            <span>Transferable</span>
+                                        </label>
                                         )}
                                         
                                         {user_role === 'student' ? (
