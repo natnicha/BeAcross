@@ -43,6 +43,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     // Hook all popup control to PopupContext
     const { openModuleDetailFromSuggestionPopup, isModuleDetailFromSuggestionPopup, openCompareDetailFromSuggestionPopup, isCompareDetailFromSuggestionPopup, closeAllPopups, closeEverythingThatOpenFromSuggestionPopup } = usePopups();
     const popupRef = useRef<HTMLDivElement>(null);
+    const [responseMessages, setResponseMessages] = useState<{ [key: string]: { message: string; style: React.CSSProperties } }>({});
 
     const closeCurrentContextPopup = () => {
         closeEverythingThatOpenFromSuggestionPopup();
@@ -123,21 +124,29 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>, item: SuggestionItem) => {
         event.preventDefault();
         event.stopPropagation(); // Prevent click from bubbling up
-
+    
+        let response;
+        let newResponseMessages = { ...responseMessages }; // Create a copy of the current state
+    
         if (event.target.checked) {
-        // Checkbox is checked - call postTransferable API
-        const response = await postTransferable(props.selectedResultItem.module_id,item.module_id);
-        if (response.status == 409 || response.status == 200 )
-        {
-            setResponseMessage(response.message);
-            setResponseStyle({ margin: "15px", color: "green"}); // Set to green when add or no update
-        }
+            // Checkbox is checked - call postTransferable API
+            response = await postTransferable(props.selectedResultItem.module_id, item.module_id);
         } else {
-        // Checkbox is unchecked - call deleteTransferable API
-        const response = await deleteTransferable(props.selectedResultItem.module_id,item.module_id);
-        setResponseMessage(response.message);
-        setResponseStyle({ margin: "15px", color: "red"}); // Set to red when delete
+            // Checkbox is unchecked - call deleteTransferable API
+            response = await deleteTransferable(props.selectedResultItem.module_id, item.module_id);
         }
+    
+        // Update the message for this specific item based on the response
+        newResponseMessages[item.module_id] = {
+            message: response.message,
+            style: {
+                margin: "15px",
+                color: event.target.checked ? "green" : "red" // Green for post, red for delete
+            }
+        };
+    
+        // Update the state with the new messages
+        setResponseMessages(newResponseMessages);
     };
 
     return (
@@ -191,7 +200,11 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                         {item.university}
                                     </div>
                                     
-                                    <p style={responseStyle}>{responseMessage}</p>
+                                    {responseMessages[item.module_id] && (
+                                    <p style={responseMessages[item.module_id].style}>
+                                        {responseMessages[item.module_id].message}
+                                    </p>
+                                    )}
                                     <div className="search-feature-control-btn">
                                         {user_role === 'uni-admin' && (                                               
                                             <label className="transferibity">
@@ -200,6 +213,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                                 className="pointer-checkbox" 
                                                 name="transferbility" 
                                                 value="" 
+                                                defaultChecked 
                                                 onChange={(event) => handleCheckboxChange(event, item)}
                                             /> 
                                             Transferable
