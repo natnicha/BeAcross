@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { deleteRecommended, postRecommended } from '../services/recommendedServices';
 import ModuleDetailPopup from './ModuleDetailPopup';
 import CompareModuleDetailPopup from './CompareModuleDetailPopup';
+import { deleteTransferable, postTransferable } from '../services/suggestionServices';
 
 export interface SuggestionItem {
     content?: string;
@@ -37,6 +37,8 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const [selectedCompareItems, setSelectedCompareItems] = useState<SuggestionItem[]>([props.selectedResultItem]); // use in compare feature
     const [tempCompareItems, setTempCompareItems] = useState<SuggestionItem[]>([]); // use in compare feature
     const [immediateVisualSelected, setImmediateVisualSelected] = useState<SuggestionItem[]>([]); // use in compare feature
+    const [responseMessage, setResponseMessage] = useState('');
+    const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" });
 
     // Hook all popup control to PopupContext
     const { openModuleDetailFromSuggestionPopup, isModuleDetailFromSuggestionPopup, openCompareDetailFromSuggestionPopup, isCompareDetailFromSuggestionPopup, closeAllPopups, closeEverythingThatOpenFromSuggestionPopup } = usePopups();
@@ -117,6 +119,24 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
         return () => { document.removeEventListener('mousedown', handleClickOutside); };
     }, [closeAllPopup]);
 
+    //approved/Unapprved transferibility
+    const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>, item: SuggestionItem) => {
+        event.preventDefault();
+        event.stopPropagation(); // Prevent click from bubbling up
+
+        if (event.target.checked) {
+        // Checkbox is checked - call postTransferable API
+        const response = await postTransferable(props.selectedResultItem.module_id,item.module_id);
+        setResponseMessage(response.message);
+        setResponseStyle({ margin: "15px", color: "green"}); // Set to green when add
+        } else {
+        // Checkbox is unchecked - call deleteTransferable API
+        const response = await deleteTransferable(props.selectedResultItem.module_id,item.module_id);
+        setResponseMessage(response.message);
+        setResponseStyle({ margin: "15px", color: "red"}); // Set to red when delete
+        }
+    };
+
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
@@ -168,6 +188,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                         {item.university}
                                     </div>
                                     
+                                    <p style={responseStyle}>{responseMessage}</p>
                                     <div className="search-feature-control-btn">
                                         {user_role === 'uni-admin' && (                                               
                                             <label className="transferibity">
@@ -176,6 +197,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                                 className="pointer-checkbox" 
                                                 name="transferbility" 
                                                 value="" 
+                                                onChange={(event) => handleCheckboxChange(event, item)}
                                             /> 
                                             Transferable
                                             </label>
