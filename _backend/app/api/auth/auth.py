@@ -11,9 +11,7 @@ import app.crud.users as USERS
 import app.crud.user_logs as USER_LOGS
 import app.crud.universities as UNIVERSITIES
 from app.email_service.email_sender import *
-#
-import bson.binary
-import base64
+
 
 from .auth_utils import *
 from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel, PasswordResetRequestModel
