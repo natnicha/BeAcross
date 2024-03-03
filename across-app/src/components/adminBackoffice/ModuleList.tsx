@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SuggestionItem, getSuggestion } from "../../services/suggestionServices";
 import SuggestionPopup from '../../components/SuggestionResultPopup';
 import { usePopups } from '../../PopupContext';
@@ -33,6 +33,7 @@ export default function ModuleList() {
   const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
   const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
   const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch(
@@ -70,6 +71,20 @@ export default function ModuleList() {
         console.error("Error handling recommendation:", error);
     }
   };
+
+  // Close the popup if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+    if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      closeAllPopups();
+    }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+    };
+}, [closeAllPopups]);
 
 
   return (

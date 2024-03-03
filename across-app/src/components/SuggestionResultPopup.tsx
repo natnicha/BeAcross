@@ -49,9 +49,6 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     };
 
     const closeAllPopup = () => {
-        const searchParams = new URLSearchParams(location.search);
-        searchParams.delete('module');
-        navigate({ pathname: '/search', search: searchParams.toString() });
         closeAllPopups();
     };
 
