@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { SuggestionItem, getSuggestion } from "../../services/suggestionServices";
+import SuggestionPopup from '../../components/SuggestionResultPopup';
+import { usePopups } from '../../PopupContext';
 
 interface ModuleItem {
   university?: string;
@@ -8,6 +11,7 @@ interface ModuleItem {
   degree_level?: string;
   module_name?: string;
   type?: string;
+  no_of_recommend? : string;
 }
 
 interface ModuleData {
@@ -18,6 +22,12 @@ interface ModuleData {
     items?: ModuleItem[];
   };
 }
+
+//Suggestion Module Session
+const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } = usePopups();
+const [selectedItem, setSelectedItem] = useState<null>(null);
+const [suggestedItem, setSuggestedItem] = useState<SuggestionItem[] | undefined>([]);
+const no_of_suggested_modules = 0; // Mock
 
 export default function ModuleList() {
   const [moduleData, setModuleDatas] = useState<ModuleData | null>(null);
@@ -37,6 +47,28 @@ export default function ModuleList() {
         console.error("Error fetching module list data:", error);
       });
   }, []);
+
+  //Suggestion Module Session
+  /*const handleSuggestionClick = async (event: React.MouseEvent<HTMLButtonElement>, item: Item) => {  
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+        const response = await getSuggestion(item.module_id);
+        if (response.suggested_module_items) {
+            //setSelectedItem(item);
+            setSuggestedItem(response.suggested_module_items);
+            openSuggestionPopup(response.suggested_module_items);
+
+        } else {
+            // Handle case where no suggested_module_items are present
+            console.error("No suggestion items found.");
+        }
+    } catch (error) {
+        console.error("Error handling recommendation:", error);
+    }
+  };*/
+
 
   return (
     <div className="about-thumb bg-white shadow-lg">
@@ -93,15 +125,25 @@ export default function ModuleList() {
       ) : (
         <p>No data</p>
       )}
-          {/* Button Feature */}
-          <div className="search-feature-control-btn">
-            <button 
-                className={`custom-btn-number btn custom-link ${item.no_of_suggested_modules === 0 ? 'disabled' : ''}`}
-                onClick={(event) => handleSuggestionClick(event, item)}
-                disabled={item.no_of_suggested_modules === 0}>
-                <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
-            </button>
-          </div>
+      {/* Button Feature */}
+      <div className="search-feature-control-btn">
+        <button 
+            className={`custom-btn-number btn custom-link ${no_of_suggested_modules === 0 ? 'disabled' : ''}`}
+            /*</div>onClick={(event) => handleSuggestionClick(event, item)}*/
+            disabled={no_of_suggested_modules === 0}>
+            <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{no_of_suggested_modules}</span>
+        </button>
+      </div>
+      
+      {isSuggestionPopupOpen && selectedItem && suggestedItem && (
+        <SuggestionPopup 
+            content="" 
+            selectedResultItem={selectedItem}
+            onClose={closeAllPopups}
+            suggestionItems={suggestedItem} // Providing an empty array as a default
+        />
+      )}
+
     </div>
   );
 }
