@@ -19,6 +19,7 @@ const StudentProfilepage: React.FC = () => {
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
   const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]); // enrichment result (i.e. not original date from backend)
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
 
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
@@ -124,6 +125,16 @@ const StudentProfilepage: React.FC = () => {
     // Set the selectedModuleId which triggers fetching module details
     setSelectedModuleId(item.module_id);
   };
+
+const deletePlan = () => {
+  setShowConfirmPopup(true); // Close the popup
+};
+
+const handleDeletePersonalPlan = () => {
+  
+  getPersonalPlan();
+
+};
 
   return (
     <>
@@ -431,11 +442,18 @@ const StudentProfilepage: React.FC = () => {
                       </div>
                       
                       <div className="search-feature-control-btn">          
-                        <button>DELETE !</button>
+                        <button className="custom-btn-red btn custom-link"onClick={deletePlan}>Delete</button>
                       </div>
                   </div>
                 </div>
               ))}
+
+              {showConfirmPopup && (
+                <div className="confirmation-popup">
+                    <p>Do you want to compare these selected Modules?</p>
+                    <button className="custom-btn-red btn custom-link"onClick={handleDeletePersonalPlan}>Delete</button>
+                </div>
+              )}
 
             </div>
           </div>

@@ -49,6 +49,11 @@ export interface ModuleResponse {
     items?: ModuleItem[];
 }
 
+interface DeleteResponse {
+  id: string;
+  token: string;
+}
+
 // Function to send a POST request to the createPersonal API
 export async function postPersonalPlan(module_id: string, semester_id: string): Promise<PostPersonalPlanResponse> {
     const url: string = `http://localhost:8000/api/v1/personal-plan`;
@@ -142,3 +147,35 @@ export async function getModuleDetail(module_id: string): Promise<ModuleResponse
       throw error;
     }
   }
+
+
+// Function to send a DELETE request to the delete personal plan API
+export async function deleteRecommended(personal_plan_id: string): Promise<DeleteResponse> {
+  const url: string = `http://localhost:8000/api/v1/personal-plan/${personal_plan_id}`;
+  const payload = { personal_plan_id };
+
+  const token = sessionStorage.getItem("jwtToken") || '';
+
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    
+    // Assuming the API returns JSON that matches the SubmitRecommendedResponse interface
+    const data: DeleteResponse = await response.json();
+    return data; // Return the response data
+
+  } catch (error) {
+    console.error("Error submitting Recommended:", error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
