@@ -1,9 +1,7 @@
 import inspect
 import logging
-import json
 import re
 from typing import Annotated, Union
-from bson import json_util
 from bson.objectid import ObjectId
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Header, Query, Request, status
 from pymongo import MongoClient
@@ -25,7 +23,14 @@ from app.crud.module_comment import ModuleCommentModel
 from app.db.mongodb import get_database
 from app.api.module.model import CountRecommendResponseModel, GetModuleCommentItemResponseModel, GetModuleCommentResponseModel, ModuleCommentDataModel, ModuleCommentRequestModel, ModuleCommentResponseModel, ModuleSuggestedResponseModel, RecommendRequestModel, UploadModulesModel, UploadModulesResponseItemModel, ModuleResponseModel
 import app.crud.users as USERS
-from app.transferability.similiarity_run import combine_similarity_results_and_write_back, start_similarity_for_one, add_module_to_res
+from app.transferability.similiarity_run import combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res, start_similarity_for_one_after_update
+
+#del CRUD
+from app.crud.modules import delete_one
+from app.api.auth.auth_utils import get_payload_from_auth
+from app.api.module.model import ModuleUpdateModel
+from app.crud.modules import update_one
+from app.crud.modules import find_one
 
 module = APIRouter()
 
@@ -576,6 +581,80 @@ async def get_module(module_id: str = None, db: MongoClient = Depends(get_databa
     return module_data
 
 
+@module.delete("/{module_id}", status_code=status.HTTP_200_OK)
+async def delete_module(request: Request, module_id: str, db: MongoClient = Depends(get_database)):    
+    # fetch the module to check its university field
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    module_data = MODULES.find_one(db, module_id_obj)
+    if not module_data:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Module not found")
+
+    if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Not authorized to delete module from another university"
+            )
+    
+    deletion_result = delete_one(db, module_id_obj)
+    if deletion_result.deleted_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    remove_similarity_on_delete(module_id)
+    return {"message": "Module is successfully deleted"}
+
+
+@module.put("/{module_id}", response_model=ModuleResponseModel)
+async def update_module(request: Request, module_id: str, module_update: ModuleUpdateModel, db: MongoClient = Depends(get_database)):
+    try:
+        module_id_obj = ObjectId(module_id)
+    except Exception as e:
+        raise HTTPException(
+            detail={"message": f"Invalid ObjectId format: {str(e)}"},
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    
+    module_data = MODULES.find_one(db, module_id_obj)
+    if request.state.role == 'uni-admin' and request.state.university != module_data.get('university'):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Not authorized to delete module from another university"
+            )
+
+    # Convert Pydantic model to dictionary and filter out None values (for partial update)
+    update_data = {k: v for k, v in module_update.model_dump(exclude_unset=True).items() if v is not None}
+
+    update_result = update_one(db, module_id_obj, update_data)
+    if update_result.matched_count == 0:
+        raise HTTPException(
+            detail="Module not found",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module = find_one(db, module_id_obj)
+    if not updated_module:
+        raise HTTPException(
+            detail="Module not found after update",
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+    
+    updated_module['id'] = str(updated_module.pop("_id"))
+    remove_similarity_on_delete(module_id)
+    add_module_to_res(module_id)
+    changes = start_similarity_for_one_after_update(updated_module)
+    changes = [changes]
+    combine_similarity_results_and_write_back(changes)
+    return updated_module
+
+
 @module.get("/{module_id}/suggested", status_code=status.HTTP_200_OK)
 async def get_suggested_modules(
         request: Request,
@@ -619,4 +698,3 @@ async def get_suggested_modules(
             total_suggested_module_items = len(data),
             suggested_module_items = data,
     )}
-

@@ -7,7 +7,8 @@ const FileUploader = () => {
     "initial" | "uploading" | "success" | "fail"
   >("initial");
 
-  const jwtToken = sessionStorage.getItem("jwtToken");
+  const jwtToken = sessionStorage.getItem("jwtToken")
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setStatus("initial");
@@ -19,30 +20,32 @@ const FileUploader = () => {
     if (file?.type === "text/xml") {
       setStatus("uploading");
 
+      const formData = new FormData();
+      formData.append("file", file);
+      console.log(formData)
+
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${jwtToken}`);
+      headers.append("Content-Type", "application/xml");
+
       try {
-        file.text().then(async function(data) {
-          let result = null
-          result = await fetch("http://localhost:8000/api/v1/module", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${jwtToken}`,
-              "Content-Type": "application/xml",
-            },
-            body: data,
-          })
-          .then((response) =>  {
-            if (response.status == 201) {
-              setStatus("success")
-              setFile(null);
-            }
-            else {
-              console.error("Error fetching create modules:", response);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching create modules:", error);
-          });;
+        const result = await fetch("http://localhost:8000/api/v1/module", {
+          method: "POST",
+          body: formData.get("file"),
+          headers: headers,
         })
+        .then((response) =>  {
+          if (response.status == 201) {
+            setStatus("success")
+            setFile(null);
+          }
+          else {
+            console.error("Error fetching uploading modules:", response);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching uploading modules:", error);
+        });
       } catch (error) {
         console.error(error);
         setStatus("fail");
