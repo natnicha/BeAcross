@@ -195,14 +195,15 @@ async def forgot_password(
     
     full_name = extractFullNameFromEmail(emailaddr.email, '.')
 
-    if update_result:
-        # Send confirmation email
-        try:
-            await send_newpass_email(user_email=emailaddr.email, new_password=new_password, full_name=full_name)
-            # Update the user's record with the new encrypted password
-            update_result = USERS.update_user_password(db, emailaddr.email, encrypted_password)
-        except Exception as e:
-            # Handle email sending failure
-            logging.error(f"Failed to send password reset confirmation: {e}")
+    # Update the user's record with the new encrypted password
+    try:
+        update_result = USERS.update_user_password(db, emailaddr.email, encrypted_password)
+        if update_result:
+            # Send confirmation email
+            await send_newpass_email(user_email=emailaddr.email, new_password=new_password, full_name=full_name[0])
+    except Exception as e:
+        # Handle email sending failure or database update failure
+        logging.error(f"Failed to update password or send confirmation: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update password.")
     
     return {"message": "If your account with that email was found, we've sent the new password."}
