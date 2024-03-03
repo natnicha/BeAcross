@@ -51,8 +51,8 @@ export interface ModuleResponse {
 }
 
 interface DeleteResponse {
-  id: string;
-  token: string;
+  status: number;
+  message: string;
 }
 
 // Function to send a POST request to the createPersonal API
@@ -167,16 +167,18 @@ export async function deleteRecommended(personal_plan_id: string): Promise<Delet
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
+    if (response.status == 204) {
+      return {
+        status: response.status,
+        message:
+          "The module was deleted from your personal plan.",
+      };
+    } else {
       throw new Error(`Error: ${response.status}`);
     }
-    
-    // Assuming the API returns JSON that matches the SubmitRecommendedResponse interface
-    const data: DeleteResponse = await response.json();
-    return data; // Return the response data
 
   } catch (error) {
-    console.error("Error submitting Recommended:", error);
+    console.error("Error deleting module:", error);
     throw error; // Rethrow the error to be handled by the caller
   }
 }

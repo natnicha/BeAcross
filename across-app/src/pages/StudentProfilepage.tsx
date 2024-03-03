@@ -127,13 +127,12 @@ const StudentProfilepage: React.FC = () => {
 
   const handleDeletePlan = async (delteItem: ModuleItem) => {
     console.log("delete personal plan: " + delteItem.personalPlanId);
-    await deleteRecommended(delteItem.personalPlanId || "");
+    const response = await deleteRecommended(delteItem.personalPlanId || "");
+    alert(response.message); 
 
     // Filter out the ModuleItems that contain the personalPlanId to delete
     const updatedModuleItems = moduleItemDetail.filter(i => i.personalPlanId != delteItem.personalPlanId);
     setModuleItemDetail(updatedModuleItems);
-
-    //setShowConfirmPopup(true);
   };
 
 
