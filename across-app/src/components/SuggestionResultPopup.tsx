@@ -146,7 +146,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                 message: response.message,
                 style: {
                     margin: "15px",
-                    color: isChecked ? "green" : "red"
+                    color: isChecked ? "red" : "green"
                 }
             };
         } else {
