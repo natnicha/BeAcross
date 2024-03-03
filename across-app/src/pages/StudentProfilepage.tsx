@@ -16,10 +16,10 @@ const StudentProfilepage: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
 
   //personal plan
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
   const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
   const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]); // enrichment result (i.e. not original date from backend)
-  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [selectedSemester, setSelectedSemester] = useState('');
+
 
   // Function to Nav navigation item click
   const homeNavClick = (navItem: string) => {
@@ -133,6 +133,10 @@ const StudentProfilepage: React.FC = () => {
     // Filter out the ModuleItems that contain the personalPlanId to delete
     const updatedModuleItems = moduleItemDetail.filter(i => i.personalPlanId != delteItem.personalPlanId);
     setModuleItemDetail(updatedModuleItems);
+  };
+
+  const handleSemesterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSemester(event.target.value);
   };
 
   return (
@@ -410,14 +414,14 @@ const StudentProfilepage: React.FC = () => {
               </h5>
 
               <div style={{ marginBottom: "20px"}}>
-              <label>&nbsp;Choose a semester:&nbsp;</label>
-              <select id="semester-dropdown" name="semester">
-                <option value="summer2023">Summer 2023</option>
-                <option value="winter2023/24">Winter 2023/24</option>
-                <option value="summer2024">Summer 2024</option>
-                <option value="winter2024/25">Winter 2024/25</option>
-                <option value="summer2025">Summer 2025</option>
-              </select>
+                <label>&nbsp;Choose a semester:&nbsp;</label>
+                <select id="semester-dropdown" name="semester" onChange={handleSemesterChange}>
+                  <option value="65d7a7a22b35547c027a9d5b">Summer 2023</option>
+                  <option value="65d7a7bc2b35547c027a9d5c">Winter 2023/24</option>
+                  <option value="65d7a7c42b35547c027a9d5d">Summer 2024</option>
+                  <option value="65d7a7cc2b35547c027a9d5e">Winter 2024/25</option>
+                  <option value="65d9aa1e2b35547c027a9de9">Summer 2025</option>
+                </select>
               </div>
 
               <div className="search-header">
@@ -429,7 +433,7 @@ const StudentProfilepage: React.FC = () => {
                 <div className="search-column"><strong>University</strong></div>
               </div>
 
-              {moduleItemDetail.map((item, index) => (
+              {moduleItemDetail.filter(item => item.semesterId === selectedSemester).map((item, index) => (
                 <div className="search-table" key={index}>
                   <div className="search-row">
                       <div className="search-column" id="moduleCode">
