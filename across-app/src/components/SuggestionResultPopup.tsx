@@ -231,7 +231,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                             onChange={(event) => handleCheckboxChange(event, item)}
                                             id={`checkbox-${item.module_id}`}
                                             />
-                                            <span>Transferable</span>
+                                            <span>Transferable&nbsp;&nbsp;</span>
                                         </label>
                                         )}
                                         
