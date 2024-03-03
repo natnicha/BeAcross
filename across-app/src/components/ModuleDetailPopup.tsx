@@ -420,11 +420,11 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         type="radio" 
                                         className="pointer-checkbox" 
                                         name="semester" 
-                                        value="65d9aa1e2b35547c027a9de9" 
+                                        value="65d7a7a22b35547c027a9d5b" 
                                         onChange={handleSemesterSelection}
-                                        checked={"65d9aa1e2b35547c027a9de9" === selectedSemester}
+                                        checked={"65d7a7a22b35547c027a9d5b" === selectedSemester}
                                     /> 
-                                    &nbsp;Summer 2025
+                                    &nbsp;Summer 2023
                                 </label>
                             </div>
       
@@ -434,11 +434,11 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         type="radio" 
                                         className="pointer-checkbox" 
                                         name="semester" 
-                                        value="65d7a7cc2b35547c027a9d5e" 
+                                        value="65d7a7bc2b35547c027a9d5c" 
                                         onChange={handleSemesterSelection}
-                                        checked={"65d7a7cc2b35547c027a9d5e" === selectedSemester}
+                                        checked={"65d7a7bc2b35547c027a9d5c" === selectedSemester}
                                     /> 
-                                    &nbsp;Winter 2024/2025
+                                    &nbsp;Winter 2023/24
                                 </label>
                             </div>
                    
@@ -462,11 +462,11 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         type="radio" 
                                         className="pointer-checkbox" 
                                         name="semester" 
-                                        value="65d7a7bc2b35547c027a9d5c" 
+                                        value="65d7a7cc2b35547c027a9d5e" 
                                         onChange={handleSemesterSelection}
-                                        checked={"65d7a7bc2b35547c027a9d5c" === selectedSemester}
+                                        checked={"65d7a7cc2b35547c027a9d5e" === selectedSemester}
                                     /> 
-                                    &nbsp;Winter 2023/24
+                                    &nbsp;Winter 2024/25
                                 </label>
                             </div>
                     
@@ -476,11 +476,11 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                                         type="radio" 
                                         className="pointer-checkbox" 
                                         name="semester" 
-                                        value="65d7a7a22b35547c027a9d5b" 
+                                        value="65d9aa1e2b35547c027a9de9" 
                                         onChange={handleSemesterSelection}
-                                        checked={"65d7a7a22b35547c027a9d5b" === selectedSemester}
+                                        checked={"65d9aa1e2b35547c027a9de9" === selectedSemester}
                                     /> 
-                                    &nbsp;Summer 2023
+                                    &nbsp;Summer 2025
                                 </label>
                             </div>
                             <div style={{ paddingTop: "5%", display: 'flex', justifyContent: 'flex-end'}}>
