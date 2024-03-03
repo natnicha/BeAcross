@@ -79,6 +79,10 @@ class ModuleResponseModel(BaseModel):
     url: Optional[str] = None
     type: Optional[str] = None
 
+class UpdateTransferabilityModel(BaseModel):
+    module_a: str
+    module_b: str
+    
 class ModuleUpdateModel(BaseModel):
     name: Optional[str] = None
     content: Optional[str] = None
