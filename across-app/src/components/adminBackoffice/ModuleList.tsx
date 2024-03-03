@@ -93,6 +93,15 @@ export default function ModuleList() {
       ) : (
         <p>No data</p>
       )}
+          {/* Button Feature */}
+          <div className="search-feature-control-btn">
+            <button 
+                className={`custom-btn-number btn custom-link ${item.no_of_suggested_modules === 0 ? 'disabled' : ''}`}
+                onClick={(event) => handleSuggestionClick(event, item)}
+                disabled={item.no_of_suggested_modules === 0}>
+                <i className="bi bi-stars"></i> Suggestion Modules <span className="number-count">{item.no_of_suggested_modules}</span>
+            </button>
+          </div>
     </div>
   );
 }
