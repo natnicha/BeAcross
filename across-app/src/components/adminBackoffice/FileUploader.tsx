@@ -15,13 +15,9 @@ const FileUploader = () => {
       setFile(e.target.files[0]);
     }
   };
-
-  const handleUpload = async () => {
-    if (file) {
-      const fileNameParts = file.name.split('.');
-      const fileExtension = fileNameParts[fileNameParts.length - 1].toLowerCase();
   
-      if (fileExtension === "xml") {
+  const handleUpload = async () => {
+    if (file?.type === "text/xml") {
       setStatus("uploading");
 
       const formData = new FormData();
@@ -37,10 +33,19 @@ const FileUploader = () => {
           method: "POST",
           body: formData.get("file"),
           headers: headers,
+        })
+        .then((response) =>  {
+          if (response.status == 201) {
+            setStatus("success")
+            setFile(null);
+          }
+          else {
+            console.error("Error fetching uploading modules:", response);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching uploading modules:", error);
         });
-
-        const data = await result.json();
-        setStatus("success");
       } catch (error) {
         console.error(error);
         setStatus("fail");
@@ -48,7 +53,6 @@ const FileUploader = () => {
     } else {
       alert("File type not supported. Please upload a XML file.");
     }
-  }
   };
 
   return (
@@ -94,6 +98,8 @@ const Result = ({ status }: { status: string }) => {
     return (
       <>
         <p>✅ File uploaded successfully!</p>
+        <p>📧 Your uploaded modules are processing. We will get back to you by email as soon as possible.</p>
+        <p>⏳ This action will take some time depending on your modules, typically 1 min per module.</p>
       </>
     );
   } else if (status === "fail") {
