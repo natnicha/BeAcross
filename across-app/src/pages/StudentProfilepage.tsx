@@ -135,7 +135,6 @@ const StudentProfilepage: React.FC = () => {
     setModuleItemDetail(updatedModuleItems);
   };
 
-
   return (
     <>
       <div className="profile-container">
@@ -409,6 +408,17 @@ const StudentProfilepage: React.FC = () => {
               <h5 className="mb-3" style={{ color: "#1e5af5" }}>
                 My Personal Plan
               </h5>
+
+              <div style={{ marginBottom: "20px"}}>
+              <label>&nbsp;Choose a semester:&nbsp;</label>
+              <select id="semester-dropdown" name="semester">
+                <option value="summer2023">Summer 2023</option>
+                <option value="winter2023/24">Winter 2023/24</option>
+                <option value="summer2024">Summer 2024</option>
+                <option value="winter2024/25">Winter 2024/25</option>
+                <option value="summer2025">Summer 2025</option>
+              </select>
+              </div>
 
               <div className="search-header">
                 <div className="search-column"><strong>Module Code</strong></div>
