@@ -147,3 +147,8 @@ def test_not_is_public_path_put_user_profile_by_auth():
     method = 'PUT'
     assert not is_public_path(api, method)
 
+def test_not_is_public_path_delete_user_profile_by_admin():
+    api = '/api/v1/user/65a8041efbc5863974a6d4e4'
+    method = 'DELETE'
+    assert not is_public_path(api, method)
+
