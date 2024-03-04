@@ -57,6 +57,11 @@ def test_is_public_path_get_module_no_of_recommend():
     method = 'GET'
     assert is_public_path(api, method)
 
+def test_not_is_public_path_post_module_recommend():
+    api = '/api/v1/module/recommend'
+    method = 'POST'
+    assert not is_public_path(api, method)
+
 def test_is_public_path_get_module_suggested():
     api = '/api/v1/module/65a8041efbc5863974a6d4e4/suggested'
     method = 'GET'
