@@ -3,10 +3,10 @@
          xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
          xmlns:owl="http://www.w3.org/2002/07/owl#"
-         xml:base="C:\Users\ExcoSia\Desktop\Winter 2023-24\PrincipleSeminar\victory-pie-solutions\_backend\app\owl\modules.owl"
-         xmlns="C:\Users\ExcoSia\Desktop\Winter 2023-24\PrincipleSeminar\victory-pie-solutions\_backend\app\owl\modules.owl#">
+         xml:base="D:\Main\victory-pie-solutions\_backend\app\owl\modules.owl"
+         xmlns="D:\Main\victory-pie-solutions\_backend\app\owl\modules.owl#">
 
-<owl:Ontology rdf:about="C:\Users\ExcoSia\Desktop\Winter 2023-24\PrincipleSeminar\victory-pie-solutions\_backend\app\owl\modules.owl"/>
+<owl:Ontology rdf:about="D:\Main\victory-pie-solutions\_backend\app\owl\modules.owl"/>
 
 <owl:ObjectProperty rdf:about="#similarTo">
   <rdfs:domain rdf:resource="#Module"/>
@@ -329,7 +329,6 @@
 
 <owl:NamedIndividual rdf:about="#65ac17dfd2815b505f3e37f3">
   <rdf:type rdf:resource="#Module"/>
-  <similarTo rdf:resource="#65ac17b1d2815b505f3e3539"/>
   <similarTo rdf:resource="#65ac17b1d2815b505f3e3530"/>
 </owl:NamedIndividual>
 
@@ -1709,11 +1708,6 @@
   <rdf:type rdf:resource="#Module"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e3539">
-  <rdf:type rdf:resource="#Module"/>
-  <similarTo rdf:resource="#65ac17dfd2815b505f3e37f3"/>
-</owl:NamedIndividual>
-
 <owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e3507">
   <rdf:type rdf:resource="#Module"/>
 </owl:NamedIndividual>
@@ -1907,10 +1901,6 @@
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e3534">
-  <rdf:type rdf:resource="#Module"/>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e3535">
   <rdf:type rdf:resource="#Module"/>
 </owl:NamedIndividual>
 
@@ -4286,14 +4276,6 @@
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#65ac17b1d2815b505f3e365b">
-  <rdf:type rdf:resource="#Module"/>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#65e4f22d3b623a5da76c3bc7">
-  <rdf:type rdf:resource="#Module"/>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#65e4f22d3b623a5da76c3bc8">
   <rdf:type rdf:resource="#Module"/>
 </owl:NamedIndividual>
 
