@@ -32,6 +32,16 @@ def test_is_public_path_get_module():
     method = 'GET'
     assert is_public_path(api, method)
 
+def test_not_is_public_path_post_module_comment():
+    api = '/api/v1/module'
+    method = 'POST'
+    assert not is_public_path(api, method)
+
+def test_not_is_public_path_put_module_comment():
+    api = '/api/v1/module/65a8041efbc5863974a6d4e4'
+    method = 'PUT'
+    assert not is_public_path(api, method)
+
 def test_is_public_path_module_search():
     api = '/api/v1/module/search'
     method = 'GET'
@@ -44,10 +54,6 @@ def test_is_public_path_module_search_advanced():
 
 def test_is_public_path_get_module_no_of_recommend():
     api = '/api/v1/module/65a8041efbc5863974a6d4e4/recommend'
-    method = 'GET'
-    assert is_public_path(api, method)
-
-    api = '/api/v1/module/65a8041efbc5863974a6d4e5/recommend'
     method = 'GET'
     assert is_public_path(api, method)
 
