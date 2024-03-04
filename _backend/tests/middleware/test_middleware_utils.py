@@ -27,13 +27,13 @@ def test_is_public_path_openapi():
     method = 'GET'
     assert is_public_path(api, method)
 
-def test_is_public_path_module_search():
-    api = '/api/v1/module/search'
+def test_is_public_path_get_module():
+    api = '/api/v1/module/65a8041efbc5863974a6d4e4'
     method = 'GET'
     assert is_public_path(api, method)
 
-def test_is_public_path_get_module():
-    api = '/api/v1/module/65a8041efbc5863974a6d4e4'
+def test_is_public_path_module_search():
+    api = '/api/v1/module/search'
     method = 'GET'
     assert is_public_path(api, method)
 
