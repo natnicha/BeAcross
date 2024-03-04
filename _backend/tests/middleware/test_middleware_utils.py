@@ -97,6 +97,11 @@ def test_not_is_public_path_post_module_comment():
     method = 'POST'
     assert not is_public_path(api, method)
 
+def test_not_is_public_path_delete_module_comment():
+    api = '/api/v1/module/comment/65a8041efbc5863974a6d4e4'
+    method = 'DELETE'
+    assert not is_public_path(api, method)
+
 def test_is_public_path_get_semester():
     api = '/api/v1/semester?sortby=name&orderby=desc'
     method = 'GET'
