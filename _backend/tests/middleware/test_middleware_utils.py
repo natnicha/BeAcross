@@ -55,3 +55,8 @@ def test_is_public_path_get_module_suggested():
     api = '/api/v1/module/65a8041efbc5863974a6d4e4/suggested'
     method = 'GET'
     assert is_public_path(api, method)
+
+def test_is_public_path_get_module_comment():
+    api = '/api/v1/module/65ac17b1d2815b505f3e352d/comment'
+    method = 'GET'
+    assert is_public_path(api, method)
