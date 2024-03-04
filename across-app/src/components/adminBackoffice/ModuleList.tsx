@@ -1,3 +1,10 @@
+import { useEffect, useState, useRef } from "react";
+import {
+  SuggestionItem,
+  getSuggestion,
+} from "../../services/suggestionServices";
+import SuggestionPopup from "../../components/SuggestionResultPopup";
+import { usePopups } from "../../PopupContext";
 import { useEffect, useState } from "react";
 import ModuleEditPopup from "./ModuleEditPopup";
 
@@ -10,6 +17,10 @@ interface ModuleItem {
   degree_level?: string;
   module_name?: string;
   type?: string;
+  no_of_suggested_modules?: number;
+  module_id: string;
+  is_recommended: boolean;
+  no_of_recommend: number;
 }
 
 interface ModuleData {
@@ -23,6 +34,15 @@ interface ModuleData {
 
 export default function ModuleList() {
   const [moduleData, setModuleDatas] = useState<ModuleData | null>(null);
+
+  //Suggestion Module Session
+  const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } =
+    usePopups();
+  const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
+  const [suggestedItem, setSuggestedItem] = useState<
+    SuggestionItem[] | undefined
+  >([]);
+  const popupRef = useRef<HTMLDivElement>(null);
   const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
   const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
 
@@ -39,7 +59,7 @@ export default function ModuleList() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)`,
+      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&limit=200`,
       {
         method: "GET",
       }
@@ -52,6 +72,46 @@ export default function ModuleList() {
         console.error("Error fetching module list data:", error);
       });
   }, []);
+
+  //Suggestion Module Session
+  const handleSuggestionClick = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+    item: ModuleItem
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      const response = await getSuggestion(item.module_id);
+      if (response.suggested_module_items) {
+        setSelectedItem(item);
+        setSuggestedItem(response.suggested_module_items);
+        openSuggestionPopup(response.suggested_module_items);
+      } else {
+        // Handle case where no suggested_module_items are present
+        console.error("No suggestion items found.");
+      }
+    } catch (error) {
+      console.error("Error handling recommendation:", error);
+    }
+  };
+
+  // Close the popup if clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
+        closeAllPopups();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [closeAllPopups]);
 
   const handleDeleteStud = (id: string) => {
     if (window.confirm("Do you want to delete this module?")) {
@@ -106,9 +166,28 @@ export default function ModuleList() {
           <strong>Degree Level</strong>
         </div>
         <div className="search-column">
+          <strong>Module Type</strong>
+        </div>
+        <div className="search-column">
+          <strong>University</strong>
+        </div>
+        <div className="search-column">
+          <strong>Module Code</strong>
+        </div>
+        <div className="search-column">
+          <strong>Module Name</strong>
+        </div>
+        <div className="search-column">
+          <strong>ECTS Credits</strong>
+        </div>
+        <div className="search-column">
+          <strong>Degree Level</strong>
+        </div>
+        <div className="search-column">
           <strong>University</strong>
         </div>
       </div>
+
       {/*Display Items*/}
       {moduleData ? (
         <div className="search-table">
@@ -130,9 +209,18 @@ export default function ModuleList() {
                 <div className="search-column" id="university">
                   {item.university}
                 </div>
+
+                {/* Button Feature */}
                 <div className="search-feature-control-btn">
-                  <button className="custom-btn-number btn custom-link">
-                    <i className="bi bi-stars"></i> Suggestion Modules
+                  <button
+                    className={"custom-btn-number btn custom-link"}
+                    onClick={(event) => handleSuggestionClick(event, item)}
+                    disabled={item.no_of_suggested_modules === 0}
+                  >
+                    <i className="bi bi-stars"></i> Suggestion Modules{" "}
+                    <span className="number-count">
+                      {item.no_of_suggested_modules}
+                    </span>
                   </button>
                   <button
                     className="custom-btn-number btn custom-link"
@@ -158,6 +246,15 @@ export default function ModuleList() {
         <ModuleEditPopup
           selectedItem={selectedItem}
           onClose={closeDetailPopup}
+        />
+      )}
+
+      {isSuggestionPopupOpen && selectedItem && suggestedItem && (
+        <SuggestionPopup
+          content=""
+          selectedResultItem={selectedItem}
+          onClose={closeAllPopups}
+          suggestionItems={suggestedItem} // Providing an empty array as a default
         />
       )}
     </div>

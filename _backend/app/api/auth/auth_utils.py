@@ -159,29 +159,46 @@ def set_user_info_from_jwt(request: Request):
 def has_permission(request: Request):
     api = request.url.path
     method = request.method
-    if api.__contains__("/recommend"):
-        if request.state.role != "student":
+    if api.__contains__("/recommend") and method in ['POST', 'DELETE']:
+        if request.state.role == "student":
+            return True
+        else:
             return False
     if api.__contains__("/module/comment"):
-        if request.state.role != "student":
+        if request.state.role == "student":
+            return True
+        else:
             return False
-    if api.__contains__("/api/v1/module") and method in ['POST', 'PUT', 'DELETE']:
-        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
-            return False
-    if api.__contains__("/user/profile/list"):
-        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
-            return False
-    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "DELETE": #/api/v1/user/{user-id}
-        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
-            return False
-    if api.endswith("/user/") and method == "DELETE": #/api/v1/user/
+    put_delete_module_pattern = '''^/api/v1/module/[a-zA-Z0-9]+$'''
+    if re.match(put_delete_module_pattern, api) and method in ['PUT', 'DELETE']:
+        if request.state.role == "uni-admin" or request.state.role == "sys-admin":
+            return True
+    post_module_pattern = '''^/api/v1/module'''
+    if re.match(post_module_pattern, api) and method == 'POST':
+        if request.state.role == "uni-admin" or request.state.role == "sys-admin":
+            return True
+    if api.endswith("/user/profile"):
         return True
-    if api.__contains__("/user/") and (not api.endswith("/user/")) and method == "PUT": #/api/v1/user/{user-id}
-        if not (request.state.role == "uni-admin" or request.state.role == "sys-admin"):
+    if api.endswith("/user/profile/list"):
+        if request.state.role == "uni-admin" or request.state.role == "sys-admin":
+            return True
+    user_admin_management_pattern = '''^/api/v1/user/[a-zA-Z0-9]+$'''
+    if re.match(user_admin_management_pattern, api) and method == "DELETE": #/api/v1/user/{user-id}
+        if request.state.role == "uni-admin" or request.state.role == "sys-admin":
+            return True
+        else:
             return False
-    if api.endswith("/user/") and method == "PUT": #/api/v1/user/
+    user_self_management_pattern = '''^/api/v1/user[/]*$'''
+    if re.match(user_self_management_pattern, api)  and method == "DELETE": #/api/v1/user
+        return True
+    if re.match(user_admin_management_pattern, api) and method == 'PUT':  #/api/v1/user/{user-id}
+        if request.state.role == "uni-admin" or request.state.role == "sys-admin":
+            return True
+        else:
+            return False
+    if re.match(user_self_management_pattern, api)  and method == "PUT": #/api/v1/user
         return True
     if api.__contains__("/personal-plan"):
-        if not (request.state.role == "student"):
-            return False
-    return True
+        if request.state.role == "student":
+            return True
+    return False

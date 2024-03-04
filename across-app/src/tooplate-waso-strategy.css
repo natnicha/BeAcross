@@ -1677,3 +1677,25 @@ ul {
   width: auto;
   max-width: 80%;
 }
+
+.transferibity {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  cursor: pointer;
+  }
+
+  .pointer-checkbox {
+    margin-right: 10px; /* Add space between the checkbox and the text */
+}
+
+.button-like-checkbox {
+  background: var(--primary-color);
+  cursor: pointer;
+  border-radius: 10px;
+  color: var(--white-color);
+  font-size: var(--copyright-text-font-size);
+  font-weight: var(--font-weight-bold);
+  padding: 5px 10px;
+  margin: 5px 0 10px 5px; /* top | right | bottom | left */
+}

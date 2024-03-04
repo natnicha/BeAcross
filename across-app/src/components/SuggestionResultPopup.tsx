@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { deleteRecommended, postRecommended } from '../services/recommendedServices';
 import ModuleDetailPopup from './ModuleDetailPopup';
 import CompareModuleDetailPopup from './CompareModuleDetailPopup';
+import { deleteTransferable, postTransferable } from '../services/suggestionServices';
 
 export interface SuggestionItem {
     content?: string;
@@ -29,8 +29,6 @@ interface PopupProps {
 
 const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
    
-    const navigate = useNavigate();
-    const location = useLocation();
     const user_role = sessionStorage.getItem('user_role');
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const [suggestedList, setSuggestedList] = useState<SuggestionItem[]>(props.suggestionItems);
@@ -43,15 +41,14 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     // Hook all popup control to PopupContext
     const { openModuleDetailFromSuggestionPopup, isModuleDetailFromSuggestionPopup, openCompareDetailFromSuggestionPopup, isCompareDetailFromSuggestionPopup, closeAllPopups, closeEverythingThatOpenFromSuggestionPopup } = usePopups();
     const popupRef = useRef<HTMLDivElement>(null);
+    const [responseMessages, setResponseMessages] = useState<{ [key: string]: { message: string; style: React.CSSProperties } }>({});
+    const [checkedStates, setCheckedStates] = useState<{ [module_id: string]: boolean }>({});
 
     const closeCurrentContextPopup = () => {
         closeEverythingThatOpenFromSuggestionPopup();
     };
 
     const closeAllPopup = () => {
-        const searchParams = new URLSearchParams(location.search);
-        searchParams.delete('module');
-        navigate({ pathname: '/search', search: searchParams.toString() });
         closeAllPopups();
     };
 
@@ -122,6 +119,60 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
         return () => { document.removeEventListener('mousedown', handleClickOutside); };
     }, [closeAllPopup]);
 
+    //approved/Unapprved transferibility
+    const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>, item: SuggestionItem) => {
+        event.preventDefault();
+        event.stopPropagation();
+    
+        const isChecked = event.target.checked;
+        // Directly update the checkedStates with the current isChecked value
+        setCheckedStates(prevState => ({ ...prevState, [item.module_id]: isChecked }));
+    
+        let response;
+    
+        // Decide which API to call based on the isChecked value
+        if (isChecked) {
+            // If the checkbox is now checked, call postTransferable API
+            response = await postTransferable(props.selectedResultItem.module_id, item.module_id);
+        } else {
+            // If the checkbox is now unchecked, call deleteTransferable API
+            response = await deleteTransferable(props.selectedResultItem.module_id, item.module_id);
+        }
+    
+        // Prepare to update the response message based on the API response
+        let newResponseMessages = { ...responseMessages };
+    
+        // Update or delete the message for this specific item based on the response
+        if (response && response.message) {
+            newResponseMessages[item.module_id] = {
+                message: response.message,
+                style: {
+                    margin: "15px",
+                    color: isChecked ? "green" : "red" // Adjusted to directly use isChecked for color determination
+                }
+            };
+        } else {
+            // If no message from response, consider removing the message for this item
+            delete newResponseMessages[item.module_id];
+        }
+    
+        // Update the state with the new response messages
+        setResponseMessages(newResponseMessages);
+    };
+
+    useEffect(() => {
+        const initialCheckedStates = props.suggestionItems.reduce((acc, item) => {
+          acc[item.module_id] = true; // Set each item as checked by default
+          return acc;
+        }, {} as { [module_id: string]: boolean });
+        setCheckedStates(initialCheckedStates);
+      }, [props.suggestionItems]);
+
+    const shouldDisableRowClick = () => {
+    const currentUrl = window.location.href;
+    return currentUrl.includes("http://localhost:3000/admin/list");
+    };
+
     return (
         <div className="module-detail">
             <div className="popup-backdrop">
@@ -153,7 +204,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                         </div>
                         {suggestedList && suggestedList.map((item, index) => (
                             <div className="search-table" key={index}>
-                                <div className="search-row" onClick={() => handleRowClick(item as SuggestionItem)}>
+                                <div className="search-row" onClick={() => !shouldDisableRowClick() && handleRowClick(item as SuggestionItem)}>
                                     <div className="search-column" id="moduleCode">
                                         {item.module_code}
                                     </div>
@@ -173,7 +224,26 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                         {item.university}
                                     </div>
                                     
+                                    {responseMessages[item.module_id] && (
+                                    <p style={responseMessages[item.module_id].style}>
+                                        {responseMessages[item.module_id].message}
+                                    </p>
+                                    )}
                                     <div className="search-feature-control-btn">
+                                        {/* Button-like Checkbox for Transferability */}
+                                        {user_role === 'uni-admin' && (
+                                        <label className="button-like-checkbox" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
+                                            <input 
+                                            type="checkbox" 
+                                            className="hidden-checkbox"
+                                            checked={checkedStates[item.module_id]} // Controlled component
+                                            onChange={(event) => handleCheckboxChange(event, item)}
+                                            id={`checkbox-${item.module_id}`}
+                                            />
+                                            <span>Transferable&nbsp;&nbsp;</span>
+                                        </label>
+                                        )}
+                                        
                                         {user_role === 'student' ? (
                                             <button 
                                                 className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
@@ -186,8 +256,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                             <button className="custom-btn-grey-number btn custom-link" style={{ width: '20%'}} disabled>
                                                 <i className="bi bi-hand-thumbs-up"></i> Recommended <span className="number-count">{item.no_of_recommend}</span>
                                             </button>
-                                        )}
-
+                                        )}    
                                         <button className="custom-btn-green-number btn custom-link"
                                             onClick={(event) => handleCompareClick(event, item)}>
                                             Compare
