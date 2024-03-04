@@ -32,12 +32,12 @@ def test_is_public_path_get_module():
     method = 'GET'
     assert is_public_path(api, method)
 
-def test_not_is_public_path_post_module_comment():
+def test_not_is_public_path_post_module():
     api = '/api/v1/module'
     method = 'POST'
     assert not is_public_path(api, method)
 
-def test_not_is_public_path_put_module_comment():
+def test_not_is_public_path_put_module():
     api = '/api/v1/module/65a8041efbc5863974a6d4e4'
     method = 'PUT'
     assert not is_public_path(api, method)
