@@ -1,8 +1,6 @@
 from fastapi.testclient import TestClient
 from app.middleware.middleware_utils import is_public_path
 
-from app.config.config_utils import load_env
-from app.api.auth.auth import get_database
 from main import app
 
 client = TestClient(app)
