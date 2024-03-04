@@ -60,3 +60,8 @@ def test_is_public_path_get_module_comment():
     api = '/api/v1/module/65ac17b1d2815b505f3e352d/comment'
     method = 'GET'
     assert is_public_path(api, method)
+
+def test_is_public_path_get_semester():
+    api = '/api/v1/semester?sortby=name&orderby=desc'
+    method = 'GET'
+    assert is_public_path(api, method)
