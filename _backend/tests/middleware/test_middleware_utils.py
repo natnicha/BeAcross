@@ -142,3 +142,8 @@ def test_not_is_public_path_put_user_profile_by_admin():
     method = 'PUT'
     assert not is_public_path(api, method)
 
+def test_not_is_public_path_put_user_profile_by_auth():
+    api = '/api/v1/user'
+    method = 'PUT'
+    assert not is_public_path(api, method)
+
