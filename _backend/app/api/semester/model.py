@@ -11,7 +11,7 @@ class BaseModel(BaseModel):
 class SemesterResponseItem(BaseModel):
     id: str
     name: str
-    created_at: datetime
+    created_at: datetime.datetime
 
 class SemesterResponseData(BaseModel):
     total_items: int = 0
