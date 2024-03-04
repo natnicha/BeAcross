@@ -126,3 +126,8 @@ def test_is_public_path_get_semester():
     api = '/api/v1/semester?sortby=name&orderby=desc'
     method = 'GET'
     assert is_public_path(api, method)
+
+def test_not_is_public_path_get_user_profile():
+    api = '/api/v1/user/profile'
+    method = 'GET'
+    assert not is_public_path(api, method)
