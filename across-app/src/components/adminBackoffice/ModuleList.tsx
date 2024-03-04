@@ -5,7 +5,6 @@ import {
 } from "../../services/suggestionServices";
 import SuggestionPopup from "../../components/SuggestionResultPopup";
 import { usePopups } from "../../PopupContext";
-import { useEffect, useState } from "react";
 import ModuleEditPopup from "./ModuleEditPopup";
 
 interface ModuleItem {
@@ -18,7 +17,6 @@ interface ModuleItem {
   module_name?: string;
   type?: string;
   no_of_suggested_modules?: number;
-  module_id: string;
   is_recommended: boolean;
   no_of_recommend: number;
 }
@@ -38,7 +36,6 @@ export default function ModuleList() {
   //Suggestion Module Session
   const { openSuggestionPopup, isSuggestionPopupOpen, closeAllPopups } =
     usePopups();
-  const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
   const [suggestedItem, setSuggestedItem] = useState<
     SuggestionItem[] | undefined
   >([]);
@@ -82,7 +79,7 @@ export default function ModuleList() {
     event.stopPropagation();
 
     try {
-      const response = await getSuggestion(item.module_id);
+      const response = await getSuggestion(item.module_id ?? "");
       if (response.suggested_module_items) {
         setSelectedItem(item);
         setSuggestedItem(response.suggested_module_items);
@@ -166,24 +163,6 @@ export default function ModuleList() {
           <strong>Degree Level</strong>
         </div>
         <div className="search-column">
-          <strong>Module Type</strong>
-        </div>
-        <div className="search-column">
-          <strong>University</strong>
-        </div>
-        <div className="search-column">
-          <strong>Module Code</strong>
-        </div>
-        <div className="search-column">
-          <strong>Module Name</strong>
-        </div>
-        <div className="search-column">
-          <strong>ECTS Credits</strong>
-        </div>
-        <div className="search-column">
-          <strong>Degree Level</strong>
-        </div>
-        <div className="search-column">
           <strong>University</strong>
         </div>
       </div>
@@ -252,7 +231,7 @@ export default function ModuleList() {
       {isSuggestionPopupOpen && selectedItem && suggestedItem && (
         <SuggestionPopup
           content=""
-          selectedResultItem={selectedItem}
+          selectedResultItem={selectedItem as SuggestionItem} // Fix: Update the type of selectedItem
           onClose={closeAllPopups}
           suggestionItems={suggestedItem} // Providing an empty array as a default
         />
