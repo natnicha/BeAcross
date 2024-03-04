@@ -17,6 +17,16 @@ def test_is_public_path_auth():
     method = 'POST'
     assert is_public_path(api, method)
 
+def test_is_public_path_auth_register():
+    api = '/api/v1/auth/register'
+    method = 'POST'
+    assert is_public_path(api, method)
+
+def test_is_public_path_auth_login():
+    api = '/api/v1/auth/login'
+    method = 'POST'
+    assert is_public_path(api, method)
+
 def test_is_public_path_docs():
     api = '/docs'
     method = 'GET'
