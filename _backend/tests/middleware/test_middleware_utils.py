@@ -32,11 +32,21 @@ def test_is_public_path_module_search():
     method = 'GET'
     assert is_public_path(api, method)
 
-def test_is_public_path_get_module_recommend():
-    api = 'api/v1/module/65a8041efbc5863974a6d4e4/recommend'
+def test_is_public_path_module_search_advanced():
+    api = '/api/v1/module/search/advanced?term=("university":Chemnitz)&limit=200&sortby=no_of_suggested_modules&orderby=desc'
     method = 'GET'
     assert is_public_path(api, method)
 
-    api = 'api/v1/module/65a8041efbc5863974a6d4e5/recommend'
+def test_is_public_path_get_module_no_of_recommend():
+    api = '/api/v1/module/65a8041efbc5863974a6d4e4/recommend'
+    method = 'GET'
+    assert is_public_path(api, method)
+
+    api = '/api/v1/module/65a8041efbc5863974a6d4e5/recommend'
+    method = 'GET'
+    assert is_public_path(api, method)
+
+def test_is_public_path_get_module_suggested():
+    api = '/api/v1/module/65a8041efbc5863974a6d4e4/suggested'
     method = 'GET'
     assert is_public_path(api, method)
