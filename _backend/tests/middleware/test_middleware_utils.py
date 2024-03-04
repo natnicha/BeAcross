@@ -117,6 +117,11 @@ def test_not_is_public_path_get_personal_plan_by_module_id():
     method = 'GET'
     assert not is_public_path(api, method)
 
+def test_not_is_public_path_delete_personal_plan():
+    api = '/api/v1/personal-plan/65a8041efbc5863974a6d4e4'
+    method = 'DELETE'
+    assert not is_public_path(api, method)
+
 def test_is_public_path_get_semester():
     api = '/api/v1/semester?sortby=name&orderby=desc'
     method = 'GET'
