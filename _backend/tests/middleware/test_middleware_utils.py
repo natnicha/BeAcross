@@ -131,3 +131,9 @@ def test_not_is_public_path_get_user_profile():
     api = '/api/v1/user/profile'
     method = 'GET'
     assert not is_public_path(api, method)
+
+def test_not_is_public_path_get_user_profile_list():
+    api = '/api/v1/user/profile/list'
+    method = 'GET'
+    assert not is_public_path(api, method)
+
