@@ -102,9 +102,19 @@ def test_not_is_public_path_delete_module_comment():
     method = 'DELETE'
     assert not is_public_path(api, method)
 
-def test_not_is_public_path_post_semester():
+def test_not_is_public_path_post_personal_plan():
     api = '/api/v1/personal-plan'
     method = 'POST'
+    assert not is_public_path(api, method)
+
+def test_not_is_public_path_get_personal_plan():
+    api = '/api/v1/personal-plan'
+    method = 'GET'
+    assert not is_public_path(api, method)
+
+def test_not_is_public_path_get_personal_plan_by_module_id():
+    api = '/api/v1/personal-plan?module_id=65a8041efbc5863974a6d4e4'
+    method = 'GET'
     assert not is_public_path(api, method)
 
 def test_is_public_path_get_semester():
