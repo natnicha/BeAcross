@@ -26,9 +26,7 @@ import app.crud.users as USERS
 from app.api.module.model import UpdateTransferabilityModel
 from app.transferability.similiarity_run import add_similarity, combine_similarity_results_and_write_back, remove_similarity_on_delete, start_similarity_for_one, add_module_to_res, start_similarity_for_one_after_update, remove_similarity
 
-#del CRUD
 from app.crud.modules import delete_one
-from app.api.auth.auth_utils import get_payload_from_auth
 from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
 from app.crud.modules import find_one
