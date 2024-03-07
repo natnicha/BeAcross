@@ -90,3 +90,21 @@ def test_post_module_recommend_already_performed_recommend(mocker):
 #         json={"module_id":"65ac17b1d2815b505f3e352d"}
 #     )
 #     assert response.status_code == status.HTTP_201_CREATED
+
+
+
+
+
+
+
+
+
+
+def test_delete_module_recommend_no_authorization():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/module/65ac17b1d2815b505f3e352d/recommend",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
