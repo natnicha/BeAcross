@@ -1033,11 +1033,23 @@ def test_get_suggested_module_module_id_incorrect_format():
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-def test_get_suggested_module_not_found(mocker):
+def test_get_suggested_module_module_not_found(mocker):
     load_env()
     init_setting()
     module_id = '65ac17b1d2815b505f3e352d'
     mocker.patch('app.crud.modules.count_by_id', return_value=0)
+    response = client.get(
+        url=f'/api/v1/module/{module_id}/suggested',
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_get_suggested_module_no_suggested_module_found(mocker):
+    load_env()
+    init_setting()
+    module_id = '65ac17b1d2815b505f3e352d'
+    mocker.patch('app.crud.modules.count_by_id', return_value=1)
+    mocker.patch('app.owl.modules.find_suggested_modules', return_value=[])
     response = client.get(
         url=f'/api/v1/module/{module_id}/suggested',
         headers={"Content-Type":"application/json"}
