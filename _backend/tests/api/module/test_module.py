@@ -677,3 +677,22 @@ def test_search_module_student_success_without_recommend(mocker):
     assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["items"][0]["is_recommended"]  == False
+
+
+
+
+
+
+
+
+
+
+def test_search_advanced_module_not_found(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.modules.advanced_count', return_value=0)
+    response = client.get(
+        url=f'/api/v1/module/search/advanced?term=("university":Chemnitz)',
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
