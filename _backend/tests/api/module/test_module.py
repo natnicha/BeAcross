@@ -427,3 +427,14 @@ def test_delete_module_comment_module_id_incorrect_format():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_delete_module_comment_not_found(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.module_comment.find', return_value={})
+    module_id = "65ac17b1d2815b505f3e352d"
+    response = client.delete(
+        url=f"/api/v1/module/comment/{module_id}",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
