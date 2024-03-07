@@ -81,16 +81,17 @@ def test_post_module_recommend_already_performed_recommend(mocker):
     )
     assert response.status_code == status.HTTP_409_CONFLICT
 
-# def test_post_module_recommend_success(mocker):
-#     load_env()
-#     init_setting()
-#     mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={})
-#     response = client.post(
-#         url="/api/v1/module/recommend",
-#         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
-#         json={"module_id":"65ac17b1d2815b505f3e352d"}
-#     )
-#     assert response.status_code == status.HTTP_201_CREATED
+def test_post_module_recommend_success(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={})
+    mocker.patch('app.crud.module_recommend.insert_one', return_value={})
+    response = client.post(
+        url="/api/v1/module/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={"module_id":"65ac17b1d2815b505f3e352d"}
+    )
+    assert response.status_code == status.HTTP_201_CREATED
 
 
 
