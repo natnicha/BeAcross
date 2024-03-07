@@ -27,3 +27,12 @@ def test_get_personal_plan_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_get_personal_plan_uni_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.get(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
