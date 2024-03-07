@@ -347,3 +347,16 @@ def test_post_module_comment_sys_admin_forbidden():
         json={}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_post_module_comment_module_id_incorrect_format():
+    load_env()
+    init_setting()
+    response = client.post(
+        url="/api/v1/module/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+            "module_id": "abc",
+            "message": "this course is awesome"
+        }
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
