@@ -135,3 +135,13 @@ def test_delete_module_recommend_module_id_incorrect_format():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_delete_module_recommend_not_found(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={})
+    response = client.delete(
+        url="/api/v1/module/65ac17b1d2815b505f3e352d/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
