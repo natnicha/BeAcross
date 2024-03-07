@@ -29,7 +29,7 @@ def test_post_no_request_body():
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()["message"] == "no request body provided"
 
-def test_module_recommend_no_authorization():
+def test_post_module_recommend_no_authorization():
     load_env()
     init_setting()
     response = client.post(
@@ -39,7 +39,7 @@ def test_module_recommend_no_authorization():
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-def test_module_recommend_uni_admin_forbidden():
+def test_post_module_recommend_uni_admin_forbidden():
     load_env()
     init_setting()
     response = client.post(
@@ -49,7 +49,7 @@ def test_module_recommend_uni_admin_forbidden():
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
-def test_module_recommend_sys_admin_forbidden():
+def test_post_module_recommend_sys_admin_forbidden():
     load_env()
     init_setting()
     response = client.post(
@@ -59,7 +59,7 @@ def test_module_recommend_sys_admin_forbidden():
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
-def test_module_recommend_module_id_incorrect_format():
+def test_post_module_recommend_module_id_incorrect_format():
     load_env()
     init_setting()
     response = client.post(
@@ -69,7 +69,7 @@ def test_module_recommend_module_id_incorrect_format():
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-def test_module_recommend_already_performed_recommend(mocker):
+def test_post_module_recommend_already_performed_recommend(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={'_id': ObjectId('65e8c8168c36c28a62742e5d'), 'module_id': ObjectId('65ac17b1d2815b505f3e352d'), 'user_id': ObjectId('65e8c7904a8c3c22bf839569')})
@@ -79,3 +79,14 @@ def test_module_recommend_already_performed_recommend(mocker):
         json={"module_id":"65ac17b1d2815b505f3e352d"}
     )
     assert response.status_code == status.HTTP_409_CONFLICT
+
+# def test_post_module_recommend_success(mocker):
+#     load_env()
+#     init_setting()
+#     mocker.patch('app.crud.module_recommend.get_module_recommend', return_value=[])
+#     response = client.post(
+#         url="/api/v1/module/recommend",
+#         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+#         json={"module_id":"65ac17b1d2815b505f3e352d"}
+#     )
+#     assert response.status_code == status.HTTP_201_CREATED
