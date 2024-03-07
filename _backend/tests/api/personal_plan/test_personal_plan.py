@@ -54,3 +54,31 @@ def test_get_personal_plan_module_id_incorrect_format():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_get_personal_plan_student_success(mocker):
+    load_env()
+    init_setting()
+    personal_plans = [{
+        "_id" : ObjectId("65e3ed3477dc05db2ccce8ad"),
+        "user_id" : ObjectId("65c277e1be7a7e961b48a549"),
+        "semester_id" : ObjectId("65d7a7cc2b35547c027a9d5e"),
+        "module_id" : ObjectId("65ac17b1d2815b505f3e3673"),
+        "created_at" : 1516239022
+    }]
+    mocker.patch('app.crud.personal_plans.get_by_user_id_and_module_id', return_value=personal_plans)
+    semesters = [{
+        "_id" : ObjectId("65d9aa1e2b35547c027a9de9"),
+        "name" : "summer 2025",
+        "created_at" : 1516239022
+    },
+    {
+        "_id" : ObjectId("65d7a7cc2b35547c027a9d5e"),
+        "name" : "winter 2024/25",
+        "created_at" : 1516239022
+    }]
+    mocker.patch('app.crud.semesters.find_all', return_value=semesters)
+    response = client.get(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_200_OK
