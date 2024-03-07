@@ -377,3 +377,23 @@ def test_post_module_comment_success(mocker):
         }
     )
     assert response.status_code == status.HTTP_201_CREATED
+
+
+
+
+
+
+
+
+
+
+
+def test_delete_module_comment_guest_unauthorized():
+    load_env()
+    init_setting()
+    module_id = "65ac17b1d2815b505f3e352d"
+    response = client.delete(
+        url=f"/api/v1/module/comment/{module_id}",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
