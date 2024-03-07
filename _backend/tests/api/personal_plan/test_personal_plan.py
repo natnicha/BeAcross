@@ -101,3 +101,22 @@ def test_get_personal_plan_student_success(mocker):
         }
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["data"] == expected_response
+
+
+
+
+
+
+
+
+
+
+
+def test_post_personal_plan_guest_unauthorized():
+    load_env()
+    init_setting()
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
