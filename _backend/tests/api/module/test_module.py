@@ -1,11 +1,9 @@
 from bson import ObjectId
-from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from fastapi import status
 
 from app.db.settings import Settings
 from app.config.config_utils import load_env
-from app.config.config_utils import env_config
 from main import app
 
 client = TestClient(app)
@@ -70,3 +68,14 @@ def test_module_recommend_module_id_incorrect_format():
         json={"module_id":"abcd"}
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_module_recommend_already_performed_recommend(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={'_id': ObjectId('65e8c8168c36c28a62742e5d'), 'module_id': ObjectId('65ac17b1d2815b505f3e352d'), 'user_id': ObjectId('65e8c7904a8c3c22bf839569')})
+    response = client.post(
+        url="/api/v1/module/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={"module_id":"65ac17b1d2815b505f3e352d"}
+    )
+    assert response.status_code == status.HTTP_409_CONFLICT
