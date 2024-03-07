@@ -12,6 +12,8 @@ class EnvConfig:
     EMAIL_SENDER= None
     EMAIL_PASSWORD= None
 
+    AZURE = None
+
 env_config = EnvConfig()
 
 def load_env():
@@ -25,6 +27,8 @@ def load_env():
 
     env_config.EMAIL_SENDER = os.getenv('EMAIL_SENDER')
     env_config.EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
+    env_config.AZURE = os.getenv('AZURE')
 
 def setup_logging():
     logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
