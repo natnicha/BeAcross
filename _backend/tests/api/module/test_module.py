@@ -318,7 +318,7 @@ def test_get_module_comment_sys_admin(mocker):
 
 
 
-def test_post_module_comment_guest():
+def test_post_module_comment_guest_unauthorized():
     load_env()
     init_setting()
     response = client.post(
@@ -327,3 +327,13 @@ def test_post_module_comment_guest():
         json={}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_post_module_comment_uni_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.post(
+        url=f"/api/v1/module/comment",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"},
+        json={}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
