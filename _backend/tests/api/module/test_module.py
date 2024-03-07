@@ -337,3 +337,13 @@ def test_post_module_comment_uni_admin_forbidden():
         json={}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_post_module_comment_sys_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.post(
+        url=f"/api/v1/module/comment",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"},
+        json={}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
