@@ -1013,3 +1013,22 @@ def test_get_module_student_without_recommend(mocker):
     assert response.json()["data"][0]["no_of_recommend"]  == 58
     assert response.json()["data"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"][0]["is_recommended"]  == False
+
+
+
+
+
+
+
+
+
+
+def test_get_suggested_module_module_id_incorrect_format():
+    load_env()
+    init_setting()
+    module_id = 'abc'
+    response = client.get(
+        url=f'/api/v1/module/{module_id}/suggested',
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
