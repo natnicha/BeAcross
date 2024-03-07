@@ -483,7 +483,7 @@ def test_search_module_guest_success(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.modules.count', return_value=1)
-    modules_mock = [{
+    modules = [{
         "_id" : ObjectId("65ac17b1d2815b505f3e3557"),
         "name" : "Parallel programming",
         "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
@@ -495,7 +495,7 @@ def test_search_module_guest_success(mocker):
         "degree_level" : "Master"
     }]
 
-    mocker.patch('app.crud.modules.find', return_value=modules_mock)
+    mocker.patch('app.crud.modules.find', return_value=modules)
     mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
 
     suggested_modules = ["65ac1847d2815b505f3e3b96", "65ac1847d2815b505f3e3b95"]
@@ -506,12 +506,12 @@ def test_search_module_guest_success(mocker):
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["data"]["total_results"]  == len(modules_mock)
-    assert response.json()["data"]["total_items"]  == len(modules_mock)
-    assert response.json()["data"]["items"][0]["module_name"]  == modules_mock[0]["module_name"]
-    assert response.json()["data"]["items"][0]["content"] == modules_mock[0]["content"]
-    assert response.json()["data"]["items"][0]["program"]  == modules_mock[0]["program"]
-    assert response.json()["data"]["items"][0]["university"]  == modules_mock[0]["university"]
+    assert response.json()["data"]["total_results"]  == len(modules)
+    assert response.json()["data"]["total_items"]  == len(modules)
+    assert response.json()["data"]["items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["items"][0]["program"]  == modules[0]["program"]
+    assert response.json()["data"]["items"][0]["university"]  == modules[0]["university"]
     assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["items"][0]["is_recommended"]  == False
@@ -520,7 +520,7 @@ def test_search_module_uni_admin_success(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.modules.count', return_value=1)
-    modules_mock = [{
+    modules = [{
         "_id" : ObjectId("65ac17b1d2815b505f3e3557"),
         "name" : "Parallel programming",
         "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
@@ -532,7 +532,7 @@ def test_search_module_uni_admin_success(mocker):
         "degree_level" : "Master"
     }]
 
-    mocker.patch('app.crud.modules.find', return_value=modules_mock)
+    mocker.patch('app.crud.modules.find', return_value=modules)
     mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
 
     suggested_modules = ["65ac1847d2815b505f3e3b96", "65ac1847d2815b505f3e3b95"]
@@ -543,12 +543,12 @@ def test_search_module_uni_admin_success(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"},
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["data"]["total_results"]  == len(modules_mock)
-    assert response.json()["data"]["total_items"]  == len(modules_mock)
-    assert response.json()["data"]["items"][0]["module_name"]  == modules_mock[0]["module_name"]
-    assert response.json()["data"]["items"][0]["content"] == modules_mock[0]["content"]
-    assert response.json()["data"]["items"][0]["program"]  == modules_mock[0]["program"]
-    assert response.json()["data"]["items"][0]["university"]  == modules_mock[0]["university"]
+    assert response.json()["data"]["total_results"]  == len(modules)
+    assert response.json()["data"]["total_items"]  == len(modules)
+    assert response.json()["data"]["items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["items"][0]["program"]  == modules[0]["program"]
+    assert response.json()["data"]["items"][0]["university"]  == modules[0]["university"]
     assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["items"][0]["is_recommended"]  == False
@@ -557,7 +557,7 @@ def test_search_module_sys_admin_success(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.modules.count', return_value=1)
-    modules_mock = [{
+    modules = [{
         "_id" : ObjectId("65ac17b1d2815b505f3e3557"),
         "name" : "Parallel programming",
         "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
@@ -569,7 +569,7 @@ def test_search_module_sys_admin_success(mocker):
         "degree_level" : "Master"
     }]
 
-    mocker.patch('app.crud.modules.find', return_value=modules_mock)
+    mocker.patch('app.crud.modules.find', return_value=modules)
     mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
 
     suggested_modules = ["65ac1847d2815b505f3e3b96", "65ac1847d2815b505f3e3b95"]
@@ -580,12 +580,12 @@ def test_search_module_sys_admin_success(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"},
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["data"]["total_results"]  == len(modules_mock)
-    assert response.json()["data"]["total_items"]  == len(modules_mock)
-    assert response.json()["data"]["items"][0]["module_name"]  == modules_mock[0]["module_name"]
-    assert response.json()["data"]["items"][0]["content"] == modules_mock[0]["content"]
-    assert response.json()["data"]["items"][0]["program"]  == modules_mock[0]["program"]
-    assert response.json()["data"]["items"][0]["university"]  == modules_mock[0]["university"]
+    assert response.json()["data"]["total_results"]  == len(modules)
+    assert response.json()["data"]["total_items"]  == len(modules)
+    assert response.json()["data"]["items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["items"][0]["program"]  == modules[0]["program"]
+    assert response.json()["data"]["items"][0]["university"]  == modules[0]["university"]
     assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["items"][0]["is_recommended"]  == False
@@ -594,7 +594,7 @@ def test_search_module_student_success_with_recommend(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.modules.count', return_value=1)
-    modules_mock = [{
+    modules = [{
         "_id" : ObjectId("65ac17b1d2815b505f3e3557"),
         "name" : "Parallel programming",
         "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
@@ -606,7 +606,7 @@ def test_search_module_student_success_with_recommend(mocker):
         "degree_level" : "Master"
     }]
 
-    mocker.patch('app.crud.modules.find', return_value=modules_mock)
+    mocker.patch('app.crud.modules.find', return_value=modules)
     mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
 
     module_recommends = [{
@@ -630,12 +630,12 @@ def test_search_module_student_success_with_recommend(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["data"]["total_results"]  == len(modules_mock)
-    assert response.json()["data"]["total_items"]  == len(modules_mock)
-    assert response.json()["data"]["items"][0]["module_name"]  == modules_mock[0]["module_name"]
-    assert response.json()["data"]["items"][0]["content"] == modules_mock[0]["content"]
-    assert response.json()["data"]["items"][0]["program"]  == modules_mock[0]["program"]
-    assert response.json()["data"]["items"][0]["university"]  == modules_mock[0]["university"]
+    assert response.json()["data"]["total_results"]  == len(modules)
+    assert response.json()["data"]["total_items"]  == len(modules)
+    assert response.json()["data"]["items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["items"][0]["program"]  == modules[0]["program"]
+    assert response.json()["data"]["items"][0]["university"]  == modules[0]["university"]
     assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["items"][0]["is_recommended"]  == True
@@ -644,7 +644,7 @@ def test_search_module_student_success_without_recommend(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.modules.count', return_value=1)
-    modules_mock = [{
+    modules = [{
         "_id" : ObjectId("65ac17b1d2815b505f3e3557"),
         "name" : "Parallel programming",
         "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
@@ -656,7 +656,7 @@ def test_search_module_student_success_without_recommend(mocker):
         "degree_level" : "Master"
     }]
 
-    mocker.patch('app.crud.modules.find', return_value=modules_mock)
+    mocker.patch('app.crud.modules.find', return_value=modules)
     mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
     mocker.patch('app.crud.module_recommend.get_user_recommend', return_value=[])
 
@@ -668,12 +668,12 @@ def test_search_module_student_success_without_recommend(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
     )
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["data"]["total_results"]  == len(modules_mock)
-    assert response.json()["data"]["total_items"]  == len(modules_mock)
-    assert response.json()["data"]["items"][0]["module_name"]  == modules_mock[0]["module_name"]
-    assert response.json()["data"]["items"][0]["content"] == modules_mock[0]["content"]
-    assert response.json()["data"]["items"][0]["program"]  == modules_mock[0]["program"]
-    assert response.json()["data"]["items"][0]["university"]  == modules_mock[0]["university"]
+    assert response.json()["data"]["total_results"]  == len(modules)
+    assert response.json()["data"]["total_items"]  == len(modules)
+    assert response.json()["data"]["items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["items"][0]["program"]  == modules[0]["program"]
+    assert response.json()["data"]["items"][0]["university"]  == modules[0]["university"]
     assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["items"][0]["is_recommended"]  == False
@@ -696,3 +696,51 @@ def test_search_advanced_module_not_found(mocker):
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_search_advanced_guest_success_with_recommend(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.modules.advanced_count', return_value=1)
+    modules = [{
+        "_id" : ObjectId("65ac17b1d2815b505f3e3557"),
+        "name" : "Parallel programming",
+        "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
+        "program" : "Applied Computer Science",
+        "university" : "Technische Universitat Chemnitz",
+        "degree_program" : "Applied Computer Science",
+        "module_code" : "561070",
+        "ects" : 5,
+        "degree_level" : "Master"
+    }]
+    mocker.patch('app.crud.modules.advanced_find', return_value=modules)
+    mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
+
+    module_recommends = [{
+        "_id" : ObjectId("65b69045a7465e50f5ef6c87"),
+        "module_id" : ObjectId("65ac17b1d2815b505f3e35df"),
+        "user_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "created_at" : 1516239022
+    },{
+        "_id" : ObjectId("65b69045a7465e50f5ef6c88"),
+        "module_id" : ObjectId("65ac17b1d2815b505f3e3557"),
+        "user_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "created_at" : 1516239022
+    }]
+    mocker.patch('app.crud.module_recommend.get_user_recommend', return_value=module_recommends)
+
+    suggested_modules = ["65ac1847d2815b505f3e3b96", "65ac1847d2815b505f3e3b95"]
+    mocker.patch('app.owl.modules.find_suggested_modules', return_value=suggested_modules)
+    response = client.get(
+        url=f'/api/v1/module/search/advanced?term=("university":Chemnitz)',
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["data"]["total_results"]  == len(modules)
+    assert response.json()["data"]["total_items"]  == len(modules)
+    assert response.json()["data"]["items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["items"][0]["program"]  == modules[0]["program"]
+    assert response.json()["data"]["items"][0]["university"]  == modules[0]["university"]
+    assert response.json()["data"]["items"][0]["no_of_recommend"]  == 58
+    assert response.json()["data"]["items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
+    assert response.json()["data"]["items"][0]["is_recommended"]  == False
