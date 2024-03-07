@@ -417,3 +417,13 @@ def test_delete_module_comment_sys_admin_forbidden():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"},
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_delete_module_comment_module_id_incorrect_format():
+    load_env()
+    init_setting()
+    module_id = "abc"
+    response = client.delete(
+        url=f"/api/v1/module/comment/{module_id}",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
