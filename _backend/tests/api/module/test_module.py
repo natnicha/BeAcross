@@ -83,7 +83,7 @@ def test_post_module_recommend_already_performed_recommend(mocker):
 # def test_post_module_recommend_success(mocker):
 #     load_env()
 #     init_setting()
-#     mocker.patch('app.crud.module_recommend.get_module_recommend', return_value=[])
+#     mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={})
 #     response = client.post(
 #         url="/api/v1/module/recommend",
 #         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
@@ -140,6 +140,16 @@ def test_delete_module_recommend_not_found(mocker):
     load_env()
     init_setting()
     mocker.patch('app.crud.module_recommend.get_module_recommend', return_value={})
+    response = client.delete(
+        url="/api/v1/module/65ac17b1d2815b505f3e352d/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_delete_module_recommend_not_found(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.module_recommend.get_module_recommend', return_value=[])
     response = client.delete(
         url="/api/v1/module/65ac17b1d2815b505f3e352d/recommend",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
