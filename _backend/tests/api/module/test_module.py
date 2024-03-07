@@ -14,13 +14,16 @@ student_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjVlOGM3OTA0
 uni_admin_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjVlNGQyMmJhMjFkMzA4ZWNhMGM1MzFkIiwicm9sZSI6InVuaS1hZG1pbiIsInVuaXZlcnNpdHkiOiJUZWNobmlzY2hlIFVuaXZlcnNpdGF0IENoZW1uaXR6IiwiaWF0IjoxNzA5ODA1MDYzLCJleHAiOjIwMjUxNjUwNjN9.NTlNeqRgG1bDuEJEZoutHPACf8PQcnq_RHMKLNze-vo"
 sys_admin_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjVlOThlMzZjOTRmNjU3ODNjM2JhZDRjIiwicm9sZSI6InN5cy1hZG1pbiIsInVuaXZlcnNpdHkiOiJUZWNobmlzY2hlIFVuaXZlcnNpdGF0IENoZW1uaXR6IiwiaWF0IjoxNzA5ODA1MTcwLCJleHAiOjIwMjUxNjUxNzB9.Dh1m07NfibQ9m3m7d_geowNpDwwkqtrJCaVqlW6vzjk"
 
-def test_post_no_request_body():
-    load_env()
+def init_setting():
     Settings.user_roles = {
         "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
         "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
         "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
     }
+
+def test_post_no_request_body():
+    load_env()
+    init_setting()
     response = client.post(
         url="/api/v1/module/recommend",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
@@ -30,11 +33,7 @@ def test_post_no_request_body():
 
 def test_module_recommend_no_authorization():
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = client.post(
         url="/api/v1/module/recommend",
         headers={"Content-Type":"application/json"},
@@ -44,11 +43,7 @@ def test_module_recommend_no_authorization():
 
 def test_module_recommend_uni_admin_forbidden():
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = client.post(
         url="/api/v1/module/recommend",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"},
@@ -58,11 +53,7 @@ def test_module_recommend_uni_admin_forbidden():
 
 def test_module_recommend_sys_admin_forbidden():
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = client.post(
         url="/api/v1/module/recommend",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"},
@@ -72,11 +63,7 @@ def test_module_recommend_sys_admin_forbidden():
 
 def test_module_recommend_module_id_incorrect_format():
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = client.post(
         url="/api/v1/module/recommend",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
