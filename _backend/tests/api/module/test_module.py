@@ -1,6 +1,7 @@
 from bson import ObjectId
 from fastapi.testclient import TestClient
 from fastapi import status
+from pydantic import BaseModel
 
 from app.db.settings import Settings
 from app.config.config_utils import load_env
@@ -360,3 +361,19 @@ def test_post_module_comment_module_id_incorrect_format():
         }
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_post_module_comment_success(mocker):
+    load_env()
+    init_setting()
+    class InsertedCursor(BaseModel):
+        inserted_id: int
+    mocker.patch('app.api.module.module.insert_module_comment', return_value=InsertedCursor(inserted_id=1))
+    response = client.post(
+        url="/api/v1/module/comment",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+            "module_id": "65ac17b1d2815b505f3e352d",
+            "message": "this course is awesome"
+        }
+    )
+    assert response.status_code == status.HTTP_201_CREATED
