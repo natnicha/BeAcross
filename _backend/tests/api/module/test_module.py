@@ -155,3 +155,48 @@ def test_delete_module_recommend_not_found(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+
+
+
+
+
+
+
+
+def test_get_module_comment_guest(mocker):
+    load_env()
+    init_setting()
+    module_comment = [{
+        "_id" : ObjectId("65d3ce2a23c0d86ac9be7ae0"),
+        "module_id" : ObjectId("65ac17b1d2815b505f3e352d"),
+        "message" : "this course is awesome!",
+        "user_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }]
+    user = {
+        "_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "email" : "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password" : b'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==',
+        "first_name" : "natnicha",
+        "last_name" : "rodtong",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3")
+    }
+    mocker.patch('app.crud.module_comment.find_by_module_id', return_value=module_comment)
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+    module_id = "65ac17b1d2815b505f3e352d"
+    response = client.get(
+        url=f"/api/v1/module/{module_id}/comment",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["module_id"] == module_id
+    assert response.json()["total_items"] == len(module_comment)
+    assert response.json()["items"][0]["id"] == str(module_comment[0]["_id"])
+    assert response.json()["items"][0]["message"] == module_comment[0]["message"]
+    assert response.json()["items"][0]["user"] == "na***a"
