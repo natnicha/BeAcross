@@ -138,3 +138,16 @@ def test_post_personal_plan_sys_admin_forbidden():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_post_personal_plan_module_id_incorrect_format():
+    load_env()
+    init_setting()
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+            "module_id":"abc",
+            "semester_id":"65d3ce2a23c0d86ac9be7ae0"
+        }
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
