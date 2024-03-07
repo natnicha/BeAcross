@@ -17,6 +17,12 @@ async def get_db_test_client():
 
 app.dependency_overrides[get_database] = get_db_test_client
 
+def init_setting():
+    Settings.user_roles = {
+        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
+        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
+        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
+    }
 
 def test_register_invalid_email_format(benchmark):
     response = benchmark(client.post,
@@ -79,11 +85,7 @@ def test_register_success_user_with_last_name(mocker, benchmark):
     mocker.patch('app.crud.email_domains.get_email_domain', return_value=email_domains_object)
     mocker.patch('app.crud.users.get_user', return_value={})
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = benchmark(client.post,
         url="/api/v1/auth/register",
         headers={"Content-Type":"application/json"},
@@ -105,11 +107,7 @@ def test_register_success_user_without_last_name(mocker, benchmark):
     mocker.patch('app.crud.email_domains.get_email_domain', return_value=email_domains_object)
     mocker.patch('app.crud.users.get_user', return_value={})
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = benchmark(client.post,
         url="/api/v1/auth/register",
         headers={"Content-Type":"application/json"},
@@ -136,11 +134,7 @@ def test_login_unauthenticated(mocker, benchmark):
     mocker.patch('app.crud.users.get_user', return_value=users_object)
 
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = benchmark(client.post,
         url="/api/v1/auth/login",
         headers={"Content-Type":"application/json"},
@@ -180,11 +174,7 @@ def test_login_success(mocker, benchmark):
     mocker.patch('app.crud.universities.find_one', return_value=university_object)
 
     load_env()
-    Settings.user_roles = {
-        "student": ObjectId("65a8040bfbc5863974a6d4e2"), 
-        "uni-admin": ObjectId("65a80418fbc5863974a6d4e3"), 
-        "sys-admin": ObjectId("65a8041efbc5863974a6d4e4"), 
-    }
+    init_setting()
     response = benchmark(client.post,
         url="/api/v1/auth/login",
         headers={"Content-Type":"application/json"},
