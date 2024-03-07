@@ -81,4 +81,23 @@ def test_get_personal_plan_student_success(mocker):
         url="/api/v1/personal-plan",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
+    expected_response = {
+        'total_items': 1, 
+        'items': [
+            {
+                'module_id': '65ac17b1d2815b505f3e3673', 
+                'personal_plan': [{
+                    'personal_plan_id': None, 
+                    'semester_id': '65d9aa1e2b35547c027a9de9', 
+                    'semester_name': 'summer 2025', 
+                    'is_added': False
+                }, {
+                    'personal_plan_id': '65e3ed3477dc05db2ccce8ad', 
+                    'semester_id': '65d7a7cc2b35547c027a9d5e', 
+                    'semester_name': 'winter 2024/25', 
+                    'is_added': True
+                }]
+            }]
+        }
     assert response.status_code == status.HTTP_200_OK
+    assert response.json()["data"] == expected_response
