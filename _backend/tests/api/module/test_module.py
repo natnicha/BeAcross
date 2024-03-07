@@ -397,3 +397,13 @@ def test_delete_module_comment_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_delete_module_comment_uni_admin_forbidden():
+    load_env()
+    init_setting()
+    module_id = "65ac17b1d2815b505f3e352d"
+    response = client.delete(
+        url=f"/api/v1/module/comment/{module_id}",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"},
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
