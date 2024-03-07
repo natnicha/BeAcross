@@ -1102,3 +1102,63 @@ def test_get_suggested_module_guest_success(mocker):
     assert response.json()["data"]["suggested_module_items"][0]["no_of_recommend"]  == 58
     assert response.json()["data"]["suggested_module_items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
     assert response.json()["data"]["suggested_module_items"][0]["is_recommended"]  == False
+
+def test_get_suggested_module_student_success_with_recommend(mocker):
+    load_env()
+    init_setting()
+    module_id = '65ac17b1d2815b505f3e352d'
+    mocker.patch('app.crud.modules.count_by_id', return_value=1)
+
+    suggested_modules = ["65ac1847d2815b505f3e3b96", "65ac1847d2815b505f3e3b95"]
+    mocker.patch('app.owl.modules.find_suggested_modules', return_value=suggested_modules)
+    
+    modules = [{
+        "_id" : ObjectId("65ac1847d2815b505f3e3b96"),
+        "name" : "Pragmatics II",
+        "content" : "• Students are acquinted with major topics in the domain of pragmatics which fall outside the scope of Pragmatics I. • The course focuses on current research in Pragmatics and stimulates original student work in the field. Formal foundations of linguistic theory; Pragmatics I This course is intended as a continuation of Pragmatics I which serves as an introduction to the field. In more formal detail, students are acquinted with current trends in topics like implicature, presupposition, experimental pragmatics, context dependence, speech acts. Students acquire in-depth amalyses of language phenomena from the pragmatic and semantic-pragmatic domain within the following topics: presupposition; context dependence and contextual veriables; acquiring pragmatics rules and processing pragmatic inferences; speech acts. Horn, L. in G. Ward (eds.) 2004. The handbook of pragmatics. Blackwell. Kadmon, Nirit. 2001. Formal Pragmatics: Semantics, Pragmatics, Presupposition, and Focus. Oxford: Blackwell Publishers. Levinson, S. 2000. Presumptive meanings: The theory of generalized conversational implicature. Cambridge, MA: MIT Press. Novek, I. in D. Sperber (eds). 2006. Experimental pragmatics. Palgrave Macmillan. Sauerland, U. in K. Yatsushiro (eds.). 2009. Semantics and Pragmatics. Palgrave Macmillan. Članki iz relevantnih znanstvenih revij, ki obravnavajo pragmatično področje. • attendance and active class participation; • two homework assignments; • final written exam. Associate professor of Linguistics at the University of Nova Gorica. STEPANOV, Arthur, STATEVA, Penka. When QR disobeys superiority. Linguistic inquiry, ISSN 0024-3892, 2009, vol. 40, no. 1, str. 176-185. [COBISS.SI-ID 1130491] STEPANOV, Arthur, STATEVA, Penka. Successive cyclicity as residual wh-scope marking. Lingua, ISSN 0024-3841. [Print ed.], dec. 2006, vol. 116, no. 12, str. 2107-2153. STATEVA, Penka. On the status of parasitic gaps in Bulgarian. Journal of Slavic linguistics, ISSN 1068-2090, 2005, vol. 13, no. 1, str. 137-155. [COBISS.SI-ID 1154811] STATEVA, Penka. Possessive clitics and the structure of nominal expressions. Lingua, ISSN 0024-3841. [Print ed.], Aug. 2002, vol. 112, no. 8, str. 647-690, doi: 10.1016/S0024-3841(01)00066-3. [COBISS.SI-ID 1150203]",
+        "url" : "https://www.ung.si/en/schools/school-of-humanities/programmes/2SI2/2022/2SL2042/2023/",
+        "university" : "University of Nova Gorica",
+        "degree_program" : "SL studies - Linguistics",
+        "module_code" : "2SL2042",
+        "ects" : 3,
+        "year" : "2. year",
+        "degree_level" : "Master"
+    },{
+        "_id" : ObjectId("65ac1847d2815b505f3e3b95"),
+        "name" : "Parallel programming",
+        "content" : "Content:The content of the lecture includes: Architecture and connection networks of parallel systems; Performance, runtime analysis and scalability of parallel programs; Message passing programming and implementation of typical communication patterns; Programming and synchronization techniques for shared address space with multi-threading; Coordination of parallel programs. In the exercises, programming models and techniques are practically applied to various applications. Aim:Knowledge of the architecture and network structures of parallel platforms; Knowledge of basic programming techniques for shared and distributed address spaces and their application to various applications",
+        "program" : "Applied Computer Science",
+        "university" : "Technische Universitat Chemnitz",
+        "degree_program" : "Applied Computer Science",
+        "module_code" : "561070",
+        "ects" : 5,
+        "degree_level" : "Master"
+    }]
+    mocker.patch('app.crud.modules.find_many_by_id_list', return_value=modules)
+    mocker.patch('app.crud.module_recommend.count_module_recommend', return_value=58)
+    
+    module_recommends = [{
+        "_id" : ObjectId("65b69045a7465e50f5ef6c87"),
+        "module_id" : ObjectId("65ac1847d2815b505f3e3b95"),
+        "user_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "created_at" : 1516239022
+    },{
+        "_id" : ObjectId("65b69045a7465e50f5ef6c88"),
+        "module_id" : ObjectId("65ac1847d2815b505f3e3b96"),
+        "user_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "created_at" : 1516239022
+    }]
+    mocker.patch('app.crud.module_recommend.get_user_recommend', return_value=module_recommends)
+    response = client.get(
+        url=f'/api/v1/module/{module_id}/suggested',
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["data"]["requested_module_id"]  == module_id
+    assert response.json()["data"]["total_suggested_module_items"]  == len(suggested_modules)
+    assert response.json()["data"]["suggested_module_items"][0]["module_name"]  == modules[0]["module_name"]
+    assert response.json()["data"]["suggested_module_items"][0]["content"] == modules[0]["content"]
+    assert response.json()["data"]["suggested_module_items"][0]["university"]  == modules[0]["university"]
+    assert response.json()["data"]["suggested_module_items"][0]["no_of_recommend"]  == 58
+    assert response.json()["data"]["suggested_module_items"][0]["no_of_suggested_modules"]  == len(suggested_modules)
+    assert response.json()["data"]["suggested_module_items"][0]["is_recommended"]  == True
