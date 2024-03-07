@@ -129,3 +129,12 @@ def test_post_personal_plan_uni_admin_forbidden():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_post_personal_plan_sys_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
