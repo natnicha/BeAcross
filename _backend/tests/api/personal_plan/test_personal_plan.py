@@ -120,3 +120,12 @@ def test_post_personal_plan_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_post_personal_plan_uni_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
