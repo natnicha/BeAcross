@@ -438,3 +438,23 @@ def test_delete_module_comment_not_found(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_delete_module_comment_success(mocker):
+    load_env()
+    init_setting()
+    module_comment = [{
+        "_id" : ObjectId("65d3ce2a23c0d86ac9be7ae0"),
+        "module_id" : ObjectId("65ac17b1d2815b505f3e352d"),
+        "message" : "this course is awesome!",
+        "user_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }]
+    mocker.patch('app.crud.module_comment.find', return_value=module_comment)
+    mocker.patch('app.crud.module_comment.delete_one', return_value={})
+    module_id = "65ac17b1d2815b505f3e352d"
+    response = client.delete(
+        url=f"/api/v1/module/comment/{module_id}",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+    )
+    assert response.status_code == status.HTTP_200_OK
