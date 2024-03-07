@@ -108,3 +108,21 @@ def test_delete_module_recommend_no_authorization():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_delete_module_recommend_uni_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/module/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_delete_module_recommend_sys_admin_forbidden():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/module/recommend",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
