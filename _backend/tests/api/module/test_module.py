@@ -459,3 +459,22 @@ def test_delete_module_comment_success(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
     )
     assert response.status_code == status.HTTP_200_OK
+
+
+
+
+
+
+
+
+
+
+def test_search_module_not_found(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.modules.count', return_value=0)
+    response = client.get(
+        url=f"/api/v1/module/search?term=data",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
