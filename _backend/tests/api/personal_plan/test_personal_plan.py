@@ -151,3 +151,16 @@ def test_post_personal_plan_module_id_incorrect_format():
         }
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_post_personal_plan_semester_id_incorrect_format():
+    load_env()
+    init_setting()
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+            "module_id":"65ac1847d2815b505f3e3b96",
+            "semester_id":"abc"
+        }
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
