@@ -178,3 +178,18 @@ def test_post_personal_plan_module_not_found(mocker):
         }
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_post_personal_plan_semester_not_found(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.modules.count_by_id', return_value=1)
+    mocker.patch('app.crud.semesters.count_by_id', return_value=0)
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+            "module_id":"65ac1847d2815b505f3e3b96",
+            "semester_id":"65d9aa1e2b35547c027a9de9"
+        }
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
