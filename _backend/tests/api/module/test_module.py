@@ -308,3 +308,22 @@ def test_get_module_comment_sys_admin(mocker):
     assert response.json()["items"][0]["id"] == str(module_comment[0]["_id"])
     assert response.json()["items"][0]["message"] == module_comment[0]["message"]
     assert response.json()["items"][0]["user"] == "na***a"
+
+
+
+
+
+
+
+
+
+
+def test_post_module_comment_guest():
+    load_env()
+    init_setting()
+    response = client.post(
+        url=f"/api/v1/module/comment",
+        headers={"Content-Type":"application/json"},
+        json={}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
