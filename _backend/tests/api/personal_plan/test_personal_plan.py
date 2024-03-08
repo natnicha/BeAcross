@@ -1,6 +1,7 @@
 from bson import ObjectId
 from fastapi.testclient import TestClient
 from fastapi import status
+from pydantic import BaseModel
 
 from app.db.settings import Settings
 from app.config.config_utils import load_env
@@ -209,3 +210,26 @@ def test_post_personal_plan_already_added_into_personal_plan(mocker):
         }
     )
     assert response.status_code == status.HTTP_409_CONFLICT
+
+def test_post_personal_plan_success(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.modules.count_by_id', return_value=1)
+    mocker.patch('app.crud.semesters.count_by_id', return_value=1)
+    mocker.patch('app.crud.personal_plans.count_by_module_id_semester_id_user_id', return_value=0)
+    
+    class InsertedCursor(BaseModel):
+        inserted_id: str
+    mocker.patch('app.crud.personal_plans.insert_one', return_value=InsertedCursor(inserted_id="65ac17b1d2815b505f3e352d"))
+    response = client.post(
+        url="/api/v1/personal-plan",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+            "module_id":"65ac1847d2815b505f3e3b96",
+            "semester_id":"65d9aa1e2b35547c027a9de9"
+        }
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    assert response.json()["personal_plan_id"] == "65ac17b1d2815b505f3e352d"
+    assert response.json()["module_id"] == "65ac1847d2815b505f3e3b96"
+    assert response.json()["semester_id"] == "65d9aa1e2b35547c027a9de9"
