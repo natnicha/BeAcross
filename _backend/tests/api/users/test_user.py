@@ -899,3 +899,12 @@ def test_delete_admin_user_profile_student_forbidden():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_delete_admin_user_profile_incorrect_user_id_format():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/user/abc",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
