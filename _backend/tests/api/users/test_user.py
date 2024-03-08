@@ -641,3 +641,12 @@ def test_put_admin_user_profile_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_put_admin_user_profile_student_forbidden():
+    load_env()
+    init_setting()
+    response = client.put(
+        url="/api/v1/user/65e98e36c94f65783c3bad4c",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
