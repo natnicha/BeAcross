@@ -233,3 +233,22 @@ def test_post_personal_plan_success(mocker):
     assert response.json()["personal_plan_id"] == "65ac17b1d2815b505f3e352d"
     assert response.json()["module_id"] == "65ac1847d2815b505f3e3b96"
     assert response.json()["semester_id"] == "65d9aa1e2b35547c027a9de9"
+
+
+
+
+
+
+
+
+
+
+
+def test_delete_personal_plan_guest_unauthorized():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/personal-plan/65ac17b1d2815b505f3e352d",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
