@@ -420,3 +420,22 @@ def test_get_user_profile_list_uni_admin_with_uni_admin_filter(mocker):
     assert response.json()["total_results"] == len(users)
     assert response.json()["total_items"] == len(users)
     assert response.json()["items"] == expected_items
+
+
+
+
+
+
+
+
+
+
+
+def test_put_auth_user_profile_guest_unauthorized():
+    load_env()
+    init_setting()
+    response = client.put(
+        url="/api/v1/user/profile/",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
