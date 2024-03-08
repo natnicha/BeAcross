@@ -623,3 +623,21 @@ def test_put_auth_user_profile_sys_admin(mocker):
     }
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == expected_response
+
+
+
+
+
+
+
+
+
+
+def test_put_admin_user_profile_guest_unauthorized():
+    load_env()
+    init_setting()
+    response = client.put(
+        url="/api/v1/user/65e98e36c94f65783c3bad4c",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
