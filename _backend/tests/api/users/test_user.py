@@ -440,7 +440,7 @@ def test_put_auth_user_profile_guest_unauthorized():
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-def test_put_auth_user_profile_student(mocker):
+def test_put_auth_user_profile_student_success(mocker):
     load_env()
     init_setting()
     user = {
@@ -501,7 +501,7 @@ def test_put_auth_user_profile_student(mocker):
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == expected_response
 
-def test_put_auth_user_profile_uni_admin(mocker):
+def test_put_auth_user_profile_uni_admin_success(mocker):
     load_env()
     init_setting()
     user = {
@@ -563,7 +563,7 @@ def test_put_auth_user_profile_uni_admin(mocker):
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == expected_response
 
-def test_put_auth_user_profile_sys_admin(mocker):
+def test_put_auth_user_profile_sys_admin_success(mocker):
     load_env()
     init_setting()
     user = {
@@ -650,3 +650,12 @@ def test_put_admin_user_profile_student_forbidden():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_put_admin_user_profile_user_id_incorrect_format():
+    load_env()
+    init_setting()
+    response = client.put(
+        url="/api/v1/user/abc",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
