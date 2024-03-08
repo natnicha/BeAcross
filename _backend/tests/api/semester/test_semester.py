@@ -111,3 +111,34 @@ def test_get_semester_uni_admin(mocker):
     }]
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["data"]["items"] == expected_response
+
+def test_get_semester_sys_admin(mocker):
+    load_env()
+    init_setting()
+    semesters = [{
+        "_id" : ObjectId("65d9aa1e2b35547c027a9de9"),
+        "name" : "summer 2025",
+        "created_at" : 1516239022
+    },
+    {
+        "_id" : ObjectId("65d7a7cc2b35547c027a9d5e"),
+        "name" : "winter 2024/25",
+        "created_at" : 1516239022
+    }]
+    mocker.patch('app.crud.semesters.find_all', return_value=semesters)
+    response = client.get(
+        url="/api/v1/semester",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+    )
+    expected_response = [{
+        "id" : "65d9aa1e2b35547c027a9de9",
+        "name" : "summer 2025",
+        "created_at" : "2018-01-18T01:30:22Z"
+    },
+    {
+        "id" : "65d7a7cc2b35547c027a9d5e",
+        "name" : "winter 2024/25",
+        "created_at" : "2018-01-18T01:30:22Z"
+    }]
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["data"]["items"] == expected_response
