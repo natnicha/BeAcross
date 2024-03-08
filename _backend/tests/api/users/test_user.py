@@ -313,3 +313,83 @@ def test_get_user_profile_list_sys_admin_default_student(mocker):
     assert response.json()["total_results"] == len(users)
     assert response.json()["total_items"] == len(users)
     assert response.json()["items"] == users
+
+def test_get_user_profile_list_uni_admin_with_uni_admin_filter(mocker):
+    load_env()
+    init_setting()
+    users = [{
+        "_id" : ObjectId("65e8c7904a8c3c22bf839569"),
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    },{
+        "_id" : ObjectId("65d4bb0cfd70facf3287bd5d"),
+        "email" : "Joanna.Merkel@tu-chemnitz.de",
+        "password" : "ZjM2MzAyZTliZDRmYTdjNDY4YjRmODUxMTJmMmQxMzE3YWFjMDZjM2IwNTU5ZDMzOGRiYjk0NWVmYmY1YjcxYToyZDIwODdjNTcyNjE0NzAzODY3OWViNmZkZmY2YmRlMQ==",
+        "first_name" : "Joanna",
+        "last_name" : "Merkel",
+        "registration_number" : "1674856",
+        "course_of_study" : "German",
+        "semester" : 2,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }]
+    mocker.patch('app.crud.users.get_users', return_value=users)
+
+    email_domains = [{
+        "_id" : ObjectId("65a440ad4e731f4ba4ec9c9b"),
+        "university_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "domain" : "tu-chemnitz.de"
+    }]
+    mocker.patch('app.crud.email_domains.get_email_domain', return_value=email_domains)
+
+    university = {
+        "_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "country" : "Germany",
+        "name" : "Technische Universitat Chemnitz"
+    }
+    mocker.patch('app.crud.universities.find_one', return_value=university)
+    mocker.patch('app.crud.users.count', return_value=len(users))
+    response = client.get(
+        url="/api/v1/user/profile/list?user_role=uni-admin",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    expected_items = [{
+        "id" : "65e8c7904a8c3c22bf839569",
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "university": "Technische Universitat Chemnitz",
+        "user_role" : "uni-admin",
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    },{
+        "id" : "65d4bb0cfd70facf3287bd5d",
+        "email" : "Joanna.Merkel@tu-chemnitz.de",
+        "password" : "ZjM2MzAyZTliZDRmYTdjNDY4YjRmODUxMTJmMmQxMzE3YWFjMDZjM2IwNTU5ZDMzOGRiYjk0NWVmYmY1YjcxYToyZDIwODdjNTcyNjE0NzAzODY3OWViNmZkZmY2YmRlMQ==",
+        "first_name" : "Joanna",
+        "last_name" : "Merkel",
+        "registration_number" : "1674856",
+        "course_of_study" : "German",
+        "semester" : 2,
+        "university": "Technische Universitat Chemnitz",
+        "user_role" : "uni-admin",
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }]
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["total_results"] == len(users)
+    assert response.json()["total_items"] == len(users)
+    assert response.json()["items"] == expected_items
