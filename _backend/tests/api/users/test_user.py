@@ -908,3 +908,27 @@ def test_delete_admin_user_profile_incorrect_user_id_format():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_delete_admin_user_profile_uni_admin_success(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "email" : "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password" : b'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==',
+        "first_name" : "natnicha",
+        "last_name" : "rodtong",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+    mocker.patch('app.crud.users.delete_one', return_value={})
+    response = client.delete(
+        url="/api/v1/user/65e4d22ba21d308eca0c531d",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_204_NO_CONTENT
