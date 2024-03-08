@@ -309,10 +309,37 @@ def test_get_user_profile_list_sys_admin_default_student(mocker):
         url="/api/v1/user/profile/list",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
     )
+    expected_users = [{
+        "id" : "65e8c7904a8c3c22bf839569",
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "university": "Technische Universitat Chemnitz",
+        "user_role" : "student",
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    },{
+        "id" : "65d4bb0cfd70facf3287bd5d",
+        "email" : "Joanna.Merkel@tu-chemnitz.de",
+        "password" : "ZjM2MzAyZTliZDRmYTdjNDY4YjRmODUxMTJmMmQxMzE3YWFjMDZjM2IwNTU5ZDMzOGRiYjk0NWVmYmY1YjcxYToyZDIwODdjNTcyNjE0NzAzODY3OWViNmZkZmY2YmRlMQ==",
+        "first_name" : "Joanna",
+        "last_name" : "Merkel",
+        "registration_number" : "1674856",
+        "course_of_study" : "German",
+        "semester" : 2,
+        "university": "Technische Universitat Chemnitz",
+        "user_role" : "student",
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }]
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["total_results"] == len(users)
     assert response.json()["total_items"] == len(users)
-    assert response.json()["items"] == users
+    assert response.json()["items"] == expected_users
 
 def test_get_user_profile_list_uni_admin_with_uni_admin_filter(mocker):
     load_env()
