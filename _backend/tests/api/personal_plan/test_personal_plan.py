@@ -289,3 +289,14 @@ def test_delete_personal_plan_personal_plan_not_found(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+def test_delete_personal_plan_success(mocker):
+    load_env()
+    init_setting()
+    mocker.patch('app.crud.personal_plans.count_by_id_user_id', return_value=1)
+    mocker.patch('app.crud.personal_plans.delete_one_by_id', return_value={})
+    response = client.delete(
+        url="/api/v1/personal-plan/65ac17b1d2815b505f3e352d",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_204_NO_CONTENT
