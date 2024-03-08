@@ -5,18 +5,26 @@ from app.config.config_utils import env_config
 from azure.storage.blob import BlobServiceClient
 import json
 
-def init():
-    blob_service_client = BlobServiceClient.from_connection_string(env_config.AZURE)
-    print("\nListing blobs...")
+def init_conn():
+    return BlobServiceClient.from_connection_string(env_config.AZURE)
+
+def read_res_file():
+    conn = init_conn()
     container_name = "results"
     blob_name = "result.json"
 
-    blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
+    blob_client = conn.get_blob_client(container=container_name, blob=blob_name)
     # List the blobs in the container
     blob_content = blob_client.download_blob().readall()
 
-    json_data = json.loads(blob_content)
+    res = json.loads(blob_content)
+    return res
 
-    # Now json_data is a dictionary containing the contents of the JSON blob
-    print(json_data)
-    
+def write_res_file(data):
+    conn = init_conn()
+    container_name = "results"
+    blob_name = "result.json"
+
+    blob_client = conn.get_blob_client(container=container_name, blob=blob_name)
+    content = json.dumps(data)  # Serialize dictionary into JSON string
+    blob_client.upload_blob(content, overwrite=True)  # Upload updated content back to blob
