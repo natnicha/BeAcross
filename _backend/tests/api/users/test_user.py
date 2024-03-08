@@ -783,3 +783,20 @@ def test_put_admin_user_profile_sys_admin_success(mocker):
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == expected_response
 
+
+
+
+
+
+
+
+
+
+def test_delete_auth_user_profile_guest_unauthorized():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/user",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
