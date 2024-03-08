@@ -1033,6 +1033,16 @@ def test_post_module_guest_unauthorized():
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
+def test_post_module_student_forbidden():
+    load_env()
+    init_setting()
+    module_id = '65ac17b1d2815b505f3e352d'
+    response = client.post(
+        url=f'/api/v1/module/{module_id}',
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
 
 
 
