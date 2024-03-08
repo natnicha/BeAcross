@@ -848,3 +848,27 @@ def test_delete_auth_user_profile_uni_admin_success(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_204_NO_CONTENT
+
+def test_delete_auth_user_profile_sys_admin_success(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e98e36c94f65783c3bad4c"),
+        "email" : "example.c@s2022.tu-chemnitz.de",
+        "password" : b"YzQ5YzE3MjNiMmM1MTczM2VhZTk2MGRhYjhiMzVlNTFkYjUyYjNkNzVlYmFhZjlhMGQ3M2E0YmFjZjBmMDQyNToxYWU2NWY3NGEzNzU0Njc4OGJiYTUxZjMxYTNlM2I0OA==",
+        "first_name" : "example",
+        "last_name" : "c",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a8041efbc5863974a6d4e4"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+    mocker.patch('app.crud.users.delete_one', return_value={})
+    response = client.delete(
+        url="/api/v1/user",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_204_NO_CONTENT
