@@ -1026,22 +1026,31 @@ def test_get_module_student_without_recommend(mocker):
 def test_post_module_guest_unauthorized():
     load_env()
     init_setting()
-    module_id = '65ac17b1d2815b505f3e352d'
     response = client.post(
-        url=f'/api/v1/module/{module_id}',
-        headers={"Content-Type":"application/json"}
+        url=f'/api/v1/module',
+        headers={"Content-Type":"application/xml"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 def test_post_module_student_forbidden():
     load_env()
     init_setting()
-    module_id = '65ac17b1d2815b505f3e352d'
     response = client.post(
-        url=f'/api/v1/module/{module_id}',
-        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+        url=f'/api/v1/module',
+        headers={"Content-Type":"application/xml", "Authorization": f"Bearer {student_jwt}"}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_post_module_unsupport_media_type():
+    load_env()
+    init_setting()
+    response = client.post(
+        url=f'/api/v1/module',
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"},
+        json={}
+
+    )
+    assert response.status_code == status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
 
 
 
