@@ -129,3 +129,54 @@ def test_get_user_profile_uni_admin(mocker):
     }
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == expected_response
+
+def test_get_user_profile_sys_admin(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e98e36c94f65783c3bad4c"),
+        "email" : "example.c@s2022.tu-chemnitz.de",
+        "password" : b"YzQ5YzE3MjNiMmM1MTczM2VhZTk2MGRhYjhiMzVlNTFkYjUyYjNkNzVlYmFhZjlhMGQ3M2E0YmFjZjBmMDQyNToxYWU2NWY3NGEzNzU0Njc4OGJiYTUxZjMxYTNlM2I0OA==",
+        "first_name" : "example",
+        "last_name" : "c",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a8041efbc5863974a6d4e4"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+
+    email_domains = [{
+        "_id" : ObjectId("65a440ad4e731f4ba4ec9c9b"),
+        "university_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "domain" : "tu-chemnitz.de"
+    }]
+    mocker.patch('app.crud.email_domains.get_email_domain', return_value=email_domains)
+
+    university = {
+        "_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "country" : "Germany",
+        "name" : "Technische Universitat Chemnitz"
+    }
+    mocker.patch('app.crud.universities.find_one', return_value=university)
+    response = client.get(
+        url="/api/v1/user/profile",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+    )
+    expected_response = {
+        "email" : "example.c@s2022.tu-chemnitz.de",
+        "password" : "YzQ5YzE3MjNiMmM1MTczM2VhZTk2MGRhYjhiMzVlNTFkYjUyYjNkNzVlYmFhZjlhMGQ3M2E0YmFjZjBmMDQyNToxYWU2NWY3NGEzNzU0Njc4OGJiYTUxZjMxYTNlM2I0OA==",
+        "first_name" : "example",
+        "last_name" : "c",
+        'university': 'Technische Universitat Chemnitz', 
+        'registration_number': None, 
+        'course_of_study': None, 
+        'semester': 1, 
+        'user_role': 'sys-admin', 
+        'created_at': '2018-01-18T01:30:22Z', 
+        'updated_at': '2018-01-18T01:30:22Z'
+    }
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == expected_response
