@@ -435,7 +435,68 @@ def test_put_auth_user_profile_guest_unauthorized():
     load_env()
     init_setting()
     response = client.put(
-        url="/api/v1/user/profile/",
+        url="/api/v1/user",
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_put_auth_user_profile_student(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e8c7904a8c3c22bf839569"),
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a8040bfbc5863974a6d4e2"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+
+    updated_user = {
+        "_id" : ObjectId("65e8c7904a8c3c22bf839569"),
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "xx",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a8040bfbc5863974a6d4e2"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.update_one', return_value=updated_user)
+    response = client.put(
+        url="/api/v1/user",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"},
+        json={
+        "id" : "65e8c7904a8c3c22bf839569",
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ff5e9d11a756393b9256f452785a3fdb9e347bd23d041b156074becd0fb22026:cf1a4dc7d3c24cd29f0de1b322bc67ad",
+        "first_name" : "example",
+        "last_name" : "xx",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1
+    })
+    expected_response = {
+        "id" : "65e8c7904a8c3c22bf839569",
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "xx",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_role" : "student",
+        "created_at" : '2018-01-18T01:30:22Z',
+        "updated_at" : '2018-01-18T01:30:22Z'
+    }
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == expected_response
