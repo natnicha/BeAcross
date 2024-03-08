@@ -1023,6 +1023,25 @@ def test_get_module_student_without_recommend(mocker):
 
 
 
+def test_post_module_guest_unauthorized():
+    load_env()
+    init_setting()
+    module_id = '65ac17b1d2815b505f3e352d'
+    response = client.post(
+        url=f'/api/v1/module/{module_id}',
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+
+
+
+
+
+
+
+
 def test_get_suggested_module_module_id_incorrect_format():
     load_env()
     init_setting()
