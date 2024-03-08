@@ -1097,7 +1097,6 @@ def test_post_module_uni_admin_success(mocker):
     </module>
 </data>'''
     )
-    print(response.json())
     expected_response = {
         'data': {
             'total_items': 1, 
@@ -1142,7 +1141,6 @@ def test_post_module_sys_admin_success(mocker):
     </module>
 </data>'''
     )
-    print(response.json())
     expected_response = {
         'data': {
             'total_items': 1, 
