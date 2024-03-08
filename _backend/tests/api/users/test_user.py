@@ -872,3 +872,21 @@ def test_delete_auth_user_profile_sys_admin_success(mocker):
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+
+
+
+
+
+
+
+
+def test_delete_admin_user_profile_guest_unauthorized():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/user/65e8c7904a8c3c22bf839569",
+        headers={"Content-Type":"application/json"}
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
