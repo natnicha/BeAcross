@@ -800,3 +800,27 @@ def test_delete_auth_user_profile_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_delete_auth_user_profile_student_success(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e8c7904a8c3c22bf839569"),
+        "email" : "example.x@s2022.tu-chemnitz.de",
+        "password" : "ZmY1ZTlkMTFhNzU2MzkzYjkyNTZmNDUyNzg1YTNmZGI5ZTM0N2JkMjNkMDQxYjE1NjA3NGJlY2QwZmIyMjAyNjpjZjFhNGRjN2QzYzI0Y2QyOWYwZGUxYjMyMmJjNjdhZA==",
+        "first_name" : "example",
+        "last_name" : "x",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a8040bfbc5863974a6d4e2"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+    mocker.patch('app.crud.users.delete_one', return_value={})
+    response = client.delete(
+        url="/api/v1/user",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_204_NO_CONTENT
