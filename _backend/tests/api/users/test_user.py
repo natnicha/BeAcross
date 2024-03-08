@@ -659,3 +659,65 @@ def test_put_admin_user_profile_user_id_incorrect_format():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+def test_put_admin_user_profile_uni_admin_success(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "email" : "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password" : b'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==',
+        "first_name" : "natnicha",
+        "last_name" : "rodtong",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+
+    updated_user = {
+        "_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "email" : "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password" : b'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==',
+        "first_name" : "natnicha",
+        "last_name" : "rodtong",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.update_one', return_value=updated_user)
+    response = client.put(
+        url="/api/v1/user/65e4d22ba21d308eca0c531d",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {uni_admin_jwt}"},
+        json={
+        "id" : "65e4d22ba21d308eca0c531d",
+        "email": "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password": "03c13c62e8de6957379e362e17c34858ed44fcd9942ed4c50cf6753036249279:14ce3d7f55324f6d94928d93be524aaa",
+        "first_name": "natnicha",
+        "last_name": "rodtong",
+        "university": "Technische Universitat Chemnitz",
+        "registration_number": None,
+        "course_of_study": None,
+        "semester": 1
+    })
+    expected_response = {
+        "id" : "65e4d22ba21d308eca0c531d",
+        "email" : "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password" : 'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==',
+        "first_name" : "natnicha",
+        "last_name" : "rodtong",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_role" : "uni-admin",
+        "created_at" : '2018-01-18T01:30:22Z',
+        "updated_at" : '2018-01-18T01:30:22Z'
+    }
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == expected_response
