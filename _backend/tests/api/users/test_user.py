@@ -890,3 +890,12 @@ def test_delete_admin_user_profile_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_delete_admin_user_profile_student_forbidden():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/user/65e8c7904a8c3c22bf839569",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
