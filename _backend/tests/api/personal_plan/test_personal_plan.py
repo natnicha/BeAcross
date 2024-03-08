@@ -270,3 +270,12 @@ def test_delete_personal_plan_sys_admin_forbidden():
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+
+def test_delete_personal_plan_module_id_incorrect_format():
+    load_env()
+    init_setting()
+    response = client.delete(
+        url="/api/v1/personal-plan/abc",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
