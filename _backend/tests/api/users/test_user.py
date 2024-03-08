@@ -63,4 +63,18 @@ def test_get_user_profile_student(mocker):
         url="/api/v1/user/profile",
         headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
+    expected_response = {
+        'email': 'natnicha.rodtong@s2022.tu-chemnitz.de', 
+        'password': 'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==', 
+        'first_name': 'natnicha', 
+        'last_name': 'rodtong', 
+        'university': 'Technische Universitat Chemnitz', 
+        'registration_number': None, 
+        'course_of_study': None, 
+        'semester': 1, 
+        'user_role': 'uni-admin', 
+        'created_at': '2018-01-18T01:30:22Z', 
+        'updated_at': '2018-01-18T01:30:22Z'
+    }
     assert response.status_code == status.HTTP_200_OK
+    assert response.json() == expected_response
