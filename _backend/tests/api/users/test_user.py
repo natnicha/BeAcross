@@ -198,3 +198,12 @@ def test_get_user_profile_list_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_get_user_profile_list_student_forbidden():
+    load_env()
+    init_setting()
+    response = client.get(
+        url="/api/v1/user/profile/list",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_403_FORBIDDEN
