@@ -27,3 +27,40 @@ def test_get_user_profile_guest_unauthorized():
         headers={"Content-Type":"application/json"}
     )
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+def test_get_user_profile_student(mocker):
+    load_env()
+    init_setting()
+    user = {
+        "_id" : ObjectId("65e4d22ba21d308eca0c531d"),
+        "email" : "natnicha.rodtong@s2022.tu-chemnitz.de",
+        "password" : b'MDNjMTNjNjJlOGRlNjk1NzM3OWUzNjJlMTdjMzQ4NThlZDQ0ZmNkOTk0MmVkNGM1MGNmNjc1MzAzNjI0OTI3OToxNGNlM2Q3ZjU1MzI0ZjZkOTQ5MjhkOTNiZTUyNGFhYQ==',
+        "first_name" : "natnicha",
+        "last_name" : "rodtong",
+        "registration_number" : None,
+        "course_of_study" : None,
+        "semester" : 1,
+        "user_roles_id" : ObjectId("65a80418fbc5863974a6d4e3"),
+        "created_at" : 1516239022,
+        "updated_at" : 1516239022
+    }
+    mocker.patch('app.crud.users.get_user_by_id', return_value=user)
+
+    email_domains = [{
+        "_id" : ObjectId("65a440ad4e731f4ba4ec9c9b"),
+        "university_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "domain" : "tu-chemnitz.de"
+    }]
+    mocker.patch('app.crud.email_domains.get_email_domain', return_value=email_domains)
+
+    university = {
+        "_id" : ObjectId("65a43ec94e731f4ba4ec9c11"),
+        "country" : "Germany",
+        "name" : "Technische Universitat Chemnitz"
+    }
+    mocker.patch('app.crud.universities.find_one', return_value=university)
+    response = client.get(
+        url="/api/v1/user/profile",
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
+    )
+    assert response.status_code == status.HTTP_200_OK
