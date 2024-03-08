@@ -276,6 +276,6 @@ def test_delete_personal_plan_module_id_incorrect_format():
     init_setting()
     response = client.delete(
         url="/api/v1/personal-plan/abc",
-        headers={"Content-Type":"application/json", "Authorization": f"Bearer {sys_admin_jwt}"}
+        headers={"Content-Type":"application/json", "Authorization": f"Bearer {student_jwt}"}
     )
-    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
