@@ -173,6 +173,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         value={field1}
                                         onChange={(e) => setField1(e.target.value)}
                                     >
+                                        <option value="" disabled selected>Select...</option>
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
                                         <option value="degree_level">Degree Level</option>
@@ -207,6 +208,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         value={field2}
                                         onChange={(e) => setField2(e.target.value)}
                                     >
+                                        <option value="" disabled selected>Select...</option>
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
                                         <option value="degree_level">Degree Level</option>
@@ -243,6 +245,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         value={field3}
                                         onChange={(e) => setField3(e.target.value)}
                                     >
+                                        <option value="" disabled selected>Select...</option>
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
                                         <option value="degree_level">Degree Level</option>
@@ -277,6 +280,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         value={field4}
                                         onChange={(e) => setField4(e.target.value)}
                                     >
+                                        <option value="" disabled selected>Select...</option>
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
                                         <option value="degree_level">Degree Level</option>
