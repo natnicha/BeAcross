@@ -40,6 +40,24 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
         }
       };
 
+    const handleAdvanceSearch = async () => {
+        if (!content.trim()) {
+            // If content is empty or only contains whitespace
+            setErrorMessage('Please enter a search term first.');
+            return; // Exit the function early without searching
+        }
+        setErrorMessage(''); // Clear any previous error message
+        try {
+            if (onSearch) {
+                await onSearch();
+            }
+            navigate("/search?query=" + encodeURIComponent(content));
+        } catch (error) {
+            console.error('Error during search:', error);
+            setErrorMessage('An error occurred during the search. Please try again.');
+        }
+      };
+
     // Function to handle Enter key press
     const handleKeyDown = async (event: KeyboardEvent<HTMLInputElement>): Promise<void> => {
         if (event.key === 'Enter') {
@@ -61,10 +79,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         onKeyDown={handleKeyDown} // Add onKeyDown event listener
+                        disabled={showAdvanceSearch}
                     />&nbsp;&nbsp;
                 <button
                     className="custom-btn btn custom-link"
                     onClick={handleSearch}
+                    disabled={showAdvanceSearch}
                     >
                     Search
                 </button>
@@ -100,7 +120,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     &nbsp;
                                     <input
                                         type="text"
-                                        className="searchInput"
+                                        className="AdvanceSearchInput"
                                         placeholder="Condition 1"
                                         value={""}
                                     />
@@ -133,7 +153,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     &nbsp;
                                     <input
                                         type="text"
-                                        className="searchInput"
+                                        className="AdvanceSearchInput"
                                         placeholder="Condition 2"
                                         value={""}
                                     />
@@ -168,7 +188,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     &nbsp;
                                     <input
                                         type="text"
-                                        className="searchInput"
+                                        className="AdvanceSearchInput"
                                         placeholder="Condition 3"
                                         value={""}
                                     />
@@ -201,7 +221,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     &nbsp;
                                     <input
                                         type="text"
-                                        className="searchInput"
+                                        className="AdvanceSearchInput"
                                         placeholder="Condition 4"
                                         value={""}
                                     />
@@ -225,7 +245,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                             &nbsp;&nbsp;
                             <button
                                 className="custom-btn btn custom-link"
-                                onClick={handleSearch}
+                                onClick={handleAdvanceSearch}
                                 >
                                 Advance Search
                             </button>
