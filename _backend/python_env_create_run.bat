@@ -12,6 +12,7 @@ call env\Scripts\activate
 REM Upgrade pip to the latest version
 python -m pip install --upgrade pip
 
+python -m pip install pydantic[email]
 python -m pip install fastapi
 python -m pip install uvicorn
 python -m pip install "pymongo[srv]"

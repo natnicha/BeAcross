@@ -1,13 +1,43 @@
 
-password_reset_template = """
-Dear {user},
-
-Your password has been reset. Your new password is: {password}
-
-Please change it after your next login.
-
-Wishing you well,
-Your Victory Pie Solutions Team
+password_reset_template = u"""
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+</head>
+<body>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="border-collapse: collapse;">
+                    <tr>
+                        <td bgcolor="#ffffff" align="center" style="padding: 40px 0 30px 0;">
+                            <h1>Dear {user},</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#ffffff" align="center" style="padding: 20px;">
+                            <p>Your password has been reset. Your new password is: <strong>{password}</strong></p>
+                            <p>Please change it after your next login.</p>
+                            <p>Wishing you well,<br>Your Victory Pie Solutions Team</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#f4f4f4" align="center" style="padding: 10px;">
+                            <p>Remark:</p>
+                            <ul>
+                                <li>Please keep your account information safe.</li>
+                                <li>This email has been automatically sent by the system. Please do not reply back. If you wish to contact us, please send an email to <a href="mailto:Victorypiesolutions@outlook.com">Victorypiesolutions@outlook.com</a>.</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
 """
 
 

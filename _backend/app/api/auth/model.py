@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 from bson import ObjectId
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from app.crud.users import UsersModel
 
@@ -59,3 +59,6 @@ class LoginResponseDataModel(BaseModel):
 
 class LoginResponseModel(BaseModel):
     data: LoginResponseDataModel
+
+class PasswordResetRequestModel(BaseModel):
+    email: EmailStr

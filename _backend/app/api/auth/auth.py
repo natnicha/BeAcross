@@ -12,8 +12,9 @@ import app.crud.user_logs as USER_LOGS
 import app.crud.universities as UNIVERSITIES
 from app.email_service.email_sender import *
 
+
 from .auth_utils import *
-from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel
+from .model import LoginRequestModel, LoginResponseDataModel, LoginResponseModel, LoginUserDataResponseModel, RegisterDataResponse, RegisterRequestModel, RegisterResponseModel, PasswordResetRequestModel
 
 auth = APIRouter()
 
@@ -176,3 +177,26 @@ def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseMod
         created_at = user["created_at"],
         updated_at = user["updated_at"],
     )
+
+@auth.post("/forgot-password")
+async def forgot_password(emailaddr: PasswordResetRequestModel, db: MongoClient = Depends(get_database)):
+    # Verify the user exists
+    user_cursor = USERS.get_user(db, emailaddr.email)
+    user_detail = next(user_cursor, None) 
+    if not user_detail:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    new_password = generate_password()  
+    encrypted_password = hash_text(new_password)
+    encrypted_password = str.encode(encrypted_password)
+
+    try:
+        update_result = USERS.update_one(db, user_detail["_id"], {"password": encrypted_password})
+        if update_result:
+            # if the new password is updated, Send a confirmation email
+            await send_newpass_email(user_email=emailaddr.email, password=new_password, user_name=user_detail["first_name"])
+    except Exception as e:
+        logging.error(f"Failed to update password or send confirmation: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update password.")
+
+    return {"message": "If your account with that email was found, we've sent you an email with the new password."}
