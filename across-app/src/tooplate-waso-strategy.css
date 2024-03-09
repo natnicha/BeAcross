@@ -415,6 +415,7 @@ strong {
   height: 100px;
   margin-left: -345px;
   width: 155%;
+  padding: 6%;
 }
 
 .SearchPage .searchbarContent {
@@ -454,7 +455,6 @@ strong {
   display: flex;
   align-items: center;
   width: 100%; 
-  transition: height 0.3s ease;
 }
 
 .advancedSearchRow {
