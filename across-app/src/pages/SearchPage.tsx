@@ -83,39 +83,39 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
       }
   }
 
-parseUrlParams = () => {
-  const searchParams = new URLSearchParams(this.props.location.search);
-  
-  // Parsing sorting parameters
-  const currentSortField = searchParams.get('sortby') || 'module_name';
-  const currentSortOrder = searchParams.get('orderby') || 'asc';
-  
-  // Parsing filter parameters
-  const degree_level = searchParams.getAll('degree_level');
-  const module_type = searchParams.getAll('module_type');
-  const university = searchParams.getAll('university');
-  
-  // For ects
-  const ects = searchParams.get('ects');
-  
-  // Parsing pagination
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  
-  // Setting the state with parsed values
-  this.setState({
-      currentSortField,
-      currentSortOrder,
-      filters: {
-          degree_level: degree_level,
-          module_type: module_type,
-          university: university,
-          ects: ects || null,
-      },
-      currentPage,
-  }, () => {
-      this.performSearch(true);
-  });
-}
+  parseUrlParams = () => {
+    const searchParams = new URLSearchParams(this.props.location.search);
+    
+    // Parsing sorting parameters
+    const currentSortField = searchParams.get('sortby') || 'module_name';
+    const currentSortOrder = searchParams.get('orderby') || 'asc';
+    
+    // Parsing filter parameters
+    const degree_level = searchParams.getAll('degree_level');
+    const module_type = searchParams.getAll('module_type');
+    const university = searchParams.getAll('university');
+    
+    // For ects
+    const ects = searchParams.get('ects');
+    
+    // Parsing pagination
+    const currentPage = parseInt(searchParams.get('page') || '1', 10);
+    
+    // Setting the state with parsed values
+    this.setState({
+        currentSortField,
+        currentSortOrder,
+        filters: {
+            degree_level: degree_level,
+            module_type: module_type,
+            university: university,
+            ects: ects || null,
+        },
+        currentPage,
+    }, () => {
+        this.performSearch(true);
+    });
+  }
 
   calculateTotalPages = () => {
     const itemsPerPage = 20;
@@ -152,11 +152,8 @@ parseUrlParams = () => {
         orderby: [this.state.currentSortOrder]
       };
 
-      // Including the filters in the searchServices call
-
-      // 1. access url "advance=true"
-      // 2. store in boolean  var isAdvanceSearch = true;
-      const isAdvanceSearch = false; // access url and determine isAdvanceSearch in url
+      //check Advance search is true or false
+      const isAdvanceSearch = Boolean(new URLSearchParams(this.props.location.search).get('isAdvance'));
 
       const result = await searchServices(this.state.query, offsetString, filters, sorting, isAdvanceSearch);
       

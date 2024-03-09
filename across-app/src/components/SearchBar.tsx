@@ -163,7 +163,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 1"
-                                        value={condition1}
+                                        value={condition1 || ''}
+                                        onChange={(e) => setCondition1(e.target.value)}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
@@ -196,7 +197,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 2"
-                                        value={condition2}
+                                        value={condition2 || ''}
+                                        onChange={(e) => setCondition2(e.target.value)}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
@@ -231,7 +233,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 3"
-                                        value={condition3}
+                                        value={condition3 || ''}
+                                        onChange={(e) => setCondition3(e.target.value)}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
@@ -264,7 +267,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 4"
-                                        value={condition4}
+                                        value={condition4 || ''}
+                                        onChange={(e) => setCondition4(e.target.value)}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
