@@ -37,9 +37,10 @@ interface SortParams {
 export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams, isAdvanceSearch: boolean): Promise<SearchResponse> {
     
   const token = sessionStorage.getItem("jwtToken") || '';  //get jwt token
-  
+ 
   // Base URL including the term
-    const apiName = isAdvanceSearch ? '/advance' : '';
+    const apiName = isAdvanceSearch ? '/advanced' : '';
+    
     let url = `http://localhost:8000/api/v1/module/search${apiName}?term=${encodeURIComponent(term)}`;
 
     // Function to append multiple filter values

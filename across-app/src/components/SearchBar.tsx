@@ -36,10 +36,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
     const [field2, setField2] = useState<string | undefined>('');
     const [field3, setField3] = useState<string | undefined>('');
     const [field4, setField4] = useState<string | undefined>('');
-    const [operator1, setOperator1] = useState<string | undefined>('');
-    const [operator2, setOperator2] = useState<string | undefined>('');
-    const [operator3, setOperator3] = useState<string | undefined>('');
-    const [operator4, setOperator4] = useState<string | undefined>('');
+    const [operator1, setOperator1] = useState<string>('AND');
+    const [operator2, setOperator2] = useState<string>('AND');
+    const [operator3, setOperator3] = useState<string>('AND');
+    const [operator4, setOperator4] = useState<string>('AND');
 
 
     const AdvanceSearchClick = () => {
@@ -78,16 +78,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
         try {
 
         // Initialize queryParts with the first part of the query using content
-        const queryParts = [`("module_name":"${content}")`];
+        const queryParts = [`("module_name":${content})`];
 
         // Append additional conditions with their respective operators and fields
-        if (condition1) queryParts.push(`${operator1} ("${field1}":"${condition1}")`);
-        if (condition2) queryParts.push(`${operator2} ("${field2}":"${condition2}")`);
-        if (condition3) queryParts.push(`${operator3} ("${field3}":"${condition3}")`);
-        if (condition4) queryParts.push(`${operator4} ("${field4}":"${condition4}")`);
+        if (condition1) queryParts.push(`${operator1}("${field1}":${condition1})`);
+        if (condition2) queryParts.push(`${operator2}("${field2}":${condition2})`);
+        if (condition3) queryParts.push(`${operator3}("${field3}":${condition3})`);
+        if (condition4) queryParts.push(`${operator4}("${field4}":${condition4})`);
 
         // Join all parts of the query into a final string
-        const finalQuery = queryParts.join(' ');
+        const finalQuery = queryParts.join('');
 
         if (onSearch) {
             await onSearch();
