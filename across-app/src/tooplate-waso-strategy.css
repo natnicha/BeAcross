@@ -405,6 +405,10 @@ strong {
   height: 300px;
   width: 100%;
 }
+.SearchPage {
+  display: flex;
+  flex-direction: column;
+}
 
 .SearchPage .searchbar {
   position: relative;
@@ -425,6 +429,7 @@ strong {
 .SearchPage p {
   font-size: large;
   margin-left: auto;
+  padding-left: 30px;
 }
 
 .SearchPage .row {
@@ -449,6 +454,7 @@ strong {
   display: flex;
   align-items: center;
   width: 100%; 
+  transition: height 0.3s ease;
 }
 
 .advancedSearchRow {
