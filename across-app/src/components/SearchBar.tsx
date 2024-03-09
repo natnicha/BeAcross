@@ -80,7 +80,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                             role="button"
                             tabIndex={0}
                             >
-                            <strong><u>Advance Search Panel</u></strong>
+                            <strong><u>Advance Search</u></strong>
                             &nbsp;<i className="bi bi-caret-right-fill"></i>
                         </a>
                         {showAdvanceSearch && (
@@ -134,7 +134,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <input
                                         type="text"
                                         className="searchInput"
-                                        placeholder="Condition 1"
+                                        placeholder="Condition 2"
                                         value={""}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
@@ -169,7 +169,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <input
                                         type="text"
                                         className="searchInput"
-                                        placeholder="Condition 1"
+                                        placeholder="Condition 3"
                                         value={""}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
@@ -202,7 +202,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <input
                                         type="text"
                                         className="searchInput"
-                                        placeholder="Condition 1"
+                                        placeholder="Condition 4"
                                         value={""}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
@@ -222,7 +222,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     </select> 
                                 </div>
                             </div>
-                        </>                   
+                            &nbsp;&nbsp;
+                            <button
+                                className="custom-btn btn custom-link"
+                                onClick={handleSearch}
+                                >
+                                Advance Search
+                            </button>
+                        </> 
+                                          
                     )}
                     </div>
             </div>
