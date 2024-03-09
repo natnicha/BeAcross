@@ -74,7 +74,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                         <a
                             className="click-scroll d-flex align-items-end"
                             onClick={(e) => {
-                                e.preventDefault(); // Prevent default if using href="#"
+                                e.preventDefault();
                                 AdvanceSearchClick();
                             }}
                             role="button"
@@ -83,24 +83,145 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                             <strong><u>Advance Search Panel</u></strong>
                             &nbsp;<i className="bi bi-caret-right-fill"></i>
                         </a>
-                    {showAdvanceSearch && (
+                        {showAdvanceSearch && (
                         <>
-                            <select
-                                name="logicalOperators"
-                                id="logicalOperators"
-                                value={selectedValue}
-                                onChange={handleChange}
-                            >
-                                <option value="AND">AND</option>
-                                <option value="OR">OR</option>
-                                <option value="NOT">NOT</option>
-                            </select>
-                            <input
-                                type="text"
-                                className="searchInput"
-                                placeholder="Search module here..."
-                                value={""}
-                            />
+                            <div className="advanchsearchpanel">
+                                <div className="advancesearch">
+                                    <select
+                                        name="logicalOperators"
+                                        id="logicalOperators"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="AND">AND</option>
+                                        <option value="OR">OR</option>
+                                        <option value="NOT">NOT</option>
+                                    </select>
+                                    &nbsp;
+                                    <input
+                                        type="text"
+                                        className="searchInput"
+                                        placeholder="Condition 1"
+                                        value={""}
+                                    />
+                                    &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
+                                    <select
+                                        name="metaData"
+                                        id="metaData"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="module_name">Module Name</option>
+                                        <option value="degree_program">Degree Program</option>
+                                        <option value="degree_level">Degree Level</option>
+                                        <option value="content">Content</option>
+                                        <option value="ects">ECTS</option>
+                                        <option value="university">University</option>
+                                        <option value="module_type">Module Type</option>
+                                    </select> 
+                                    <div style={{ paddingLeft: '35px'}}></div>
+                                    <select 
+                                        name="logicalOperators"
+                                        id="logicalOperators"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="AND">AND</option>
+                                        <option value="OR">OR</option>
+                                        <option value="NOT">NOT</option>
+                                    </select>
+                                    &nbsp;
+                                    <input
+                                        type="text"
+                                        className="searchInput"
+                                        placeholder="Condition 1"
+                                        value={""}
+                                    />
+                                    &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
+                                    <select
+                                        name="metaData"
+                                        id="metaData"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="module_name">Module Name</option>
+                                        <option value="degree_program">Degree Program</option>
+                                        <option value="degree_level">Degree Level</option>
+                                        <option value="content">Content</option>
+                                        <option value="ects">ECTS</option>
+                                        <option value="university">University</option>
+                                        <option value="module_type">Module Type</option>
+                                    </select> 
+                                </div>  
+
+                                <div className="advancesearch">
+                                    <select
+                                        name="logicalOperators"
+                                        id="logicalOperators"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="AND">AND</option>
+                                        <option value="OR">OR</option>
+                                        <option value="NOT">NOT</option>
+                                    </select>
+                                    &nbsp;
+                                    <input
+                                        type="text"
+                                        className="searchInput"
+                                        placeholder="Condition 1"
+                                        value={""}
+                                    />
+                                    &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
+                                    <select
+                                        name="metaData"
+                                        id="metaData"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="module_name">Module Name</option>
+                                        <option value="degree_program">Degree Program</option>
+                                        <option value="degree_level">Degree Level</option>
+                                        <option value="content">Content</option>
+                                        <option value="ects">ECTS</option>
+                                        <option value="university">University</option>
+                                        <option value="module_type">Module Type</option>
+                                    </select>
+                                    <div style={{ paddingLeft: '35px'}}></div>
+                                    <select 
+                                        name="logicalOperators"
+                                        id="logicalOperators"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="AND">AND</option>
+                                        <option value="OR">OR</option>
+                                        <option value="NOT">NOT</option>
+                                    </select>
+                                    &nbsp;
+                                    <input
+                                        type="text"
+                                        className="searchInput"
+                                        placeholder="Condition 1"
+                                        value={""}
+                                    />
+                                    &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
+                                    <select
+                                        name="metaData"
+                                        id="metaData"
+                                        value={selectedValue}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="module_name">Module Name</option>
+                                        <option value="degree_program">Degree Program</option>
+                                        <option value="degree_level">Degree Level</option>
+                                        <option value="content">Content</option>
+                                        <option value="ects">ECTS</option>
+                                        <option value="university">University</option>
+                                        <option value="module_type">Module Type</option>
+                                    </select> 
+                                </div>
+                            </div>
                         </>                   
                     )}
                     </div>
