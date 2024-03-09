@@ -77,19 +77,22 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
         setErrorMessage(''); // Clear any previous error message
         try {
 
-            const queryParts = [];
-            if (condition1) queryParts.push(`("module_name":${content})${operator1}("${field1}":${condition1})`);
-            if (condition2 && queryParts.length > 0) queryParts.push(`${operator2} ("${field2}":${condition2})`);
-            
-            const finalQuery = queryParts.join(' ');
+        // Initialize queryParts with the first part of the query using content
+        const queryParts = [`("module_name":"${content}")`];
 
+        // Append additional conditions with their respective operators and fields
+        if (condition1) queryParts.push(`${operator1} ("${field1}":"${condition1}")`);
+        if (condition2) queryParts.push(`${operator2} ("${field2}":"${condition2}")`);
+        if (condition3) queryParts.push(`${operator3} ("${field3}":"${condition3}")`);
+        if (condition4) queryParts.push(`${operator4} ("${field4}":"${condition4}")`);
 
+        // Join all parts of the query into a final string
+        const finalQuery = queryParts.join(' ');
 
-
-            if (onSearch) {
-                await onSearch();
-            }
-            navigate("/search?query=" + encodeURIComponent(finalQuery) + "&isAdvance=true");
+        if (onSearch) {
+            await onSearch();
+        }
+        navigate("/search?query=" + encodeURIComponent(finalQuery) + "&isAdvance=true");
         } catch (error) {
             console.error('Error during search:', error);
             setErrorMessage('An error occurred during the search. Please try again.');
