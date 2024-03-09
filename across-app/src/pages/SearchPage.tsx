@@ -65,6 +65,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.handleSearchBarSearch = this.handleSearchBarSearch.bind(this);
   }
 
+  // OnSearch()
   handleSearchBarSearch = (): void => {
     this.setState({ currentPage: 1 }, () => {
       this.performSearch(true);
