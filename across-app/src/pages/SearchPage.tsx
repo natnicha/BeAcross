@@ -76,12 +76,12 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.performSearch(true); // Assuming true initializes the search with current state
 }
 
-async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
-    // Check if URL changed
-    if (this.props.location.search !== prevProps.location.search) {
-        this.parseUrlParams();
-    }
-}
+  async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
+      // Check if URL changed
+      if (this.props.location.search !== prevProps.location.search) {
+          this.parseUrlParams();
+      }
+  }
 
 parseUrlParams = () => {
   const searchParams = new URLSearchParams(this.props.location.search);
@@ -126,9 +126,9 @@ parseUrlParams = () => {
     }
 
     this.setState({ totalPages });
-}
+  }
 
-   performSearch = async (isNewSearch: boolean = false) => {
+  performSearch = async (isNewSearch: boolean = false) => {
     try {
       const offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
       const offsetString = offset.toString(); // Convert to String before passing data to BE
@@ -153,7 +153,12 @@ parseUrlParams = () => {
       };
 
       // Including the filters in the searchServices call
-      const result = await searchServices(this.state.query, offsetString, filters, sorting);
+
+      // 1. access url "advance=true"
+      // 2. store in boolean  var isAdvanceSearch = true;
+      const isAdvanceSearch = false; // access url and determine isAdvanceSearch in url
+
+      const result = await searchServices(this.state.query, offsetString, filters, sorting, isAdvanceSearch);
       
       if (isNewSearch) {
         this.setState({ searchResult: result, currentPage: 1 });

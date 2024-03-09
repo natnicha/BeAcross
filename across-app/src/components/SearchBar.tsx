@@ -5,7 +5,20 @@ interface SearchBarProps {
     content: string;
     setContent: (value: string) => void;
     onSearch?: () => Promise<void> | void;
+    condition1?: string;
+    condition2?: string;
+    condition3?: string;
+    condition4?: string;
+    field1?: string;
+    field2?: string;
+    field3?: string;
+    field4?: string;
+    operator1?: string;
+    operator2?: string;
+    operator3?: string;
+    operator4?: string;
   }
+
 
 const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) => {
     
@@ -13,6 +26,21 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
     const [showAdvanceSearch, setAdvanceSearch] = useState(false); // State to manage visibility of the advance search panel
     const [selectedValue, setSelectedValue] = useState('AND');
     const [errorMessage, setErrorMessage] = useState(''); // New state for the error message
+
+    //advanceSearch
+    const [condition1, setCondition1] = useState<string | undefined>('');
+    const [condition2, setCondition2] = useState<string | undefined>('');
+    const [condition3, setCondition3] = useState<string | undefined>('');
+    const [condition4, setCondition4] = useState<string | undefined>('');
+    const [field1, setField1] = useState<string | undefined>('');
+    const [field2, setField2] = useState<string | undefined>('');
+    const [field3, setField3] = useState<string | undefined>('');
+    const [field4, setField4] = useState<string | undefined>('');
+    const [operator1, setOperator1] = useState<string | undefined>('');
+    const [operator2, setOperator2] = useState<string | undefined>('');
+    const [operator3, setOperator3] = useState<string | undefined>('');
+    const [operator4, setOperator4] = useState<string | undefined>('');
+
 
     const AdvanceSearchClick = () => {
         setAdvanceSearch(!showAdvanceSearch); // Toggle the visibility of the advance search panel
@@ -48,10 +76,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
         }
         setErrorMessage(''); // Clear any previous error message
         try {
+
+            const queryParts = [];
+            if (condition1) queryParts.push(`("module_name":${content})${operator1}("${field1}":${condition1})`);
+            if (condition2 && queryParts.length > 0) queryParts.push(`${operator2} ("${field2}":${condition2})`);
+            
+            const finalQuery = queryParts.join(' ');
+
+
+
+
             if (onSearch) {
                 await onSearch();
             }
-            navigate("/search?query=" + encodeURIComponent(content));
+            navigate("/search?query=" + encodeURIComponent(finalQuery) + "&isAdvance=true");
         } catch (error) {
             console.error('Error during search:', error);
             setErrorMessage('An error occurred during the search. Please try again.');
@@ -79,7 +117,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         onKeyDown={handleKeyDown} // Add onKeyDown event listener
-                        disabled={showAdvanceSearch}
                     />&nbsp;&nbsp;
                 <button
                     className="custom-btn btn custom-link"
@@ -90,6 +127,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                 </button>
                 </div>
                 {errorMessage && <div style={{ color: 'red', marginTop: '10px', marginLeft: '30px' }}>{errorMessage}</div>}
+                    
                     <div className="advancedSearchRow">
                         <a
                             className="click-scroll d-flex align-items-end"
@@ -110,8 +148,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <select
                                         name="logicalOperators"
                                         id="logicalOperators"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={operator1}
+                                        onChange={(e) => setOperator1(e.target.value)}
                                     >
                                         <option value="AND">AND</option>
                                         <option value="OR">OR</option>
@@ -122,14 +160,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 1"
-                                        value={""}
+                                        value={condition1}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
                                         name="metaData"
                                         id="metaData"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={field1}
+                                        onChange={(e) => setField1(e.target.value)}
                                     >
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
@@ -143,8 +181,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <select 
                                         name="logicalOperators"
                                         id="logicalOperators"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={operator2}
+                                        onChange={(e) => setOperator2(e.target.value)}
                                     >
                                         <option value="AND">AND</option>
                                         <option value="OR">OR</option>
@@ -155,14 +193,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 2"
-                                        value={""}
+                                        value={condition2}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
                                         name="metaData"
                                         id="metaData"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={field2}
+                                        onChange={(e) => setField2(e.target.value)}
                                     >
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
@@ -178,8 +216,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <select
                                         name="logicalOperators"
                                         id="logicalOperators"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={operator3}
+                                        onChange={(e) => setOperator3(e.target.value)}
                                     >
                                         <option value="AND">AND</option>
                                         <option value="OR">OR</option>
@@ -190,14 +228,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 3"
-                                        value={""}
+                                        value={condition3}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
                                         name="metaData"
                                         id="metaData"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={field3}
+                                        onChange={(e) => setField3(e.target.value)}
                                     >
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
@@ -211,8 +249,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                     <select 
                                         name="logicalOperators"
                                         id="logicalOperators"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={operator4}
+                                        onChange={(e) => setOperator4(e.target.value)}
                                     >
                                         <option value="AND">AND</option>
                                         <option value="OR">OR</option>
@@ -223,14 +261,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 4"
-                                        value={""}
+                                        value={condition4}
                                     />
                                     &nbsp;&nbsp;<strong>in</strong>&nbsp;&nbsp;
                                     <select
                                         name="metaData"
                                         id="metaData"
-                                        value={selectedValue}
-                                        onChange={handleChange}
+                                        value={field4}
+                                        onChange={(e) => setField4(e.target.value)}
                                     >
                                         <option value="module_name">Module Name</option>
                                         <option value="degree_program">Degree Program</option>
