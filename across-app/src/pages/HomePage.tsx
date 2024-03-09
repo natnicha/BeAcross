@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import acrossBG from "../images/across-bg.png";
 
 //thumbnail images
-import naturalScienceImage from "../images/projects/natural-science.png";
+import physicsImage from "../images/projects/natural-science.png";
 import computerScienceImage from "../images/projects/computer-science.png";
 import mathematicsImage from "../images/projects/mathematics.png";
 import economicsImage from "../images/projects/economics.png";
 import mechanicalEngineeringImage from "../images/projects/mechanical-engineering.png";
 import humanityImage from "../images/projects/humanity.png";
-import electricalEnginerringImage from "../images/projects/electrical-enginerring.png";
+import historicalImage from "../images/projects/electrical-enginerring.png";
 import MusicAndArtImage from "../images/projects/music-and-art.png";
 import SearchBar from "../components/SearchBar";
 
@@ -40,18 +40,18 @@ const HomePage: React.FC = () => {
               <h2 style={{ color: "#1e5af5" }}>Course Categories</h2>
             </div>
 
-            {/*Natural Science*/}
+            {/*Physics*/}
             <div className="col-lg-3 col-12">
               <div className="projects-thumb projects-thumb-small">
                 <a href="#">
                   <img
-                    src={naturalScienceImage}
+                    src={physicsImage}
                     className="img-fluid projects-image"
-                    alt="Natural Science"
+                    alt="Physics"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Natural Science</h4>
+                      <h4 className="projects-title">Physics</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -134,18 +134,18 @@ const HomePage: React.FC = () => {
                 </a>
               </div>
             </div>
-            {/*Mechanical Engineering*/}
+            {/*Engineering*/}
             <div className="col-lg-3 col-12">
               <div className="projects-thumb projects-thumb-small">
                 <a href="#">
                   <img
                     src={mechanicalEngineeringImage}
                     className="img-fluid projects-image"
-                    alt="Mechanical Engineering"
+                    alt="Engineering"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Mechanical Engineering</h4>
+                      <h4 className="projects-title">Engineering</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -180,18 +180,18 @@ const HomePage: React.FC = () => {
                 </a>
               </div>
             </div>
-            {/*Electrical Enginerring*/}
+            {/*Historical*/}
             <div className="col-lg-3 col-12">
               <div className="projects-thumb projects-thumb-small">
                 <a href="#">
                   <img
-                    src={electricalEnginerringImage}
+                    src={historicalImage}
                     className="img-fluid projects-image"
-                    alt="Electrical Enginerring"
+                    alt="Historical"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Electrical Enginerring</h4>
+                      <h4 className="projects-title">Historical</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -203,18 +203,18 @@ const HomePage: React.FC = () => {
                 </a>
               </div>
             </div>
-            {/*Music And Art*/}
+            {/*Media Art*/}
             <div className="col-lg-3 col-12">
               <div className="projects-thumb projects-thumb-small">
                 <a href="#">
                   <img
                     src={MusicAndArtImage}
                     className="img-fluid projects-image"
-                    alt="Music And Art"
+                    alt="Media Art"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Music And Art</h4>
+                      <h4 className="projects-title">Media Art</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
