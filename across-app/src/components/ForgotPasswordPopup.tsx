@@ -43,9 +43,9 @@ const handleSubmit = async () => {
     const response = await forgotPassword(emailToForgotPassword);
     console.log('Request Forgot password successful:', response);
         
-    if(response.status === 201) {
+    if(response.status === 200) {
       setIsSubmitted(true);
-      setResponseMessage(response.message);
+      setResponseMessage("The email was sent succesfully");
       setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
     } else {  
       setResponseMessage(response.message);

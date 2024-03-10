@@ -108,7 +108,7 @@ export async function loginUser(
 
 // Function to send a POST request to the Forgot password API
 export async function forgotPassword(email: string): Promise<RegisterResponse> {
-  const url: string = "";
+  const url: string = "http://127.0.0.1:8000/api/v1/auth/forgot-password";
   const payload: RegisterRequest = { email };
 
   try {
