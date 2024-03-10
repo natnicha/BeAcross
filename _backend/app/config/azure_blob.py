@@ -4,16 +4,19 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from app.config.config_utils import env_config
 from azure.storage.blob import BlobServiceClient
 import json
+from owlready2 import *
+
+res_container_name = "results"
+res_blob_name = "result.json"
+owl_blob_name = "modules.owl"
 
 def init_conn():
     return BlobServiceClient.from_connection_string(env_config.AZURE)
 
 def read_res_file():
     conn = init_conn()
-    container_name = "results"
-    blob_name = "result.json"
 
-    blob_client = conn.get_blob_client(container=container_name, blob=blob_name)
+    blob_client = conn.get_blob_client(container=res_container_name, blob=res_blob_name)
     # List the blobs in the container
     blob_content = blob_client.download_blob().readall()
 
@@ -22,9 +25,27 @@ def read_res_file():
 
 def write_res_file(data):
     conn = init_conn()
-    container_name = "results"
-    blob_name = "result.json"
 
-    blob_client = conn.get_blob_client(container=container_name, blob=blob_name)
-    content = json.dumps(data)  # Serialize dictionary into JSON string
+    blob_client = conn.get_blob_client(container=res_container_name, blob=res_blob_name)
+    content = json.dumps(data, indent=2) # Serialize dictionary into JSON string
+    print(content)
     blob_client.upload_blob(content, overwrite=True)  # Upload updated content back to blob
+
+
+def download_owl_file():
+    # Initialize BlobServiceClient using your connection string
+    conn = init_conn()
+
+    # Get a BlobClient for the blob you want to download
+    blob_client = conn.get_blob_client(container=res_container_name, blob=owl_blob_name)
+    blob_data = blob_client.download_blob()
+    return blob_data
+
+def write_owl_file(path):
+    conn = init_conn()
+    blob_client = conn.get_blob_client(container=res_container_name, blob=owl_blob_name)
+    # Upload the local file to the blob, overwriting the existing blob
+    with open(path, "rb") as local_file:
+        print(local_file)
+        blob_client.upload_blob(local_file, overwrite=True)
+

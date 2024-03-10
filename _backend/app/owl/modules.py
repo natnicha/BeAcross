@@ -1,22 +1,16 @@
+from app.config.azure_blob import download_owl_file, read_res_file, write_owl_file
 from owlready2 import *
 import os
 import json
 
 def find_suggested_modules(module: str) -> list:
 
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(current_directory)
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "owl", "modules.owl")
-
-    if not os.path.isfile(owl_path):
+    write_owl_to_file_on_download()
+    
+    if not os.path.isfile(path()):
         return []
 
-    onto = get_ontology(owl_path).load()
+    onto = get_ontology(path()).load()
     # Get the individual by its name
     individual = onto.search_one(iri="*%s" % module)
 
@@ -25,41 +19,17 @@ def find_suggested_modules(module: str) -> list:
         if individual.similarTo:
             for i in individual.similarTo:
                 res.append(i.name)
+    
+    delete_owl()
     return res
 
-def delete_file():
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
-
-    if os.path.isfile(owl_path):
-        # print("File exists")
-        os.remove(owl_path)
 
 def add_modules_to_owl():
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    delete_owl()
+    create_empty_owl_file()
 
-    # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
-
-    # print(owl_path)
-
-    if os.path.isfile(owl_path):
-        # print("File exists")
-        os.remove(owl_path)
-
-    fp = open(owl_path, 'w')
-    fp.close()
-
-    onto = get_ontology(owl_path).load()
+    onto = get_ontology(path()).load()
 
     # Remove all classes, individuals, properties, and axioms
     for entity in list(onto.classes()) + list(onto.individuals()) + list(onto.properties()):
@@ -76,7 +46,7 @@ def add_modules_to_owl():
             range = [Module]
 
     # Create Ontology
-    sim_result = get_results()
+    sim_result = read_res_file()
 
     # define Modules
     for key, item in sim_result.items():
@@ -103,22 +73,35 @@ def add_modules_to_owl():
                 instance.name = inner
                 res.similarTo.append(instance)
 
-    onto.save(owl_path)
+    onto.save(path())
+    delete_owl_after_write()
 
-
-def get_results():
-    # Specify the path to your JSON file
+def path():
+        # Get the current working directory (your_script.py's directory)
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
     # Navigate to the 'owl' directory and access 'results.json'
-    json_path = os.path.join(backend_directory, "app", "owl", "result.json")
+    owl_path = os.path.join(backend_directory, "owl", "modules.owl")
+    
+    return owl_path
 
-    # Read the JSON file and load its content into a dictionary
-    with open(json_path, 'r') as json_file:
-        data_dict = json.load(json_file)
+def write_owl_to_file_on_download():
+    with open(path(), "wb") as local_file:
+        owl_data = download_owl_file()
+        owl_data.readinto(local_file)
 
-    # Now, data_dict contains the content of the JSON file as a Python dictionary
-    return data_dict
+def delete_owl():
+    if os.path.isfile(path()):
+        os.remove(path())
+
+def create_empty_owl_file():
+    fp = open(path(), 'w')
+    fp.close()
+
+def delete_owl_after_write():
+    write_owl_file(path())
+    delete_owl()
+    

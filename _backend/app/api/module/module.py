@@ -418,7 +418,6 @@ async def create_module(
 
     background_tasks.add_task(add_module_to_res_parallel_process, items=item_response_list)
     background_tasks.add_task(calculate_similarity_for_one_parallel_process, items=item_response_list)
-    background_tasks.add_task(add_modules_to_owl)
     background_tasks.add_task(send_email_after_calculation, db=db, user_id=ObjectId(request.state.user_id))
 
     return {
