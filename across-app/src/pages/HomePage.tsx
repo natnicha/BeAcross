@@ -26,28 +26,28 @@ const HomePage: React.FC = () => {
   
       switch (courseName) {
         case "Physics":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "Computer Science":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "Mathematic":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "Economic":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "Engineer":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "Human":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "History":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         case "Media Art":
-          queryParts = [`("degree_program":"${courseName}")`];
+          queryParts = [`("degree_program":${courseName})`];
           break;
         default:
           console.log("Course not handled:", courseName);
