@@ -83,7 +83,7 @@ To advnaced search modules regarding given conditions
 ```json
 {
   "detail" : {
-    "message": "no module found"
+    "message": "No module found"
   }
 }
 ```
