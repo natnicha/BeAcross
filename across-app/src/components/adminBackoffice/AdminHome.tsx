@@ -49,6 +49,10 @@ export default function AdminHome() {
           <i className="bi bi-file-earmark-text"></i>{" "}
           <strong> &nbsp; Edit Profile</strong>
         </Link>
+        <br />
+        <Link to="../profile" className="click-scroll">
+          <strong> &nbsp; </strong>
+        </Link>
       </button>
     </>
   );

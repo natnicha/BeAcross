@@ -18,9 +18,11 @@ interface StudInfoData {
 }
 
 export default function StudList() {
-  const [studInfoData, setStudInfoDatas] = useState<StudInfoData | null>(null);
+  const [studInfoData, setStudInfoData] = useState<StudInfoData | null>(null);
   const [selectedItem, setSelectedItem] = useState<StudInfo | null>(null);
   const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredStudInfo, setFilteredStudInfo] = useState<StudInfo[]>([]);
 
   const jwtToken = sessionStorage.getItem("jwtToken");
 
@@ -44,11 +46,11 @@ export default function StudList() {
       })
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Failed to delete sutudent");
+            throw new Error("Failed to delete student");
           }
 
           // Remove the deleted student from state
-          setStudInfoDatas((prevStudInfoData) => {
+          setStudInfoData((prevStudInfoData) => {
             if (!prevStudInfoData) return null;
             const updatedItems = prevStudInfoData.items.filter(
               (item) => item.id !== id
@@ -57,15 +59,14 @@ export default function StudList() {
           });
         })
         .catch((error) => {
-          console.error("Error deleting sutudent:", error);
+          console.error("Error deleting student:", error);
         });
-    } else {
     }
   };
 
   //Get student list
   useEffect(() => {
-    fetch("http://localhost:8000/api/v1/user/profile/list", {
+    fetch(`http://localhost:8000/api/v1/user/profile/list`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -73,24 +74,49 @@ export default function StudList() {
     })
       .then((response) => response.json())
       .then((data: StudInfoData) => {
-        setStudInfoDatas(data);
+        setStudInfoData(data);
+        setFilteredStudInfo(data?.items || []);
       })
       .catch((error) => {
-        console.error("Error fetching studunt list data:", error);
+        console.error("Error fetching student list data:", error);
       });
   }, [jwtToken]);
+
+  // Filter students based on search query
+  useEffect(() => {
+    if (!studInfoData) return;
+    const filteredStudents = studInfoData.items.filter((student) =>
+      `${student.first_name} ${student.last_name} ${student.registration_number}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+    setFilteredStudInfo(filteredStudents);
+  }, [searchQuery, studInfoData]);
 
   return (
     <div className="about-thumb bg-white shadow-lg">
       <h5 className="mb-3" style={{ color: "#1e5af5" }}>
         Student List
-      </h5>{" "}
+      </h5>
+      <div
+        className="searchbar"
+        style={{ float: "right", padding: "10px", width: "100%" }}
+      >
+        <input
+          type="text"
+          placeholder="Search student's name or registration number"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ float: "right", width: "45%" }}
+        />
+        <i className="bi bi-search" style={{ float: "right" }}></i>
+      </div>
       <div className="search-header">
         <div className="search-column">
           <strong>Name and Surname</strong>
         </div>
         <div className="search-column">
-          <strong>Registrarion Nr.</strong>
+          <strong>Registration Nr.</strong>
         </div>
         <div className="search-column">
           <strong>Course of study</strong>
@@ -100,12 +126,12 @@ export default function StudList() {
         </div>
       </div>
       {/*Display Items*/}
-      {studInfoData ? (
+      {filteredStudInfo ? (
         <div className="search-table">
-          {studInfoData.items.map((studInfo) => (
+          {filteredStudInfo.map((studInfo) => (
             <div className="search-row" key={studInfo.email}>
               <div className="search-column" id="name">
-                {studInfo.first_name + " " + studInfo.last_name}
+                {studInfo.first_name} {studInfo.last_name}
               </div>
               <div className="search-column" id="registrationNr">
                 {studInfo.registration_number}
