@@ -28,7 +28,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
     const [errorMessage, setErrorMessage] = useState(''); // New state for the error message
 
     //advanceSearch
-    const [condition1, setCondition1] = useState<string | undefined>('');
+    const [condition1, setCondition1] = useState<string>('');
     const [condition2, setCondition2] = useState<string | undefined>('');
     const [condition3, setCondition3] = useState<string | undefined>('');
     const [condition4, setCondition4] = useState<string | undefined>('');
@@ -69,9 +69,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
       };
 
     const handleAdvanceSearch = async () => {
-        if (!content.trim()) {
+        if (!condition1.trim()) {
             // If content is empty or only contains whitespace
-            setErrorMessage('Please enter a search term first.');
+            setErrorMessage('Please enter a first condition first.');
             return; // Exit the function early without searching
         }
         setErrorMessage(''); // Clear any previous error message
