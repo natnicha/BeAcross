@@ -49,3 +49,15 @@ def write_owl_file(path):
         print(local_file)
         blob_client.upload_blob(local_file, overwrite=True)
 
+def check_etag(before, during):
+    if before == during:
+        return True
+    else:
+        return False
+    
+def get_etag(blob_name):
+    conn = init_conn()
+
+    blob_client = conn.get_blob_client(container=res_container_name, blob=blob_name)
+    etag = blob_client.get_blob_properties().etag
+    return etag
