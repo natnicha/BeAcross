@@ -405,12 +405,17 @@ strong {
   height: 300px;
   width: 100%;
 }
+.SearchPage {
+  display: flex;
+  flex-direction: column;
+}
 
 .SearchPage .searchbar {
   position: relative;
   height: 100px;
   margin-left: -345px;
   width: 155%;
+  padding: 6%;
 }
 
 .SearchPage .searchbarContent {
@@ -425,6 +430,7 @@ strong {
 .SearchPage p {
   font-size: large;
   margin-left: auto;
+  padding-left: 30px;
 }
 
 .SearchPage .row {
@@ -447,13 +453,14 @@ strong {
 .searchbarRow,
 .advancedSearchRow {
   display: flex;
-  align-items: center; /* Center items vertically */
-  width: 100%; /* Take full width of parent */
+  align-items: center;
+  width: 100%; 
 }
 
 .advancedSearchRow {
-  justify-content: left; /* Center the link horizontally */
-  margin-top: 10px; /* Add some space above the link */
+  justify-content: left;
+  margin-top: 10px;
+  flex-direction: row;
 }
 
 .bi-search {
@@ -1699,3 +1706,11 @@ ul {
   padding: 5px 10px;
   margin: 5px 0 10px 5px; /* top | right | bottom | left */
 }
+
+.advancesearch {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+}
+
+

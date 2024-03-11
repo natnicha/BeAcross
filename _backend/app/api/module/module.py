@@ -325,7 +325,7 @@ async def advanced_search(
 
     count = MODULES.advanced_count(db, extracted_columns)
     if count == 0:
-        raise HTTPException(detail={"message": "no module found"}, status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail={"message": "No module found"}, status_code=status.HTTP_404_NOT_FOUND)
     
     sortby_column = 'module_name'
     if not is_manual_calculated_sortby(sortby=sortby):
