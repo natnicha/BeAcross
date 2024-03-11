@@ -9,7 +9,7 @@ from app.transferability.similiarity_logic import compare_titles
 from app.config.config_utils import env_config
 from app.owl.modules import add_modules_to_owl
 from app.api.module.model import ModuleResponseModel, UploadModulesResponseItemModel
-from app.config.azure_blob import read_res_file, write_res_file
+from app.config.azure_blob import check_etag, get_etag, read_res_file, write_res_file
 
 # TODO check if id already exists in similarity file
 
@@ -39,7 +39,7 @@ def get_all_module_id():
 
 # fix results file after addition
 def fix_res_file():
-    data = read_res_file()
+    data,etag = read_res_file()
     ids = get_all_module_id()
     to_remove_key = []
     # print(data)
@@ -61,7 +61,12 @@ def fix_res_file():
     for _id in to_remove_key:
         del data[_id]
 
-    write_res_file(data)
+    if check_etag(etag, get_etag("result.json")):
+        write_res_file(data)
+        return
+    else:
+        fix_res_file()
+        
 
 
 # get all modules from a different uni
@@ -145,7 +150,7 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
     # calculate transferability between modules
     data = get_specific_module_data(inserted_mod.university)
 
-    similarity_results = read_res_file()
+    similarity_results,etag = read_res_file()
     similarity_changes = {}
 
     for modu in data:
@@ -175,7 +180,7 @@ def start_similarity_for_one_after_update(updated_mod: ModuleResponseModel):
     # calculate transferability between modules
     data = get_specific_module_data(updated_mod['university'])
 
-    similarity_results = read_res_file()
+    similarity_results,etag = read_res_file()
     similarity_changes = {}
 
     for modu in data:
@@ -203,7 +208,7 @@ def start_similarity_for_one_after_update(updated_mod: ModuleResponseModel):
 
 def combine_similarity_results_and_write_back(similarity_changes: list):
 
-    similarity_source = read_res_file()
+    similarity_source,etag = read_res_file()
     res = fix_similarity_changes(similarity_changes)
     for key, value in res.items():
         similarity_source[key].extend(value)
@@ -272,7 +277,7 @@ def check_similarity_class(module_a, module_b):
 
 # takes 2 module id numbers and removes the similarity from first to second
 def remove_similarity(module_to_remove_from: str, module_to_remove: str):
-    data = read_res_file()
+    data,etag = read_res_file()
 
     index = -1
 
@@ -295,7 +300,7 @@ def remove_similarity(module_to_remove_from: str, module_to_remove: str):
 
 
 def remove_similarity_on_delete(module_to_remove):
-    data = read_res_file()
+    data,etag = read_res_file()
 
     index = -1
 
@@ -315,7 +320,7 @@ def remove_similarity_on_delete(module_to_remove):
 
 # takes 2 module id numbers and add the similarity to the first
 def add_similarity(module_to_add_to: str, module_to_add: str):
-    data = read_res_file()
+    data,etag = read_res_file()
 
     if module_to_add_to not in data.keys() or module_to_add not in data.keys():
         raise Exception("Module Not Found")
@@ -336,7 +341,7 @@ def add_similarity(module_to_add_to: str, module_to_add: str):
 
 
 def add_module_to_res(id_to_add):
-    data = read_res_file()
+    data,etag = read_res_file()
     data[id_to_add] = []
     write_res_file(data)
 

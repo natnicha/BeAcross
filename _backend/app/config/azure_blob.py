@@ -19,9 +19,9 @@ def read_res_file():
     blob_client = conn.get_blob_client(container=res_container_name, blob=res_blob_name)
     # List the blobs in the container
     blob_content = blob_client.download_blob().readall()
-
+    etag = blob_client.get_blob_properties().etag
     res = json.loads(blob_content)
-    return res
+    return res,etag
 
 def write_res_file(data):
     conn = init_conn()
@@ -33,13 +33,16 @@ def write_res_file(data):
 
 
 def download_owl_file():
+
     # Initialize BlobServiceClient using your connection string
     conn = init_conn()
 
     # Get a BlobClient for the blob you want to download
     blob_client = conn.get_blob_client(container=res_container_name, blob=owl_blob_name)
     blob_data = blob_client.download_blob()
-    return blob_data
+    etag = blob_client.get_blob_properties().etag
+
+    return blob_data,etag
 
 def write_owl_file(path):
     conn = init_conn()

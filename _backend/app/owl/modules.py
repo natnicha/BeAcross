@@ -1,4 +1,4 @@
-from app.config.azure_blob import download_owl_file, read_res_file, write_owl_file
+from app.config.azure_blob import check_etag, download_owl_file, get_etag, read_res_file, write_owl_file
 from owlready2 import *
 import os
 import json
@@ -46,7 +46,7 @@ def add_modules_to_owl():
             range = [Module]
 
     # Create Ontology
-    sim_result = read_res_file()
+    sim_result,etag = read_res_file()
 
     # define Modules
     for key, item in sim_result.items():
@@ -74,7 +74,12 @@ def add_modules_to_owl():
                 res.similarTo.append(instance)
 
     onto.save(path())
-    delete_owl_after_write()
+    
+    if check_etag(etag, get_etag("result.json")):
+        delete_owl_after_write()
+        return
+    else:
+        add_modules_to_owl()
 
 def path():
         # Get the current working directory (your_script.py's directory)
@@ -90,7 +95,7 @@ def path():
 
 def write_owl_to_file_on_download():
     with open(path(), "wb") as local_file:
-        owl_data = download_owl_file()
+        owl_data,etag = download_owl_file()
         owl_data.readinto(local_file)
 
 def delete_owl():

@@ -31,6 +31,8 @@ from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
 from app.crud.modules import find_one
 
+from app.config.azure_blob import check_etag, get_etag
+
 module = APIRouter()
 
 sortby_database_col_mapping = {"module_name":"name", "degree_program":"degree_program", "degree_level":"degree_level", "ects":"ects", "university":"university", "module_type": "type", "module_code": "module_code", "content":"content"}
@@ -434,6 +436,8 @@ def add_module_to_res_parallel_process(items: list):
         
 
 def calculate_similarity_for_one_parallel_process(items: list):
+    # get etag before calculation
+    etag = get_etag("result.json")
     try:
         logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: started")
         cpu_count = multiprocessing.cpu_count()
@@ -469,7 +473,10 @@ def calculate_similarity_for_one_parallel_process(items: list):
         logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: all parallel processes joined")
 
         logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: writing a result json file")
-        combine_similarity_results_and_write_back(similarity_changes)
+        if check_etag(etag, get_etag("result.json")):
+            combine_similarity_results_and_write_back(similarity_changes)
+        else:
+            calculate_similarity_for_one_parallel_process(items)
         logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: {len(items)} modules successfully proceeded")
     except Exception as e:
         logging.error(f"{__name__}.{inspect.stack()[0][3]} | message: {e}")
