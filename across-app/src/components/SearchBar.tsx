@@ -78,10 +78,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
         try {
 
             // Initialize queryParts with the first part of the query using content
-            const queryParts = [`("module_name":${content})`];
+            const queryParts = [`("${field1}":${condition1})`];
 
             // Append additional conditions with their respective operators and fields
-            if (condition1) queryParts.push(`${operator1}("${field1}":${condition1})`);
             if (condition2) queryParts.push(`${operator2}("${field2}":${condition2})`);
             if (condition3) queryParts.push(`${operator3}("${field3}":${condition3})`);
             if (condition4) queryParts.push(`${operator4}("${field4}":${condition4})`);
@@ -121,6 +120,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                         onKeyDown={handleKeyDown} // Add onKeyDown event listener
+                        disabled={showAdvanceSearch}
                     />&nbsp;&nbsp;
                 <button
                     className="custom-btn btn custom-link"
@@ -149,18 +149,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ content, setContent, onSearch }) 
                         <>
                             <div className="advanchsearchpanel">
                                 <div className="advancesearch">
-                                    <select
-                                        name="logicalOperators"
-                                        id="logicalOperators"
-                                        value={operator1}
-                                        onChange={(e) => setOperator1(e.target.value)}
-                                    >
-                                        <option value="AND">AND</option>
-                                        <option value="OR">OR</option>
-                                        <option value="NOT">NOT</option>
-                                    </select>
-                                    &nbsp;
-                                    <input
+                                    <input style={{ marginLeft: '60px' }}
                                         type="text"
                                         className="AdvanceSearchInput"
                                         placeholder="Condition 1"
