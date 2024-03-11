@@ -42,6 +42,10 @@ export default function ModuleList() {
   const popupRef = useRef<HTMLDivElement>(null);
   const [selectedItem, setSelectedItem] = useState<ModuleItem | null>(null);
   const [isDetailPopupOpen, setIsDetailPopupOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredModuleItem, setFilteredModuleItem] = useState<ModuleItem[]>(
+    []
+  );
 
   const jwtToken = sessionStorage.getItem("jwtToken");
 
@@ -54,6 +58,7 @@ export default function ModuleList() {
     openDetailPopup();
   };
 
+  //Get Module List
   useEffect(() => {
     fetch(
       `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&limit=200`,
@@ -69,6 +74,17 @@ export default function ModuleList() {
         console.error("Error fetching module list data:", error);
       });
   }, []);
+
+  // Filter module based on search query
+  useEffect(() => {
+    if (!moduleData) return;
+    const filteredModules = moduleData.data.items?.filter((module) =>
+      `${module.module_code} ${module.module_name}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+    setFilteredModuleItem(filteredModules || []);
+  }, [searchQuery, moduleData]);
 
   //Suggestion Module Session
   const handleSuggestionClick = async (
@@ -149,6 +165,19 @@ export default function ModuleList() {
       <h5 className="mb-3" style={{ color: "#1e5af5" }}>
         Module List
       </h5>
+      <div
+        className="searchbar"
+        style={{ float: "right", padding: "10px", width: "100%" }}
+      >
+        <input
+          type="text"
+          placeholder="Search module name or code"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ float: "right", width: "45%" }}
+        />
+        <i className="bi bi-search" style={{ float: "right" }}></i>
+      </div>
       <div className="search-header">
         <div className="search-column">
           <strong>Module Code</strong>
@@ -168,10 +197,10 @@ export default function ModuleList() {
       </div>
 
       {/*Display Items*/}
-      {moduleData ? (
+      {filteredModuleItem ? (
         <div className="search-table">
-          {moduleData.data.items &&
-            moduleData.data.items.map((item, index) => (
+          {filteredModuleItem &&
+            filteredModuleItem.map((item, index) => (
               <div className="search-row" key={index}>
                 <div className="search-column" id="moduleCode">
                   {item.module_code}
