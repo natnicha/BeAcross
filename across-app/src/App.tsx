@@ -13,7 +13,7 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutAcross from "./pages/AboutAcrossPage";
 import Policy from "./pages/PolicyPage";
-import ContactUs from "./pages/ContactusPage";
+import ContactUs from "./pages/ContactUsPage";
 import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
