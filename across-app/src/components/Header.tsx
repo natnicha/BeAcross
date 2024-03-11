@@ -64,17 +64,14 @@ const Header: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <a
-                  className="nav-link click-scroll"
-                  href="http://localhost:3000/"
-                >
+                <Link to="/" className="nav-link click-scroll">
                   <strong>Home</strong>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="http://localhost:3000/aboutacross">
+                <Link to="/aboutacross" className="nav-link click-scroll">
                   <strong>About</strong>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link click-scroll" href="#section_3">
