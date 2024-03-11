@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { usePopups } from '../PopupContext';
 import { getComment } from '../services/commentServices';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { loadAppConfig } from '../services/configUtils';
 
 //Uni logo
 import bialystokUni from "../images/uni/bialystok-university-technology-bialystok-poland.png";
@@ -28,31 +26,22 @@ interface ModuleDetailPopupProps {
     onClose?: () => void;
 }
 
-interface Comment {
-    id: number;
-    text: string;
-}
-
 interface ModuleComment {
     user: string;
     message: string;
     created_at: string;
 }
 
-
 const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItems, onClose }) => {
    
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
-    const navigate = useNavigate();
-    const location = useLocation();
-    const [config, setConfig] = useState<{ apiBaseUrl: string } | null>(null);
-    const [moduleComments, setModuleComments] = useState<ModuleComment[]>([]);
+    const [moduleComments, setModuleComments] = useState<CommentsByModuleId>({});
+    type CommentsByModuleId = Record<string, ModuleComment[]>;
 
     // Hook all popup control to PopupContext
     const { closeAllPopups } = usePopups();
     const popupRef = useRef<HTMLDivElement>(null);
-       
-    
+         
     useEffect(() => {
         const fetchCommentsForModule = async (moduleId: string) => {
             try {
@@ -69,8 +58,11 @@ const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedIt
         };
     
         const fetchAllComments = async () => {
-            const allComments = await Promise.all(selectedItems.map(item => fetchCommentsForModule(item.module_id)));
-            setModuleComments(allComments.flat()); // Flatten the array if you're aggregating comments from multiple modules
+            const commentsByModuleId: CommentsByModuleId = {};
+            for (const item of selectedItems) {
+                commentsByModuleId[item.module_id] = await fetchCommentsForModule(item.module_id);
+            }
+            setModuleComments(commentsByModuleId); // Update this line to use the new structure
         };
     
         if (selectedItems.length > 0) {
@@ -197,9 +189,9 @@ const CompareModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedIt
                             <div className="feedback-section">
                                 <h6 id="uniqueCommentFeedback">Feedback from Students</h6>
                                 <div className="detail-table" style={{ height: '40%' }}>
-                                    {moduleComments.length > 0 ? (
-                                        moduleComments.map((comment, index) => (
-                                            <div key={index} className="comments">
+                                    {moduleComments[item.module_id] && moduleComments[item.module_id].length > 0 ? (
+                                        moduleComments[item.module_id].map((comment, commentIndex) => (
+                                            <div key={commentIndex} className="comments">
                                                 <div className="detail-row" style={{ border: '1px solid #ddd', width: '98%' }}>
                                                     <div className="detail-column-date" id="user">
                                                         <i className="bi bi-person-circle"></i>&nbsp;&nbsp;<strong>{comment.user}</strong>
