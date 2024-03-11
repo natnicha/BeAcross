@@ -74,14 +74,14 @@ const Header: React.FC = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="#section_3">
+                <Link to="/policy" className="nav-link click-scroll">
                   <strong>Policy</strong>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="#section_4">
-                  <strong>Contact</strong>
-                </a>
+               <Link to="/contactus" className="nav-link click-scroll">
+                  <strong>Contact Us</strong>
+                </Link>
               </li>
               <li className="nav-item">
                 <div className="d-flex align-items-center mt-2">
