@@ -72,7 +72,7 @@ const Header: React.FC = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="#section_2">
+                <a className="nav-link click-scroll" href="http://localhost:3000/aboutacross">
                   <strong>About</strong>
                 </a>
               </li>

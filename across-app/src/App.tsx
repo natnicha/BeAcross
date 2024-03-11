@@ -11,6 +11,7 @@ import { PopupProvider } from "./PopupContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
+import AboutAcross from "./pages/AboutAcrossPage";
 import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
@@ -23,10 +24,11 @@ const App: React.FC = () => {
           <Header />
           <Routes>
             <Route index path="/" element={<HomePage />} />
+            <Route index path="/aboutacross" element={<AboutAcross />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/studentprofile" element={<StudentProfilePage />} />
             <Route path="/admin/*" element={<AdminBackofficePage />} />
-            <Route path="/*" element={<h1>Not Found</h1>} /> {/* 404 */}
+            <Route path="/*" element={<h1>Page Not Found</h1>} /> {/* 404 */}
           </Routes>
           <Footer />
         </Router>
