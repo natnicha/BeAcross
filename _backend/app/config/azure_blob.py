@@ -49,7 +49,6 @@ def write_owl_file(path):
     blob_client = conn.get_blob_client(container=res_container_name, blob=owl_blob_name)
     # Upload the local file to the blob, overwriting the existing blob
     with open(path, "rb") as local_file:
-        print(local_file)
         blob_client.upload_blob(local_file, overwrite=True)
 
 def check_etag(before, during):
