@@ -1,8 +1,41 @@
-import React from "react";
+import React, { useState, FormEvent } from 'react';
 import aboutAcrossBG from "../images/about-across-bg.png";
 
 const ContactUs: React.FC = () => {
 
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault(); // Prevent the default form submission
+
+    try {
+      // Here you would typically make an API call to your server or a serverless function to send the email
+      const response = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      if (response.ok) {
+        // Handle success response
+        alert('Email sent successfully!');
+        setForm({ name: '', email: '', message: '' }); // Reset form
+      } else {
+        // Handle server errors or invalid responses
+        alert('Failed to send email. Please try again later.');
+      }
+    } catch (error) {
+      // Handle network errors
+      console.error('Network error:', error);
+      alert('Network error. Please try again later.');
+    }
+  };
+   
   return (
     <>
     <div style={{ backgroundImage: `url(${aboutAcrossBG})` }} className="background-image"></div>
@@ -14,21 +47,20 @@ const ContactUs: React.FC = () => {
         <div className="container">
             <div className="row">
                 <div className="col-lg-6 col-12">
-                    <form className="custom-form contact-form" action="" method="post" role="form">
+                    <form className="custom-form contact-form" onSubmit={handleSubmit}>
                         <h2 className="mb-3">Contact Us</h2>
                         <p>We value your input and are eager to hear from you. Whether you have questions, feedback, or simply want to reach out, don't hesitate to get in touch with us</p>
                         <div className="row">
                           <div className="col-lg-6 col-md-6 col-12">                                    
-                            <input type="text" name="name" id="name" className="form-control" placeholder="Name" required />
+                            <input type="text" name="name" value={form.name} onChange={handleChange} className="form-control" placeholder="Name" required />
                           </div>
 
                           <div className="col-lg-6 col-md-6 col-12">         
-                            <input type="email" name="email" id="email" className="form-control" placeholder="email@domain.xx" pattern="[^ @]*@[^ @]*" required />
+                            <input type="email" name="email" value={form.email} onChange={handleChange} className="form-control" placeholder="email@domain.xx" pattern="[^ @]*@[^ @]*" required />
                           </div>
 
                           <div className="col-12">
-                            <textarea className="form-control" rows={7} id="message" name="message" placeholder="Message"></textarea>
-
+                            <textarea className="form-control" rows={7} id="message" name="message" value={form.message} onChange={handleChange} placeholder="Message"></textarea>
                             <button type="submit" className="form-control">Submit</button>
                           </div>
                         </div>
