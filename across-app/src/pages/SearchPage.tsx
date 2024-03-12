@@ -131,6 +131,8 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   performSearch = async (isNewSearch: boolean = false) => {
     try {
+      console.log(`Current page: ${this.state.currentPage}, Total pages: ${this.state.totalPages}`);
+
       const offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
       const offsetString = offset.toString(); // Convert to String before passing data to BE
 
@@ -158,14 +160,22 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
       const result = await searchServices(this.state.query, offsetString, filters, sorting, isAdvanceSearch);
       
-      if (isNewSearch) {
+      /*if (isNewSearch) {
         this.setState({ searchResult: result, currentPage: 1 });
       } else {
         this.setState({ searchResult: result });
-      }
+      }*/
+      this.setState({ searchResult: result }, () => {
+        this.calculateTotalPages(); // Recalculate total pages after updating search results
+        if (isNewSearch) {
+            this.setState({ currentPage: 1 }); // Reset to the first page if it's a new search
+        }
+    });
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
+    console.log(`Current page: ${this.state.currentPage}, Total pages: ${this.state.totalPages}`);
+
   }
 
   setQuery(newQuery: string) {
@@ -400,7 +410,7 @@ handleSortClick = (sortField: string) => {
                         <input style={{ marginLeft: "5px"}}
                           type="range" 
                           min="0" 
-                          max="20" 
+                          max="50" 
                           step="1" 
                           name="ects"
                           value={this.state.filters.ects ?? 0}
@@ -467,12 +477,12 @@ handleSortClick = (sortField: string) => {
                 <SearchResult searchResult={this.state.searchResult}/>     
                 </div>  
                 <div>
-                <Pagination
-                  currentPage={this.state.currentPage}
-                  totalPages={this.state.totalPages}
-                  onPageChange={this.handlePageChange}
-                />
-              </div>             
+                  <Pagination
+                    currentPage={this.state.currentPage}
+                    totalPages={this.state.totalPages}
+                    onPageChange={this.handlePageChange}
+                  />
+                </div>             
           </div>
     );
   }

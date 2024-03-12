@@ -6,6 +6,7 @@ import {
 import SuggestionPopup from "../../components/SuggestionResultPopup";
 import { usePopups } from "../../PopupContext";
 import ModuleEditPopup from "./ModuleEditPopup";
+import Pagination from '../../components/Pagination';
 
 interface ModuleItem {
   module_id?: string;
@@ -49,6 +50,11 @@ export default function ModuleList() {
 
   const jwtToken = sessionStorage.getItem("jwtToken");
 
+  //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [offset, setOffset] = useState(20);
+
   // Functions to open/close the register popup
   const openDetailPopup = () => setIsDetailPopupOpen(true);
   const closeDetailPopup = () => setIsDetailPopupOpen(false);
@@ -58,25 +64,43 @@ export default function ModuleList() {
     openDetailPopup();
   };
 
+  //Pagination
+  const handlePageChange = (newPage: number) => {
+    // Calculate the new offset based on the page number
+    const newOffset = (newPage - 1) * 20; // Each page increases offset by 20
+    setCurrentPage(newPage);
+    setOffset(newOffset); // Update the offset state to trigger the useEffect
+  };
+  
   //Get Module List
   useEffect(() => {
-    fetch(
-      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=no_of_suggested_modules&orderby=desc`,
-      {
-        method: "GET",
-      }
-    )
-      .then((response) => response.json())
-      .then((data: ModuleData) => {
+    const getModuleList = async () => {
+      try {
+        // Base URL
+        let url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`;
+  
+        // Append the offset to the URL if not on the first page
+        if (currentPage > 1) {
+          url += `&offset=${offset}`;
+        }
+  
+        const response = await fetch(url, {
+          method: "GET",
+        });
+        const data = await response.json();
         setModuleDatas(data);
-      })
-      .catch((error) => {
+        const total = data.data.total_results ?? 0;
+        setTotalPages(Math.ceil(total / 20));
+      } catch (error) {
         console.error("Error fetching module list data:", error);
-      });
-  }, []);
+      }
+    };
+  
+    getModuleList();
+  }, [currentPage, offset]);
 
   // Filter module based on search query
-  useEffect(() => {
+  /*useEffect(() => {
     if (!moduleData) return;
     const filteredModules = moduleData.data.items?.filter((module) =>
       `${module.module_code} ${module.module_name}`
@@ -84,7 +108,22 @@ export default function ModuleList() {
         .includes(searchQuery.toLowerCase())
     );
     setFilteredModuleItem(filteredModules || []);
-  }, [searchQuery, moduleData]);
+  }, [searchQuery, moduleData]);*/
+  useEffect(() => {
+    // Ensure moduleData is not null and items are present before attempting to filter.
+    if (!moduleData || !moduleData.data.items) return;
+
+    const filteredModules = moduleData.data.items.filter((module) =>
+      `${module.module_code} ${module.module_name}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+
+    setFilteredModuleItem(filteredModules);
+
+    // Since filteredModuleItem depends on the current page (which determines moduleData)
+    // and the search query, we include both as dependencies.
+}, [moduleData, searchQuery]);
 
   //Suggestion Module Session
   const handleSuggestionClick = async (
@@ -162,9 +201,17 @@ export default function ModuleList() {
 
   return (
     <div className="about-thumb bg-white shadow-lg">
-      <h5 className="mb-3" style={{ color: "#1e5af5" }}>
-        Module List
-      </h5>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        <h5 className="mb-3" style={{ color: "#1e5af5", margin: 0 }}>
+          Module List
+        </h5>
+        <p style={{ margin: 0 }}>Show 
+          <span style={{ color: "#1e5af5" }}><strong> {moduleData?.data.total_items ?? '0'} </strong></span>
+          of 
+          <span style={{ color: "#1e5af5" }}><strong> {moduleData?.data.total_results ?? '0'} </strong></span>
+          Search results founded.
+        </p>
+      </div>
       <div
         className="searchbar"
         style={{ float: "right", padding: "10px", width: "100%" }}
@@ -244,6 +291,8 @@ export default function ModuleList() {
                   </button>
                 </div>
               </div>
+              
+              
             ))}
         </div>
       ) : (
@@ -265,6 +314,13 @@ export default function ModuleList() {
           suggestionItems={suggestedItem} // Providing an empty array as a default
         />
       )}
-    </div>
+      <div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div> 
+    </div>   
   );
 }
