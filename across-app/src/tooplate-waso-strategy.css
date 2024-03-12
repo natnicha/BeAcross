@@ -1153,10 +1153,13 @@ td {
 -----------------------------------------*/
 .pagination {
   display: flex;
-  padding-left: 200px;
   list-style: none;
   margin-top: 30px;
   margin-bottom: 30px;
+}
+
+.SearchPage .pagination {
+  padding-left: 200px;
 }
 
 .page-link {

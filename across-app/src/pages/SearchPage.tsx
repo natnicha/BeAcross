@@ -467,12 +467,12 @@ handleSortClick = (sortField: string) => {
                 <SearchResult searchResult={this.state.searchResult}/>     
                 </div>  
                 <div>
-                <Pagination
-                  currentPage={this.state.currentPage}
-                  totalPages={this.state.totalPages}
-                  onPageChange={this.handlePageChange}
-                />
-              </div>             
+                  <Pagination
+                    currentPage={this.state.currentPage}
+                    totalPages={this.state.totalPages}
+                    onPageChange={this.handlePageChange}
+                  />
+                </div>             
           </div>
     );
   }

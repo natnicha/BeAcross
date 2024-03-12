@@ -6,6 +6,7 @@ import {
 import SuggestionPopup from "../../components/SuggestionResultPopup";
 import { usePopups } from "../../PopupContext";
 import ModuleEditPopup from "./ModuleEditPopup";
+import Pagination from '../../components/Pagination';
 
 interface ModuleItem {
   module_id?: string;
@@ -49,6 +50,14 @@ export default function ModuleList() {
 
   const jwtToken = sessionStorage.getItem("jwtToken");
 
+  //Pagination
+  const itemsPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredModuleItem.slice(indexOfFirstItem, indexOfLastItem);
+
   // Functions to open/close the register popup
   const openDetailPopup = () => setIsDetailPopupOpen(true);
   const closeDetailPopup = () => setIsDetailPopupOpen(false);
@@ -58,17 +67,23 @@ export default function ModuleList() {
     openDetailPopup();
   };
 
+  //Pagination
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    // If your data fetching is page-dependent, trigger it here
+  };
+
   //Get Module List
   useEffect(() => {
-    fetch(
-      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`,
-      {
-        method: "GET",
-      }
-    )
+    fetch(`http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`, {
+      method: "GET",
+    })
       .then((response) => response.json())
       .then((data: ModuleData) => {
         setModuleDatas(data);
+        // Assuming data.data.total_items gives the total number of modules
+        const total = data.data.total_items ?? 0;
+        setTotalPages(Math.ceil(total / itemsPerPage));
       })
       .catch((error) => {
         console.error("Error fetching module list data:", error);
@@ -165,6 +180,12 @@ export default function ModuleList() {
       <h5 className="mb-3" style={{ color: "#1e5af5" }}>
         Module List
       </h5>
+      <p>Show 
+        <span style={{ color: "#1e5af5"}}><strong> {moduleData?.data.total_items ?? '0'} </strong></span>
+        of 
+        <span style={{ color: "#1e5af5"}}><strong> {moduleData?.data.total_results ?? '0'} </strong></span>
+        Search results founded.
+      </p>
       <div
         className="searchbar"
         style={{ float: "right", padding: "10px", width: "100%" }}
@@ -199,8 +220,8 @@ export default function ModuleList() {
       {/*Display Items*/}
       {filteredModuleItem ? (
         <div className="search-table">
-          {filteredModuleItem &&
-            filteredModuleItem.map((item, index) => (
+          {currentItems &&
+            currentItems.map((item, index) => (
               <div className="search-row" key={index}>
                 <div className="search-column" id="moduleCode">
                   {item.module_code}
@@ -244,6 +265,8 @@ export default function ModuleList() {
                   </button>
                 </div>
               </div>
+              
+              
             ))}
         </div>
       ) : (
@@ -265,6 +288,13 @@ export default function ModuleList() {
           suggestionItems={suggestedItem} // Providing an empty array as a default
         />
       )}
-    </div>
+      <div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div> 
+    </div>   
   );
 }
