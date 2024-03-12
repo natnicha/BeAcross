@@ -64,27 +64,24 @@ const Header: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <a
-                  className="nav-link click-scroll"
-                  href="http://localhost:3000/"
-                >
+                <Link to="/" className="nav-link click-scroll">
                   <strong>Home</strong>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="#section_2">
+                <Link to="/aboutacross" className="nav-link click-scroll">
                   <strong>About</strong>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="#section_3">
+                <Link to="/policy" className="nav-link click-scroll">
                   <strong>Policy</strong>
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link click-scroll" href="#section_4">
-                  <strong>Contact</strong>
-                </a>
+               <Link to="/contactus" className="nav-link click-scroll">
+                  <strong>Contact Us</strong>
+                </Link>
               </li>
               <li className="nav-item">
                 <div className="d-flex align-items-center mt-2">
