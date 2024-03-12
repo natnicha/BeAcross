@@ -34,12 +34,14 @@ interface SortParams {
   }
  
 // Function to send a GET request to the search API
-export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams): Promise<SearchResponse> {
+export async function searchServices(term: string, offset: string, filter: FilterParams, sort: SortParams, isAdvanceSearch: boolean): Promise<SearchResponse> {
     
   const token = sessionStorage.getItem("jwtToken") || '';  //get jwt token
-  
+ 
   // Base URL including the term
-    let url = `http://localhost:8000/api/v1/module/search?term=${encodeURIComponent(term)}`;
+    const apiName = isAdvanceSearch ? '/advanced' : '';
+    
+    let url = `http://localhost:8000/api/v1/module/search${apiName}?term=${encodeURIComponent(term)}`;
 
     // Function to append multiple filter values
     const appendFilterParams = (url: string, paramName: string, values: string[]): string => {

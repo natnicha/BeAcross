@@ -19,6 +19,15 @@ python -m pip install fastapi uvicorn "pymongo[srv]" python-dotenv python-dotenv
 
 2. There will be .env file, find all service secrets or ask your colleagues and fill in there.
 
+## How to installs all packages specified in Pipfile.lock. (AKA update/upgrade/sync)
+
+1. make sure you are in ./\_backend
+2. install all packages specified in Pipfile.lock using the following command
+
+```
+python3.10.exe -m pipenv sync
+```
+
 ## How to start backend services
 
 1. make sure you are in ./\_backend

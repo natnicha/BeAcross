@@ -102,20 +102,31 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
         event.preventDefault();
         event.stopPropagation(); // Prevent click from bubbling up
     
-        let newSelection = [...selectedCompareItems, item];
-        if (newSelection.length <= 2) {
-            setSelectedCompareItems(newSelection);
-            setImmediateVisualSelected(prev => [...prev, item]); // Ensure clicked items are visually marked
-            setTempCompareItems(newSelection); // Temporarily store the selected items for comparison
+        // Prevent adding the item if it's already in the selection
+        if (!selectedCompareItems.some(selectedItem => selectedItem.module_id === item.module_id)) {
+            let newSelection = [...selectedCompareItems, item];
+            
+            // Proceed only if after adding, we have 2 or fewer items
+            if (newSelection.length <= 2) {
+                setSelectedCompareItems(newSelection);
+                setImmediateVisualSelected(prev => [...prev, item]); // Ensure clicked items are visually marked
+                setTempCompareItems(newSelection); // Temporarily store the selected items for comparison
     
-            if (newSelection.length === 2) {
-                // Show confirmation popup only when two items are selected
-                setShowConfirmPopup(true);
+                if (newSelection.length === 2) {
+                    // Show confirmation popup only when two items are selected
+                    setShowConfirmPopup(true);
+                }
             }
         }
     };
 
-    const isCompareDisabled = (item: Item) => selectedCompareItems.length >= 2 && !selectedCompareItems.includes(item);
+    const isCompareDisabled = (item: Item) => {
+        // Check if the current item is already selected
+        const isAlreadySelected = selectedCompareItems.some(selectedItem => selectedItem.module_id === item.module_id);
+    
+        // Disable if 2 items are already selected or if the current item is already selected
+        return selectedCompareItems.length >= 2 || isAlreadySelected;
+    };
 
     const confirmComparison = () => {
         setShowConfirmPopup(false); // Close the confirmation popup

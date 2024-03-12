@@ -1,22 +1,67 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //searchBG
 import acrossBG from "../images/across-bg.png";
 
 //thumbnail images
-import naturalScienceImage from "../images/projects/natural-science.png";
+import physicsImage from "../images/projects/natural-science.png";
 import computerScienceImage from "../images/projects/computer-science.png";
 import mathematicsImage from "../images/projects/mathematics.png";
 import economicsImage from "../images/projects/economics.png";
 import mechanicalEngineeringImage from "../images/projects/mechanical-engineering.png";
 import humanityImage from "../images/projects/humanity.png";
-import electricalEnginerringImage from "../images/projects/electrical-enginerring.png";
+import historicalImage from "../images/projects/electrical-enginerring.png";
 import MusicAndArtImage from "../images/projects/music-and-art.png";
 import SearchBar from "../components/SearchBar";
 
 const HomePage: React.FC = () => {
   const [content, setContent] = useState("");
+  const navigate = useNavigate();
 
+  
+  const handleCourseClick = (courseName: string) => {
+    try {
+      let queryParts: string[] = []; // Define outside to have broader scope
+  
+      switch (courseName) {
+        case "Physics":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "Computer Science":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "Mathematic":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "Economic":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "Engineer":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "Human":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "History":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        case "Media Art":
+          queryParts = [`("degree_program":${courseName})`];
+          break;
+        default:
+          console.log("Course not handled:", courseName);
+          return; // Exit function if courseName does not match any case
+      }
+  
+      // Assuming queryParts is meant to be a string for URI component
+      const queryString = encodeURIComponent(queryParts.join('')); // Join parts if needed
+      window.location.href = window.location.origin + "/search?query=" + queryString + "&isAdvance=true";
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
+  };
+  
   return (
     <>
     <img src={acrossBG} alt="Background" />
@@ -40,18 +85,17 @@ const HomePage: React.FC = () => {
               <h2 style={{ color: "#1e5af5" }}>Course Categories</h2>
             </div>
 
-            {/*Natural Science*/}
+            {/*Physics*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Physics')}>
                   <img
-                    src={naturalScienceImage}
+                    src={physicsImage}
                     className="img-fluid projects-image"
-                    alt="Natural Science"
+                    alt="Physics"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Natural Science</h4>
+                      <h4 className="projects-title">Physics</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -60,13 +104,11 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
             {/*computer-science*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Computer Science')}>
                   <img
                     src={computerScienceImage}
                     className="img-fluid projects-image"
@@ -85,13 +127,11 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
             {/*Mathematics*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Mathematic')}>
                   <img
                     src={mathematicsImage}
                     className="img-fluid projects-image"
@@ -108,13 +148,11 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
             {/*Economics*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Economic')}>
                   <img
                     src={economicsImage}
                     className="img-fluid projects-image"
@@ -131,21 +169,19 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
-            {/*Mechanical Engineering*/}
+            {/*Engineering*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Engineer')}>
                   <img
                     src={mechanicalEngineeringImage}
                     className="img-fluid projects-image"
-                    alt="Mechanical Engineering"
+                    alt="Engineering"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Mechanical Engineering</h4>
+                      <h4 className="projects-title">Engineering</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -154,13 +190,11 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
             {/*Humanity*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Human')}>
                   <img
                     src={humanityImage}
                     className="img-fluid projects-image"
@@ -177,21 +211,19 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
-            {/*Electrical Enginerring*/}
+            {/*Historical*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('History')}>
                   <img
-                    src={electricalEnginerringImage}
+                    src={historicalImage}
                     className="img-fluid projects-image"
-                    alt="Electrical Enginerring"
+                    alt="Historical"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Electrical Enginerring</h4>
+                      <h4 className="projects-title">Historical</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -200,21 +232,19 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
-            {/*Music And Art*/}
+            {/*Media Art*/}
             <div className="col-lg-3 col-12">
-              <div className="projects-thumb projects-thumb-small">
-                <a href="#">
+              <div className="projects-thumb projects-thumb-small" onClick={() => handleCourseClick('Media Art')}>
                   <img
                     src={MusicAndArtImage}
                     className="img-fluid projects-image"
-                    alt="Music And Art"
+                    alt="Media Art"
                   />
                   <div className="projects-info">
                     <div className="projects-title-wrap">
-                      <h4 className="projects-title">Music And Art</h4>
+                      <h4 className="projects-title">Media Art</h4>
                     </div>
 
                     <div className="projects-btn-wrap mt-4">
@@ -223,7 +253,6 @@ const HomePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </a>
               </div>
             </div>
           </div>

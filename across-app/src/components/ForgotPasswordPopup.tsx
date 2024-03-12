@@ -45,7 +45,7 @@ const handleSubmit = async () => {
         
     if(response.status === 200) {
       setIsSubmitted(true);
-      setResponseMessage("The email was sent succesfully");
+      setResponseMessage("If your account with that email was found, we've sent you an email with the new password.");
       setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
     } else {  
       setResponseMessage(response.message);

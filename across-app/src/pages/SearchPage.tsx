@@ -65,6 +65,7 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.handleSearchBarSearch = this.handleSearchBarSearch.bind(this);
   }
 
+  // OnSearch()
   handleSearchBarSearch = (): void => {
     this.setState({ currentPage: 1 }, () => {
       this.performSearch(true);
@@ -76,46 +77,46 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     this.performSearch(true); // Assuming true initializes the search with current state
 }
 
-async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
-    // Check if URL changed
-    if (this.props.location.search !== prevProps.location.search) {
-        this.parseUrlParams();
-    }
-}
+  async componentDidUpdate(prevProps: SearchPageProps, prevState: SearchPageState) {
+      // Check if URL changed
+      if (this.props.location.search !== prevProps.location.search) {
+          this.parseUrlParams();
+      }
+  }
 
-parseUrlParams = () => {
-  const searchParams = new URLSearchParams(this.props.location.search);
-  
-  // Parsing sorting parameters
-  const currentSortField = searchParams.get('sortby') || 'module_name';
-  const currentSortOrder = searchParams.get('orderby') || 'asc';
-  
-  // Parsing filter parameters
-  const degree_level = searchParams.getAll('degree_level');
-  const module_type = searchParams.getAll('module_type');
-  const university = searchParams.getAll('university');
-  
-  // For ects
-  const ects = searchParams.get('ects');
-  
-  // Parsing pagination
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  
-  // Setting the state with parsed values
-  this.setState({
-      currentSortField,
-      currentSortOrder,
-      filters: {
-          degree_level: degree_level,
-          module_type: module_type,
-          university: university,
-          ects: ects || null,
-      },
-      currentPage,
-  }, () => {
-      this.performSearch(true);
-  });
-}
+  parseUrlParams = () => {
+    const searchParams = new URLSearchParams(this.props.location.search);
+    
+    // Parsing sorting parameters
+    const currentSortField = searchParams.get('sortby') || 'module_name';
+    const currentSortOrder = searchParams.get('orderby') || 'asc';
+    
+    // Parsing filter parameters
+    const degree_level = searchParams.getAll('degree_level');
+    const module_type = searchParams.getAll('module_type');
+    const university = searchParams.getAll('university');
+    
+    // For ects
+    const ects = searchParams.get('ects');
+    
+    // Parsing pagination
+    const currentPage = parseInt(searchParams.get('page') || '1', 10);
+    
+    // Setting the state with parsed values
+    this.setState({
+        currentSortField,
+        currentSortOrder,
+        filters: {
+            degree_level: degree_level,
+            module_type: module_type,
+            university: university,
+            ects: ects || null,
+        },
+        currentPage,
+    }, () => {
+        this.performSearch(true);
+    });
+  }
 
   calculateTotalPages = () => {
     const itemsPerPage = 20;
@@ -126,9 +127,9 @@ parseUrlParams = () => {
     }
 
     this.setState({ totalPages });
-}
+  }
 
-   performSearch = async (isNewSearch: boolean = false) => {
+  performSearch = async (isNewSearch: boolean = false) => {
     try {
       const offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
       const offsetString = offset.toString(); // Convert to String before passing data to BE
@@ -152,8 +153,10 @@ parseUrlParams = () => {
         orderby: [this.state.currentSortOrder]
       };
 
-      // Including the filters in the searchServices call
-      const result = await searchServices(this.state.query, offsetString, filters, sorting);
+      //check Advance search is true or false
+      const isAdvanceSearch = Boolean(new URLSearchParams(this.props.location.search).get('isAdvance'));
+
+      const result = await searchServices(this.state.query, offsetString, filters, sorting, isAdvanceSearch);
       
       if (isNewSearch) {
         this.setState({ searchResult: result, currentPage: 1 });
