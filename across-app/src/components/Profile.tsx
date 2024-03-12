@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Popup from "../components/ChangepasswordPopup";
 
 interface UserProfile {
-  id: string;
+  password: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -14,27 +14,21 @@ interface UserProfile {
 
 export default function Profile() {
   const [editMode, setEditMode] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
+  const [profileItem, setProfileItem] = useState<UserProfile | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to manage the popup visibility
+
   const jwtToken = sessionStorage.getItem("jwtToken");
 
   // Function to open/close the popup
   const openPopup = () => setIsPopupOpen(true);
   const closePopup = () => setIsPopupOpen(false);
 
-  useEffect(() => {
-    // Fetch user profile data
-    fetch("http://localhost:8000/api/v1/user/profile", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setUserProfile(data))
-      .catch((error) => console.error("Error fetching profile:", error));
-  }, [jwtToken]);
+  const handleChangePWClick = (item: UserProfile) => {
+    setProfileItem(item);
+    openPopup();
+  };
 
   const handleEditToggle = () => {
     setEditMode(!editMode);
@@ -65,13 +59,26 @@ export default function Profile() {
           }
           // Update userProfile state with the edited profile
           setUserProfile(editedProfile);
-          setEditMode(false); // Exit edit mode after saving
+          setEditMode(false);
         })
         .catch((error) => {
           console.error("Error updating profile:", error);
         });
     }
   };
+
+  useEffect(() => {
+    // Fetch user profile data
+    fetch("http://localhost:8000/api/v1/user/profile", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setUserProfile(data))
+      .catch((error) => console.error("Error fetching profile:", error));
+  }, [jwtToken]);
 
   return (
     <div className="about-thumb bg-white shadow-lg">
@@ -211,14 +218,16 @@ export default function Profile() {
               />
             </div>
             <button
-              onClick={openPopup}
+              onClick={() => handleChangePWClick(userProfile)}
               className="custom-btn btn custom-link p mt-4"
               style={{ float: "right", width: "200px" }}
             >
               Change Password
             </button>
 
-            {isPopupOpen && <Popup content="" onClose={closePopup} />}
+            {profileItem && isPopupOpen && (
+              <Popup profileItem={profileItem} onClose={closePopup} />
+            )}
           </div>
         </div>
       )}
