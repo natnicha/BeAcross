@@ -18,7 +18,13 @@ import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
 
+import ProtectedRoute from './ProtectedRoute';
+
 const App: React.FC = () => {
+
+  // Check if the user is authenticated
+  const isAuthenticated = sessionStorage.getItem('jwtToken') ? true : false;
+
   return (
     <UserProvider>
       <PopupProvider>
@@ -30,8 +36,10 @@ const App: React.FC = () => {
             <Route index path="/policy" element={<Policy />} />
             <Route index path="/contactus" element={<ContactUs />} />
             <Route path="/search" element={<SearchPage />} />
-            <Route path="/studentprofile" element={<StudentProfilePage />} />
-            <Route path="/admin/*" element={<AdminBackofficePage />} />
+            <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+              <Route path="/studentprofile" element={<StudentProfilePage />} />
+              <Route path="/admin/*" element={<AdminBackofficePage />} />
+            </Route>
             <Route path="/*" element={<h1>Page Not Found</h1>} /> {/* 404 */}
           </Routes>
           <Footer />
