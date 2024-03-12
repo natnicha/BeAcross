@@ -57,6 +57,7 @@ export default function ModuleList() {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredModuleItem.slice(indexOfFirstItem, indexOfLastItem);
+  const [offset, setOffset] = useState(20);
 
   // Functions to open/close the register popup
   const openDetailPopup = () => setIsDetailPopupOpen(true);
@@ -69,12 +70,14 @@ export default function ModuleList() {
 
   //Pagination
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    // If your data fetching is page-dependent, trigger it here
+    // Calculate the new offset based on the page number
+    const newOffset = (newPage - 1) * 20; // Each page increases offset by 20
+    setCurrentPage(newPage); // Assuming you have a setCurrentPage method to update current page
+    setOffset(newOffset); // Update the offset state to trigger the useEffect
   };
-
+  
   //Get Module List
-  useEffect(() => {
+  /*useEffect(() => {
     fetch(`http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`, {
       method: "GET",
     })
@@ -88,7 +91,23 @@ export default function ModuleList() {
       .catch((error) => {
         console.error("Error fetching module list data:", error);
       });
-  }, []);
+  }, []);*/
+  useEffect(() => {
+    const getModuleList = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc&offset=${offset}`, {
+          method: "GET",
+        });
+        const data = await response.json();
+        setModuleDatas(data);
+        const total = data.data.total_results ?? 0;
+        setTotalPages(Math.ceil(total / 10)); // Assuming itemsPerPage is 10
+      } catch (error) {
+        console.error("Error fetching module list data:", error);
+      }
+    };
+    getModuleList();
+  }, [offset]);
 
   // Filter module based on search query
   useEffect(() => {
