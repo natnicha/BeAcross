@@ -54,6 +54,8 @@ const Policy: React.FC = () => {
               Twitter (Twitter Inc., 1355 Market Street, Suite 900, San Francisco, CA 94103, USA): 
               <a href="https://twitter.com/en/privacy" target="_blank" rel="noopener noreferrer">https://twitter.com/en/privacy</a>
               <br />
+              GoogleMaps (Google, 1600 Amphitheater Parkway, Mountain View, CA 94043, USA): 
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">https://policies.google.com/privacy</a>
             </p>
               These external sites are developed and maintained independently by such third parties, over whom we have no control regarding their design, content, or functionality. 
               We explicitly dissociate ourselves from the content of all linked third-party websites. It's important to note that these third-party sites may use their own cookies, 

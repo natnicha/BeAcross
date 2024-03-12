@@ -1079,8 +1079,8 @@ td {
   CONTACT              
 -----------------------------------------*/
 .contact-container-wrap {
-  background-color: var(--primary-color);
-  padding-bottom: 120px;
+  background-color: rgba(212, 212, 236, 0.5);
+  padding-bottom: 50px;
 }
 
 .contact-form {
