@@ -12,6 +12,9 @@ def is_public_path(api: str, method: str):
     if api.__contains__('/docs') or api.__contains__('/openapi.json') :
         return True
     
+    if api.__contains__('/api/v1/contact-us'):
+        return True
+    
     if api.__contains__('/api/v1/module/search'):
         return True
 
