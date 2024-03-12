@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.auth.auth import auth
 from app.api.module.module import module
+from app.api.contact_us.contact_us import contact_us
 from app.api.personal_plan.personal_plan import personal_plan
 from app.api.user.user import user
 from app.api.semester.semester import semester
@@ -15,6 +16,7 @@ from app.middleware.middleware import security_checking
 app = FastAPI()
 
 app.include_router(auth, prefix='/api/v1/auth', tags=['auth'])
+app.include_router(contact_us, prefix='/api/v1/contact-us', tags=['contact-us'])
 app.include_router(module, prefix='/api/v1/module', tags=['module'])
 app.include_router(personal_plan, prefix='/api/v1/personal-plan', tags=['personal-plan'])
 app.include_router(semester, prefix='/api/v1/semester', tags=['semester'])
