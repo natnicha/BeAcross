@@ -1226,13 +1226,14 @@ td {
   list-style: none;
   display: inline-block;
   vertical-align: top;
+  margin-right: 10px;
 }
 
 .social-icon-link {
-  background: var(--white-color);
+  background: var(--primary-color);
   border-radius: 20px;
   font-size: var(--copyright-text-font-size);
-  color: var(--dark-color);
+  color: var(--white-color);
   display: inline-block;
   vertical-align: top;
   margin: 5px;

@@ -77,6 +77,12 @@ const ContactUs: React.FC = () => {
                                     Victorypiesolutions@outlook.com
                                 </a>
                             </h5>
+                            <ul className="social-icon">
+                                <li><a href="#" className="social-icon-link bi-facebook"></a></li>
+                                <li><a href="#" className="social-icon-link bi-twitter"></a></li>
+                                <li><a href="#" className="social-icon-link bi-instagram"></a></li>
+                                <li><a href="#" className="social-icon-link bi-linkedin"></a></li>
+                            </ul>
                             <iframe className="google-map mt-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2520.8054961362877!2d12.928331700000001!3d50.816242300000006!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a7472b0ade30d5%3A0xcf1cfa7ca41c7210!2sTechnische%20Universit%C3%A4t%20Chemnitz!5e0!3m2!1sen!2sde!4v1710205531605!5m2!1sen!2sde" width="100%" height="300" loading="lazy"></iframe>
                         </div>
                     </div>
