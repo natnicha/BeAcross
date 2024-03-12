@@ -18,7 +18,7 @@ const StudentProfilepage: React.FC = () => {
   //personal plan
   const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
   const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]); // enrichment result (i.e. not original date from backend)
-  const [selectedSemester, setSelectedSemester] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState<string>("65d7a7a22b35547c027a9d5b");
 
 
   // Function to Nav navigation item click
@@ -435,7 +435,7 @@ const StudentProfilepage: React.FC = () => {
                 <div className="search-column"><strong>University</strong></div>
               </div>
 
-              {moduleItemDetail.filter(item => selectedSemester === null || item.semesterId === selectedSemester).map((item, index) => (
+              {moduleItemDetail.filter(item => !selectedSemester || item.semesterId === selectedSemester).map((item, index) => (
                 <div className="search-table" key={index}>
                   <div className="search-row">
                       <div className="search-column" id="moduleCode">
