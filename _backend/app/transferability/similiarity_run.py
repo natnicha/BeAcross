@@ -9,7 +9,7 @@ from app.transferability.similiarity_logic import compare_titles
 from app.config.config_utils import env_config
 from app.owl.modules import add_modules_to_owl
 from app.api.module.model import ModuleResponseModel, UploadModulesResponseItemModel
-
+from app.config.azure_blob import check_etag, get_etag, read_res_file, write_res_file
 
 # TODO check if id already exists in similarity file
 
@@ -39,7 +39,7 @@ def get_all_module_id():
 
 # fix results file after addition
 def fix_res_file():
-    data = read_similarity_file()
+    data,etag = read_res_file()
     ids = get_all_module_id()
     to_remove_key = []
     # print(data)
@@ -61,7 +61,14 @@ def fix_res_file():
     for _id in to_remove_key:
         del data[_id]
 
-    write_back(data)
+    if check_etag(etag, get_etag("result.json")):
+        write_res_file(data)
+        add_modules_to_owl()
+        return
+    else:
+        fix_res_file()
+
+        
 
 
 # get all modules from a different uni
@@ -145,7 +152,7 @@ def start_similarity_for_one(inserted_mod: UploadModulesResponseItemModel):
     # calculate transferability between modules
     data = get_specific_module_data(inserted_mod.university)
 
-    similarity_results = read_similarity_file()
+    similarity_results,etag = read_res_file()
     similarity_changes = {}
 
     for modu in data:
@@ -175,7 +182,7 @@ def start_similarity_for_one_after_update(updated_mod: ModuleResponseModel):
     # calculate transferability between modules
     data = get_specific_module_data(updated_mod['university'])
 
-    similarity_results = read_similarity_file()
+    similarity_results,etag = read_res_file()
     similarity_changes = {}
 
     for modu in data:
@@ -202,22 +209,13 @@ def start_similarity_for_one_after_update(updated_mod: ModuleResponseModel):
     return similarity_changes
 
 def combine_similarity_results_and_write_back(similarity_changes: list):
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
-
-    lock = FileLock(results_path + ".lock")
-    with lock:
-        similarity_source = read_similarity_file()
-        res = fix_similarity_changes(similarity_changes)
-        for key, value in res.items():
-            similarity_source[key].extend(value)
-        write_back(similarity_source)
+    similarity_source,etag = read_res_file()
+    res = fix_similarity_changes(similarity_changes)
+    for key, value in res.items():
+        similarity_source[key].extend(value)
+    write_res_file(similarity_source)
+    add_modules_to_owl()
 
 # run a similarity check from the database
 def check_similarity_db(module_a, module_b):
@@ -281,7 +279,7 @@ def check_similarity_class(module_a, module_b):
 
 # takes 2 module id numbers and removes the similarity from first to second
 def remove_similarity(module_to_remove_from: str, module_to_remove: str):
-    data = read_similarity_file()
+    data,etag = read_res_file()
 
     index = -1
 
@@ -299,12 +297,12 @@ def remove_similarity(module_to_remove_from: str, module_to_remove: str):
     
     if index != -1:
         del data[module_to_remove_from][index]
-        write_back(data)
+        write_res_file(data)
         add_modules_to_owl()
 
 
 def remove_similarity_on_delete(module_to_remove):
-    data = read_similarity_file()
+    data,etag = read_res_file()
 
     index = -1
 
@@ -319,12 +317,12 @@ def remove_similarity_on_delete(module_to_remove):
             else:
                 data[key].remove(module_to_remove)
 
-    write_back(data)
+    write_res_file(data)
     add_modules_to_owl()
 
 # takes 2 module id numbers and add the similarity to the first
 def add_similarity(module_to_add_to: str, module_to_add: str):
-    data = read_similarity_file()
+    data,etag = read_res_file()
 
     if module_to_add_to not in data.keys() or module_to_add not in data.keys():
         raise Exception("Module Not Found")
@@ -338,50 +336,17 @@ def add_similarity(module_to_add_to: str, module_to_add: str):
 
     if index == -1:
         data[module_to_add_to].append(module_to_add)
-        write_back(data)
+        write_res_file(data)
         add_modules_to_owl()
     else:
         raise Exception("Module Similarity Already Exists")
 
 
 def add_module_to_res(id_to_add):
-    data = read_similarity_file()
+    data,etag = read_res_file()
     data[id_to_add] = []
-    write_back(data)
+    write_res_file(data)
 
-
-# read json similarity file
-def read_similarity_file():
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
-
-    # Specify the path to your JSON file
-    with open(results_path, 'r') as file:
-        data = json.load(file)
-
-    # return the dictionary
-    return data
-
-
-# Write the updated json results back to the file
-def write_back(data):
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    results_path = os.path.join(backend_directory, "app", "owl", "result.json")
-
-    with open(results_path, 'w') as file:
-        json.dump(data, file, indent=2)
 
 def fix_similarity_changes(data):
     merged_dict = {}

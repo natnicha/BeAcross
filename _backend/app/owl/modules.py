@@ -1,22 +1,11 @@
+from app.config.azure_blob import check_etag, download_owl_file, get_etag, read_res_file, write_owl_file
 from owlready2 import *
 import os
 import json
 
 def find_suggested_modules(module: str) -> list:
 
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(current_directory)
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "owl", "modules.owl")
-
-    if not os.path.isfile(owl_path):
-        return []
-
-    onto = get_ontology(owl_path).load()
+    onto = get_ontology(get_owl_path()).load()
     # Get the individual by its name
     individual = onto.search_one(iri="*%s" % module)
 
@@ -25,41 +14,16 @@ def find_suggested_modules(module: str) -> list:
         if individual.similarTo:
             for i in individual.similarTo:
                 res.append(i.name)
+    
     return res
 
-def delete_file():
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
-
-    # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
-
-    if os.path.isfile(owl_path):
-        # print("File exists")
-        os.remove(owl_path)
 
 def add_modules_to_owl():
-    # Get the current working directory (your_script.py's directory)
-    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    delete_owl()
+    create_empty_owl_file()
 
-    # Navigate to the 'owl' directory and access 'results.json'
-    owl_path = os.path.join(backend_directory, "app", "owl", "modules.owl")
-
-    # print(owl_path)
-
-    if os.path.isfile(owl_path):
-        # print("File exists")
-        os.remove(owl_path)
-
-    fp = open(owl_path, 'w')
-    fp.close()
-
-    onto = get_ontology(owl_path).load()
+    onto = get_ontology(get_owl_path()).load()
 
     # Remove all classes, individuals, properties, and axioms
     for entity in list(onto.classes()) + list(onto.individuals()) + list(onto.properties()):
@@ -76,7 +40,7 @@ def add_modules_to_owl():
             range = [Module]
 
     # Create Ontology
-    sim_result = get_results()
+    sim_result,etag = read_res_file()
 
     # define Modules
     for key, item in sim_result.items():
@@ -103,22 +67,76 @@ def add_modules_to_owl():
                 instance.name = inner
                 res.similarTo.append(instance)
 
-    onto.save(owl_path)
+    onto.save(get_owl_path())
+    
+    if check_etag(etag, get_etag("result.json")):
+        update_owl_after_write()
+        return
+    else:
+        add_modules_to_owl()
 
-
-def get_results():
-    # Specify the path to your JSON file
+def get_owl_path():
+        # Get the current working directory (your_script.py's directory)
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
-    backend_directory = os.path.dirname(os.path.dirname(current_directory))
+    backend_directory = os.path.dirname(current_directory)
 
-    # Navigate to the 'owl' directory and access 'results.json'
-    json_path = os.path.join(backend_directory, "app", "owl", "result.json")
+    # Navigate to the 'owl' directory and access 'etg.txt'
+    owl_path = os.path.join(backend_directory, "owl", "modules.owl")
+    
+    return owl_path
 
-    # Read the JSON file and load its content into a dictionary
-    with open(json_path, 'r') as json_file:
-        data_dict = json.load(json_file)
+def get_etg_path():
+        # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
 
-    # Now, data_dict contains the content of the JSON file as a Python dictionary
-    return data_dict
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(current_directory)
+
+    # Navigate to the 'owl' directory and access 'etg.txt'
+    owl_path = os.path.join(backend_directory, "owl", "etg.txt")
+    
+    return owl_path
+
+def write_owl_to_file_on_download():
+    with open(get_owl_path(), "wb") as local_file:
+        owl_data,etag = download_owl_file()
+        owl_data.readinto(local_file)
+        write_etg(etag= etag)
+
+#delete local owl file
+def delete_owl():
+    if os.path.isfile(get_owl_path()):
+        os.remove(get_owl_path())
+
+#write an empty owl file
+def create_empty_owl_file():
+    fp = open(get_owl_path(), 'w')
+    fp.close()
+
+# delete 
+def update_owl_after_write():
+    write_owl_file(get_owl_path())
+    write_owl_to_file_on_download()
+    
+# check if change occured since last time owl file was read
+def change_occur():
+    if not os.path.isfile(get_owl_path()):
+        print("update_needed")
+        return True
+
+    if get_etg() == get_etag("modules.owl"):
+        return False
+    
+    print("update_needed")
+    return True
+    
+
+def write_etg(etag):
+    with open(get_etg_path(), "w") as file:
+        file.write(etag)
+
+def get_etg():
+    with open(get_etg_path(), "r") as file:
+        return file.read()

@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from pymongo.cursor import Cursor
 from owlready2 import *
 from app.email_service.email_sender import send_success_calculated_similarity_email
-from app.owl.modules import add_modules_to_owl
+from app.owl.modules import add_modules_to_owl, change_occur, write_owl_to_file_on_download
 import xml.etree.ElementTree as ET
 from multiprocessing.pool import ThreadPool as Pool
 from nltk.corpus import wordnet
@@ -30,6 +30,8 @@ from app.crud.modules import delete_one
 from app.api.module.model import ModuleUpdateModel
 from app.crud.modules import update_one
 from app.crud.modules import find_one
+
+from app.config.azure_blob import check_etag, get_etag
 
 module = APIRouter()
 
@@ -280,6 +282,11 @@ async def search(
 
 def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
     data = list(items)
+    
+    # check if change occur on owl ontology
+    if change_occur():
+        write_owl_to_file_on_download()
+
     for entry in data:
         entry["module_id"] = str(entry.pop("_id"))
         entry["module_name"] = entry.pop('name')
@@ -416,7 +423,6 @@ async def create_module(
 
     background_tasks.add_task(add_module_to_res_parallel_process, items=item_response_list)
     background_tasks.add_task(calculate_similarity_for_one_parallel_process, items=item_response_list)
-    background_tasks.add_task(add_modules_to_owl)
     background_tasks.add_task(send_email_after_calculation, db=db, user_id=ObjectId(request.state.user_id))
 
     return {
@@ -435,6 +441,8 @@ def add_module_to_res_parallel_process(items: list):
         
 
 def calculate_similarity_for_one_parallel_process(items: list):
+    # get etag before calculation
+    etag = get_etag("result.json")
     try:
         logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: started")
         cpu_count = multiprocessing.cpu_count()
@@ -470,7 +478,10 @@ def calculate_similarity_for_one_parallel_process(items: list):
         logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: all parallel processes joined")
 
         logging.debug(f"{__name__}.{inspect.stack()[0][3]} | message: writing a result json file")
-        combine_similarity_results_and_write_back(similarity_changes)
+        if check_etag(etag, get_etag("result.json")):
+            combine_similarity_results_and_write_back(similarity_changes)
+        else:
+            calculate_similarity_for_one_parallel_process(items)
         logging.info(f"{__name__}.{inspect.stack()[0][3]} | message: {len(items)} modules successfully proceeded")
     except Exception as e:
         logging.error(f"{__name__}.{inspect.stack()[0][3]} | message: {e}")
@@ -717,6 +728,11 @@ async def get_suggested_modules(
             detail={"message": "No module found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
+    
+    # check if change occur on modules
+    if change_occur():
+        write_owl_to_file_on_download()
+
     suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
     if len(suggested_module_ids) == 0:
         raise HTTPException(

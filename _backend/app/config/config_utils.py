@@ -12,6 +12,8 @@ class EnvConfig:
     EMAIL_SENDER= None
     EMAIL_PASSWORD= None
 
+    AZURE = None
+    
     EMAIL_CONTACT_US= None
 
 env_config = EnvConfig()
@@ -28,6 +30,8 @@ def load_env():
     env_config.EMAIL_SENDER = os.getenv('EMAIL_SENDER')
     env_config.EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
+    env_config.AZURE = os.getenv('AZURE')
+    
     env_config.EMAIL_CONTACT_US = os.getenv('EMAIL_CONTACT_US')
 
 def setup_logging():
