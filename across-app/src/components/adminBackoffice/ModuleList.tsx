@@ -51,12 +51,8 @@ export default function ModuleList() {
   const jwtToken = sessionStorage.getItem("jwtToken");
 
   //Pagination
-  const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredModuleItem.slice(indexOfFirstItem, indexOfLastItem);
   const [offset, setOffset] = useState(20);
 
   // Functions to open/close the register popup
@@ -104,7 +100,7 @@ export default function ModuleList() {
   }, [currentPage, offset]);
 
   // Filter module based on search query
-  useEffect(() => {
+  /*useEffect(() => {
     if (!moduleData) return;
     const filteredModules = moduleData.data.items?.filter((module) =>
       `${module.module_code} ${module.module_name}`
@@ -112,7 +108,22 @@ export default function ModuleList() {
         .includes(searchQuery.toLowerCase())
     );
     setFilteredModuleItem(filteredModules || []);
-  }, [searchQuery, moduleData]);
+  }, [searchQuery, moduleData]);*/
+  useEffect(() => {
+    // Ensure moduleData is not null and items are present before attempting to filter.
+    if (!moduleData || !moduleData.data.items) return;
+
+    const filteredModules = moduleData.data.items.filter((module) =>
+      `${module.module_code} ${module.module_name}`
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    );
+
+    setFilteredModuleItem(filteredModules);
+
+    // Since filteredModuleItem depends on the current page (which determines moduleData)
+    // and the search query, we include both as dependencies.
+}, [moduleData, searchQuery]);
 
   //Suggestion Module Session
   const handleSuggestionClick = async (
@@ -235,8 +246,8 @@ export default function ModuleList() {
       {/*Display Items*/}
       {filteredModuleItem ? (
         <div className="search-table">
-          {currentItems &&
-            currentItems.map((item, index) => (
+          {filteredModuleItem &&
+            filteredModuleItem.map((item, index) => (
               <div className="search-row" key={index}>
                 <div className="search-column" id="moduleCode">
                   {item.module_code}
