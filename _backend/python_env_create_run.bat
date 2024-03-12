@@ -31,6 +31,8 @@ python -m pip install Cython
 python -m pip install rdflib
 python -m pip install aiosmtplib
 python -m pip install filelock
+python -m pip install azure-storage-blob 
+python -m pip install azure-identity
 
 
 python -m uvicorn main:app --reload
