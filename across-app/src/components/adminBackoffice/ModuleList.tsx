@@ -49,7 +49,6 @@ export default function ModuleList() {
   );
 
   const jwtToken = sessionStorage.getItem("jwtToken");
-
   //Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -75,9 +74,14 @@ export default function ModuleList() {
   //Get Module List
   useEffect(() => {
     const getModuleList = async () => {
+      
+      const university = sessionStorage.getItem("university") || ""; // check university of admin    
+      
       try {
+        const encodedUniversity = encodeURIComponent(university);
+
         // Base URL
-        let url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`;
+        let url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":${encodedUniversity})&sortby=module_name&orderby=asc`;
   
         // Append the offset to the URL if not on the first page
         if (currentPage > 1) {
@@ -100,15 +104,6 @@ export default function ModuleList() {
   }, [currentPage, offset]);
 
   // Filter module based on search query
-  /*useEffect(() => {
-    if (!moduleData) return;
-    const filteredModules = moduleData.data.items?.filter((module) =>
-      `${module.module_code} ${module.module_name}`
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    );
-    setFilteredModuleItem(filteredModules || []);
-  }, [searchQuery, moduleData]);*/
   useEffect(() => {
     // Ensure moduleData is not null and items are present before attempting to filter.
     if (!moduleData || !moduleData.data.items) return;
@@ -121,8 +116,6 @@ export default function ModuleList() {
 
     setFilteredModuleItem(filteredModules);
 
-    // Since filteredModuleItem depends on the current page (which determines moduleData)
-    // and the search query, we include both as dependencies.
 }, [moduleData, searchQuery]);
 
   //Suggestion Module Session

@@ -19,6 +19,7 @@ interface LoginResponse {
   firstname: string;
   lastname: string;
   user_role: string;
+  university: string;
 }
 
 // Function to send a POST request to the register API
@@ -80,14 +81,16 @@ export async function loginUser(
       sessionStorage.setItem("firstname", responseData.data.user.first_name);
       sessionStorage.setItem("lastname", responseData.data.user.last_name);
       sessionStorage.setItem("user_role", responseData.data.user.user_role);
-
+      sessionStorage.setItem('university', responseData.data.user.university);
       sessionStorage.setItem("jwtToken", responseData.data.jwt); // store jwt until the tab closed, access via sessionStorage.getItem('jwtToken');
+      
       return {
         token: responseData.data.jwt,
         message: "Login successfully.",
         firstname: responseData.data.firstname,
         lastname: responseData.data.lastname,
         user_role: responseData.data.user_role,
+        university: responseData.data.university,
       };
     } else if (response.status == 401) {
       return {
@@ -96,6 +99,7 @@ export async function loginUser(
         firstname: "",
         lastname: "",
         user_role: "",
+        university: "",
       };
     } else {
       throw new Error(`Error: ${response.status}`);

@@ -19,11 +19,9 @@ const LoginPopup: React.FC<PopupProps> = () => {
   const [emailToLogin, setEmailToLogin] = useState('');
   const [passwordToLogin, setPasswordToLogin] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
-  const [userRole, setUserRole] = useState('');
   const [responseStyle, setResponseStyle] = useState({ margin: "15px", color: "green" });
   const popupRef = useRef<HTMLDivElement>(null);
-
-  const [jwtToken, setJwtToken] = useState(''); // State to store JWT token
+  const [jwtToken, setJwtToken] = useState('');
  
    // Combined login handler
    const handleLogin = async () => {
@@ -35,8 +33,6 @@ const LoginPopup: React.FC<PopupProps> = () => {
       if (response && response.token) {
         setJwtToken(response.token); // Store the JWT token in the state
         setIsLoggedIn(true); // set user status for shared
-        setUserRole(response.user_role); // Store user role in state
-        sessionStorage.setItem('userRole', response.user_role);
         setResponseMessage(response.message);
         setResponseStyle({ margin: "15px", color: "green"}); // Set to green on success
         closeAllPopups(); // after success login, popup will close
