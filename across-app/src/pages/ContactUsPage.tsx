@@ -14,8 +14,7 @@ const ContactUs: React.FC = () => {
     e.preventDefault(); // Prevent the default form submission
 
     try {
-      // Here you would typically make an API call to your server or a serverless function to send the email
-      const response = await fetch('/api/sendEmail', {
+      const response = await fetch('http://localhost:8000/api/v1/contact-us', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
