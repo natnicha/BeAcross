@@ -64,6 +64,15 @@ In order to contact Across administrators, use this API to send an email from Ac
 }
 ```
 
+## Error Response 400 - Bad Request (case: email is invalid format)
+```json
+{
+ "detail": { 
+    "message": "Email is invalid format",
+ }
+}
+```
+
 ## Error Response 422 - Unprocessable Entity (case: request body validation error)
 ```json
 {
