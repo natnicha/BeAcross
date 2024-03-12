@@ -9,6 +9,7 @@ interface UserProfile {
   registration_number: string; //for the student
   course_of_study: string;
   semester: string;
+  university: string;
 }
 
 export default function Profile() {
@@ -119,48 +120,50 @@ export default function Profile() {
           </div>
           {sessionStorage.getItem("user_role") !== "uni-admin" ? (
             <>
-              <div className="personal-info-section">
-                <p>Registration Number:</p>
-                <input
-                  type="text"
-                  className="registrationnumber full-width-input"
-                  name="registration_number"
-                  value={
-                    editMode
-                      ? editedProfile?.registration_number
-                      : userProfile?.registration_number
-                  }
-                  onChange={handleInputChange}
-                  disabled={!editMode}
-                />
-              </div>
-              <div className="personal-info-section">
-                <p>Course of Study:</p>
-                <input
-                  type="text"
-                  className="courseofstudy full-width-input"
-                  name="course_of_study"
-                  value={
-                    editMode
-                      ? editedProfile?.course_of_study
-                      : userProfile?.course_of_study
-                  }
-                  onChange={handleInputChange}
-                  disabled={!editMode}
-                />
-              </div>
-              <div className="personal-info-section">
-                <p>Study Semester:</p>
-                <input
-                  type="text"
-                  className="semester full-width-input"
-                  name="semester"
-                  value={
-                    editMode ? editedProfile?.semester : userProfile?.semester
-                  }
-                  onChange={handleInputChange}
-                  disabled={!editMode}
-                />
+              <div className="personal-info-container">
+                <div className="personal-info-section">
+                  <p>Registration Number:</p>
+                  <input
+                    type="text"
+                    className="registrationnumber full-width-input"
+                    name="registration_number"
+                    value={
+                      editMode
+                        ? editedProfile?.registration_number
+                        : userProfile?.registration_number
+                    }
+                    onChange={handleInputChange}
+                    disabled={!editMode}
+                  />
+                </div>
+                <div className="personal-info-section">
+                  <p>Course of Study:</p>
+                  <input
+                    type="text"
+                    className="courseofstudy full-width-input"
+                    name="course_of_study"
+                    value={
+                      editMode
+                        ? editedProfile?.course_of_study
+                        : userProfile?.course_of_study
+                    }
+                    onChange={handleInputChange}
+                    disabled={!editMode}
+                  />
+                </div>
+                <div className="personal-info-section">
+                  <p>Study Semester:</p>
+                  <input
+                    type="text"
+                    className="semester full-width-input"
+                    name="semester"
+                    value={
+                      editMode ? editedProfile?.semester : userProfile?.semester
+                    }
+                    onChange={handleInputChange}
+                    disabled={!editMode}
+                  />
+                </div>
               </div>
             </>
           ) : (
@@ -169,14 +172,35 @@ export default function Profile() {
               <input
                 type="text"
                 className="uniInfo full-width-input"
-                placeholder="Chemnitz University of Technology"
+                placeholder={userProfile?.university}
                 disabled
               />
             </div>
           )}
-
-          <hr />
-          <div className="personal-info-container">
+          <div style={{ float: "inline-start", width: "90%" }}>
+            {editMode ? (
+              <button
+                className="custom-btn-green btn custom-link"
+                onClick={handleSave}
+                style={{ float: "right", marginBottom: "20px" }}
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                className="custom-btn btn custom-link"
+                onClick={handleEditToggle}
+                style={{ float: "right", marginBottom: "20px" }}
+              >
+                Edit
+              </button>
+            )}{" "}
+          </div>
+          <hr style={{ width: "100%" }} />
+          <div
+            className="personal-info-container"
+            style={{ float: "inline-start", width: "90%" }}
+          >
             <div className="personal-info-section">
               <p>Password:</p>
               <input
@@ -189,25 +213,12 @@ export default function Profile() {
             <button
               onClick={openPopup}
               className="custom-btn btn custom-link p mt-4"
+              style={{ float: "right", width: "200px" }}
             >
               Change Password
             </button>
+
             {isPopupOpen && <Popup content="" onClose={closePopup} />}
-            {editMode ? (
-              <button
-                className="custom-btn-green-number btn custom-link"
-                onClick={handleSave}
-              >
-                Save
-              </button>
-            ) : (
-              <button
-                className="custom-btn-number btn custom-link"
-                onClick={handleEditToggle}
-              >
-                Edit
-              </button>
-            )}{" "}
           </div>
         </div>
       )}
