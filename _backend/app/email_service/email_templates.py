@@ -125,13 +125,14 @@ contact_us_reply_to_VPS_template = u"""
     <head>Hi Victory Pie Solutions Team!</head>
     <body font-family: 'Source Sans Pro'>
         <br>
+        <br>
         Email from via your form on <a href="http://localhost:3000/"><font color="#1e5af5">Across</font></a>.<br>
         <br>
         <b>You got a new message from</b>:<br>
-        {user}, {email}<br>
+        <blockquote>{user}, {email}</blockquote><br>
         <br>
         <b>message</b>: <br>
-        <p class="blockquote">{message}</p><br>
+        <blockquote>{message}</blockquote><br>
         <br>
         Wishing you well,<br>
         Your Victory Pie Solutions Robot<br><br><br>
