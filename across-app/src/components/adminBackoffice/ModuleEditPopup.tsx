@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { getPositionOfLineAndCharacter } from "typescript";
 
 // Define the Item type based on your data structure
 interface Item {
@@ -26,6 +25,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
   const [updatedModule, setUpdatedModule] = useState<Item>(selectedItem);
 
   const jwtToken = sessionStorage.getItem("jwtToken");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEditToggle = () => {
     setEditMode(!editMode);
@@ -40,7 +40,8 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
   };
 
   const handleSave = () => {
-    // Call API to save changes
+    setIsLoading(true); // Start loading
+
     fetch(`http://localhost:8000/api/v1/module/${selectedItem.module_id}`, {
       method: "PUT",
       headers: {
@@ -51,15 +52,16 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
     })
       .then((response) => response.json())
       .then((data) => {
-        // Handle success, maybe close the popup or update UI
         console.log("Updated data:", data);
         onClose();
         window.location.reload();
         setEditMode(false);
       })
       .catch((error) => {
-        // Handle error
         console.error("Error updating module:", error);
+      })
+      .finally(() => {
+        setIsLoading(false); // End loading
       });
   };
 
@@ -69,7 +71,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
         <div className="popup-content" style={{ width: "50%" }}>
           <div className="title-popup mb-2">
             <h5 style={{ color: "white", textAlign: "left" }}>
-              &nbsp;&nbsp;&nbsp;Information of "{selectedItem.module_code}-
+              &nbsp;&nbsp;&nbsp;Information of &nbsp; "{selectedItem.module_code}&nbsp;-&nbsp;
               {selectedItem.module_name}"
             </h5>
           </div>
@@ -99,7 +101,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
             </h5>
             <div className="row mb-3 mt-10">
               <div className="col">
-                <strong>Name </strong>
+                <strong>Name :&nbsp;</strong>
                 <input
                   type="text"
                   name="module_name"
@@ -113,7 +115,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                 />
               </div>
               <div className="col">
-                <strong>Module Code </strong>
+                <strong>Module Code :&nbsp;</strong>
                 <input
                   type="text"
                   name="module_code"
@@ -129,7 +131,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
             </div>
             <div className="row mb-3 ">
               <div className="col">
-                <strong>Degree Program</strong>
+                <strong>Degree Program :</strong>
                 <input
                   type="text"
                   name="degree_program"
@@ -143,7 +145,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                 />
               </div>
               <div className="col">
-                <strong>ECTS Credits</strong>
+                <strong>ECTS Credits :</strong>
                 <input
                   type="text"
                   name="ects"
@@ -153,7 +155,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
                 />
               </div>
               <div className="col">
-                <strong>Degree Level</strong>
+                <strong>Degree Level :</strong>
                 <input
                   type="text"
                   name="degree_level"
@@ -185,6 +187,14 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
               </button>
             )}{" "}
           </div>
+          {
+            isLoading && (
+              <div className="loader-container">
+                <p>This process will take some time, please wait...</p>
+                <div className="loader"></div>
+              </div>
+            )
+          }
         </div>
       </div>
     </div>

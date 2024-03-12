@@ -61,7 +61,7 @@ export default function ModuleList() {
   //Get Module List
   useEffect(() => {
     fetch(
-      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=no_of_suggested_modules&orderby=desc`,
+      `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`,
       {
         method: "GET",
       }
