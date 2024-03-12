@@ -12,13 +12,6 @@ const Footer: React.FC = () => {
                             <p className="copyright-text mb-0 me-4">
                                 Copyright © 2024 European Cross-Border University
                             </p>
-
-                            <ul className="social-icon">
-                                <li><a href="#" className="social-icon-link bi-facebook"></a></li>
-                                <li><a href="#" className="social-icon-link bi-twitter"></a></li>
-                                <li><a href="#" className="social-icon-link bi-instagram"></a></li>
-                                <li><a href="#" className="social-icon-link bi-linkedin"></a></li>
-                            </ul>
                         </div>
                     </div>
                     
