@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { usePopups } from "../PopupContext";
 import ForgotPasswordPopup from "./ForgotPasswordPopup";
 import { setSelectionRange } from "@testing-library/user-event/dist/utils";
@@ -20,6 +20,8 @@ const Header: React.FC = () => {
   } = usePopups();
 
   const navigate = useNavigate(); // redirect user back to homepage
+  const location = useLocation();
+  const [reloadTrigger, setReloadTrigger] = useState(false);
 
   const handleLogout = () => {
     // Clear the token and user_role on logout
@@ -28,6 +30,12 @@ const Header: React.FC = () => {
     setIsLoggedIn(false);
     navigate("/");
   };
+
+  useEffect(() => {
+    if (location.pathname === '/studentprofile') {
+      setReloadTrigger(prev => !prev);
+    }
+  }, [location]);
 
   return (
     <>
@@ -122,9 +130,14 @@ const Header: React.FC = () => {
                     <a
                       className="click-scroll d-flex align-items-end"
                       onClick={() => {
-                        sessionStorage.getItem("user_role") === "uni-admin"
-                          ? navigate("/admin")
-                          : navigate("/studentprofile");
+                        const userRole = sessionStorage.getItem("user_role");
+                        const destination = userRole === "uni-admin" ? "/admin" : "/studentprofile";
+                        navigate(destination);
+
+                        // Optional: Force a function to be called when navigating to /studentprofile
+                        if(destination === "/studentprofile") {
+                          window.location.reload();
+                        }
                       }}
                       role="button"
                       tabIndex={0}
