@@ -22,7 +22,25 @@ def get_by_user_id_and_module_id(conn: MongoClient, user_id: ObjectId, module_id
     condition = {"user_id":user_id}
     if module_id is not None:
         condition["module_id"] = module_id
-    return conn[env_config.DB_NAME].get_collection("personal_plans").find(condition).sort({"module_id": 1, "semester_id": 1})
+    return conn[env_config.DB_NAME].get_collection("personal_plans").aggregate([
+        {
+            "$lookup":
+            {
+                "from": "modules",
+                "localField": "module_id",
+                "foreignField": "_id",
+                "as": "LeftJoinModulesCollection"
+            }
+        }, {
+            "$match":{
+                "$and":[
+                    condition, 
+                    {"LeftJoinModulesCollection.0": {"$exists":True}}
+                ]}
+        }, {
+            "$sort": {"module_id": 1, "semester_id": 1}
+        }
+    ])
 
 def count_by_module_id_semester_id_user_id(conn: MongoClient, user_id: ObjectId, semester_id: ObjectId, module_id: ObjectId):
     return conn[env_config.DB_NAME].get_collection("personal_plans").count_documents({
