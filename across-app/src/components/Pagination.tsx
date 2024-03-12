@@ -10,38 +10,40 @@ class Pagination extends React.Component<PaginationProps> {
     getPageNumbers() {
         const { currentPage, totalPages } = this.props;
         let pages = [];
-
+    
         // Always include the first page
         pages.push(1);
-
-        // Determine the range of pages to display
-        if (currentPage > 2) {
+    
+        // Include ellipsis if there are pages skipped before current page
+        if (currentPage > 3) {
             pages.push("...");
         }
-        if (currentPage === totalPages && totalPages > 3) {
-            pages.push(currentPage - 2);
-        }
-        if (currentPage > 1) {
+    
+        // Include the page before current page if it's more than the first page
+        if (currentPage > 2) {
             pages.push(currentPage - 1);
         }
-        if (currentPage > 2 && currentPage < totalPages) {
+    
+        // Include current page if it's not the first or last page
+        if (currentPage !== 1 && currentPage !== totalPages) {
             pages.push(currentPage);
         }
+    
+        // Include the page after current page if it's less than the last page
         if (currentPage < totalPages - 1) {
             pages.push(currentPage + 1);
         }
-        if (currentPage === 1 && totalPages > 3) {
-            pages.push(currentPage + 2);
-        }
+    
+        // Include ellipsis if there are pages skipped after current page
         if (currentPage < totalPages - 2) {
             pages.push("...");
         }
-
-        // Always include the last page if more than 1 page
+    
+        // Always include the last page if there's more than one page
         if (totalPages > 1) {
             pages.push(totalPages);
         }
-
+    
         return pages;
     }
 

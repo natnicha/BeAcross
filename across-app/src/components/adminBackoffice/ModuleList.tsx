@@ -68,7 +68,7 @@ export default function ModuleList() {
   const handlePageChange = (newPage: number) => {
     // Calculate the new offset based on the page number
     const newOffset = (newPage - 1) * 20; // Each page increases offset by 20
-    setCurrentPage(newPage); // Assuming you have a setCurrentPage method to update current page
+    setCurrentPage(newPage);
     setOffset(newOffset); // Update the offset state to trigger the useEffect
   };
   
