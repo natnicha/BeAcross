@@ -7,12 +7,52 @@ interface PaginationProps {
 }
 
 class Pagination extends React.Component<PaginationProps> {
+    getPageNumbers() {
+        const { currentPage, totalPages } = this.props;
+        let pages = [];
+
+        // Always include the first page
+        pages.push(1);
+
+        // Determine the range of pages to display
+        if (currentPage > 2) {
+            pages.push("...");
+        }
+        if (currentPage === totalPages && totalPages > 3) {
+            pages.push(currentPage - 2);
+        }
+        if (currentPage > 1) {
+            pages.push(currentPage - 1);
+        }
+        if (currentPage > 2 && currentPage < totalPages) {
+            pages.push(currentPage);
+        }
+        if (currentPage < totalPages - 1) {
+            pages.push(currentPage + 1);
+        }
+        if (currentPage === 1 && totalPages > 3) {
+            pages.push(currentPage + 2);
+        }
+        if (currentPage < totalPages - 2) {
+            pages.push("...");
+        }
+
+        // Always include the last page if more than 1 page
+        if (totalPages > 1) {
+            pages.push(totalPages);
+        }
+
+        return pages;
+    }
+
     render() {
         const { currentPage, totalPages, onPageChange } = this.props;
 
+        const pagesToShow = this.getPageNumbers();
+
         return (
             <nav>
-                <ul className="pagination justify-content-center mt-5">        
+                <ul className="pagination justify-content-center mt-5">
                     {/* Previous Page Button */}
                     <li className="page-item">
                         <a 
@@ -31,21 +71,23 @@ class Pagination extends React.Component<PaginationProps> {
                         </a>
                     </li>
 
-                    {/* Page Numbers */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                        <li className={`page-item ${page === currentPage ? 'active' : ''}`} key={page} aria-current={page === currentPage ? "page" : undefined}>
-                            <a 
-                            className="page-link" 
-                            href="#"
-                            onClick={(e) => {
-                                e.preventDefault(); // Prevent default anchor behavior
-                                if (page !== currentPage) {
-                                    onPageChange(page);
-                                }
-                            }}
-                            >
-                            {page}
-                            </a>
+                    {/* Dynamic Page Numbers */}
+                    {pagesToShow.map((page, index) => (
+                        <li key={index} className={`page-item ${page === currentPage ? 'active' : ''} ${typeof page === 'string' ? 'disabled' : ''}`}>
+                            {typeof page === 'number' ? (
+                                <a 
+                                    className="page-link" 
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault(); // Prevent default anchor behavior
+                                        onPageChange(page);
+                                    }}
+                                >
+                                    {page}
+                                </a>
+                            ) : (
+                                <span className="page-link">{page}</span>
+                            )}
                         </li>
                     ))}
 
@@ -65,7 +107,7 @@ class Pagination extends React.Component<PaginationProps> {
                             <span aria-hidden="true">Next</span>
                         </a>
                     </li>
-                </ul>  
+                </ul>
             </nav>
         );
     }

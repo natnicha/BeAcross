@@ -77,37 +77,31 @@ export default function ModuleList() {
   };
   
   //Get Module List
-  /*useEffect(() => {
-    fetch(`http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data: ModuleData) => {
-        setModuleDatas(data);
-        // Assuming data.data.total_items gives the total number of modules
-        const total = data.data.total_items ?? 0;
-        setTotalPages(Math.ceil(total / itemsPerPage));
-      })
-      .catch((error) => {
-        console.error("Error fetching module list data:", error);
-      });
-  }, []);*/
   useEffect(() => {
     const getModuleList = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc&offset=${offset}`, {
+        // Base URL
+        let url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":Chemnitz)&sortby=module_name&orderby=asc`;
+  
+        // Append the offset to the URL if not on the first page
+        if (currentPage > 1) {
+          url += `&offset=${offset}`;
+        }
+  
+        const response = await fetch(url, {
           method: "GET",
         });
         const data = await response.json();
         setModuleDatas(data);
         const total = data.data.total_results ?? 0;
-        setTotalPages(Math.ceil(total / 10)); // Assuming itemsPerPage is 10
+        setTotalPages(Math.ceil(total / 20));
       } catch (error) {
         console.error("Error fetching module list data:", error);
       }
     };
+  
     getModuleList();
-  }, [offset]);
+  }, [currentPage, offset]);
 
   // Filter module based on search query
   useEffect(() => {
