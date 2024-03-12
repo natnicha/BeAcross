@@ -58,7 +58,7 @@ const StudentProfilepage: React.FC = () => {
     setShowProfileInformation(false);
     setPersonalPlan(false);
   };
-  
+
   // State for the visibility of rows under module types
   const [showFocusModuleRows, setShowFocusModuleRows] = useState(false);
   const [showAdvanceModuleRows, setShowAdvanceModuleRows] = useState(false);
@@ -86,6 +86,11 @@ const StudentProfilepage: React.FC = () => {
   //Personal Plan
   const handlePersonalPlanClick = async () => {
     try {
+      
+      setPersonalPlan(true);
+      setExamResult(false);
+      setShowProfileInformation(false);
+
       // Step 1: call personal plan api API
       const personalPlanResponse = await getPersonalPlan();
       sessionStorage.setItem('personalPlanData', JSON.stringify(personalPlanResponse));
@@ -117,9 +122,6 @@ const StudentProfilepage: React.FC = () => {
       // Step 4: set all data to state of this component for later use
       setModuleItemDetail(enrichedModuleItems);
       setPersonalPlanResponse(personalPlanResponse); 
-      setPersonalPlan(true);
-      setExamResult(false);
-      setShowProfileInformation(false);
     } catch (error) {
       console.error("Failed to fetch module details:", error);
     }
