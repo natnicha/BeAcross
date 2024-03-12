@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import aboutAcrossBG from "../images/about-across-bg.png";
 import Partners from "../images/projects/partners.png";
 
-
 const AboutAcross: React.FC = () => {
-
-
-
   
   return (
     <>
