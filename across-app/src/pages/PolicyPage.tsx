@@ -48,11 +48,15 @@ const Policy: React.FC = () => {
             <h5>V. LINK TO THIRD - PARTY WEBSITES</h5>
             <p>Our website includes links to sites and services owned and operated by third parties (Social Media):<br /><br />
             <p>
-              Facebook (Facebook Inc., USA, California, San Jose): 
+              Facebook / Instragram (Facebook Inc., USA, California, San Jose): 
               <a href="https://www.facebook.com/privacy/policy/?entry_point=comet_dropdown" target="_blank" rel="noopener noreferrer">https://www.facebook.com/privacy/policy/?entry_point=comet_dropdown</a>
+               &nbsp;or <a href="https://privacycenter.instagram.com/policy/?entry_point=ig_help_center_data_policy_redirect" target="_blank" rel="noopener noreferrer">https://privacycenter.instagram.com/policy/?entry_point=ig_help_center_data_policy_redirect</a>
               <br />
               Twitter (Twitter Inc., 1355 Market Street, Suite 900, San Francisco, CA 94103, USA): 
               <a href="https://twitter.com/en/privacy" target="_blank" rel="noopener noreferrer">https://twitter.com/en/privacy</a>
+              <br />
+              Linkedin (Microsoft Corporation Inc., 1000 W. Maude Avenue Sunnyvale, CA 94085, USA): 
+              <a href="https://www.linkedin.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">https://www.linkedin.com/legal/privacy-policy</a>
               <br />
               GoogleMaps (Google, 1600 Amphitheater Parkway, Mountain View, CA 94043, USA): 
               <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">https://policies.google.com/privacy</a>
