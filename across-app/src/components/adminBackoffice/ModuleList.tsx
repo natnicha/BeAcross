@@ -177,15 +177,17 @@ export default function ModuleList() {
 
   return (
     <div className="about-thumb bg-white shadow-lg">
-      <h5 className="mb-3" style={{ color: "#1e5af5" }}>
-        Module List
-      </h5>
-      <p>Show 
-        <span style={{ color: "#1e5af5"}}><strong> {moduleData?.data.total_items ?? '0'} </strong></span>
-        of 
-        <span style={{ color: "#1e5af5"}}><strong> {moduleData?.data.total_results ?? '0'} </strong></span>
-        Search results founded.
-      </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+        <h5 className="mb-3" style={{ color: "#1e5af5", margin: 0 }}>
+          Module List
+        </h5>
+        <p style={{ margin: 0 }}>Show 
+          <span style={{ color: "#1e5af5" }}><strong> {moduleData?.data.total_items ?? '0'} </strong></span>
+          of 
+          <span style={{ color: "#1e5af5" }}><strong> {moduleData?.data.total_results ?? '0'} </strong></span>
+          Search results founded.
+        </p>
+      </div>
       <div
         className="searchbar"
         style={{ float: "right", padding: "10px", width: "100%" }}
