@@ -190,7 +190,7 @@ const ModuleEditPopup: React.FC<ModuleEditPopupProps> = ({
           {
             isLoading && (
               <div className="loader-container">
-                <p>Re-calculating Similarity logic, please wait...</p>
+                <p>Re-calculating Similarity logic, please do not close this popup.</p>
                 <div className="loader"></div>
               </div>
             )
