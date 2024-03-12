@@ -410,7 +410,7 @@ handleSortClick = (sortField: string) => {
                         <input style={{ marginLeft: "5px"}}
                           type="range" 
                           min="0" 
-                          max="20" 
+                          max="50" 
                           step="1" 
                           name="ects"
                           value={this.state.filters.ects ?? 0}
