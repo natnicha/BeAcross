@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from pymongo.cursor import Cursor
 from owlready2 import *
 from app.email_service.email_sender import send_success_calculated_similarity_email
-from app.owl.modules import add_modules_to_owl
+from app.owl.modules import add_modules_to_owl, change_occur, write_owl_to_file_on_download
 import xml.etree.ElementTree as ET
 from multiprocessing.pool import ThreadPool as Pool
 from nltk.corpus import wordnet
@@ -282,6 +282,11 @@ async def search(
 
 def prepare_item(db: MongoClient, items: Cursor, user_recommends: list):
     data = list(items)
+    
+    # check if change occur on owl ontology
+    if change_occur():
+        write_owl_to_file_on_download()
+
     for entry in data:
         entry["module_id"] = str(entry.pop("_id"))
         entry["module_name"] = entry.pop('name')
@@ -723,6 +728,11 @@ async def get_suggested_modules(
             detail={"message": "No module found"},
             status_code=status.HTTP_404_NOT_FOUND
         )
+    
+    # check if change occur on modules
+    if change_occur():
+        write_owl_to_file_on_download()
+
     suggested_module_ids = OWL_MODULES.find_suggested_modules(module_id)
     if len(suggested_module_ids) == 0:
         raise HTTPException(

@@ -5,12 +5,7 @@ import json
 
 def find_suggested_modules(module: str) -> list:
 
-    write_owl_to_file_on_download()
-    
-    if not os.path.isfile(path()):
-        return []
-
-    onto = get_ontology(path()).load()
+    onto = get_ontology(get_owl_path()).load()
     # Get the individual by its name
     individual = onto.search_one(iri="*%s" % module)
 
@@ -20,7 +15,6 @@ def find_suggested_modules(module: str) -> list:
             for i in individual.similarTo:
                 res.append(i.name)
     
-    delete_owl()
     return res
 
 
@@ -29,7 +23,7 @@ def add_modules_to_owl():
     delete_owl()
     create_empty_owl_file()
 
-    onto = get_ontology(path()).load()
+    onto = get_ontology(get_owl_path()).load()
 
     # Remove all classes, individuals, properties, and axioms
     for entity in list(onto.classes()) + list(onto.individuals()) + list(onto.properties()):
@@ -73,40 +67,76 @@ def add_modules_to_owl():
                 instance.name = inner
                 res.similarTo.append(instance)
 
-    onto.save(path())
+    onto.save(get_owl_path())
     
     if check_etag(etag, get_etag("result.json")):
-        delete_owl_after_write()
+        update_owl_after_write()
         return
     else:
         add_modules_to_owl()
 
-def path():
+def get_owl_path():
         # Get the current working directory (your_script.py's directory)
     current_directory = os.path.dirname(os.path.abspath(__file__))
 
     # Jump up two parent directories to the '_backend' directory
     backend_directory = os.path.dirname(current_directory)
 
-    # Navigate to the 'owl' directory and access 'results.json'
+    # Navigate to the 'owl' directory and access 'etg.txt'
     owl_path = os.path.join(backend_directory, "owl", "modules.owl")
     
     return owl_path
 
+def get_etg_path():
+        # Get the current working directory (your_script.py's directory)
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+
+    # Jump up two parent directories to the '_backend' directory
+    backend_directory = os.path.dirname(current_directory)
+
+    # Navigate to the 'owl' directory and access 'etg.txt'
+    owl_path = os.path.join(backend_directory, "owl", "etg.txt")
+    
+    return owl_path
+
 def write_owl_to_file_on_download():
-    with open(path(), "wb") as local_file:
+    with open(get_owl_path(), "wb") as local_file:
         owl_data,etag = download_owl_file()
         owl_data.readinto(local_file)
+        write_etg(etag= etag)
 
+#delete local owl file
 def delete_owl():
-    if os.path.isfile(path()):
-        os.remove(path())
+    if os.path.isfile(get_owl_path()):
+        os.remove(get_owl_path())
 
+#write an empty owl file
 def create_empty_owl_file():
-    fp = open(path(), 'w')
+    fp = open(get_owl_path(), 'w')
     fp.close()
 
-def delete_owl_after_write():
-    write_owl_file(path())
-    delete_owl()
+# delete 
+def update_owl_after_write():
+    write_owl_file(get_owl_path())
+    write_owl_to_file_on_download()
     
+# check if change occured since last time owl file was read
+def change_occur():
+    if not os.path.isfile(get_owl_path()):
+        print("update_needed")
+        return True
+
+    if get_etg() == get_etag("modules.owl"):
+        return False
+    
+    print("update_needed")
+    return True
+    
+
+def write_etg(etag):
+    with open(get_etg_path(), "w") as file:
+        file.write(etag)
+
+def get_etg():
+    with open(get_etg_path(), "r") as file:
+        return file.read()

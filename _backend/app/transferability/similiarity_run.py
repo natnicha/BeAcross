@@ -63,9 +63,11 @@ def fix_res_file():
 
     if check_etag(etag, get_etag("result.json")):
         write_res_file(data)
+        add_modules_to_owl()
         return
     else:
         fix_res_file()
+
         
 
 
