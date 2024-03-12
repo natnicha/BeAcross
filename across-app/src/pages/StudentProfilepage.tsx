@@ -86,7 +86,7 @@ const StudentProfilepage: React.FC = () => {
   //Personal Plan
   const handlePersonalPlanClick = async () => {
     try {
-      
+
       setPersonalPlan(true);
       setExamResult(false);
       setShowProfileInformation(false);
@@ -435,7 +435,7 @@ const StudentProfilepage: React.FC = () => {
                 <div className="search-column"><strong>University</strong></div>
               </div>
 
-              {moduleItemDetail.filter(item => item.semesterId === selectedSemester).map((item, index) => (
+              {moduleItemDetail.filter(item => selectedSemester === null || item.semesterId === selectedSemester).map((item, index) => (
                 <div className="search-table" key={index}>
                   <div className="search-row">
                       <div className="search-column" id="moduleCode">
@@ -463,7 +463,6 @@ const StudentProfilepage: React.FC = () => {
                   </div>
                 </div>
               ))}
-
 
             </div>
           </div>
