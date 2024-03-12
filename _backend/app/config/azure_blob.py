@@ -28,7 +28,6 @@ def write_res_file(data):
 
     blob_client = conn.get_blob_client(container=res_container_name, blob=res_blob_name)
     content = json.dumps(data, indent=2) # Serialize dictionary into JSON string
-    print(content)
     blob_client.upload_blob(content, overwrite=True)  # Upload updated content back to blob
 
 
