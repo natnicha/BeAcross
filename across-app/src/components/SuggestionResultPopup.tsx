@@ -4,6 +4,7 @@ import { deleteRecommended, postRecommended } from '../services/recommendedServi
 import ModuleDetailPopup from './ModuleDetailPopup';
 import CompareModuleDetailPopup from './CompareModuleDetailPopup';
 import { deleteTransferable, postTransferable } from '../services/suggestionServices';
+import { useLocation } from 'react-router-dom';
 
 export interface SuggestionItem {
     content?: string;
@@ -29,6 +30,7 @@ interface PopupProps {
 
 const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
    
+    const location = useLocation();
     const user_role = sessionStorage.getItem('user_role');
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const [suggestedList, setSuggestedList] = useState<SuggestionItem[]>(props.suggestionItems);
@@ -231,17 +233,17 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     )}
                                     <div className="search-feature-control-btn">
                                         {/* Button-like Checkbox for Transferability */}
-                                        {user_role === 'uni-admin' && (
-                                        <label className="button-like-checkbox" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
-                                            <input 
-                                            type="checkbox" 
-                                            className="hidden-checkbox"
-                                            checked={checkedStates[item.module_id]} // Controlled component
-                                            onChange={(event) => handleCheckboxChange(event, item)}
-                                            id={`checkbox-${item.module_id}`}
-                                            />
-                                            <span>Transferable&nbsp;&nbsp;</span>
-                                        </label>
+                                        {user_role === 'uni-admin' && location.pathname === '/admin/list' && (
+                                            <label className="button-like-checkbox" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
+                                                <input 
+                                                type="checkbox" 
+                                                className="hidden-checkbox"
+                                                checked={checkedStates[item.module_id]} // Controlled component
+                                                onChange={(event) => handleCheckboxChange(event, item)}
+                                                id={`checkbox-${item.module_id}`}
+                                                />
+                                                <span>Transferable&nbsp;&nbsp;</span>
+                                            </label>
                                         )}
                                         
                                         {user_role === 'student' ? (

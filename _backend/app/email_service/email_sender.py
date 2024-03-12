@@ -3,7 +3,7 @@ from email.utils import formataddr
 import aiosmtplib
 from fastapi import HTTPException  
 
-from .email_templates import password_reset_template, registration_template, success_calculated_similarity_template
+from .email_templates import *
 from app.config.config_utils import env_config
 
 async def send_email(receiver_email: str, subject: str, body: str, sender_email: str, sender_password: str):
@@ -67,4 +67,25 @@ async def send_success_calculated_similarity_email(user_email: str, user_name: s
         return True
     except Exception as e:
         raise e
-    
+
+async def send_contact_us_email(user_email: str, user_name: str, message):
+    email_body_to_VPS = contact_us_reply_to_VPS_template.format(user=user_name, email=user_email, message=message)
+    email_body_to_users = contact_us_reply_to_users_template.format(user=user_name, email=user_email)
+    try:
+        await send_email(
+            receiver_email=env_config.EMAIL_CONTACT_US,
+            subject="Victory Pie Solutions - Contact Us",
+            body=email_body_to_VPS,
+            sender_email=env_config.EMAIL_SENDER, 
+            sender_password=env_config.EMAIL_PASSWORD  # Gmail app password
+        )
+        await send_email(
+            receiver_email=user_email,
+            subject="Thank you for contacting Across",
+            body=email_body_to_users,
+            sender_email=env_config.EMAIL_SENDER, 
+            sender_password=env_config.EMAIL_PASSWORD  # Gmail app password
+        )
+        return True
+    except Exception as e:
+        raise e
