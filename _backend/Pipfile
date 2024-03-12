@@ -28,6 +28,7 @@ pytest-html = "*"
 pytest-benchmark = "*"
 safety = "*"
 pygal = "*"
+pydantic = {extras = ["email"], version = "*"}
 
 [dev-packages]
 
