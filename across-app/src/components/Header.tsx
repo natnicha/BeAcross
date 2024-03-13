@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { usePopups } from "../PopupContext";
 import ForgotPasswordPopup from "./ForgotPasswordPopup";
-import { setSelectionRange } from "@testing-library/user-event/dist/utils";
+
 
 const Header: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useUser(); // check user status (login)
@@ -20,8 +20,6 @@ const Header: React.FC = () => {
   } = usePopups();
 
   const navigate = useNavigate(); // redirect user back to homepage
-  const location = useLocation();
-  const [reloadTrigger, setReloadTrigger] = useState(false);
 
   const handleLogout = () => {
     // Clear the token and user_role on logout
