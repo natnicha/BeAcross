@@ -239,7 +239,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
                                 </div>
                                 
                                 <div className="search-feature-control-btn">
-                                {user_role === 'student' ? (
+                                {(user_role === 'student'|| user_role === 'sys-admin') ? (
                                     <button 
                                         className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
                                         onClick={(event) => handleRecommendedClick(event, item)}

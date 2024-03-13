@@ -249,7 +249,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                             </label>
                                         )}
                                         
-                                        {user_role === 'student' ? (
+                                        {(user_role === 'student' || user_role === 'sys-admin') ? (
                                             <button 
                                                 className={`btn custom-link ${item.is_recommended ? 'custom-btn-green-number' : 'custom-btn-yellow-number'}`}
                                                 style={{ width: '20%' }}

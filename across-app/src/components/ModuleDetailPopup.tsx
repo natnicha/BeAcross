@@ -380,7 +380,7 @@ const ModuleDetailPopup: React.FC<ModuleDetailPopupProps> = ({ selectedItem, sho
                     
                     {/*Comment Box Section*/}
                     {
-                        user_role === 'student' && (
+                        (user_role === 'student' || user_role === 'sys-admin') && (
                             <div className="comment-box">
                             <h6>You can share your feedback here..</h6>
                             <p>The comment will post as an anonymous</p>
