@@ -31,12 +31,6 @@ const Header: React.FC = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    if (location.pathname === '/studentprofile') {
-      setReloadTrigger(prev => !prev);
-    }
-  }, [location]);
-
   return (
     <>
       <header className="site-header">
@@ -133,11 +127,6 @@ const Header: React.FC = () => {
                         const userRole = sessionStorage.getItem("user_role");
                         const destination = userRole === "uni-admin" ? "/admin" : "/studentprofile";
                         navigate(destination);
-
-                        // Optional: Force a function to be called when navigating to /studentprofile
-                        if(destination === "/studentprofile") {
-                          window.location.reload();
-                        }
                       }}
                       role="button"
                       tabIndex={0}
