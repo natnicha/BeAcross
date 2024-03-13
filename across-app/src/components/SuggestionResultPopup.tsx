@@ -236,7 +236,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     )}
                                     <div className="search-feature-control-btn">
                                         {/* Button-like Checkbox for Transferability */}
-                                        {user_role === 'uni-admin' && location.pathname === '/admin/list' && (
+                                        {(user_role === 'uni-admin' || user_role === 'sys-admin') && location.pathname === '/admin/list' && (
                                             <label className="button-like-checkbox" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
                                                 <input 
                                                 type="checkbox" 

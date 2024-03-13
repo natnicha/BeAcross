@@ -123,7 +123,7 @@ const Header: React.FC = () => {
                       className="click-scroll d-flex align-items-end"
                       onClick={() => {
                         const userRole = sessionStorage.getItem("user_role");
-                        const destination = userRole === "uni-admin" ? "/admin" : "/studentprofile";
+                        const destination = (userRole === "uni-admin" || userRole === "sys-admin") ? "/admin" : "/studentprofile";
                         navigate(destination);
                       }}
                       role="button"
