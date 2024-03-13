@@ -1,13 +1,12 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from './AuthContext'; // Adjust the import path as necessary
 
-interface ProtectedRouteProps {
-  isAuthenticated: boolean;
-}
+export const ProtectedRoute = () => {
+  const { isAuthenticated } = useAuth();
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ isAuthenticated }) => {
-  // If the user is not authenticated, redirect to the home page
   if (!isAuthenticated) {
+    // Redirect user to the home page if not authenticated
     return <Navigate to="/" replace />;
   }
 
