@@ -15,6 +15,10 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // Toggle Submenu usestate
 const AdminBackofficePage: React.FC = () => {
+  
+  const isJwtExist = sessionStorage.getItem('jwtToken') != null && sessionStorage.getItem('jwtToken') != undefined && sessionStorage.getItem('jwtToken') != "";
+  if (!isJwtExist) { window.location.href = window.location.origin; }    // go to first page
+
   const [chevron, setChevron] = useState(true);
   const [chevron2, setChevron2] = useState(true);
 

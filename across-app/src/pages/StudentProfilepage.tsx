@@ -9,6 +9,13 @@ import Profile from "../components/Profile";
 import { getPersonalPlan, getModuleDetail, Item, ModuleItem, PersonalPlanResponse, deleteRecommended} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
+  
+  const isJwtExist = sessionStorage.getItem('jwtToken') != null && sessionStorage.getItem('jwtToken') != undefined && sessionStorage.getItem('jwtToken') != "";
+  if (!isJwtExist) {
+    // go to first page
+    window.location.href = window.location.origin;
+  }
+  
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
   const [showProfileInformation, setShowProfileInformation] = useState(false); // State to manage visibility of the sections
   const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections

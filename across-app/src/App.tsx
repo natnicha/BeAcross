@@ -18,7 +18,6 @@ import SearchPage from "./pages/SearchPage";
 import StudentProfilePage from "./pages/StudentProfilepage";
 import AdminBackofficePage from "./pages/AdminBackofficePage";
 
-
 const App: React.FC = () => {
 
   return (
@@ -33,7 +32,7 @@ const App: React.FC = () => {
               <Route index path="/contactus" element={<ContactUs />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/studentprofile" element={<StudentProfilePage />} />
-              <Route index path="/admin/*" element={<AdminBackofficePage />} />
+              <Route path="/admin/*" element={<AdminBackofficePage />} />
               <Route path="/*" element={<h1>Page Not Found</h1>} /> {/* 404 */}
             </Routes>
             <Footer />
