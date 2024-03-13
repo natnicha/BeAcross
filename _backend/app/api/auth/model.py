@@ -44,7 +44,7 @@ class LoginUserDataResponseModel(BaseModel):
     password: bytes
     first_name: str
     last_name: Optional[str] = None
-    university: str = None
+    university: Optional[str] = None
     registration_number: Optional[str] = None
     course_of_study: Optional[str] = None
     semester: Optional[int] = None
