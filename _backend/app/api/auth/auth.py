@@ -162,18 +162,22 @@ def insert_user_logs(db: MongoClient, user_id: string, host: str, user_agent: st
     return 
 
 def get_user_data(db: MongoClient, user: UsersModel) -> LoginUserDataResponseModel:
-    university_id = get_universities(db, user["email"])[0]["university_id"]
+    role = get_user_role(user_roles_id=user["user_roles_id"])
+    university = None
+    if role == 'uni-admin':
+        university_id = get_universities(db, user["email"])[0]["university_id"]
+        university = UNIVERSITIES.find_one(db, university_id)["name"]
     return LoginUserDataResponseModel(
         id = str(user["_id"]),
         email = user["email"],
         password = user["password"],
         first_name = user["first_name"],
         last_name = user["last_name"],
-        university = UNIVERSITIES.find_one(db, university_id)["name"],
+        university = university,
         registration_number = user["registration_number"],
         course_of_study = user["course_of_study"],
         semester = user["semester"],
-        user_role = get_user_role(user_roles_id=user["user_roles_id"]),
+        user_role = role,
         created_at = user["created_at"],
         updated_at = user["updated_at"],
     )
