@@ -7,8 +7,6 @@ import "./tooplate-waso-strategy.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./UserContext";
 import { PopupProvider } from "./PopupContext";
-import { ProtectedRoute } from './ProtectedRoute';
-import { AuthProvider } from './AuthContext';
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -24,7 +22,6 @@ import AdminBackofficePage from "./pages/AdminBackofficePage";
 const App: React.FC = () => {
 
   return (
-    <AuthProvider>
       <UserProvider>
         <PopupProvider>
           <Router>
@@ -35,17 +32,14 @@ const App: React.FC = () => {
               <Route index path="/policy" element={<Policy />} />
               <Route index path="/contactus" element={<ContactUs />} />
               <Route path="/search" element={<SearchPage />} />
-              <Route element={<ProtectedRoute />}>
-                <Route path="/studentprofile" element={<StudentProfilePage />} />
-                <Route index path="/admin/*" element={<AdminBackofficePage />} />
-              </Route>
+              <Route path="/studentprofile" element={<StudentProfilePage />} />
+              <Route index path="/admin/*" element={<AdminBackofficePage />} />
               <Route path="/*" element={<h1>Page Not Found</h1>} /> {/* 404 */}
             </Routes>
             <Footer />
           </Router>
         </PopupProvider>
       </UserProvider>
-    </AuthProvider>
   );
 };
 
