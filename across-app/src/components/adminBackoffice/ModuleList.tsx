@@ -75,13 +75,17 @@ export default function ModuleList() {
   useEffect(() => {
     const getModuleList = async () => {
       
-      const university = sessionStorage.getItem("university") || ""; // check university of admin    
+      const university = sessionStorage.getItem("university") || ""; // Get university from sessionStorage
       
       try {
-        const encodedUniversity = encodeURIComponent(university);
-
-        // Base URL
-        let url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":${encodedUniversity})&sortby=module_name&orderby=asc`;
+        let url;
+        // Check if university is explicitly null and set URL accordingly
+        if (university == "null") {
+          url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":%20)&sortby=module_name&orderby=asc`;
+        } else {
+          const encodedUniversity = encodeURIComponent(university);
+          url = `http://localhost:8000/api/v1/module/search/advanced?term=("university":${encodedUniversity})&sortby=module_name&orderby=asc`;
+        }
   
         // Append the offset to the URL if not on the first page
         if (currentPage > 1) {
@@ -99,7 +103,7 @@ export default function ModuleList() {
         console.error("Error fetching module list data:", error);
       }
     };
-  
+
     getModuleList();
   }, [currentPage, offset]);
 
