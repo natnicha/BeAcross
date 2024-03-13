@@ -125,6 +125,10 @@ const Header: React.FC = () => {
                         const userRole = sessionStorage.getItem("user_role");
                         const destination = (userRole === "uni-admin" || userRole === "sys-admin") ? "/admin" : "/studentprofile";
                         navigate(destination);
+
+                        if(destination === "/studentprofile") {
+                          window.location.reload();
+                        }
                       }}
                       role="button"
                       tabIndex={0}
