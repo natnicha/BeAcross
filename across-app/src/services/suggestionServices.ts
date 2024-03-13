@@ -86,7 +86,7 @@ export async function postTransferable(module_a: string, module_b: string): Prom
         message:
           "Similarity is successfully added.",
       };
-    } else if (response.status == 409) {
+    } else if (response.status == 409 || response.status == 404) {
       return { status: response.status, message: responseData.detail.message };
     } else {
       throw new Error(`Error: ${response.status}`);
@@ -120,6 +120,8 @@ export async function deleteTransferable(module_a: string, module_b: string): Pr
         message:
           "Similarity is successfully deleted.",
       }
+    } else if (response.status == 409 || response.status == 404) {
+      return { status: response.status, message: "Module Not Found" };
     } else {
       throw new Error(`Error: ${response.status}`);
     }

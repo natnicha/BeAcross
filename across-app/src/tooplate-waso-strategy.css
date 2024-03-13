@@ -1298,7 +1298,8 @@ td {
 }
 
 .tm-nav-item:hover .tm-nav-link,
-.tm-nav-item.active .tm-nav-link {
+.tm-nav-item.active .tm-nav-link,
+.tm-nav-item .nav-link:hover {
   color: white;
   background-color: #1e5af5;
   text-decoration: none;

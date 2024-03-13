@@ -9,6 +9,13 @@ import Profile from "../components/Profile";
 import { getPersonalPlan, getModuleDetail, Item, ModuleItem, PersonalPlanResponse, deleteRecommended} from "../services/personalplanServices";
 
 const StudentProfilepage: React.FC = () => {
+  
+  const isJwtExist = sessionStorage.getItem('jwtToken') != null && sessionStorage.getItem('jwtToken') != undefined && sessionStorage.getItem('jwtToken') != "";
+  if (!isJwtExist) {
+    // go to first page
+    window.location.href = window.location.origin;
+  }
+  
   const [activeNav, setActiveNav] = useState("home"); // State to track the active navigation item
   const [showProfileInformation, setShowProfileInformation] = useState(false); // State to manage visibility of the sections
   const [showExamResult, setExamResult] = useState(false); // State to manage visibility of the sections
@@ -18,7 +25,7 @@ const StudentProfilepage: React.FC = () => {
   //personal plan
   const [personalPlanResponse, setPersonalPlanResponse] = useState<PersonalPlanResponse | null>(null); // intermediate result
   const [moduleItemDetail, setModuleItemDetail] = useState<ModuleItem[]>([]); // enrichment result (i.e. not original date from backend)
-  const [selectedSemester, setSelectedSemester] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState<string>("65d7a7a22b35547c027a9d5b");
 
 
   // Function to Nav navigation item click
@@ -58,7 +65,7 @@ const StudentProfilepage: React.FC = () => {
     setShowProfileInformation(false);
     setPersonalPlan(false);
   };
-  
+
   // State for the visibility of rows under module types
   const [showFocusModuleRows, setShowFocusModuleRows] = useState(false);
   const [showAdvanceModuleRows, setShowAdvanceModuleRows] = useState(false);
@@ -86,6 +93,11 @@ const StudentProfilepage: React.FC = () => {
   //Personal Plan
   const handlePersonalPlanClick = async () => {
     try {
+
+      setPersonalPlan(true);
+      setExamResult(false);
+      setShowProfileInformation(false);
+
       // Step 1: call personal plan api API
       const personalPlanResponse = await getPersonalPlan();
       sessionStorage.setItem('personalPlanData', JSON.stringify(personalPlanResponse));
@@ -117,9 +129,6 @@ const StudentProfilepage: React.FC = () => {
       // Step 4: set all data to state of this component for later use
       setModuleItemDetail(enrichedModuleItems);
       setPersonalPlanResponse(personalPlanResponse); 
-      setPersonalPlan(true);
-      setExamResult(false);
-      setShowProfileInformation(false);
     } catch (error) {
       console.error("Failed to fetch module details:", error);
     }
@@ -433,7 +442,7 @@ const StudentProfilepage: React.FC = () => {
                 <div className="search-column"><strong>University</strong></div>
               </div>
 
-              {moduleItemDetail.filter(item => item.semesterId === selectedSemester).map((item, index) => (
+              {moduleItemDetail.filter(item => !selectedSemester || item.semesterId === selectedSemester).map((item, index) => (
                 <div className="search-table" key={index}>
                   <div className="search-row">
                       <div className="search-column" id="moduleCode">
@@ -461,7 +470,6 @@ const StudentProfilepage: React.FC = () => {
                   </div>
                 </div>
               ))}
-
 
             </div>
           </div>

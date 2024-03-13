@@ -131,7 +131,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   performSearch = async (isNewSearch: boolean = false) => {
     try {
-      console.log(`Current page: ${this.state.currentPage}, Total pages: ${this.state.totalPages}`);
 
       const offset = (this.state.currentPage - 1) * 20; // Calculate offset based on current page
       const offsetString = offset.toString(); // Convert to String before passing data to BE
@@ -174,8 +173,6 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
-    console.log(`Current page: ${this.state.currentPage}, Total pages: ${this.state.totalPages}`);
-
   }
 
   setQuery(newQuery: string) {

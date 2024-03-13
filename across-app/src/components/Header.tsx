@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import RegisterPopup from "../components/RegisterationPopup";
 import LoginPopup from "../components/LoginPopup";
 import { useUser } from "../UserContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { usePopups } from "../PopupContext";
 import ForgotPasswordPopup from "./ForgotPasswordPopup";
-import { setSelectionRange } from "@testing-library/user-event/dist/utils";
+
 
 const Header: React.FC = () => {
   const { isLoggedIn, setIsLoggedIn } = useUser(); // check user status (login)
@@ -122,9 +122,13 @@ const Header: React.FC = () => {
                     <a
                       className="click-scroll d-flex align-items-end"
                       onClick={() => {
-                        sessionStorage.getItem("user_role") === "uni-admin"
-                          ? navigate("/admin")
-                          : navigate("/studentprofile");
+                        const userRole = sessionStorage.getItem("user_role");
+                        const destination = (userRole === "uni-admin" || userRole === "sys-admin") ? "/admin" : "/studentprofile";
+                        navigate(destination);
+
+                        if(destination === "/studentprofile") {
+                          window.location.reload();
+                        }
                       }}
                       role="button"
                       tabIndex={0}

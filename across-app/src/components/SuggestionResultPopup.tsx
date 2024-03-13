@@ -35,6 +35,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
     const jwtToken = sessionStorage.getItem("jwtToken") || '';
     const [suggestedList, setSuggestedList] = useState<SuggestionItem[]>(props.suggestionItems);
     const [selectedSuggestedItem, setSuggestedItem] = useState<SuggestionItem>(props.selectedResultItem); // item from suggestion result
+    const [isLoading, setIsLoading] = useState(false);
     
     const [selectedCompareItems, setSelectedCompareItems] = useState<SuggestionItem[]>([props.selectedResultItem]); // use in compare feature
     const [tempCompareItems, setTempCompareItems] = useState<SuggestionItem[]>([]); // use in compare feature
@@ -123,6 +124,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
 
     //approved/Unapprved transferibility
     const handleCheckboxChange = async (event: React.ChangeEvent<HTMLInputElement>, item: SuggestionItem) => {
+        setIsLoading(true); // start loading
         event.preventDefault();
         event.stopPropagation();
     
@@ -159,6 +161,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
         }
     
         // Update the state with the new response messages
+        setIsLoading(false); //end loading
         setResponseMessages(newResponseMessages);
     };
 
@@ -233,7 +236,7 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     )}
                                     <div className="search-feature-control-btn">
                                         {/* Button-like Checkbox for Transferability */}
-                                        {user_role === 'uni-admin' && location.pathname === '/admin/list' && (
+                                        {(user_role === 'uni-admin' || user_role === 'sys-admin') && location.pathname === '/admin/list' && (
                                             <label className="button-like-checkbox" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
                                                 <input 
                                                 type="checkbox" 
@@ -266,6 +269,15 @@ const SuggestionResultPopup: React.FC<PopupProps> = (props) => {
                                     </div>
                                 </div>
                             </div>))}
+                            <br /><br />
+                            {
+                                isLoading && (
+                                <div className="loader-container">
+                                    <p>Re-calculating Similarity logic, please do not close this popup.</p>
+                                    <div className="loader"></div>
+                                </div>
+                                )
+                            }
                          </div>   
 
                         {/* Conditionally render ModuleDetailPopup */}
