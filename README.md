@@ -11,11 +11,11 @@ BeAcross is an Across initiative platform providing you a variety of modules fro
 
 
 ## About Across
-Across conducts an initiative led by Technische Universität Chemnitz known as the **Across Alliance**. This alliance consists of ten European universities that collectively form the European cross border University [Across](https://www.across-alliance.eu/) . 
+Across conducts an initiative led by Technische Universität Chemnitz known as the **Across Alliance**. This alliance consists of ten European universities that collectively form the European across border University [Across](https://www.across-alliance.eu/) . 
 
 
 ## Across Aims
-The goal is to facilitate successful cross-border exchange and collaboration within different regions in Europe. The initiative seeks to deepen cooperation among European universities situated across borders. The focus of this cooperation will be on crucial cross-border issues such as development and economic challenges, comparative law and public administration, education, natural resource management, tourism, migrations transportation, culture, and the preservation of cross-border cultural heritage.
+The goal is to facilitate successful cross-border exchange and collaboration within different regions in Europe. The initiative seeks to deepen cooperation among European universities situated across borders. The focus of this cooperation will be on crucial cross-border issues such as development and economic challenges, comparative law and public administration, education, natural resource management, tourism, migration transportation, culture, and the preservation of cross-border cultural heritage.
 
 ## Visual
 Across website sample
@@ -34,8 +34,8 @@ Across website sample
 [<img src="./readme-src/bootstrap_logo.png" width="62">](https://getbootstrap.com/)
 ## Getting Started
 To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
-1. Setup your development environment for backend web services according to the [Backend README](/_backend/README.md)
-2. Setup your development environment for Across website according to the [Across README](/across-app/README.md)
+1. Setup your development environment for a backend web services according to the [Backend README](/_backend/README.md)
+2. Setup your development environment for an Across website according to the [Across README](/across-app/README.md)
 3. Start backend web services
 4. Start Across website
 5. Enjoy our website at [Across](localhost:3000/)
@@ -50,7 +50,7 @@ There are 4 user roles in a BeAcross platform including
 ### Logging into Across website
 Here is initiative placeholder users that you can use in our application
 #### Guest
-As a Guest, you no need to log in to Across website
+As a Guest, you are no need to log in to the Across website
 
 #### Student
 As a Student, you can use the following email and password
@@ -91,7 +91,7 @@ As a System Administrator, you can use the following email and password
   - [x] basic terms
   - [x] advanced conditions
   - [x] course of studies
-- [x] Add an automatical determination engine calculating suggested similar modules from module name, description, and credits.
+- [x] Add an automatic determination engine calculating suggested similar modules from module name, description, and credits.
   - [x] when imported new modules
   - [x] when updated existing modules
   - [x] when deleted existing modules
@@ -110,7 +110,7 @@ As a System Administrator, you can use the following email and password
   - [ ] support more than 1 file at a time
 - [ ] Add an account management feature
   - [x] student accounts managed by university admins
-  - [ ] university admins accounts managed by system admins 
+  - [ ] university admins' accounts managed by system admins 
 - [ ] Provide seamless login from a university portal to Across using Single Sign-On (SSO) by university student/staff account
 - [ ] Synchronize student personal data from a university's portal
 - [ ] Retrieve examination data from a university's portal
@@ -156,4 +156,4 @@ A Slice of Trust, Innovation, and Comfort in Every Morning, Unlocking Your Indus
 Visit us at [Victory Pie Solutions](https://www.victorypiesolutions.com/) or [email](Victorypiesolutions@outlook.com)
 
 ## Project status
-Across v.1.0.0 was launched on 5th Mar 2024. All unique selling points are successfully developed in this version. If you have any suggestion, please feel free to contribute us by creating issues or a new branch to start enhancement. Also, you can see our application progress in a Roadmap section.
+Across v.1.0.0 was launched on 5th Mar 2024. All unique selling points are successfully developed in this version. If you have any suggestions, please feel free to contribute to us by creating issues or a new branch to start enhancement. Also, you can see our application progress in the Roadmap section.
