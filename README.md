@@ -4,7 +4,8 @@
 ![Static Badge](https://img.shields.io/badge/Test-Passed-green)
 ![Static Badge](https://img.shields.io/badge/Coverage-100%25-green)
 ![Static Badge](https://img.shields.io/badge/Security-Passed-blue)
-![Static Badge](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-green) 
+![Static Badge](https://img.shields.io/badge/Performance-%3C6ms%20response%20time-blue)
+
 
 BeAcross is an Across initiative platform providing you a variety of modules from different European **across border universities**.
 
@@ -122,21 +123,25 @@ If you have any suggestion that would make our website looks better or more conv
 1. Fork the Project
 2. Create your Feature Branch 
     ```
-    git checkout -b feature/YourFeature
+    git checkout -b feature/AwesomeFeature
     ```
 3. Commit your Changes 
     ```
-    git commit -m 'Add some YourFeature'
+    git commit -m 'Add some AwesomeFeature'
     ```
 4. Push to the Branch
     ```
-    git push origin feature/YourFeature
+    git push origin feature/AwesomeFeature
     ```
 5. Open a Pull Request
 
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Acknowledgment
+Here is a resource list which is helpful and  would like to give credit to. 
+
+* [Owlready 2 documents](https://owlready2.readthedocs.io/en/latest/)
+* [Mongo DB playground](https://mongoplayground.net/)
+* [Mongo DB community](https://www.mongodb.com/community/)
 
 ## License
 This project is under Technische Universität Chemnitz contributed by Victory Pie Solutions.
@@ -151,4 +156,4 @@ A Slice of Trust, Innovation, and Comfort in Every Morning, Unlocking Your Indus
 Visit us at [Victory Pie Solutions](https://www.victorypiesolutions.com/) or [email](Victorypiesolutions@outlook.com)
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Across v.1.0.0 was launched on 5th Mar 2024. All unique selling points are successfully developed in this version. If you have any suggestion, please feel free to contribute us by creating issues or a new branch to start enhancement. Also, you can see our application progress in a Roadmap section.
