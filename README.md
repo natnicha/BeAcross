@@ -74,22 +74,31 @@ As a System Administrator, you can use the following email and password
 Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
 
 ## Roadmap
-- [x] Add a searching feature by basic terms
-- [x] Add a searching feature by advanced conditions
-- [x] Add a searching feature by course of studies
+- [x] Add a searching feature by 
+  - [x] basic terms
+  - [x] advanced conditions
+  - [x] course of studies
 - [x] Add an automatically determination engine calculating suggested similar modules from module name, description, and credits.
+  - [x] when imported new modules
+  - [x] when updated existing modules
+  - [x] when deleted existing modules
 - [x] Add a comparing modules feature to compare modules side by side
 - [x] Add a sharing button to share modules on social media
-- [x] Add a feeback feature sharing from alumnis to upcoming students by commenting on modules 
+- [ ] Add a feeback feature sharing from alumnis to upcoming students by commenting on modules 
+  - [x] sharing from student
+  - [ ] sharing from only alumnis who took an exam
 - [x] Add a favoriting feature that allows to pin modules into a particular semester in a personal plan
-- [x] Add a recommending feature voted by student
-- [ ] Amend the recommending feature to allow voting by only alumnis who took an exam
-- [x] Add an importing modules feature using XML file by university admins
-- [ ] Amend the importingmodules feature to support JSON format
-- [ ] Amend the importingmodules feature to support more than 1 file at a time
-- [x] Add a student account management managed by university/system admins feature
-- [ ] Add a university admins account management managed by system admins feature
-- [ ] Add seamless login to Across website using Single Sign-On (SSO) from university student/staff account
+- [ ] Add a recommending feature 
+  - [x] voted by student
+  - [ ] voted by only alumnis who took an exam
+- [ ] Add an importing modules feature by university admins
+  - [x] using XML file
+  - [ ] using JSON file
+  - [ ] support more than 1 file at a time
+- [ ] Add a account management feature
+  - [x] student accounts managed by university admins
+  - [ ] university admins accounts managed by system admins 
+- [ ] Provide seamless login from university portal to Across using Single Sign-On (SSO) by university student/staff account
 - [ ] Synchronize student personal data from university's portal
 - [ ] Retrieve examination data from university's portal
 
