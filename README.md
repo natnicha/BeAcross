@@ -51,7 +51,7 @@ If you have run out of energy or time for your project, put a note at the top of
 
 A Slice of Trust, Innovation, and Comfort in Every Morning, Unlocking Your Industry's Full Potential 
 
-[Victory Pie Solutions](https://www.victorypiesolutions.com/)
+Visit us at [Victory Pie Solutions](https://www.victorypiesolutions.com/)
 
 ## Vision
 Our company name, Victory Pie Solutions, tells you what we're all about. "Victory" means we're always working hard to help our clients succeed. "Pie" shows how we bring together different kinds of technology to solve problems. And "Solution" is just that— we offer good, solid answers to business challenges. We aim to make our services as easy to use as pie by focusing on what users really want. To do this, we mix the best technologies together, just like the perfect pie combines different ingredients
