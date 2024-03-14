@@ -26,11 +26,12 @@ There are 4 user roles in a BeAcross platform including
 - University Administrator
 - System Administrator
 
+### Logging into Across website
 Here is initiative placeholder users that you can use in our application
-### Guest
+#### Guest
 As a Guest, you no need to log in to Across website
 
-### Student
+#### Student
 As a Student, you can use the following email and password
 
 * Email 
@@ -42,7 +43,7 @@ As a Student, you can use the following email and password
         FM2lf!L2
 
 
-### University Administrator
+#### University Administrator
 As a University Administrator, you can use the following email and password
 
 * Email
@@ -53,7 +54,7 @@ As a University Administrator, you can use the following email and password
 
         rwA!3BmT
 
-### System Administrator
+#### System Administrator
 As a System Administrator, you can use the following email and password
 
 * Email
