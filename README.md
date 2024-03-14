@@ -1,13 +1,11 @@
 # BeAcross
+
 ![alt text](./across-app/src/images/across-bg.png)
-
-<p style="text-align: center;">
-
 ![Static Badge](https://img.shields.io/badge/Test-Passed-green)
 ![Static Badge](https://img.shields.io/badge/Coverage-100%25-green)
 ![Static Badge](https://img.shields.io/badge/Security-Passed-blue)
 ![Static Badge](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-green) 
-</p>
+
 BeAcross is an Across initiative platform providing you a variety of modules from different European **across border universities**. This project is under Technische Universität Chemnitz contributed by Victory Pie Solutions.
 
 
