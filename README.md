@@ -1,6 +1,6 @@
 # BeAcross
 ![alt text](./across-app/src/images/across-bg.png)
-BeAcross is an Across initiative platform providing you a variety of modules from different European Universities **across border Universities**. This project is under Technische Universität Chemnitz contributed by Victory Pie Solutions.
+BeAcross is an Across initiative platform providing you a variety of modules from different European **across border Universities**. This project is under Technische Universität Chemnitz contributed by Victory Pie Solutions.
 
 
 ## About Across
