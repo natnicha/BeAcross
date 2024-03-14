@@ -1,6 +1,6 @@
 # BeAcross
 
-![alt text](./across-app/src/images/across-bg.png)
+![Across website](./across-app/src/images/across-bg.png)
 ![Static Badge](https://img.shields.io/badge/Test-Passed-green)
 ![Static Badge](https://img.shields.io/badge/Coverage-100%25-green)
 ![Static Badge](https://img.shields.io/badge/Security-Passed-blue)
@@ -16,8 +16,13 @@ Across conducts an initiative led by Technische Universität Chemnitz known as t
 ## Across Aims
 The goal is to facilitate successful cross-border exchange and collaboration within different regions in Europe. The initiative seeks to deepen cooperation among European universities situated across borders. The focus of this cooperation will be on crucial cross-border issues such as development and economic challenges, comparative law and public administration, education, natural resource management, tourism, migrations transportation, culture, and the preservation of cross-border cultural heritage.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Visual
+Across website sample
+
+![searching modules](./readme-src/ezgif-1-703e206c9f2.gif)
+
+## Built With
+
 
 ## Getting Started
 To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
