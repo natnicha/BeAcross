@@ -87,33 +87,33 @@ As a System Administrator, you can use the following email and password
         rRi.Pz9c
 
 ## Roadmap
-- [x] Add a searching feature by 
+- [x] Add a search feature by 
   - [x] basic terms
   - [x] advanced conditions
   - [x] course of studies
-- [x] Add an automatically determination engine calculating suggested similar modules from module name, description, and credits.
+- [x] Add an automatical determination engine calculating suggested similar modules from module name, description, and credits.
   - [x] when imported new modules
   - [x] when updated existing modules
   - [x] when deleted existing modules
 - [x] Add a comparing modules feature to compare modules side by side
 - [x] Add a sharing button to share modules on social media
-- [ ] Add a feeback feature sharing from alumnis to upcoming students by commenting on modules 
+- [ ] Add a feedback feature sharing from alumni to upcoming students by commenting on modules 
   - [x] sharing from student
-  - [ ] sharing from only alumnis who took an exam
-- [x] Add a favoriting feature that allows to pin modules into a particular semester in a personal plan
+  - [ ] sharing from only alumni who took an exam
+- [x] Add a favoriting feature that allows one to pin modules into a particular semester in a personal plan
 - [ ] Add a recommending feature 
   - [x] voted by student
-  - [ ] voted by only alumnis who took an exam
+  - [ ] voted by only alumni who took an exam
 - [ ] Add an importing modules feature by university admins
   - [x] using XML file
   - [ ] using JSON file
   - [ ] support more than 1 file at a time
-- [ ] Add a account management feature
+- [ ] Add an account management feature
   - [x] student accounts managed by university admins
   - [ ] university admins accounts managed by system admins 
-- [ ] Provide seamless login from university portal to Across using Single Sign-On (SSO) by university student/staff account
-- [ ] Synchronize student personal data from university's portal
-- [ ] Retrieve examination data from university's portal
+- [ ] Provide seamless login from a university portal to Across using Single Sign-On (SSO) by university student/staff account
+- [ ] Synchronize student personal data from a university's portal
+- [ ] Retrieve examination data from a university's portal
 
 
 ## Contributing
