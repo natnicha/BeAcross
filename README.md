@@ -19,11 +19,18 @@ The goal is to facilitate successful cross-border exchange and collaboration wit
 ## Visual
 Across website sample
 
-![searching modules](./readme-src/ezgif-1-703e206c9f2.gif)
+![searching modules](./readme-src/visual.gif)
 
 ## Built With
 
-
+[<img src="./readme-src/python_logo.png" width="150">](https://www.python.org/)
+[<img src="./readme-src/fastapi_logo.png" width="150">](https://fastapi.tiangolo.com/)
+[<img src="./readme-src/mongodb_logo.png" width="150">](https://www.mongodb.com/)
+[<img src="./readme-src/scikit_learn_logo.png" width="80">](https://scikit-learn.org/stable/)
+[<img src="./readme-src/owlready2_logo.png" width="50">](https://owlready2.readthedocs.io/en/latest/)
+[<img src="./readme-src/react_logo.png" width="50">](https://react.dev/)
+[<img src="./readme-src/typescript_logo.png" width="50">](https://www.typescriptlang.org/)
+[<img src="./readme-src/bootstrap_logo.png" width="62">](https://getbootstrap.com/)
 ## Getting Started
 To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
 1. Setup your development environment for backend web services according to the [Backend README](/_backend/README.md)
