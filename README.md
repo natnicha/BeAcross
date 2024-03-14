@@ -93,13 +93,11 @@ For open source projects, say how it is licensed.
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
 
 
-## Victory Pie Solutions
+## Contributor 
+This project is contributed by **Victory Pie Solutions**
 
 <img src="./readme-src/logo.png" width="300">
 
 A Slice of Trust, Innovation, and Comfort in Every Morning, Unlocking Your Industry's Full Potential 
 
 Visit us at [Victory Pie Solutions](https://www.victorypiesolutions.com/)
-
-## Vision
-Our company name, Victory Pie Solutions, tells you what we're all about. "Victory" means we're always working hard to help our clients succeed. "Pie" shows how we bring together different kinds of technology to solve problems. And "Solution" is just that— we offer good, solid answers to business challenges. We aim to make our services as easy to use as pie by focusing on what users really want. To do this, we mix the best technologies together, just like the perfect pie combines different ingredients
