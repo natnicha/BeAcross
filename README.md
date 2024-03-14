@@ -1,95 +1,159 @@
-# Victory Pie Solutions
+# BeAcross
+
+![Across website](./across-app/src/images/across-bg.png)
+![Static Badge](https://img.shields.io/badge/Test-Passed-green)
+![Static Badge](https://img.shields.io/badge/Coverage-100%25-green)
+![Static Badge](https://img.shields.io/badge/Security-Passed-blue)
+![Static Badge](https://img.shields.io/badge/Performance-%3C6ms%20response%20time-blue)
 
 
-## Across Modules Parser
-https://github.com/salehghraiyib/across-parser/tree/master
+BeAcross is an Across initiative platform providing you a variety of modules from different European **across border universities**.
 
 
-## Getting started
+## About Across
+Across conducts an initiative led by Technische Universität Chemnitz known as the **Across Alliance**. This alliance consists of ten European universities that collectively form the European across border University [Across](https://www.across-alliance.eu/) . 
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Across Aims
+The goal is to facilitate successful cross-border exchange and collaboration within different regions in Europe. The initiative seeks to deepen cooperation among European universities situated across borders. The focus of this cooperation will be on crucial cross-border issues such as development and economic challenges, comparative law and public administration, education, natural resource management, tourism, migration transportation, culture, and the preservation of cross-border cultural heritage.
 
-## Add your files
+## Visual
+Across website sample
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+![searching modules](./readme-src/visual.gif)
 
-```
-cd existing_repo
-git remote add origin https://gitlab.hrz.tu-chemnitz.de/vsr/edu/planspiel/WS2324/victory-pie-solutions.git
-git branch -M main
-git push -uf origin main
-```
+## Built With
 
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.hrz.tu-chemnitz.de/vsr/edu/planspiel/WS2324/victory-pie-solutions/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+[<img src="./readme-src/python_logo.png" width="150">](https://www.python.org/)
+[<img src="./readme-src/fastapi_logo.png" width="150">](https://fastapi.tiangolo.com/)
+[<img src="./readme-src/mongodb_logo.png" width="150">](https://www.mongodb.com/)
+[<img src="./readme-src/scikit_learn_logo.png" width="80">](https://scikit-learn.org/stable/)
+[<img src="./readme-src/owlready2_logo.png" width="50">](https://owlready2.readthedocs.io/en/latest/)
+[<img src="./readme-src/react_logo.png" width="50">](https://react.dev/)
+[<img src="./readme-src/typescript_logo.png" width="50">](https://www.typescriptlang.org/)
+[<img src="./readme-src/bootstrap_logo.png" width="62">](https://getbootstrap.com/)
+## Getting Started
+To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
+1. Setup your development environment for a backend web services according to the [Backend README](/_backend/README.md)
+2. Setup your development environment for an Across website according to the [Across README](/across-app/README.md)
+3. Start backend web services
+4. Start Across website
+5. Enjoy our website at [Across](localhost:3000/)
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+There are 4 user roles in a BeAcross platform including
+- Guest
+- Student
+- University Administrator
+- System Administrator
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Logging into Across website
+Here is initiative placeholder users that you can use in our application
+#### Guest
+As a Guest, you are no need to log in to the Across website
+
+#### Student
+As a Student, you can use the following email and password
+
+* Email 
+
+        across.student@s2023.tu-chemnitz.de
+
+* Password
+        
+        FM2lf!L2
+
+
+#### University Administrator
+As a University Administrator, you can use the following email and password
+
+* Email
+    
+        across.uni.admin@tu-chemnitz.de
+
+* Password
+
+        rwA!3BmT
+
+#### System Administrator
+As a System Administrator, you can use the following email and password
+
+* Email
+    
+        across.sys.admin@tu-chemnitz.de
+
+* Password
+
+        rRi.Pz9c
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- [x] Add a search feature by 
+  - [x] basic terms
+  - [x] advanced conditions
+  - [x] course of studies
+- [x] Add an automatic determination engine calculating suggested similar modules from module name, description, and credits.
+  - [x] when imported new modules
+  - [x] when updated existing modules
+  - [x] when deleted existing modules
+- [x] Add a comparing modules feature to compare modules side by side
+- [x] Add a sharing button to share modules on social media
+- [ ] Add a feedback feature sharing from alumni to upcoming students by commenting on modules 
+  - [x] sharing from student
+  - [ ] sharing from only alumni who took an exam
+- [x] Add a favoriting feature that allows one to pin modules into a particular semester in a personal plan
+- [ ] Add a recommending feature 
+  - [x] voted by student
+  - [ ] voted by only alumni who took an exam
+- [ ] Add an importing modules feature by university admins
+  - [x] using XML file
+  - [ ] using JSON file
+  - [ ] support more than 1 file at a time
+- [ ] Add an account management feature
+  - [x] student accounts managed by university admins
+  - [ ] university admins' accounts managed by system admins 
+- [ ] Provide seamless login from a university portal to Across using Single Sign-On (SSO) by university student/staff account
+- [ ] Synchronize student personal data from a university's portal
+- [ ] Retrieve examination data from a university's portal
+
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+If you have any suggestion that would make our website looks better or more convenience, please fork the repo and create a merge requeste. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thank you again!
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+1. Fork the Project
+2. Create your Feature Branch 
+    ```
+    git checkout -b feature/AwesomeFeature
+    ```
+3. Commit your Changes 
+    ```
+    git commit -m 'Add some AwesomeFeature'
+    ```
+4. Push to the Branch
+    ```
+    git push origin feature/AwesomeFeature
+    ```
+5. Open a Pull Request
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+
+## Acknowledgment
+Here is a resource list which is helpful and  would like to give credit to. 
+
+* [Owlready 2 documents](https://owlready2.readthedocs.io/en/latest/)
+* [Mongo DB playground](https://mongoplayground.net/)
+* [Mongo DB community](https://www.mongodb.com/community/)
 
 ## License
-For open source projects, say how it is licensed.
+This project is under Technische Universität Chemnitz contributed by Victory Pie Solutions.
+
+## Project Contributor & Support
+This project is contributed by **Victory Pie Solutions**
+
+<img src="./readme-src/logo.png" width="300">
+
+A Slice of Trust, Innovation, and Comfort in Every Morning, Unlocking Your Industry's Full Potential 
+
+Visit us at [Victory Pie Solutions](https://www.victorypiesolutions.com/) or [email](Victorypiesolutions@outlook.com)
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Across v.1.0.0 was launched on 5th Mar 2024. All unique selling points are successfully developed in this version. If you have any suggestions, please feel free to contribute to us by creating issues or a new branch to start enhancement. Also, you can see our application progress in the Roadmap section.

@@ -76,3 +76,17 @@ safety check --save-html .
 ```
 safety scan --save-html .
 ```
+
+
+## Access interactive API docs
+Now go to http://127.0.0.1:8000/docs.
+
+You will see the automatic interactive API documentation (provided by [Swagger UI](https://github.com/swagger-api/swagger-ui)):
+
+![Swagger UI](../readme-src/swagger-ui.PNG)
+
+
+
+## Access Across Modules Parser
+Additionally, to extract data from PDF files into json format, please refer to this repository.
+[Git Hub](https://github.com/salehghraiyib/across-parser/tree/master)
