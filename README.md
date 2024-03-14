@@ -74,7 +74,25 @@ As a System Administrator, you can use the following email and password
 Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- [x] Add a searching feature by basic terms
+- [x] Add a searching feature by advanced conditions
+- [x] Add a searching feature by course of studies
+- [x] Add an automatically determination engine calculating suggested similar modules from module name, description, and credits.
+- [x] Add a comparing modules feature to compare modules side by side
+- [x] Add a sharing button to share modules on social media
+- [x] Add a feeback feature sharing from alumnis to upcoming students by commenting on modules 
+- [x] Add a favoriting feature that allows to pin modules into a particular semester in a personal plan
+- [x] Add a recommending feature voted by student
+- [ ] Amend the recommending feature to allow voting by only alumnis who took an exam
+- [x] Add an importing modules feature using XML file by university admins
+- [ ] Amend the importingmodules feature to support JSON format
+- [ ] Amend the importingmodules feature to support more than 1 file at a time
+- [x] Add a student account management managed by university/system admins feature
+- [ ] Add a university admins account management managed by system admins feature
+- [ ] Add seamless login to Across website using Single Sign-On (SSO) from university student/staff account
+- [ ] Synchronize student personal data from university's portal
+- [ ] Retrieve examination data from university's portal
+
 
 ## Contributing
 State if you are open to contributions and what your requirements are for accepting them.
