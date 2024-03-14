@@ -17,7 +17,12 @@ On some READMEs, you may see small images that convey metadata, such as whether 
 Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
+1. Setup your development environment for backend web services according to the [Backend README](/_backend/README.md)
+2. Setup your development environment for Across website according to the [Across README](/across-app/README.md)
+3. Start backend web services
+4. Start Across website
+5. Enjoy our website at [Across](localhost:3000/)
 
 ## Usage
 There are 4 user roles in a BeAcross platform including
