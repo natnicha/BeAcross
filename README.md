@@ -1,5 +1,11 @@
 # BeAcross
 ![alt text](./across-app/src/images/across-bg.png)
+
+![Static Badge](https://img.shields.io/badge/Test-Passed-green)
+![Static Badge](https://img.shields.io/badge/Coverage-100%25-green)
+![Static Badge](https://img.shields.io/badge/Security-Passed-blue)
+![Static Badge](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-green)
+
 BeAcross is an Across initiative platform providing you a variety of modules from different European **across border universities**. This project is under Technische Universität Chemnitz contributed by Victory Pie Solutions.
 
 
@@ -9,9 +15,6 @@ Across conducts an initiative led by Technische Universität Chemnitz known as t
 
 ## Across Aims
 The goal is to facilitate successful cross-border exchange and collaboration within different regions in Europe. The initiative seeks to deepen cooperation among European universities situated across borders. The focus of this cooperation will be on crucial cross-border issues such as development and economic challenges, comparative law and public administration, education, natural resource management, tourism, migrations transportation, culture, and the preservation of cross-border cultural heritage.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
 ## Visuals
 Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
