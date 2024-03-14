@@ -16,7 +16,7 @@ On some READMEs, you may see small images that convey metadata, such as whether 
 ## Visuals
 Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
-## Installation
+## Getting Started
 To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
 1. Setup your development environment for backend web services according to the [Backend README](/_backend/README.md)
 2. Setup your development environment for Across website according to the [Across README](/across-app/README.md)
