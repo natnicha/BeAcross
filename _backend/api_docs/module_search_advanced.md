@@ -1,4 +1,4 @@
-# ** [GET] Search Module **
+# ** [GET] Advanced Search Module **
 
 To advnaced search modules regarding given conditions
 
