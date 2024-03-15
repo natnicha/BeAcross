@@ -38,7 +38,7 @@ To start Across web application, you have to start 2 services - Backend and Acro
 2. Setup your development environment for an Across website according to the [Across README](/across-app/README.md)
 3. Start backend web services
 4. Start Across website
-5. Enjoy our website at [Across](localhost:3000/)
+5. Enjoy our website at [Across](http://localhost:3000/)
 
 ## Usage
 There are 4 user roles in a BeAcross platform including
