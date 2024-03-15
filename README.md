@@ -35,7 +35,7 @@ Across website sample
 ## Getting Started
 To start Across web application, you have to start 2 services - Backend and Across. You have to set up your environment beforehand. Please follow these steps.
 1. Setup your development environment for a backend web services according to the [Backend README](/_backend/README.md)
-2. Setup your development environment for an Across website according to the [Across README](/across-app/README.md)
+2. Setup your development environment for an Across website (frotend) according to the [Across README](/across-app/README.md)
 3. Start backend web services
 4. Start Across website
 5. Enjoy our website at [Across](http://localhost:3000/)
@@ -154,5 +154,5 @@ A Slice of Trust, Innovation, and Comfort in Every Morning, Unlocking Your Indus
 
 Visit us at [Victory Pie Solutions](https://www.victorypiesolutions.com/) or [email](Victorypiesolutions@outlook.com)
 
-## Project status
-Across v.1.0.0 was launched on 5th Mar 2024. All unique selling points are successfully developed in this version. If you have any suggestions, please feel free to contribute to us by creating issues or a new branch to start enhancement. Also, you can see our application progress in the Roadmap section.
+## Project Status
+Across v.1.0.0 has been launched since 5th Mar 2024. All unique selling points are successfully developed in this version. If you have any suggestions, please feel free to contribute to us by creating issues or a new branch to start enhancement. Also, you can see our application progress in the Roadmap section.
