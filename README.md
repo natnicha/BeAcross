@@ -135,8 +135,6 @@ If you have any suggestion that would make our website looks better or more conv
     ```
 5. Open a Pull Request
 
-## Across Module Parser - Manual
- * [Across Parser For Module Retrival](https://github.com/salehghraiyib/across-parser/tree/master)
 ## Acknowledgment
 Here is a resource list which is helpful and  would like to give credit to. 
 
